@@ -161,11 +161,11 @@ Additional Cases
 *This section describes the parts of the program each team member plans to take primary and secondary responsibility for and a rough schedule of how the team will complete the program.*
 
  * Team Member #1: Kyaira Boughton  
-  * Primary Responsibility, XML Module:
-    * implement method for saving, loading, and managing simulation configurations
-    * ensure compatibility with specified file format and handle file-related errors
-  * Secondary Responsibility:
-    * help implement GUI components that call the XML loading and storing
+   * Primary Responsibility, XML Module:
+     * implement method for saving, loading, and managing simulation configurations
+     * ensure compatibility with specified file format and handle file-related errors
+   * Secondary Responsibility:
+     * help implement GUI components that call the XML loading and storing
 
  * Team Member #2: Jessica Chen  
    * Primary Responsibility, Simulation Module:
