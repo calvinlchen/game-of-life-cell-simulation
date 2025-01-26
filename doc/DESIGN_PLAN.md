@@ -181,3 +181,12 @@ Additional Cases
      * integrate the visualization of the grid and ensure real-time updates
    * Secondary Responsibility:
      * collaborate on the integration of user trigger actions as well as simulation steps
+
+### Schedule
+- 2/4: Basic and Test
+  - Group: have all the different modules laid out in a format that can call each other (even if they just return static values)
+    - XML can pass parsed data into the Simulation, Simulation can pass the next simulation step to the GUI, ...
+  - Kyaira:
+  - Jessica:
+    - have a general structure for how the Grid, Rules and Cells interact for game of life and percolation
+  - Calvin:
