@@ -62,18 +62,64 @@ Thus, the primary architecture will focus on a layered communication model where
 
 ## Design Overview
 * Cell  
-  * Each simulation type will use a different subclass of the abstract Cell class for each cell. The main difference between subclasses will be the States enum, which will contain the different states that a Cell can be in for the given simulation type.  
+  * the smallest unit of the simulation that stores its state and neighbors
+  * abstract class with simulation type specific subclasses
 * Rules  
-  * Each simulation type will use a different subclass of abstract Rules class. The subclass would contain methods that dictate a cell’s new state (given the list of surrounding cells).  
+  * encapsulates logic for transitioning between cell states
+  * abstract class with simulation type specific subclasses
 * Grid  
-  * The grid holds the references to the cells and updates the cell neighbors on grid size change. Also informs cells when to run calculations for the next stage and when to update the stage.  
+  * abstraction for the cell location and management
+  * coordinates state updates throughout the cells
 * XML  
   * All methods related to XML, such as saving a current configuration, loading a new configuration, and overwriting an existing file (if applicable).  
 * GUI  
-  * Contains all user-interaction elements, such as the start/pause buttons, as well as file-related buttons and inputs (such as button to import a new simulation file), displaying errors, and displaying the grid cells.
+  * user interface for controlling the simulation and interacting with files
+  * visual representation of simulation and information
+
+![design overview](./images/design_overview.png)
 
 ## Design Details  
-*This section describes each abstraction introduced in the Overview in detail (as well as any other concrete classes that may be needed but are not significant to include in a high-level description of the program). Describe how each handles specific Functionality Requirements, how it collaborates with other classes, and what resources it might need. Describe in detail how your method signatures do not reveal the difference between two different implementations for your data structure, file format, and OpenJFX "grid" componen*![][image3]*t.*
+
+### XML
+**XML Parser**
+- loadConfig(File file): loads a simulation configuration and initializes the simulation with the correct values
+- saveConfig(): saves the current simulation state
+- overwriteConfig(): Updates an existing configuration file
+  - for save and overwrite the parameters passed in should be the metadata / file save location users can update 
+
+### UI
+**Button**
+- buttons for start, pause, load, save, reset, changeSimulationSpeed
+- something like onButtonClick(String action)
+
+**Grid Display**
+- renderGrid(Grid grid): update visual representation of the grid
+
+**Text Display**
+- loadMessage(String): updates message to message in string
+
+### Simulation
+**Grid**
+- initializeGrid(int rows, int columns): creates a grid of cells
+- updateNeighbors(): updates each cell with its neighbors based on the grid 
+- stepAllCells(): triggers state calculation and updates state for all cells for each simulation step
+- getCell(int x, int y): returns the cell at x, y
+- setCell(int x, int y, State): sets the cell at x, y to state
+
+**Cell**
+- getState(): returns the current state 
+- setState(State state): updates the state of the cell
+- getNeighbors(): return the neighbors of the cell
+- setNeighbors(List<Cell> neighbors): updates the neighbors of the cell
+- calculateNextState(List<Cell> neighbors): determines the next state using Rules
+
+**Rule**
+- updateParameters(): updates parameters based on parameters for each simulation
+- calculateState(Cell cell, List<Cell> neighbors): returns the new state of a cell based on simulation rules
+
+> - this flow allows for the handling of the functional requirements as seen later in use cases
+> - furthermore, it hides details of implementation as since we are abstracting how the cells are stored into Grid, and grid serves as the point of which cells are wear, it does not matter to any other class if grid is given in the form of an array list or a hashmap (etc.)
+> - additionally, since XML does the parsing and passes into Grid and Rule the actual value not its format, if there was a JSON parser instead, Grid and Cell would not care
 
 ## Design Considerations  
 *This section justifies your team's reasoning for the classes and methods given in the design, including alternatives considered with pros and cons from all sides of the discussion. Describe in detail at least two design issues your group discussed at length (even if you have not yet resolved it), including pros and cons from all sides of the discussion and the alternate design options considered.*
@@ -107,26 +153,109 @@ The next design issue is which class should coordinate interactions between the 
         - creates a tight coupling between them and other components which might reduce modularity and violate responsibility principles
 
 ## Use Cases  
-*Describe how your classes work together to handle being extended or specific features (like collaborating with other classes, using resource files, or serving as an abstraction that could be implemented multiple ways).* 
 
-*In addition to the cases below, write at least two Use Cases per person to further test your design (they should be based on features given in the assignment specification, but should include more details to make them concrete to a specific scenario). Then, include the Java psuedocode needed to complete all the Use Cases to help validate and make your design plan more concrete.*
+### Given Cases
 
-*Given Cases*
+Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
+```java
+// assuming we already are in a game
+GameOfLifeCell middleCell;
+List<Cell> neighbors = middleCell.getNeighbors();
+State nextState = rule.calculateState(middleCell, neighbors);
 
-- *Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)*  
-- *Apply the rules to an edge cell: set the next state of a cell to live by counting its number of neighbors using the Game of Life rules for a cell on the edge (i.e., with some of its neighbors missing)*  
-- *Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically*  
-- *Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one*  
-- *Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in a data file*
+middleCell.setState(nextState); 
+```
 
-Additional Cases
+Apply the rules to an edge cell: set the next state of a cell to live by counting its number of neighbors using the Game of Life rules for a cell on the edge (i.e., with some of its neighbors missing)
+```java
+// assuming we already are in a game
+GameOfLifeCell edgeCell;
+List<Cell> neighbors = edgeCell.getNeighbors();
+State nextState = rule.calculateState(edgeCell, neighbors);
 
-- Save simulation  
-- overwrite simulation  
-- load incorrect simulation file  
-- edit simulation file  
-- Apply rules to a middle cell for WaTor World  
-- Apply the rules to an edge cell WaTor World
+edgeCell.setState(nextState); 
+```
+
+Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically
+```java
+grid.stepAllCells(); 
+ui.renderGrid(grid); 
+```
+
+Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
+```java
+Grid newGrid;
+Rule newRule;
+
+XMLParser parser = new XMLParser();
+parser.loadConfig(newConfigFile);   // load config initializes newGrid and new Rule with initial parameters
+
+ui.renderGrid(newGrid);
+```
+
+Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in a data file
+```java
+Grid newGrid;
+Rule newRule;
+
+XMLParser parser = new XMLParser();
+parser.loadConfig(newConfigFile);   // load config initializes newGrid and new Rule with initial parameters, parameters handled here
+
+ui.renderGrid(newGrid);
+```
+
+### Additional Cases
+
+Saves the current simulation state to a new file
+```java
+ui.onButtonClick(save);
+
+// ButtonClick then calls 
+parser.saveConfig(filePath);
+```
+Updates an existing configuration file with current simulation data
+```java
+ui.onButtonClick(save);
+
+// ButtonClick then calls 
+parser.overwriteConfig(filePath);
+```
+
+Load incorrect simulation file
+```angular2html
+parser.loadConfig(filePath);
+// loadConfig checks if valid file, if not returns with an error signal to UI
+
+ui.loadMessage(incorrect simulation string);  // where the string is found in the constants
+```
+
+Update the metadata of a simulation file for save
+```java
+ui.onButtonClick(save);
+
+// ButtonClick then calls 
+parser.saveConfig(filePath, metadata);  // if metadata from default add as parameters
+```
+
+Apply rules to a middle cell for WaTor World  
+```java
+// assuming we already are in a game
+WaTorWorldCell middleCell;
+List<Cell> neighbors = middleCell.getNeighbors();
+State nextState = rule.calculateState(middleCell, neighbors);
+
+middleCell.setState(nextState); 
+```
+
+Apply the rules to an edge cell WaTor World
+```java
+// assuming we already are in a game
+WaTorWorldCell edgeCell;
+List<Cell> neighbors = edgeCell.getNeighbors();
+State nextState = rule.calculateState(edgeCell, neighbors);
+
+edgeCell.setState(nextState); 
+```
 
 ## Proposed File Organization  
 ```  
@@ -183,10 +312,15 @@ Additional Cases
      * collaborate on the integration of user trigger actions as well as simulation steps
 
 ### Schedule
+- 1/28: Design Plan
+  - Flesh out the details of exactly what is passed between the different modules (the different assumptions)
+  - Have a general plan of how to implement the abstractions
 - 2/4: Basic and Test
   - Group: have all the different modules laid out in a format that can call each other (even if they just return static values)
     - XML can pass parsed data into the Simulation, Simulation can pass the next simulation step to the GUI, ...
   - Kyaira:
+    - have a general way to parse and save XML files 
   - Jessica:
     - have a general structure for how the Grid, Rules and Cells interact for game of life and percolation
   - Calvin:
+    - be able to choose the XML files and a way to display the current state of the simulation
