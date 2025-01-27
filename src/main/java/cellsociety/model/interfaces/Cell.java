@@ -11,7 +11,7 @@ import java.util.List;
  * @param <S> - the type of state this cell holds defined by the enum in the subclass
  * @author Jessica Chen
  */
-abstract class Cell<S extends Enum<S>> {
+public abstract class Cell<S extends Enum<S>> {
 
   private List<Cell<S>> neighbors;
   private S currentState;
@@ -23,7 +23,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param state - the initial state of the cell
    */
-  protected Cell(S state) {
+  public Cell(S state) {
     this.currentState = state;
     neighbors = new ArrayList<>();
   }
@@ -32,14 +32,14 @@ abstract class Cell<S extends Enum<S>> {
    * Based on the rules of the simulation, calculate the next state of the cell and set next state
    * to the calculated value
    */
-  protected abstract void calcNextState();
+  public abstract void calcNextState();
 
   /**
    * Advances current state to next state
    *
    * <p> Assumption: assumes already called calcNextState
    */
-  protected abstract void step();
+  public abstract void step();
 
   // ==== Setters and Getters ====
 
@@ -48,7 +48,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @return the current state of the cell
    */
-  protected S getCurrentState() {
+  public S getCurrentState() {
     return currentState;
   }
 
@@ -57,7 +57,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param state - state to set the current state of the cell
    */
-  protected void setCurrentState(S state) {
+  public void setCurrentState(S state) {
     currentState = state;
   }
 
@@ -66,7 +66,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @return the next state of the cell
    */
-  protected S getNextState() {
+  public S getNextState() {
     return nextState;
   }
 
@@ -76,7 +76,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param state - state the cell will be on the next step of the simulation
    */
-  protected void setNextState(S state) {
+  public void setNextState(S state) {
     nextState = state;
   }
 
@@ -85,7 +85,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @return the position of the cell as an array [row, column]
    */
-  protected int[] getPosition() {
+  public int[] getPosition() {
     return position;
   }
 
@@ -94,7 +94,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param position - the position to set, represented as an array [row, column]
    */
-  protected void setPosition(int[] position) {
+  public void setPosition(int[] position) {
     this.position = position;
   }
 
@@ -103,7 +103,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @return a list of neighboring cells
    */
-  protected List<Cell<S>> getNeighbors() {
+  public List<Cell<S>> getNeighbors() {
     return neighbors;
   }
 
@@ -112,7 +112,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param neighbors - a list of neighboring cells to set
    */
-  protected void setNeighbors(List<Cell<S>> neighbors) {
+  public void setNeighbors(List<Cell<S>> neighbors) {
     this.neighbors = neighbors;
   }
 
@@ -121,7 +121,7 @@ abstract class Cell<S extends Enum<S>> {
    *
    * @param neighbor - the cell to be added as a neighbor
    */
-  protected void addNeighbor(Cell<S> neighbor) {
+  public void addNeighbor(Cell<S> neighbor) {
     if (!neighbors.contains(neighbor)) {
       neighbors.add(neighbor);
     }
@@ -133,7 +133,7 @@ abstract class Cell<S extends Enum<S>> {
    * @param neighbor - the cell to be removed from neighbors
    * @return true if the neighbor was successfully removed; false otherwise
    */
-  protected boolean removeNeighbor(Cell<S> neighbor) {
+  public boolean removeNeighbor(Cell<S> neighbor) {
     return neighbors.remove(neighbor);
   }
 }

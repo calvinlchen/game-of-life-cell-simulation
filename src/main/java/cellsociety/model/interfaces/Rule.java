@@ -11,7 +11,7 @@ import java.util.Map;
  * @param <S> - the type of state this cell holds defined by the enum in the subclass
  * @author Jessica Chen
  */
-abstract class Rule<S extends Enum<S>> {
+public abstract class Rule<S extends Enum<S>> {
 
   private Map<String, Double> parameters;
 
@@ -20,7 +20,7 @@ abstract class Rule<S extends Enum<S>> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  protected Rule(Map<String, Double> parameters) {
+  public Rule(Map<String, Double> parameters) {
     this.parameters = parameters;
   }
 
@@ -30,14 +30,14 @@ abstract class Rule<S extends Enum<S>> {
    * @param cell - cell to apply the rules to
    * @return next state of the cell
    */
-  protected abstract S apply(Cell<S> cell);
+  public abstract S apply(Cell<S> cell);
 
   /**
    * Get the parameters for this rule set
    *
    * @return map of current parameters
    */
-  protected Map<String, Double> getParameters() {
+  public Map<String, Double> getParameters() {
     return parameters;
   }
 
@@ -46,7 +46,7 @@ abstract class Rule<S extends Enum<S>> {
    *
    * @param parameters - map of parameters to set it too
    */
-  protected void setParameters(Map<String, Double> parameters) {
+  public void setParameters(Map<String, Double> parameters) {
     this.parameters = parameters;
   }
 }

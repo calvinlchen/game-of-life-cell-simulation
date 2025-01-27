@@ -7,39 +7,33 @@ import java.util.List;
  *
  * <p> Grid configures cells to the given pattern and sets the neighbors for the cells.
  *
+ * @param <S> - the type of state for the cells, must be an Enum
+ * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-abstract class Grid {
-
-  private final int rows;
-  private final int cols;
+public abstract class Grid<S extends Enum<S>, T extends Cell<S>> {
 
   /**
-   * Constructs a  grid with the configuration of row and col
-   *
-   * @param rows - the number of rows
-   * @param cols - the number of cols
+   * Constructs a grid
    */
-  protected Grid(int rows, int cols) {
-    this.rows = rows;
-    this.cols = cols;
+  public Grid() {
   }
 
   /**
    * Initialize the grid with cells.
    */
-  protected abstract void initializeCells();
+  public abstract void initializeCells();
 
   /**
    * Set neighbors for all cells in the grid.
    */
-  protected abstract void setNeighbors();
+  public abstract void setNeighbors();
 
   /**
    * Get neighbors of a specific cell.
    *
    * @param position - position of a cell given in (row, col) pair
-   * @return         - list of neighboring cells
+   * @return - list of neighboring cells
    */
-  protected abstract List<Cell> getNeighbors(int[] position);
+  public abstract List<T> getNeighbors(int[] position);
 }
