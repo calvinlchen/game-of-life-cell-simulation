@@ -43,4 +43,13 @@ public class CellStates {
     AGENT_B
   }
 
+  /**
+   * Enum for representing the states of a cell in WaTor World
+   */
+  public enum WaTorStates {
+    EMPTY,
+    FISH,
+    SHARK
+  }
+
 }

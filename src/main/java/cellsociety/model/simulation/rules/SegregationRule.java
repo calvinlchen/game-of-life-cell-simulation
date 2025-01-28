@@ -5,8 +5,11 @@ import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.util.CellStates.SegregationStates;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
+
+  private final Random random = new Random();
 
   /**
    * Constructor for the Rule class
@@ -35,7 +38,7 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
       return cell.getCurrentState();
     }
 
-    SegregationCell emptyCell = findEmptyCell(cell.getNeighbors());
+    SegregationCell emptyCell = findEmptyCell(cell);
 
     if (emptyCell != null) {
       emptyCell.setSelected(true);
@@ -62,11 +65,13 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
     return similarityRatio >= threshold;
   }
 
-  private SegregationCell findEmptyCell(List<SegregationCell> neighbors) {
-    return neighbors.stream()
-        .filter(neighbor -> neighbor.getCurrentState() == SegregationStates.EMPTY
-            && !neighbor.isSelected())
-        .findAny()
+  private SegregationCell findEmptyCell(SegregationCell cell) {
+    return cell.getNeighbors().stream()
+        .filter(neighbor -> neighbor.getCurrentState() == SegregationStates.EMPTY)
+        .skip(random.nextInt((int) cell.getNeighbors().stream()
+            .filter(neighbor -> neighbor.getCurrentState() == SegregationStates.EMPTY)
+            .count()))
+        .findFirst()
         .orElse(null);
   }
 }
