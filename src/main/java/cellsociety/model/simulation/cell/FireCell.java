@@ -4,7 +4,7 @@ import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.FireRule;
 import cellsociety.model.util.CellStates.FireStates;
 
-public class FireCell extends Cell<FireStates> {
+public class FireCell extends Cell<FireStates, FireCell> {
   private final FireRule myRule;
 
   /**

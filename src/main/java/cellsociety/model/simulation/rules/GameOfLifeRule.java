@@ -1,7 +1,7 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.interfaces.Rule;
+import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.util.CellStates.GameOfLifeStates;
 import java.util.Map;
 
@@ -10,8 +10,7 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeRule extends Rule<GameOfLifeStates> {
-
+public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
   /**
    * Constructor for the Rule class
    *
@@ -22,7 +21,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates> {
   }
 
   @Override
-  public GameOfLifeStates apply(Cell<GameOfLifeStates> cell) {
+  public GameOfLifeStates apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
     // TODO: not sure if the 2, 3, should be passed in parameters
@@ -36,7 +35,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates> {
     return cell.getCurrentState();
   }
 
-  private long countAliveNeighbors(Cell<GameOfLifeStates> cell) {
+  private long countAliveNeighbors(GameOfLifeCell cell) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> neighbor.getCurrentState() == GameOfLifeStates.ALIVE)
         .count();

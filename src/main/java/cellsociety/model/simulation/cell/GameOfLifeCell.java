@@ -9,7 +9,7 @@ import cellsociety.model.util.CellStates.GameOfLifeStates;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeCell extends Cell<GameOfLifeStates> {
+public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
 
   private final GameOfLifeRule myRule;
 
@@ -24,6 +24,8 @@ public class GameOfLifeCell extends Cell<GameOfLifeStates> {
     myRule = rule;
   }
 
+  // NOTE: I thought about making these non asbstract, but with the generics it becomes bleh
+  // if I call super what cell am I really applying the rule too
   @Override
   public void calcNextState() {
     setNextState(myRule.apply(this));

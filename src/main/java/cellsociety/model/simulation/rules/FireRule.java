@@ -1,11 +1,11 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.interfaces.Rule;
+import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.util.CellStates.FireStates;
 import java.util.Map;
 
-public class FireRule extends Rule<FireStates> {
+public class FireRule extends Rule<FireStates, FireCell> {
 
 
   /**
@@ -18,7 +18,7 @@ public class FireRule extends Rule<FireStates> {
   }
 
   @Override
-  public FireStates apply(Cell<FireStates> cell) {
+  public FireStates apply(FireCell cell) {
     if (cell.getCurrentState() == FireStates.BURNING) {
       return FireStates.EMPTY;
     } else if (cell.getCurrentState() == FireStates.TREE && neighborIsBurning(cell)) {
@@ -39,7 +39,7 @@ public class FireRule extends Rule<FireStates> {
     return cell.getCurrentState();
   }
 
-  private boolean neighborIsBurning(Cell<FireStates> cell) {
+  private boolean neighborIsBurning(FireCell cell) {
     return cell.getNeighbors().stream()
         .anyMatch(neighbor -> neighbor.getCurrentState() == FireStates.BURNING);
   }

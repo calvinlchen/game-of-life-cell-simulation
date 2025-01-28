@@ -1,7 +1,7 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.interfaces.Rule;
+import cellsociety.model.simulation.cell.PercolationCell;
 import cellsociety.model.util.CellStates.PercolationStates;
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class PercolationRule extends Rule<PercolationStates> {
+public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
 
   /**
    * Constructor for the Rule class
@@ -22,7 +22,7 @@ public class PercolationRule extends Rule<PercolationStates> {
   }
 
   @Override
-  public PercolationStates apply(Cell<PercolationStates> cell) {
+  public PercolationStates apply(PercolationCell cell) {
     if (cell.getCurrentState() == PercolationStates.OPEN && neighborIsPercolated(cell)) {
       return PercolationStates.PERCOLATED;
     }
@@ -30,7 +30,7 @@ public class PercolationRule extends Rule<PercolationStates> {
     return cell.getCurrentState();
   }
 
-  private boolean neighborIsPercolated(Cell<PercolationStates> cell) {
+  private boolean neighborIsPercolated(PercolationCell cell) {
     return cell.getNeighbors().stream()
         .anyMatch(neighbor -> neighbor.getCurrentState() == PercolationStates.PERCOLATED);
   }

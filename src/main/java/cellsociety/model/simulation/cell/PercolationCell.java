@@ -9,7 +9,7 @@ import cellsociety.model.util.CellStates.PercolationStates;
  *
  * @author Jessica Chen
  */
-public class PercolationCell extends Cell<PercolationStates> {
+public class PercolationCell extends Cell<PercolationStates, PercolationCell> {
 
   private final PercolationRule myRule;
 

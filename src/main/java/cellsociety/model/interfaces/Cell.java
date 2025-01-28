@@ -9,11 +9,13 @@ import java.util.List;
  * <p> Cells hold their state and neighbors
  *
  * @param <S> - the type of state this cell holds defined by the enum in the subclass
- * @author Jessica Chen
+ * @param <U> - the type of neighbors, must be a subclass of Cell<S>
+ *
+ * Author: Jessica Chen
  */
-public abstract class Cell<S extends Enum<S>> {
+public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
 
-  private List<Cell<S>> neighbors;
+  private List<U> neighbors;
   private S currentState;
   private S nextState;
   private int[] position;
@@ -103,7 +105,7 @@ public abstract class Cell<S extends Enum<S>> {
    *
    * @return a list of neighboring cells
    */
-  public List<Cell<S>> getNeighbors() {
+  public List<U> getNeighbors() {
     return neighbors;
   }
 
@@ -112,7 +114,7 @@ public abstract class Cell<S extends Enum<S>> {
    *
    * @param neighbors - a list of neighboring cells to set
    */
-  public void setNeighbors(List<Cell<S>> neighbors) {
+  public void setNeighbors(List<U> neighbors) {
     this.neighbors = neighbors;
   }
 
@@ -121,7 +123,7 @@ public abstract class Cell<S extends Enum<S>> {
    *
    * @param neighbor - the cell to be added as a neighbor
    */
-  public void addNeighbor(Cell<S> neighbor) {
+  public void addNeighbor(U neighbor) {
     if (!neighbors.contains(neighbor)) {
       neighbors.add(neighbor);
     }
@@ -133,7 +135,7 @@ public abstract class Cell<S extends Enum<S>> {
    * @param neighbor - the cell to be removed from neighbors
    * @return true if the neighbor was successfully removed; false otherwise
    */
-  public boolean removeNeighbor(Cell<S> neighbor) {
+  public boolean removeNeighbor(U neighbor) {
     return neighbors.remove(neighbor);
   }
 }

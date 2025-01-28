@@ -34,4 +34,13 @@ public class CellStates {
     BURNING
   }
 
+  /**
+   * Enum for representing the states of a cell in Schelling's Model of Segregation
+   */
+  public enum SegregationStates {
+    EMPTY,
+    AGENT_A,
+    AGENT_B
+  }
+
 }
