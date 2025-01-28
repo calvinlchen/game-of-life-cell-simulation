@@ -2,11 +2,15 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.interfaces.Rule;
-import cellsociety.model.util.CellStates;
 import cellsociety.model.util.CellStates.GameOfLifeStates;
 import java.util.Map;
 
-public class GameOfLifeRule extends Rule<CellStates.GameOfLifeStates> {
+/**
+ * Class for representing rules for Game of Life simulation
+ *
+ * @author Jessica Chen
+ */
+public class GameOfLifeRule extends Rule<GameOfLifeStates> {
 
   /**
    * Constructor for the Rule class

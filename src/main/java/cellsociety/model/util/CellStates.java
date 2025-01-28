@@ -16,4 +16,13 @@ public class CellStates {
     DEAD
   }
 
+  /**
+   * Enum for representing the states of a cell in Percolation
+   */
+  public enum PercolationStates {
+    BLOCKED,
+    OPEN,
+    PERCOLATED
+  }
+
 }
