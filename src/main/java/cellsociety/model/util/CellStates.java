@@ -25,4 +25,13 @@ public class CellStates {
     PERCOLATED
   }
 
+  /**
+   * Enum for representing the states of a cell in SpreadingOfFire
+   */
+  public enum FireStates {
+    EMPTY,
+    TREE,
+    BURNING
+  }
+
 }

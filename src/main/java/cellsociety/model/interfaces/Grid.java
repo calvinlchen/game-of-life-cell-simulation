@@ -7,6 +7,8 @@ import java.util.List;
  *
  * <p> Grid configures cells to the given pattern and sets the neighbors for the cells.
  *
+ * <p> Reference for generics: https://www.geeksforgeeks.org/generics-in-java/
+ *
  * @param <S> - the type of state for the cells, must be an Enum
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen

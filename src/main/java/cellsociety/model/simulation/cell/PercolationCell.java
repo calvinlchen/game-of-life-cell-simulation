@@ -11,7 +11,7 @@ import cellsociety.model.util.CellStates.PercolationStates;
  */
 public class PercolationCell extends Cell<PercolationStates> {
 
-  private PercolationRule myRule;
+  private final PercolationRule myRule;
 
   /**
    * Constructs a cell with specified initial state.

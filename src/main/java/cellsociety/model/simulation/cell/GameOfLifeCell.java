@@ -11,7 +11,7 @@ import cellsociety.model.util.CellStates.GameOfLifeStates;
  */
 public class GameOfLifeCell extends Cell<GameOfLifeStates> {
 
-  private GameOfLifeRule myRule;
+  private final GameOfLifeRule myRule;
 
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
