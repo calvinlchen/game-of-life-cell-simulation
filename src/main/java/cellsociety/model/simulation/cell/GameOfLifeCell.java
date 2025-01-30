@@ -24,8 +24,8 @@ public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
     myRule = rule;
   }
 
-  // NOTE: I thought about making these non asbstract, but with the generics it becomes bleh
-  // if I call super what cell am I really applying the rule too
+  // NOTE: I thought about making these non abstract, but with the generics it becomes hard to pass
+  // the correct cell into
   @Override
   public void calcNextState() {
     setNextState(myRule.apply(this));

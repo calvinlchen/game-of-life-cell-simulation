@@ -17,7 +17,7 @@ public class PercolationCell extends Cell<PercolationStates, PercolationCell> {
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
-   * @param rule  - the Game of Life rule to calculate the next state
+   * @param rule  - the Percolation rule to calculate the next state
    */
   public PercolationCell(PercolationStates state, PercolationRule rule) {
     super(state);

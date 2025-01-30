@@ -13,7 +13,7 @@ import java.util.List;
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public abstract class Grid<S extends Enum<S>, T extends Cell<S>> {
+public abstract class Grid<S extends Enum<S>, T extends Cell<S, T>> {
 
   /**
    * Constructs a grid

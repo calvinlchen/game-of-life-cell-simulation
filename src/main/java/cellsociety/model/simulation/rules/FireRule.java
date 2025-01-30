@@ -5,8 +5,13 @@ import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.util.CellStates.FireStates;
 import java.util.Map;
 
-public class FireRule extends Rule<FireStates, FireCell> {
 
+/**
+ * Class for representing rules for Spreading of Fire simulation
+ *
+ * @author Jessica Chen
+ */
+public class FireRule extends Rule<FireStates, FireCell> {
 
   /**
    * Constructor for the Rule class
