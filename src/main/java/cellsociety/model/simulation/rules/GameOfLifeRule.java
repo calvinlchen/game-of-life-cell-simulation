@@ -2,7 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.GameOfLifeCell;
-import cellsociety.model.util.CellStates.GameOfLifeStates;
+import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import java.util.Map;
 
 /**

@@ -2,7 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.PercolationCell;
-import cellsociety.model.util.CellStates.PercolationStates;
+import cellsociety.model.util.constants.CellStates.PercolationStates;
 import java.util.Map;
 
 /**

@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.WaTorRule;
-import cellsociety.model.util.CellStates.WaTorStates;
+import cellsociety.model.util.constants.CellStates.WaTorStates;
 
 /**
  * Class for representing cell for WaTor simulation
