@@ -2,7 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.WaTorCell;
-import cellsociety.model.util.CellStates.WaTorStates;
+import cellsociety.model.util.constants.CellStates.WaTorStates;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;

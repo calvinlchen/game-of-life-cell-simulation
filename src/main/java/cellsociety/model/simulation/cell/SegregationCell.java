@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.SegregationRule;
-import cellsociety.model.util.CellStates.SegregationStates;
+import cellsociety.model.util.constants.CellStates.SegregationStates;
 
 /**
  * Class for representing cell for Schelling's Model of Segregation simulation

@@ -1,4 +1,4 @@
-package cellsociety.model.util;
+package cellsociety.model.util.constants;
 
 /**
  * Defines enums for representing the states of cells in various simulations, this should be where

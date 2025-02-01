@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
-import cellsociety.model.util.CellStates.GameOfLifeStates;
+import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 
 /**
  * Class for representing cell for Game of Life simulation

@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.FireRule;
-import cellsociety.model.util.CellStates.FireStates;
+import cellsociety.model.util.constants.CellStates.FireStates;
 
 /**
  * Class for representing cell for Spreading of Fire simulation
