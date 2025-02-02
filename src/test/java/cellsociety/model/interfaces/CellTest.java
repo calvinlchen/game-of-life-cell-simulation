@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-enum TestState { ALIVE, DEAD; }   // testing enum for states
+enum CellTestState { ALIVE, DEAD; }   // testing enum for states
 
 /**
  * Test cell for testing
  */
-class TestCell extends Cell<TestState, TestCell> {
-  public TestCell(TestState state) {
+class TestCell extends Cell<CellTestState, TestCell> {
+  public TestCell(CellTestState state) {
     super(state);
   }
 
@@ -39,8 +38,8 @@ class CellTest {
 
   @BeforeEach
   void setUp() {
-    cell = new TestCell(TestState.ALIVE);
-    neighbor = new TestCell(TestState.DEAD);
+    cell = new TestCell(CellTestState.ALIVE);
+    neighbor = new TestCell(CellTestState.DEAD);
   }
 
   // Positive Checks
@@ -48,24 +47,24 @@ class CellTest {
   @Test
   @DisplayName("Initial state is set correctly")
   void initialState_Verified() {
-    assertEquals(TestState.ALIVE, cell.getCurrentState());
+    assertEquals(CellTestState.ALIVE, cell.getCurrentState());
     assertEquals(0, cell.getNeighbors().size());
   }
 
   @Test
   @DisplayName("Set and get current state correctly")
   void currentState_SetAndGet_Verified() {
-    assertEquals(TestState.ALIVE, cell.getCurrentState());
-    cell.setCurrentState(TestState.DEAD);
-    assertEquals(TestState.DEAD, cell.getCurrentState());
+    assertEquals(CellTestState.ALIVE, cell.getCurrentState());
+    cell.setCurrentState(CellTestState.DEAD);
+    assertEquals(CellTestState.DEAD, cell.getCurrentState());
   }
 
   @Test
   @DisplayName("Set and get next state correctly")
   void nextState_SetAndGet_Verified() {
     assertNull(cell.getNextState());
-    cell.setNextState(TestState.DEAD);
-    assertEquals(TestState.DEAD, cell.getNextState());
+    cell.setNextState(CellTestState.DEAD);
+    assertEquals(CellTestState.DEAD, cell.getNextState());
   }
 
   @Test
