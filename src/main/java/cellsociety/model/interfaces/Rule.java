@@ -10,8 +10,8 @@ import java.util.Map;
  *
  * @param <S> - the type of state this cell holds defined by the enum in the subclass
  * @param <C> - the type of cell, must be a subclass of Cell<S>
- *
- * Author: Jessica Chen
+ *            <p>
+ *            Author: Jessica Chen
  */
 public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
 
@@ -21,8 +21,12 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @throws IllegalArgumentException if parameters is null
    */
   public Rule(Map<String, Double> parameters) {
+    if (parameters == null) {
+      throw new IllegalArgumentException("Parameters map cannot be null.");
+    }
     this.parameters = parameters;
   }
 
@@ -44,11 +48,15 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
   }
 
   /**
-   * Set the parameters for this rule set
+   * Set new parameters for this rule set.
    *
-   * @param parameters - map of parameters to set it to
+   * @param parameters - new parameters to set.
+   * @throws IllegalArgumentException if parameters is null.
    */
   public void setParameters(Map<String, Double> parameters) {
+    if (parameters == null) {
+      throw new IllegalArgumentException("Cannot set parameters to null.");
+    }
     this.parameters = parameters;
   }
 }
