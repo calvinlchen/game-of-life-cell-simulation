@@ -34,6 +34,18 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
   }
 
   /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state    - the initial state of the cell
+   * @param position - the position of a the cell
+   * @throws IllegalArgumentException if state or position is null
+   */
+  public Cell(S state, int[] position) {
+    this(state);
+    setPosition(position);
+  }
+
+  /**
    * Based on the rules of the simulation, calculate the next state of the cell and set next state
    * to the calculated value
    */

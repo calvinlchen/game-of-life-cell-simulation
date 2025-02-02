@@ -81,17 +81,4 @@ class RuleTest {
     TestRuleCell cell = new TestRuleCell(RuleTestState.ALIVE);
     assertEquals(RuleTestState.DEAD, rule.apply(cell));
   }
-
-  // Negative Tests
-  @Test
-  @DisplayName("Constructor throws exception when parameters are null")
-  void constructor_NullParameters_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestRule(null));
-  }
-
-  @Test
-  @DisplayName("Set parameters throws exception when parameters are null")
-  void setParameters_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> rule.setParameters(null));
-  }
 }

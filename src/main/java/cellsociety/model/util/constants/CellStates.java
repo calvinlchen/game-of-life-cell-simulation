@@ -9,6 +9,17 @@ package cellsociety.model.util.constants;
 public class CellStates {
 
   /**
+   * Enum for represent the types of simulation
+   */
+  public enum SimulationTypes {
+    GameOfLife,
+    Percolation,
+    Fire,
+    Segregation,
+    WaTor
+  }
+
+  /**
    * Enum for representing the states of a cell in Conway's Game of Life
    */
   public enum GameOfLifeStates {
