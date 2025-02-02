@@ -18,13 +18,13 @@ import cellsociety.model.util.constants.StateEnum;
 @Getter
 public class XMLData{
 
-    private SimType type; //enum for game type
-    private String title; //title of game
-    private String author; //name of author
-    private String description; //description of simulation behavior
-    private int gridRowNum; //number of rows in a grid
-    private int gridColNum; //number of columns in grid.
-    private ArrayList<List<StateEnum>> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
-    private Map<String, Double> parameters; //<parameter name as string, value>
+  private SimType type; //enum for game type
+  private String title; //title of game
+  private String author; //name of author
+  private String description; //description of simulation behavior
+  private int gridRowNum; //number of rows in a grid
+  private int gridColNum; //number of columns in grid.
+  private ArrayList<List<StateEnum>> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
+  private Map<String, Double> parameters; //<parameter name as string, value>
 
 }

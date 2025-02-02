@@ -39,6 +39,26 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   }
 
   /**
+   * Constructs a WaTorCell with a specified initial state and rule.
+   *
+   * @param state    - the initial state of the cell (must be a state from WaTorStates)
+   * @param position - the inital position of the cell
+   * @param rule     - the WaTorRule to calculate the next state
+   */
+  public WaTorCell(WaTorStates state, int[] position, WaTorRule rule) {
+    super(state, position);
+    myRule = rule;
+
+    myStepsSurvived = 0;
+    myEnergy =
+        state == WaTorStates.SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
+            .intValue() : 0;
+
+    myNextStepsSurvived = 0;
+    myNextEnergy = 0;
+  }
+
+  /**
    * Get the current steps survived
    *
    * @return the current steps survived
