@@ -47,6 +47,31 @@ public abstract class Grid<S extends Enum<S>, T extends Cell<S, T>> {
   public abstract void setNeighbors();
 
   /**
+   * Helper function for abstracted set neighbor
+   *
+   * <p>for each cell, set neighbor in the given directions
+   * @param directions - directions to set neighbors
+   */
+  public void setNeighbors(int[][] directions) {
+    for (int i = 0; i < getRows(); i++) {
+      for (int j = 0; j < getCols(); j++) {
+        T cell = getGrid().get(i).get(j);
+        if (cell != null) {
+          List<T> neighbors = new ArrayList<>();
+          for (int[] dir : directions) {
+            int newRow = i + dir[0];
+            int newCol = j + dir[1];
+            if (isValidPosition(newRow, newCol)) {
+              neighbors.add(getGrid().get(newRow).get(newCol));
+            }
+          }
+          cell.setNeighbors(neighbors);
+        }
+      }
+    }
+  }
+
+  /**
    * Initialize the grid with
    *
    * @param cells - cells to be added

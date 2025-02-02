@@ -53,6 +53,7 @@ class GridTest {
       public void setNeighbors() {
         return;
       }
+
     };
   }
 
@@ -89,6 +90,21 @@ class GridTest {
   @DisplayName("Retrieve neighbors from valid position")
   void getNeighbors_ValidPosition_Verified() {
     assertNotNull(grid.getNeighbors(new int[]{1, 1}));
+  }
+
+  @Test
+  @DisplayName("Set neighbors correctly")
+  void setNeighbors_Correctly_Verified() {
+    int[][] directions = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // Right, Down, Left, Up
+    grid.setNeighbors(directions);
+
+    TestGridCell centerCell = grid.getCell(1, 1);
+    List<TestGridCell> neighbors = centerCell.getNeighbors();
+    assertEquals(4, neighbors.size());
+    assertTrue(neighbors.contains(grid.getCell(1, 2))); // Right
+    assertTrue(neighbors.contains(grid.getCell(2, 1))); // Down
+    assertTrue(neighbors.contains(grid.getCell(1, 0))); // Left
+    assertTrue(neighbors.contains(grid.getCell(0, 1))); // Up
   }
 
   // Negative Tests
