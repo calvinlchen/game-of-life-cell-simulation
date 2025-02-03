@@ -136,7 +136,7 @@ public class XMLData {
      *
      * @return the cellStateList
      */
-    public ArrayList<List<stateEnum>> getCellStateList() {
+    public ArrayList<List<StateEnum>> getCellStateList() {
         return cellStateList;
     }
 
@@ -145,7 +145,7 @@ public class XMLData {
      *
      * @param cellStateList the new ArrayList<List<stateEnum>> value for cellStateList
      */
-    public void setCellStateList(ArrayList<List<stateEnum>> cellStateList) {
+    public void setCellStateList(ArrayList<List<StateEnum>> cellStateList) {
         this.cellStateList = cellStateList;
     }
 
