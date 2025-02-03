@@ -1,6 +1,9 @@
 package cellsociety.view.components;
 
 import cellsociety.model.util.constants.CellStates.SimulationTypes;
+import cellsociety.model.util.constants.CellStates.FireStates;
+import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
+import cellsociety.view.interfaces.CellView;
 import javafx.scene.layout.Pane;
 
 /**
@@ -31,7 +34,7 @@ public class SimulationView {
    * Initializes given cells onto the grid view
    */
   public void initializeGridView() {
-    // TODO: Implement actual simulation cells
+    // TODO: Implement CellView creation
   }
 
   private void createCellView(int cellRow, int cellCol, Enum<?> cellState, SimulationTypes simType) {
@@ -40,6 +43,35 @@ public class SimulationView {
     double y = position[1];
     double cellWidth = (double) myGridWidth / myNumCols;
     double cellHeight = (double) myGridHeight / myNumRows;
+
+    CellView<?> cellView = null;
+
+    switch (simType) {
+      case GameOfLife -> {
+        if (cellState instanceof GameOfLifeStates) {
+          cellView = new GameOfLifeCellView(x, y, cellWidth, cellHeight, (GameOfLifeStates) cellState);
+        }
+      }
+      case Fire -> {
+        if (cellState instanceof FireStates) {
+          cellView = new FireCellView(x, y, cellWidth, cellHeight, (FireStates) cellState);
+        }
+      }
+      case Percolation -> {
+        // TODO: Percolation cell creation implementation
+      }
+      case Segregation -> {
+        // TODO: Segregation cell creation implementation
+      }
+      case WaTor -> {
+        // TODO: WaTor cell creation implementation
+      }
+      default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
+    }
+
+    if (cellView != null) {
+      myDisplay.getChildren().add(cellView.getShape());
+    }
   }
 
   /**
