@@ -5,11 +5,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public abstract class ViewCell {
+/**
+ * Abstract class representing a visual cell in the grid.
+ *
+ * @param <S> The state type of the cell (must be an Enum).
+ * @param <T> The specific type of the cell (must extend Cell<S, T>).
+ */
+public abstract class ViewCell<S extends Enum<S>, T extends Cell<S, T>> {
   public static Color DEFAULT_FILL = Color.BLACK;
   public static Color DEFAULT_OUTLINE = Color.WHITE;
 
-  protected Cell myCell;
+  protected T myCell;
   protected Shape myShape;
 
   /**
@@ -19,21 +25,24 @@ public abstract class ViewCell {
    * @param width width of the cell
    * @param height height of the cell
    * @param cell the Cell object which this cell represents
-   * @param color fill color of the cell
    * @author Calvin Chen
    */
-  ViewCell(double x, double y, double width, double height, Cell cell, Color color) {
+  protected ViewCell(double x, double y, double width, double height, T cell) {
     myCell = cell;
     myShape = createShape(x,y,width,height);
-    myShape.setFill(color);
+    updateViewColor(); // Set color based on cell state
   }
 
   /**
-   * Abstract method for creating the Shape view of the cell.
-   * Subclasses can Override this method to use a different cell shape.
+   * Default method for creating the Shape view of the cell.
+   * Subclasses can Override this method to use a different cell Shape type or styling.
    */
   protected Shape createShape(double x, double y, double width, double height) {
-    return new Rectangle(x, y, width, height);
+    Shape shape = new Rectangle(x, y, width, height);
+    shape.setFill(DEFAULT_FILL);
+    shape.setStroke(DEFAULT_OUTLINE);
+    shape.setStrokeWidth(1);
+    return shape;
   }
 
   /**
@@ -56,13 +65,19 @@ public abstract class ViewCell {
    * Return the Cell object that this view represents
    * @return corresponding Cell object
    */
-  public Cell getCell() {
+  public T getCell() {
     return myCell;
   }
 
   /**
-   * Abstract method to be implemented by subclasses for updating the view
-   * based on state changes in the simulation.
+   * Updates the cell's visual representation based on its state.
    */
-  public abstract void updateView();
+  public void updateViewColor() {
+    setColor(getColorForState(myCell.getCurrentState()));
+  }
+
+  /**
+   * Abstract method to be implemented by subclasses to provide state-to-color mapping. (ChatGPT)
+   */
+  protected abstract Color getColorForState(S state);
 }
