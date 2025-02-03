@@ -38,8 +38,10 @@ public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
 
   @Override
   public void calcNextState() {
-    // TODO: make sure this doesn't override calculated stuff
-    if (getCurrentState() == SegregationStates.EMPTY && getNextState() != SegregationStates.EMPTY) {
+    // check to make sure you aren't overriding already calculated stuff
+    // namely in a prior thing you were empty and then someone moved into you because
+    // they weren't satisfied
+    if (!(getCurrentState() == SegregationStates.EMPTY && getNextState() != SegregationStates.EMPTY)) {
       setNextState(myRule.apply(this));
     }
   }

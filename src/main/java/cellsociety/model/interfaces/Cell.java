@@ -30,6 +30,7 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
       throw new IllegalArgumentException("State cannot be null");
     }
     this.currentState = state;
+    this.nextState = state;
     neighbors = new ArrayList<>();
   }
 

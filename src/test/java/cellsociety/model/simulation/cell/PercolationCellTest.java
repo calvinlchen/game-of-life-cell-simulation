@@ -19,7 +19,7 @@ class PercolationCellTest {
 
   @BeforeEach
   void setUp() {
-    rule = new PercolationRule(Map.of()); 
+    rule = new PercolationRule(Map.of());
   }
 
   @Test
