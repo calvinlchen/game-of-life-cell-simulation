@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.SegregationRule;
-import cellsociety.model.util.CellStates.SegregationStates;
+import cellsociety.model.util.constants.CellStates.SegregationStates;
 
 /**
  * Class for representing cell for Schelling's Model of Segregation simulation
@@ -24,10 +24,24 @@ public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
     myRule = rule;
   }
 
+  /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state    - the initial state of the cell
+   * @param position - the initial position of the cell
+   * @param rule     - Schelling's Model of Segregation Rule to calculate next state
+   */
+  public SegregationCell(SegregationStates state, int[] position, SegregationRule rule) {
+    super(state, position);
+    myRule = rule;
+  }
+
   @Override
   public void calcNextState() {
-    // TODO: make sure this doesn't override calculated stuff
-    if (getCurrentState() == SegregationStates.EMPTY && getNextState() != SegregationStates.EMPTY) {
+    // check to make sure you aren't overriding already calculated stuff
+    // namely in a prior thing you were empty and then someone moved into you because
+    // they weren't satisfied
+    if (!(getCurrentState() == SegregationStates.EMPTY && getNextState() != SegregationStates.EMPTY)) {
       setNextState(myRule.apply(this));
     }
   }

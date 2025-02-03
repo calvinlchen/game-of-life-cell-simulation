@@ -1,4 +1,4 @@
-package cellsociety.model.util;
+package cellsociety.model.util.constants;
 
 /**
  * Defines enums for representing the states of cells in various simulations, this should be where
@@ -7,6 +7,17 @@ package cellsociety.model.util;
  * @author Jessica Chen
  */
 public class CellStates {
+
+  /**
+   * Enum for represent the types of simulation
+   */
+  public enum SimulationTypes {
+    GameOfLife,
+    Percolation,
+    Fire,
+    Segregation,
+    WaTor
+  }
 
   /**
    * Enum for representing the states of a cell in Conway's Game of Life

@@ -10,8 +10,7 @@ import java.util.Map;
  *
  * @param <S> - the type of state this cell holds defined by the enum in the subclass
  * @param <C> - the type of cell, must be a subclass of Cell<S>
- *
- * Author: Jessica Chen
+ * @author Jessica Chen
  */
 public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
 
@@ -44,9 +43,9 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
   }
 
   /**
-   * Set the parameters for this rule set
+   * Set new parameters for this rule set.
    *
-   * @param parameters - map of parameters to set it to
+   * @param parameters - new parameters to set..
    */
   public void setParameters(Map<String, Double> parameters) {
     this.parameters = parameters;

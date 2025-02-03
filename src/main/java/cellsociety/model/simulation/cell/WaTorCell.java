@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.WaTorRule;
-import cellsociety.model.util.CellStates.WaTorStates;
+import cellsociety.model.util.constants.CellStates.WaTorStates;
 
 /**
  * Class for representing cell for WaTor simulation
@@ -39,6 +39,26 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   }
 
   /**
+   * Constructs a WaTorCell with a specified initial state and rule.
+   *
+   * @param state    - the initial state of the cell (must be a state from WaTorStates)
+   * @param position - the inital position of the cell
+   * @param rule     - the WaTorRule to calculate the next state
+   */
+  public WaTorCell(WaTorStates state, int[] position, WaTorRule rule) {
+    super(state, position);
+    myRule = rule;
+
+    myStepsSurvived = 0;
+    myEnergy =
+        state == WaTorStates.SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
+            .intValue() : 0;
+
+    myNextStepsSurvived = 0;
+    myNextEnergy = 0;
+  }
+
+  /**
    * Get the current steps survived
    *
    * @return the current steps survived
@@ -62,15 +82,19 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
    */
   @Override
   public void calcNextState() {
-    WaTorStates nextState = myRule.apply(this);
-    if (nextState != null) {
-      setNextState(nextState);
+    // only not equal if was empty and then a fish / shark swam there
+    // or if there was a fish there and it got eaten
+    if (getCurrentState() == getNextState()) {
+      WaTorStates nextState = myRule.apply(this);
+      if (nextState != null) {
+        setNextState(nextState);
 
-      myNextStepsSurvived = 0;
-      myNextEnergy =
-          nextState == WaTorStates.SHARK ? myRule.getParameters()
-              .getOrDefault("sharkInitialEnergy", 5.0)
-              .intValue() : 0;
+        myNextStepsSurvived = 0;
+        myNextEnergy =
+            nextState == WaTorStates.SHARK ? myRule.getParameters()
+                .getOrDefault("sharkInitialEnergy", 5.0)
+                .intValue() : 0;
+      }
     }
   }
 

@@ -2,7 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.GameOfLifeCell;
-import cellsociety.model.util.CellStates.GameOfLifeStates;
+import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import java.util.Map;
 
 /**
@@ -24,7 +24,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
   public GameOfLifeStates apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    // TODO: not sure if the 2, 3, should be passed in parameters
+    // TODO: for now there are no parameters
     if (cell.getCurrentState() == GameOfLifeStates.ALIVE &&
         (aliveNeighbors < 2 || aliveNeighbors > 3)) {
       return GameOfLifeStates.DEAD;
