@@ -33,10 +33,6 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
         .intValue();
   }
 
-  // TODO: note to self need to finish dependencies
-  // sharks have higher priority over fish, fish have higher priority over empty
-  // if shark eats a fish their proposed movemnt is canceled
-
   @Override
   public WaTorStates apply(WaTorCell cell) {
     WaTorStates currentState = cell.getCurrentState();
@@ -47,11 +43,12 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
     };
   }
 
-  // TODO: need to make sure the states get passed around correctly
+  // TODO: but does this handle the case where the shark eats a fish that hasn't been updated yet??
+  // shouldn't be called if this fish has died
   private WaTorStates handleFish(WaTorCell cell) {
     int stepsSurvived = cell.getStepsSurvived() + 1;    // increment steps surived
 
-    WaTorCell emptyNeighbor = findEmptyNeighbor(cell);
+    WaTorCell emptyNeighbor = findNeighbor(cell, WaTorStates.EMPTY);
     if (emptyNeighbor != null) {                        // if empty space available
       // move current fish to the new square
       emptyNeighbor.setNextState(WaTorStates.FISH, stepsSurvived, 0);
@@ -71,8 +68,8 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
   }
 
   private WaTorStates handleShark(WaTorCell cell) {
-    WaTorCell fishNeighbor = findFishNeighbor(cell);
-    WaTorCell emptyNeighbor = findEmptyNeighbor(cell);
+    WaTorCell fishNeighbor = findNeighbor(cell, WaTorStates.FISH);
+    WaTorCell emptyNeighbor = findNeighbor(cell, WaTorStates.EMPTY);
 
     int stepsSurvived = cell.getStepsSurvived() + 1;
     int energy = cell.getEnergy() - 1;
@@ -114,26 +111,16 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
   }
 
   // TODO: need to fix the moving logic of this one
-  private WaTorCell findEmptyNeighbor(WaTorCell cell) {
-    List<WaTorCell> emptyNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == WaTorStates.EMPTY
-            && neighbor.getNextState() == WaTorStates.EMPTY)
+  private WaTorCell findNeighbor(WaTorCell cell, WaTorStates findState) {
+    List<WaTorCell> neighbors = cell.getNeighbors().stream()
+        .filter(neighbor -> neighbor.getCurrentState() == findState
+            && neighbor.getNextState() == findState)
         .toList();
 
-    if (emptyNeighbors.isEmpty()) {
+    if (neighbors.isEmpty()) {
       return null;
     }
-    return emptyNeighbors.get(random.nextInt(emptyNeighbors.size()));
+    return neighbors.get(random.nextInt(neighbors.size()));
   }
 
-  private WaTorCell findFishNeighbor(WaTorCell cell) {
-    List<WaTorCell> fishNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == WaTorStates.FISH)
-        .toList();
-
-    if (fishNeighbors.isEmpty()) {
-      return null;
-    }
-    return fishNeighbors.get(random.nextInt(fishNeighbors.size()));
-  }
 }

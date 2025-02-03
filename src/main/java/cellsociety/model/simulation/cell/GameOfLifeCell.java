@@ -37,7 +37,7 @@ public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
   }
 
   // NOTE: I thought about making these non abstract, but with the generics it becomes hard to pass
-  // the correct cell into
+  // the correct cell into, also segragation and wator world become interesting
   @Override
   public void calcNextState() {
     setNextState(myRule.apply(this));
