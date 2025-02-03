@@ -82,15 +82,19 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
    */
   @Override
   public void calcNextState() {
-    WaTorStates nextState = myRule.apply(this);
-    if (nextState != null) {
-      setNextState(nextState);
+    // only not equal if was empty and then a fish / shark swam there
+    // or if there was a fish there and it got eaten
+    if (getCurrentState() == getNextState()) {
+      WaTorStates nextState = myRule.apply(this);
+      if (nextState != null) {
+        setNextState(nextState);
 
-      myNextStepsSurvived = 0;
-      myNextEnergy =
-          nextState == WaTorStates.SHARK ? myRule.getParameters()
-              .getOrDefault("sharkInitialEnergy", 5.0)
-              .intValue() : 0;
+        myNextStepsSurvived = 0;
+        myNextEnergy =
+            nextState == WaTorStates.SHARK ? myRule.getParameters()
+                .getOrDefault("sharkInitialEnergy", 5.0)
+                .intValue() : 0;
+      }
     }
   }
 
