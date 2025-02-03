@@ -1,14 +1,13 @@
 package cellsociety.view.components;
 
-import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class GameOfLifeCellView extends CellView<GameOfLifeStates, GameOfLifeCell> {
+public class GameOfLifeCellView extends CellView<GameOfLifeStates> {
 
-  public GameOfLifeCellView(double x, double y, double width, double height, GameOfLifeCell cell) {
-    super(x, y, width, height, cell);
+  public GameOfLifeCellView(double x, double y, double width, double height, GameOfLifeStates cellState) {
+    super(x, y, width, height, cellState);
   }
 
   /**

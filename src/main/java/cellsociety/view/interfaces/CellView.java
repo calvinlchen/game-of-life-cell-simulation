@@ -9,13 +9,12 @@ import javafx.scene.shape.Shape;
  * Abstract class representing a Cell's visual representation.
  *
  * @param <S> The state type of the cell (must be an Enum).
- * @param <T> The specific type of the cell (must extend Cell<S, T>).
  */
-public abstract class CellView<S extends Enum<S>, T extends Cell<S, T>> {
+public abstract class CellView<S extends Enum<S>> {
   public static Color DEFAULT_FILL = Color.BLACK;
   public static Color DEFAULT_OUTLINE = Color.WHITE;
 
-  protected T myCell;
+  protected S myCellState;
   protected Shape myShape;
 
   /**
@@ -24,11 +23,11 @@ public abstract class CellView<S extends Enum<S>, T extends Cell<S, T>> {
    * @param y y-position of the cell (relative to the Scene)
    * @param width width of the cell
    * @param height height of the cell
-   * @param cell the Cell object which this cell represents
+   * @param cellState the cell's current state from the simulation type's enum
    * @author Calvin Chen
    */
-  protected CellView(double x, double y, double width, double height, T cell) {
-    myCell = cell;
+  protected CellView(double x, double y, double width, double height, S cellState) {
+    myCellState = cellState;
     myShape = createShape(x,y,width,height);
     updateViewColor(); // Set color based on cell state
   }
@@ -62,18 +61,18 @@ public abstract class CellView<S extends Enum<S>, T extends Cell<S, T>> {
   }
 
   /**
-   * Return the Cell object that this view represents
-   * @return corresponding Cell object
+   * Return the State of the cell that this view represents
+   * @return corresponding State
    */
-  public T getCell() {
-    return myCell;
+  public S getCellState() {
+    return myCellState;
   }
 
   /**
    * Updates the cell's visual representation based on its state.
    */
   public void updateViewColor() {
-    setColor(getColorForState(myCell.getCurrentState()));
+    setColor(getColorForState(myCellState));
   }
 
   /**

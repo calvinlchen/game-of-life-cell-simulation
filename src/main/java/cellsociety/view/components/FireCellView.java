@@ -1,14 +1,13 @@
 package cellsociety.view.components;
 
-import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class FireCellView extends CellView<FireStates, FireCell> {
+public class FireCellView extends CellView<FireStates> {
 
-  public FireCellView(double x, double y, double width, double height, FireCell cell) {
-    super(x, y, width, height, cell);
+  public FireCellView(double x, double y, double width, double height, FireStates cellState) {
+    super(x, y, width, height, cellState);
   }
 
   /**
