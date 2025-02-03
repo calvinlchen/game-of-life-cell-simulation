@@ -23,7 +23,8 @@ class FireRuleTest {
   void setUp() {
     ruleDefault = new FireRule(Map.of("f", 0.0, "p", 0.0)); // default probability to be 0
     ruleMax = new FireRule(
-        Map.of("f", 1.0, "p", 1.0));     // max probability to be 1 to see difference
+        Map.of("f", 1.0, "p",
+            1.0));                        // max probability to be 1 to see difference
   }
 
   @Test
