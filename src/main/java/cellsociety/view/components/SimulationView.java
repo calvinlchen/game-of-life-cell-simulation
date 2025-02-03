@@ -1,5 +1,6 @@
 package cellsociety.view.components;
 
+import cellsociety.model.util.constants.CellStates.SimulationTypes;
 import javafx.scene.layout.Pane;
 
 /**
@@ -7,10 +8,19 @@ import javafx.scene.layout.Pane;
  */
 public class SimulationView {
   private Pane myDisplay;
+  private int myGridWidth;
+  private int myGridHeight;
+  private int myNumRows;
+  private int myNumCols;
 
-  public SimulationView() {
+  public SimulationView(int width, int height) {
     myDisplay = new Pane();
-    myDisplay.setPrefSize(1000, 1000);
+    myGridWidth = width;
+    myGridHeight = height;
+    myDisplay.setPrefSize(width, height);
+
+    myNumRows = 0;
+    myNumCols = 0;
   }
 
   public Pane getDisplay() {
@@ -24,10 +34,33 @@ public class SimulationView {
     // TODO: Implement actual simulation cells
   }
 
+  private void createCellView(int cellRow, int cellCol, Enum<?> cellState, SimulationTypes simType) {
+    double[] position = getCellPosition(cellRow, cellCol);
+    double x = position[0];
+    double y = position[1];
+    double cellWidth = (double) myGridWidth / myNumCols;
+    double cellHeight = (double) myGridHeight / myNumRows;
+  }
+
   /**
-   * Updates the grid based on the current simulation state.
+   * Returns a coordinate position for a cell based on its row and column
+   * @param row A cell's row in the grid (index starting from 0)
+   * @param column A cell's column in the grid (index starting from 0)
+   * @return double array: [0] = x-coordinate, [1] = y-coordinate
    */
-  public void updateGrid() {
+  private double[] getCellPosition(int row, int column) {
+    double[] cellPositions = new double[2];
+    // x-position
+    cellPositions[0] = (double) (myGridWidth / myNumCols)  * column;
+    // y-position
+    cellPositions[1] = (double) (myGridHeight / myNumRows) * row;
+    return cellPositions;
+  }
+
+  /**
+   * Calls the Simulation class to update all cells in the simulation
+   */
+  public void stepGrid() {
     // TODO: Implement actual simulation update logic
   }
 
@@ -36,5 +69,21 @@ public class SimulationView {
    */
   public void resetGrid() {
     myDisplay.getChildren().clear();
+  }
+
+  /**
+   * Set the number of grid rows
+   * @param numRows total number of rows of cells to display in the grid
+   */
+  public void setNumRows(int numRows) {
+    myNumRows = numRows;
+  }
+
+  /**
+   * Set the number of grid columns
+   * @param numCols total number of columns of cells to display in the grid
+   */
+  public void setNumCols(int numCols) {
+    myNumCols = numCols;
   }
 }
