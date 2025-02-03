@@ -6,12 +6,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 /**
- * Abstract class representing a visual cell in the grid.
+ * Abstract class representing a Cell's visual representation.
  *
  * @param <S> The state type of the cell (must be an Enum).
  * @param <T> The specific type of the cell (must extend Cell<S, T>).
  */
-public abstract class ViewCell<S extends Enum<S>, T extends Cell<S, T>> {
+public abstract class CellView<S extends Enum<S>, T extends Cell<S, T>> {
   public static Color DEFAULT_FILL = Color.BLACK;
   public static Color DEFAULT_OUTLINE = Color.WHITE;
 
@@ -20,14 +20,14 @@ public abstract class ViewCell<S extends Enum<S>, T extends Cell<S, T>> {
 
   /**
    * Constructs a cell to be displayed to the user.
-   * @param x x-position of the cell (relative to the grid)
-   * @param y y-position of the cell (relative to the grid)
+   * @param x x-position of the cell (relative to the Scene)
+   * @param y y-position of the cell (relative to the Scene)
    * @param width width of the cell
    * @param height height of the cell
    * @param cell the Cell object which this cell represents
    * @author Calvin Chen
    */
-  protected ViewCell(double x, double y, double width, double height, T cell) {
+  protected CellView(double x, double y, double width, double height, T cell) {
     myCell = cell;
     myShape = createShape(x,y,width,height);
     updateViewColor(); // Set color based on cell state
