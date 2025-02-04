@@ -19,7 +19,7 @@ public class XMLData {
   private String description; //description of simulation behavior
   private int gridRowNum; //number of rows in a grid
   private int gridColNum; //number of columns in grid.
-  private ArrayList<StateEnum> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
+  private ArrayList<Enum> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
   private Map<String, Double> parameters; //<parameter name as string, value>
 
     /**
@@ -135,7 +135,7 @@ public class XMLData {
      *
      * @return the cellStateList
      */
-    public ArrayList<StateEnum> getCellStateList() {
+    public ArrayList<Enum> getCellStateList() {
         return cellStateList;
     }
 
@@ -144,7 +144,7 @@ public class XMLData {
      *
      * @param cellStateList the new ArrayList<List<stateEnum>> value for cellStateList
      */
-    public void setCellStateList(ArrayList<StateEnum> cellStateList) {
+    public void setCellStateList(ArrayList<Enum> cellStateList) {
         this.cellStateList = cellStateList;
     }
 
