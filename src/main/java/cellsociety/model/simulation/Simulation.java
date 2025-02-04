@@ -104,4 +104,8 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   public S getCurrentState(int row, int col) {
     return myGrid.getCell(row, col).getCurrentState();
   }
+
+  public XMLData getXMLData() {
+    return xmlData;
+  }
 }
