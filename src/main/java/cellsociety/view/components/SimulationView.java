@@ -1,6 +1,8 @@
 package cellsociety.view.components;
 
-import cellsociety.model.util.constants.CellStates.SimulationTypes;
+import cellsociety.model.util.XMLData;
+import cellsociety.model.simulation.Simulation;
+import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.view.interfaces.CellView;
@@ -15,6 +17,11 @@ public class SimulationView {
   private int myGridHeight;
   private int myNumRows;
   private int myNumCols;
+  private double myCellWidth;
+  private double myCellHeight;
+
+  private XMLData myXML;
+  private Simulation mySimulation;
 
   public SimulationView(int width, int height) {
     myDisplay = new Pane();
@@ -24,46 +31,74 @@ public class SimulationView {
 
     myNumRows = 0;
     myNumCols = 0;
+    myCellWidth = 0;
+    myCellHeight = 0;
   }
 
+  /**
+   * Returns the grid representing the simulation cells, if mySimulation exists
+   * @return Pane containing the cell grid visual
+   */
   public Pane getDisplay() {
     return myDisplay;
   }
 
   /**
-   * Initializes given cells onto the grid view
+   * Prepares a Simulation model and the grid's cell configuration based on an XMLData object
+   * @param xmlData XMLData object representing the XML file for a simulation
    */
-  public void initializeGridView() {
-    // TODO: Implement CellView creation
+  public void configureFromXML(XMLData xmlData) {
+    myXML = xmlData;
+
+    myNumRows = xmlData.getGridRowNum();
+    myNumCols = xmlData.getGridColNum();
+    myCellWidth = (double) myGridWidth / myNumCols;
+    myCellHeight = (double) myGridHeight / myNumRows;
+
+    mySimulation = new Simulation(xmlData);
   }
 
-  private void createCellView(int cellRow, int cellCol, Enum<?> cellState, SimulationTypes simType) {
+  /**
+   * Initializes the grid view of the currently-stored Simulation model
+   */
+  public void initializeGridView() {
+    // If there is no simulation stored, then a grid cannot be generated
+    if (mySimulation == null) {
+      return;
+    }
+
+    for (int row = 0; row < myNumRows; row++) {
+      for (int col = 0; col < myNumCols; col++) {
+        createCellView(row, col, mySimulation.getCurrentState(row, col), myXML.getType());
+      }
+    }
+  }
+
+  private void createCellView(int cellRow, int cellCol, Enum<?> cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
     double x = position[0];
     double y = position[1];
-    double cellWidth = (double) myGridWidth / myNumCols;
-    double cellHeight = (double) myGridHeight / myNumRows;
 
     CellView<?> cellView = null;
 
     switch (simType) {
-      case GameOfLife -> {
+      case GAMEOFLIFE -> {
         if (cellState instanceof GameOfLifeStates) {
-          cellView = new GameOfLifeCellView(x, y, cellWidth, cellHeight, (GameOfLifeStates) cellState);
+          cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, (GameOfLifeStates) cellState);
         }
       }
-      case Fire -> {
+      case FIRE -> {
         if (cellState instanceof FireStates) {
-          cellView = new FireCellView(x, y, cellWidth, cellHeight, (FireStates) cellState);
+          cellView = new FireCellView(x, y, myCellWidth, myCellHeight, (FireStates) cellState);
         }
       }
-      case Percolation -> {
+      case PERCOLATION -> {
         // TODO: Percolation cell creation implementation
       }
-      case Segregation -> {
+      case SEGREGATION -> {
         // TODO: Segregation cell creation implementation
       }
-      case WaTor -> {
+      case WATOR -> {
         // TODO: WaTor cell creation implementation
       }
       default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
