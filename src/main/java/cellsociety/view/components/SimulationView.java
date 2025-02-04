@@ -15,8 +15,7 @@ public class SimulationView {
   private Pane myDisplay;
   private int myGridWidth;
   private int myGridHeight;
-  private int myNumRows;
-  private int myNumCols;
+  private CellView[][] myCellViews;
   private double myCellWidth;
   private double myCellHeight;
 
@@ -29,8 +28,7 @@ public class SimulationView {
     myGridHeight = height;
     myDisplay.setPrefSize(width, height);
 
-    myNumRows = 0;
-    myNumCols = 0;
+    myCellViews = new CellView[0][0];
     myCellWidth = 0;
     myCellHeight = 0;
   }
@@ -50,10 +48,12 @@ public class SimulationView {
   public void configureFromXML(XMLData xmlData) {
     myXML = xmlData;
 
-    myNumRows = xmlData.getGridRowNum();
-    myNumCols = xmlData.getGridColNum();
-    myCellWidth = (double) myGridWidth / myNumCols;
-    myCellHeight = (double) myGridHeight / myNumRows;
+    int numRows = xmlData.getGridRowNum();
+    int numCols = xmlData.getGridColNum();
+    myCellWidth = (double) myGridWidth / numRows;
+    myCellHeight = (double) myGridHeight / numCols;
+
+    myCellViews = new CellView[numRows][numCols];
 
     mySimulation = new Simulation(xmlData);
   }
@@ -67,8 +67,8 @@ public class SimulationView {
       return;
     }
 
-    for (int row = 0; row < myNumRows; row++) {
-      for (int col = 0; col < myNumCols; col++) {
+    for (int row = 0; row < myCellViews.length; row++) {
+      for (int col = 0; col < myCellViews[0].length; col++) {
         createCellView(row, col, mySimulation.getCurrentState(row, col), myXML.getType());
       }
     }
@@ -105,6 +105,7 @@ public class SimulationView {
     }
 
     if (cellView != null) {
+      myCellViews[cellRow][cellCol] = cellView;
       myDisplay.getChildren().add(cellView.getShape());
     }
   }
@@ -118,17 +119,25 @@ public class SimulationView {
   private double[] getCellPosition(int row, int column) {
     double[] cellPositions = new double[2];
     // x-position
-    cellPositions[0] = (double) (myGridWidth / myNumCols)  * column;
+    cellPositions[0] = (double) (myGridWidth / myCellViews.length)  * column;
     // y-position
-    cellPositions[1] = (double) (myGridHeight / myNumRows) * row;
+    cellPositions[1] = (double) (myGridHeight / myCellViews[0].length) * row;
     return cellPositions;
   }
 
   /**
-   * Calls the Simulation class to update all cells in the simulation
+   * Updates all cell states based on simulation rules, and updates cell colors accordingly.
    */
-  public void stepGrid() {
-    // TODO: Implement actual simulation update logic
+  public void stepGridSimulation() {
+    // update Cell object states based on simulation type
+    mySimulation.step();
+
+    // update cell views so that their colors match the new cell states
+    for (int row = 0; row < myCellViews.length; row++) {
+      for (int col = 0; col < myCellViews[0].length; col++) {
+        myCellViews[row][col].setCellState(mySimulation.getCurrentState(row, col));
+      }
+    }
   }
 
   /**
@@ -136,21 +145,5 @@ public class SimulationView {
    */
   public void resetGrid() {
     myDisplay.getChildren().clear();
-  }
-
-  /**
-   * Set the number of grid rows
-   * @param numRows total number of rows of cells to display in the grid
-   */
-  public void setNumRows(int numRows) {
-    myNumRows = numRows;
-  }
-
-  /**
-   * Set the number of grid columns
-   * @param numCols total number of columns of cells to display in the grid
-   */
-  public void setNumCols(int numCols) {
-    myNumCols = numCols;
   }
 }
