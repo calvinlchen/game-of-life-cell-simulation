@@ -43,50 +43,46 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
     };
   }
 
-  // TODO: but does this handle the case where the shark eats a fish that hasn't been updated yet??
-  // shouldn't be called if this fish has died
   private WaTorStates handleFish(WaTorCell cell) {
     int stepsSurvived = cell.getStepsSurvived() + 1;    // increment steps surived
 
-    WaTorCell emptyNeighbor = findNeighbor(cell, WaTorStates.EMPTY);
+    WaTorCell emptyNeighbor = findEmptyCell(cell);
     if (emptyNeighbor != null) {                        // if empty space available
       // move current fish to the new square
-      emptyNeighbor.setNextState(WaTorStates.FISH, stepsSurvived, 0);
+      emptyNeighbor.setNextState(WaTorStates.FISH, stepsSurvived, 0, cell);
 
       if (stepsSurvived >= fishReproductionTime) {
         stepsSurvived = 0;
-        emptyNeighbor.setNextState(WaTorStates.FISH, stepsSurvived, 0);
+        emptyNeighbor.setNextState(WaTorStates.FISH, stepsSurvived, 0, cell);
 
         return WaTorStates.FISH;
       }
       return WaTorStates.EMPTY;
     }
 
-    // otherwise fish stays in the same spot and you somehow have to update it?????
     cell.setNextState(WaTorStates.FISH, stepsSurvived, 0);
     return null;
   }
 
   private WaTorStates handleShark(WaTorCell cell) {
-    WaTorCell fishNeighbor = findNeighbor(cell, WaTorStates.FISH);
-    WaTorCell emptyNeighbor = findNeighbor(cell, WaTorStates.EMPTY);
+    WaTorCell fishNeighbor = findFishCell(cell);
+    WaTorCell emptyNeighbor = findEmptyCell(cell);
 
     int stepsSurvived = cell.getStepsSurvived() + 1;
     int energy = cell.getEnergy() - 1;
 
-    if (cell.getEnergy() <= 0) {
+    // shark dies before it can eat fish
+    if (energy <= 0) {
       return WaTorStates.EMPTY;
     }
 
     if (fishNeighbor != null) {
       energy += sharkEnergyGain;
 
-      // somehow get rid of the fish and make sure it doesn't move?
-      // TODO: make sure this actually gets rid of the fish and the fish doesn't continue to move
       cell.setCurrentState(WaTorStates.EMPTY);
       fishNeighbor.setNextState(WaTorStates.SHARK, stepsSurvived, energy);
+      fishNeighbor.setConsumed(true);
 
-      // TODO: refactor this and the if statement below, just pull out the neighbor
       if (stepsSurvived >= sharkReproductionTime) {
         stepsSurvived = 0;
         fishNeighbor.setNextState(WaTorStates.SHARK, stepsSurvived, energy);
@@ -105,16 +101,25 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
       return WaTorStates.EMPTY;
     }
 
-    // otherwise fish stays in the same spot and you somehow have to update it?????
     cell.setNextState(WaTorStates.SHARK, stepsSurvived, energy);
     return null;
   }
 
-  // TODO: need to fix the moving logic of this one
-  private WaTorCell findNeighbor(WaTorCell cell, WaTorStates findState) {
+  private WaTorCell findEmptyCell(WaTorCell cell) {
     List<WaTorCell> neighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == findState
-            && neighbor.getNextState() == findState)
+        .filter(neighbor -> neighbor.getCurrentState() == WaTorStates.EMPTY
+            && neighbor.getNextState() == WaTorStates.EMPTY)
+        .toList();
+
+    if (neighbors.isEmpty()) {
+      return null;
+    }
+    return neighbors.get(random.nextInt(neighbors.size()));
+  }
+
+  private WaTorCell findFishCell(WaTorCell cell) {
+    List<WaTorCell> neighbors = cell.getNeighbors().stream()
+        .filter(neighbor -> neighbor.getCurrentState() == WaTorStates.FISH)
         .toList();
 
     if (neighbors.isEmpty()) {
