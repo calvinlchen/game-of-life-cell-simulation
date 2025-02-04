@@ -249,6 +249,7 @@ public class XMLUtils {
                     switch (currentCellState){
                         case ("alive") -> cellStateEnums.add(CellStates.GameOfLifeStates.ALIVE);
                         case ("dead") -> cellStateEnums.add(CellStates.GameOfLifeStates.DEAD);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -257,6 +258,7 @@ public class XMLUtils {
                         case ("blocked") -> cellStateEnums.add(CellStates.PercolationStates.BLOCKED);
                         case ("open") -> cellStateEnums.add(CellStates.PercolationStates.OPEN);
                         case ("percolated") -> cellStateEnums.add(CellStates.PercolationStates.PERCOLATED);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -265,6 +267,7 @@ public class XMLUtils {
                         case ("tree") -> cellStateEnums.add(CellStates.FireStates.TREE);
                         case ("empty") -> cellStateEnums.add(CellStates.FireStates.EMPTY);
                         case ("burning") -> cellStateEnums.add(CellStates.FireStates.BURNING);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -273,14 +276,16 @@ public class XMLUtils {
                         case ("agentA") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_A);
                         case ("empty") -> cellStateEnums.add(CellStates.SegregationStates.EMPTY);
                         case ("agentB") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_B);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.WATOR -> {
-                    switch (currentCellState){
+                    switch (currentCellState) {
                         case ("fish") -> cellStateEnums.add(CellStates.WaTorStates.FISH);
                         case ("empty") -> cellStateEnums.add(CellStates.WaTorStates.EMPTY);
                         case ("shark") -> cellStateEnums.add(CellStates.WaTorStates.SHARK);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 

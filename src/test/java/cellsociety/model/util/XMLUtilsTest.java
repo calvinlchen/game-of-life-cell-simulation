@@ -117,8 +117,6 @@ class XMLUtilsTest {
         //create XML file with invalid simulation type
         createInvalidSimulationTypeXMLFile();
 
-//        XMLData xmlObj= xmlUtils.readXML(INVALID_FILE_NAME);
-
         //verify reading XML file with invalid simulation type throws exception
         Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
         assertTrue(exception.getMessage().contains("Unknown simulation type"));
