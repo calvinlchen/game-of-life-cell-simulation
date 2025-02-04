@@ -1,8 +1,13 @@
 package cellsociety.model.util;
 
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.CellStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,11 +62,12 @@ class XMLDataTest {
         assertEquals(expectedColNum, xmlData.getGridColNum(), "Grid column number should be set and retrieved correctly.");
     }
 
-    /*@Test
+    @Test
     void testGetAndSetCellStateList() {
-        ArrayList<List<StateEnum>> expectedCellStateList = new ArrayList<>();
-        List<StateEnum> row = List.of(StateEnum.ALIVE, StateEnum.DEAD);
-        expectedCellStateList.add(row);
+        ArrayList<Enum> expectedCellStateList = new ArrayList<>();
+        expectedCellStateList.add(CellStates.GameOfLifeStates.ALIVE);
+        expectedCellStateList.add(CellStates.GameOfLifeStates.ALIVE);
+        expectedCellStateList.add(CellStates.GameOfLifeStates.DEAD);
         xmlData.setCellStateList(expectedCellStateList);
         assertEquals(expectedCellStateList, xmlData.getCellStateList(), "Cell state list should be set and retrieved correctly.");
     }
@@ -73,5 +79,5 @@ class XMLDataTest {
         expectedParameters.put("threshold", 0.75);
         xmlData.setParameters(expectedParameters);
         assertEquals(expectedParameters, xmlData.getParameters(), "Parameters should be set and retrieved correctly.");
-    }*/
+    }
 }
