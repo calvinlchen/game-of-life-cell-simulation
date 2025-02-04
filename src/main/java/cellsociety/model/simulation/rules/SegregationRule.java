@@ -38,7 +38,7 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
     }
 
     // TODO: fix the default satisfaction threshold
-    double satisfactionThreshold = getParameters().getOrDefault("satisfactionThreshold", 0.5);
+    double satisfactionThreshold = getParameters().getOrDefault("toleranceThreshold", 0.5);
     if (isSatisfied(cell, satisfactionThreshold)) {
       return cell.getCurrentState();
     }
