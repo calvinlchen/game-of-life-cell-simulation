@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A class that interacts with xml files, either by reading them or writing to them.
@@ -99,11 +100,12 @@ public class XMLUtils {
                     xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType()));
 
                     //extract parameter info
+                    NodeList paramList;
                     Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
-                    if (parametersElement != null) {
-                        NodeList paramList = parametersElement.getElementsByTagName("parameter");
-                        xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
-                    }
+
+                    //parameters are nested under <parameters> vs nested directly under <grid>
+                    paramList = Objects.requireNonNullElse(parametersElement, gridElement).getElementsByTagName("parameter");
+                    xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
 
                 }
             }

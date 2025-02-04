@@ -101,7 +101,7 @@ class XMLUtilsTest {
     }
 
     @Test
-    void testReadInvalidXML() { //accidentally catchesexception。
+    void testReadInvalidXML() {
         //create invalid XML file
         createInvalidXMLFile();
 
