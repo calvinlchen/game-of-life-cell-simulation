@@ -3,6 +3,7 @@ package cellsociety.model.util;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates;
+import cellsociety.model.util.constants.exceptions.XMLException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A class that interacts with xml files, either by reading them or writing to them.
@@ -26,7 +28,7 @@ import java.util.Map;
  */
 public class XMLUtils {
 
-    private final String FILE_PATH_PREFIX = ""; //makes the assumption that all files will be in the same location.
+    private final String FILE_PATH_PREFIX = "cellsociety/xmls/"; //makes the assumption that all files will be in the same location.
 
     /**
      * A method that reads a pre-existing xml file.
@@ -98,16 +100,17 @@ public class XMLUtils {
                     xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType()));
 
                     //extract parameter info
+                    NodeList paramList;
                     Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
-                    if (parametersElement != null) {
-                        NodeList paramList = parametersElement.getElementsByTagName("parameter");
-                        xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
-                    }
+
+                    //parameters are nested under <parameters> vs nested directly under <grid>
+                    paramList = Objects.requireNonNullElse(parametersElement, gridElement).getElementsByTagName("parameter");
+                    xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
 
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new XMLException(e.getMessage());
         }
 
         return xmlObject;
@@ -181,7 +184,7 @@ public class XMLUtils {
             transformer.transform(source, result);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new XMLException(e.getMessage());
         }
 
     }
@@ -248,6 +251,7 @@ public class XMLUtils {
                     switch (currentCellState){
                         case ("alive") -> cellStateEnums.add(CellStates.GameOfLifeStates.ALIVE);
                         case ("dead") -> cellStateEnums.add(CellStates.GameOfLifeStates.DEAD);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -256,6 +260,7 @@ public class XMLUtils {
                         case ("blocked") -> cellStateEnums.add(CellStates.PercolationStates.BLOCKED);
                         case ("open") -> cellStateEnums.add(CellStates.PercolationStates.OPEN);
                         case ("percolated") -> cellStateEnums.add(CellStates.PercolationStates.PERCOLATED);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -264,6 +269,7 @@ public class XMLUtils {
                         case ("tree") -> cellStateEnums.add(CellStates.FireStates.TREE);
                         case ("empty") -> cellStateEnums.add(CellStates.FireStates.EMPTY);
                         case ("burning") -> cellStateEnums.add(CellStates.FireStates.BURNING);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
@@ -272,14 +278,16 @@ public class XMLUtils {
                         case ("agentA") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_A);
                         case ("empty") -> cellStateEnums.add(CellStates.SegregationStates.EMPTY);
                         case ("agentB") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_B);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.WATOR -> {
-                    switch (currentCellState){
+                    switch (currentCellState) {
                         case ("fish") -> cellStateEnums.add(CellStates.WaTorStates.FISH);
                         case ("empty") -> cellStateEnums.add(CellStates.WaTorStates.EMPTY);
                         case ("shark") -> cellStateEnums.add(CellStates.WaTorStates.SHARK);
+                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
