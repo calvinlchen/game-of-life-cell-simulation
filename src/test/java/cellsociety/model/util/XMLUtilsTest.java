@@ -3,6 +3,7 @@ package cellsociety.model.util;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates;
+import cellsociety.model.util.constants.exceptions.XMLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -105,9 +106,8 @@ class XMLUtilsTest {
         createInvalidXMLFile();
 
         //verify reading invalid XML file throws exception
-        Exception exception = assertThrows(RuntimeException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
-        //problem child
-        //assertTrue(exception.getMessage().contains("Error parsing XML file"));
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        assertTrue(exception.getMessage().contains("Error parsing XML file"));
 
         //clean up invalid file
         new File(INVALID_FILE_PATH).delete();

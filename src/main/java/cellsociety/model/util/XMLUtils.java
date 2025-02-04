@@ -3,6 +3,7 @@ package cellsociety.model.util;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates;
+import cellsociety.model.util.constants.exceptions.XMLException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -107,7 +108,7 @@ public class XMLUtils {
                 }
             }
         } catch (Exception e) {
-            return null;
+            throw new XMLException(e.getMessage());
         }
 
         return xmlObject;
@@ -181,7 +182,7 @@ public class XMLUtils {
             transformer.transform(source, result);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new XMLException(e.getMessage());
         }
 
     }
