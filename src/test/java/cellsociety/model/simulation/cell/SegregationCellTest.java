@@ -19,7 +19,7 @@ class SegregationCellTest {
 
   @BeforeEach
   void setUp() {
-    rule = new SegregationRule(Map.of("satisfactionThreshold", 0.5));
+    rule = new SegregationRule(Map.of("toleranceThreshold", 0.5));
   }
 
   @Test

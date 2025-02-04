@@ -20,7 +20,7 @@ class SegregationRuleTest {
 
   @BeforeEach
   void setUp() {
-    rule = new SegregationRule(Map.of("satisfactionThreshold", 0.5)); // need to have more than half to be satisfied
+    rule = new SegregationRule(Map.of("toleranceThreshold", 0.5)); // need to have more than half to be satisfied
   }
 
   @Test

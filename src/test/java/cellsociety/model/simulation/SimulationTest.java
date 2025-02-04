@@ -37,9 +37,9 @@ class SimulationTest {
 
     xmlData.setType(SimType.SEGREGATION);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        SegregationStates.EMPTY, SegregationStates.AGENT_A, SegregationStates.EMPTY,
-        SegregationStates.AGENT_B, SegregationStates.AGENT_B, SegregationStates.EMPTY,
-        SegregationStates.AGENT_A, SegregationStates.AGENT_A, SegregationStates.EMPTY)));
+        SegregationStates.EMPTY, SegregationStates.AGENT_A, SegregationStates.AGENT_B,
+        SegregationStates.AGENT_B, SegregationStates.AGENT_B, SegregationStates.AGENT_B,
+        SegregationStates.AGENT_B, SegregationStates.AGENT_B, SegregationStates.AGENT_B)));
     segregationSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.FIRE);
@@ -51,16 +51,16 @@ class SimulationTest {
 
     xmlData.setType(SimType.PERCOLATION);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        PercolationStates.BLOCKED, PercolationStates.OPEN, PercolationStates.PERCOLATED,
-        PercolationStates.OPEN, PercolationStates.BLOCKED, PercolationStates.PERCOLATED,
+        PercolationStates.OPEN, PercolationStates.PERCOLATED, PercolationStates.PERCOLATED,
+        PercolationStates.BLOCKED, PercolationStates.BLOCKED, PercolationStates.PERCOLATED,
         PercolationStates.OPEN, PercolationStates.OPEN, PercolationStates.PERCOLATED)));
     percolationSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.WATOR);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         WaTorStates.FISH, WaTorStates.SHARK, WaTorStates.EMPTY,
-        WaTorStates.SHARK, WaTorStates.FISH, WaTorStates.EMPTY,
-        WaTorStates.FISH, WaTorStates.SHARK, WaTorStates.EMPTY)));
+        WaTorStates.EMPTY, WaTorStates.EMPTY, WaTorStates.EMPTY,
+        WaTorStates.EMPTY, WaTorStates.EMPTY, WaTorStates.EMPTY)));
     watorSimulation = new Simulation<>(xmlData);
   }
 
@@ -69,11 +69,10 @@ class SimulationTest {
     assertEquals(GameOfLifeStates.ALIVE, gameOfLifeSimulation.getCurrentState(0, 0));
     assertEquals(SegregationStates.EMPTY, segregationSimulation.getCurrentState(0, 0));
     assertEquals(FireStates.BURNING, fireSimulation.getCurrentState(0, 0));
-    assertEquals(PercolationStates.BLOCKED, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(PercolationStates.OPEN, percolationSimulation.getCurrentState(0, 0));
     assertEquals(WaTorStates.FISH, watorSimulation.getCurrentState(0, 0));
   }
 
-  // TODO: update once we fix what the parameters should be
   @Test
   void testStep() {
     gameOfLifeSimulation.step();
@@ -81,11 +80,11 @@ class SimulationTest {
     fireSimulation.step();
     percolationSimulation.step();
     watorSimulation.step();
-    assertNotNull(gameOfLifeSimulation.getCurrentState(0, 0));
-    assertNotNull(segregationSimulation.getCurrentState(0, 0));
-    assertNotNull(fireSimulation.getCurrentState(0, 0));
-    assertNotNull(percolationSimulation.getCurrentState(0, 0));
-    assertNotNull(watorSimulation.getCurrentState(0, 0));
+    assertEquals(GameOfLifeStates.DEAD, gameOfLifeSimulation.getCurrentState(0, 0));
+    assertEquals(SegregationStates.AGENT_A, segregationSimulation.getCurrentState(0, 0));
+    assertEquals(FireStates.EMPTY, fireSimulation.getCurrentState(0, 0));
+    assertEquals(PercolationStates.PERCOLATED, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(WaTorStates.SHARK, watorSimulation.getCurrentState(0, 0));
   }
 
   @Test
