@@ -15,6 +15,7 @@ public class ControlPanel {
   private Button myStopButton;
   private Button myLoadButton;
   private Button mySaveButton;
+  private Button myRandomButton;
   private TextArea myStatusTextBox;
 
   public ControlPanel(UserView userView) {
@@ -39,13 +40,16 @@ public class ControlPanel {
     mySaveButton = new Button("Save");
     mySaveButton.setOnAction(e -> myUserView.saveSimulation());
 
+    myRandomButton = new Button("Random Game of Life");
+    myRandomButton.setOnAction(e -> myUserView.loadRandomGameOfLife());
+
     myStatusTextBox = new TextArea();
     myStatusTextBox.setPrefHeight(400);
     myStatusTextBox.setPrefWidth(150);
     myStatusTextBox.setEditable(false);
 
     myPanel.getChildren().addAll(myStartButton, myPauseButton, myStopButton, myLoadButton,
-        mySaveButton, myStatusTextBox);
+        mySaveButton, myRandomButton, myStatusTextBox);
   }
 
   public VBox getPanel() {
