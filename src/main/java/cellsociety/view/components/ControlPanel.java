@@ -13,6 +13,8 @@ public class ControlPanel {
   private Button myStartButton;
   private Button myPauseButton;
   private Button myStopButton;
+  private Button myLoadButton;
+  private Button mySaveButton;
   private TextArea myStatusTextBox;
 
   public ControlPanel(UserView userView) {
@@ -28,15 +30,22 @@ public class ControlPanel {
     myPauseButton = new Button("Pause");
     myPauseButton.setOnAction(e -> myUserView.pauseSimulation());
 
-    myStopButton = new Button("Stop");
-    myStopButton.setOnAction(e -> myUserView.stopSimulation());
+    myStopButton = new Button("Reset");
+    myStopButton.setOnAction(e -> myUserView.stopAndResetSimulation());
+
+    myLoadButton = new Button("Load New");
+    myLoadButton.setOnAction(e -> myUserView.loadSimulation());
+
+    mySaveButton = new Button("Save");
+    mySaveButton.setOnAction(e -> myUserView.saveSimulation());
 
     myStatusTextBox = new TextArea();
     myStatusTextBox.setPrefHeight(400);
     myStatusTextBox.setPrefWidth(150);
     myStatusTextBox.setEditable(false);
 
-    myPanel.getChildren().addAll(myStartButton, myPauseButton, myStopButton, myStatusTextBox);
+    myPanel.getChildren().addAll(myStartButton, myPauseButton, myStopButton, myLoadButton,
+        mySaveButton, myStatusTextBox);
   }
 
   public VBox getPanel() {
