@@ -5,7 +5,6 @@ import cellsociety.model.interfaces.Grid;
 import cellsociety.model.simulation.grid.AdjacentGrid;
 import cellsociety.model.simulation.grid.RectangularGrid;
 import cellsociety.model.util.XMLData;
-import java.util.ArrayList;
 
 public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   private final XMLData xmlData;
@@ -24,14 +23,13 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
     }
   }
 
-  // replace with xmlData.getCellStateList()
   private void setUpAdjacentGrid() {
-    myGrid = new AdjacentGrid<>(new ArrayList<>(), xmlData.getGridRowNum(),
+    myGrid = new AdjacentGrid(xmlData.getCellStateList(), xmlData.getGridRowNum(),
         xmlData.getGridColNum());
   }
 
   private void setUpRectangularGrid() {
-    myGrid = new RectangularGrid<>(new ArrayList<>(), xmlData.getGridRowNum(),
+    myGrid = new RectangularGrid(xmlData.getCellStateList(), xmlData.getGridRowNum(),
         xmlData.getGridColNum());
   }
 
