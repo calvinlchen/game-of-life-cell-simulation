@@ -1,5 +1,7 @@
 package cellsociety.model.util;
 
+import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.CellStates;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,6 +27,8 @@ public class XMLUtils {
      * @return an XMLData object with all information found from the provided xml file
      */
     public XMLData readXML(String fileName) {
+        XMLData xmlObject = new XMLData();
+
         try {
             File fXmlFile = new File(FILE_PATH_PREFIX + fileName + ".xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -32,59 +36,104 @@ public class XMLUtils {
             Document doc = dBuilder.parse(fXmlFile);
             doc.getDocumentElement().normalize();
 
-            System.out.println("Root element: " + doc.getDocumentElement().getNodeName());
             NodeList simulationList = doc.getElementsByTagName("simulation");
-            System.out.println("----------------------------");
 
             for (int i = 0; i < simulationList.getLength(); i++) {
                 Node simulationNode = simulationList.item(i);
                 if (simulationNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element simulationElement = (Element) simulationNode;
 
-                    // Extract metadata
-                    System.out.println("Simulation Type: "
-                            + simulationElement.getElementsByTagName("type").item(0).getTextContent());
-                    System.out.println("Simulation Title: "
-                            + simulationElement.getElementsByTagName("title").item(0).getTextContent());
-                    System.out.println("Author Name: "
-                            + simulationElement.getElementsByTagName("author").item(0).getTextContent());
-                    System.out.println("Simulation Description: "
-                            + simulationElement.getElementsByTagName("description").item(0).getTextContent());
+                    //extract metadata
+                    String SimulationType = simulationElement.getElementsByTagName("type").item(0).getTextContent();
 
-                    // Extract grid information
+                    switch (SimulationType){ //swtich case to determine enum type
+
+                        case "Game of Life" -> xmlObject.setType(SimType.GAMEOFLIFE);
+                        case "Spreading of Fire" -> xmlObject.setType(SimType.FIRE);
+                        case "Percolation" -> xmlObject.setType(SimType.PERCOLATION);
+                        case "Model of Segregation" -> xmlObject.setType(SimType.SEGREGATION);
+                        case "Wa-Tor World" -> xmlObject.setType(SimType.WATOR);
+
+                    }
+
+                    xmlObject.setTitle(simulationElement.getElementsByTagName("title").item(0).getTextContent());
+                    xmlObject.setAuthor(simulationElement.getElementsByTagName("author").item(0).getTextContent());
+                    xmlObject.setDescription(simulationElement.getElementsByTagName("description").item(0).getTextContent());
+
+                    //extract grid info
                     Element gridElement = (Element) simulationElement.getElementsByTagName("grid").item(0);
                     int rows = Integer.parseInt(gridElement.getAttribute("rows"));
                     int columns = Integer.parseInt(gridElement.getAttribute("columns"));
-                    System.out.println("Grid: " + rows + "x" + columns);
 
-                    // Extract cell information
+                    xmlObject.setGridRowNum(rows);
+                    xmlObject.setGridColNum(columns);
+
+                    //extract cell info
                     NodeList cellList = gridElement.getElementsByTagName("cell");
-                    StringBuilder cellStates = new StringBuilder("Cell: ");
                     for (int j = 0; j < cellList.getLength(); j++) {
                         Element cellElement = (Element) cellList.item(j);
-                        cellStates.append(cellElement.getAttribute("state"));
-                        if (j < cellList.getLength() - 1) {
-                            cellStates.append(", ");
+
+                        String currentCellState = cellElement.getAttribute("state");
+
+                        switch (xmlObject.getType()){
+
+                            case GAMEOFLIFE -> {
+                                switch (currentCellState){
+                                    case ("alive") -> xmlObject.getCellStateList().add(CellStates.GameOfLifeStates.ALIVE);
+                                    case ("dead") -> xmlObject.getCellStateList().add(CellStates.GameOfLifeStates.DEAD);
+                                }
+                            }
+
+                            case PERCOLATION -> {
+                                switch (currentCellState){
+                                    case ("blocked") -> xmlObject.getCellStateList().add(CellStates.PercolationStates.BLOCKED);
+                                    case ("open") -> xmlObject.getCellStateList().add(CellStates.PercolationStates.OPEN);
+                                    case ("percolated") -> xmlObject.getCellStateList().add(CellStates.PercolationStates.PERCOLATED);
+                                }
+                            }
+
+                            case FIRE -> {
+                                switch (currentCellState){
+                                    case ("tree") -> xmlObject.getCellStateList().add(CellStates.FireStates.TREE);
+                                    case ("empty") -> xmlObject.getCellStateList().add(CellStates.FireStates.EMPTY);
+                                    case ("burning") -> xmlObject.getCellStateList().add(CellStates.FireStates.BURNING);
+                                }
+                            }
+
+                            case SEGREGATION -> {
+                                switch (currentCellState){
+                                    case ("agentA") -> xmlObject.getCellStateList().add(CellStates.SegregationStates.AGENT_A);
+                                    case ("empty") -> xmlObject.getCellStateList().add(CellStates.SegregationStates.EMPTY);
+                                    case ("agentB") -> xmlObject.getCellStateList().add(CellStates.SegregationStates.AGENT_B);
+                                }
+                            }
+
+                            case WATOR -> {
+                                switch (currentCellState){
+                                    case ("fish") -> xmlObject.getCellStateList().add(CellStates.WaTorStates.FISH);
+                                    case ("empty") -> xmlObject.getCellStateList().add(CellStates.WaTorStates.EMPTY);
+                                    case ("agentB") -> xmlObject.getCellStateList().add(CellStates.WaTorStates.SHARK);
+                                }
+                            }
+
                         }
                     }
-                    System.out.println(cellStates.toString());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new XMLData();
+        return xmlObject;
     }
-
-
 
     public static void main(String argv[]) {
 
         XMLUtils xmlUtils = new XMLUtils();
-        xmlUtils.readXML("GameOfLife1");
+        XMLData data = xmlUtils.readXML("GameOfLife1");
+
+        System.out.println(data.getDescription());
 
     }
 
 }
-
