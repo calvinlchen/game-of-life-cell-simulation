@@ -186,63 +186,6 @@ public class XMLUtils {
 
     }
 
-    public void writeToXMLNoSim(String fileName, String title, String author, String description, XMLData xmldata) {
-
-        try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-
-            //create root element
-            Element rootElement = doc.createElement("simulation");
-            doc.appendChild(rootElement);
-
-            //add metadata
-            Element typeElement = doc.createElement("type");
-            typeElement.appendChild(doc.createTextNode(xmldata.getType().toString()));
-            rootElement.appendChild(typeElement);
-
-            Element titleElement = doc.createElement("title");
-            titleElement.appendChild(doc.createTextNode(title));
-            rootElement.appendChild(titleElement);
-
-            Element authorElement = doc.createElement("author");
-            authorElement.appendChild(doc.createTextNode(author));
-            rootElement.appendChild(authorElement);
-
-            Element descriptionElement = doc.createElement("description");
-            descriptionElement.appendChild(doc.createTextNode(description));
-            rootElement.appendChild(descriptionElement);
-
-            //add grid info
-            Element gridElement = doc.createElement("grid");
-            gridElement.setAttribute("rows", String.valueOf(xmldata.getGridRowNum()));
-            gridElement.setAttribute("columns", String.valueOf(xmldata.getGridColNum()));
-            rootElement.appendChild(gridElement);
-
-
-            //add parameters
-            Map<String, Double> parameters = xmldata.getParameters();
-            for (Map.Entry<String, Double> entry : parameters.entrySet()) {
-                Element paramElement = doc.createElement("parameter");
-                paramElement.setAttribute("name", entry.getKey());
-                paramElement.setAttribute("value", String.valueOf(entry.getValue()));
-                gridElement.appendChild(paramElement);
-            }
-
-            //write the content into XML file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(FILE_PATH_PREFIX + fileName + ".xml"));
-            transformer.transform(source, result);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     private ArrayList<String> cellStatesToString (int rowNum, int colNum, Simulation simulation){
 
         ArrayList<String> cellStateList = new ArrayList<>();
