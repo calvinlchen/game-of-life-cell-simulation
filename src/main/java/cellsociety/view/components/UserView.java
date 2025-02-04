@@ -27,6 +27,7 @@ public class UserView {
 
   public static final String TITLE = "Cell Society";
   public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
+  public static final double DEFAULT_SIM_STEP_TIME = 0.5;
 
   private int mySceneWidth;
   private int mySceneHeight;
@@ -98,7 +99,7 @@ public class UserView {
 
     // Otherwise, create a new animation and start it
     myState = ViewState.RUN;
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(1),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
