@@ -186,6 +186,13 @@ public class XMLUtils {
 
     }
 
+    /**
+     * A method that extracts the cellstates from the simulation data and turns them into a string list
+     *
+     * @param rowNum an int variable of the number of rows in the grid
+     * @param colNum an int variable of the number of rows in the grid@
+     * @param simulation a simulation object that holds the current state of all cells.
+     */
     private ArrayList<String> cellStatesToString (int rowNum, int colNum, Simulation simulation){
 
         ArrayList<String> cellStateList = new ArrayList<>();
@@ -220,6 +227,12 @@ public class XMLUtils {
         return cellStateList;
     }
 
+    /**
+     * A method that extracts the cellstates from the simulation xml and turns them into a string list
+     *
+     * @param cellList an NodeList variable that holds the xml data's cell data
+     * @param SimulationType an Enum representing the intended simulation type
+     */
     private ArrayList<Enum> cellStatesToEnum (NodeList cellList, Enum SimulationType){
 
         ArrayList<Enum> cellStateEnums = new ArrayList<>();
@@ -279,6 +292,12 @@ public class XMLUtils {
 
     }
 
+    /**
+     * A method that extracts the parameters from the simulation xml and turns them into a string list
+     *
+     * @param paramList an NodeList variable that holds the xml data's parameter data
+     * @param SimulationType an Enum representing the intended simulation type
+     */
     private Map<String, Double> parameterToMap (NodeList paramList, Enum SimulationType) {
 
         Map<String, Double> parameters = new HashMap<>();
