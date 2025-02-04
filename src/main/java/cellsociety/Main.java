@@ -15,6 +15,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cellsociety.view.components.UserView;
+
 
 /**
  * Feel free to completely change this code or delete it entirely. 
@@ -28,20 +30,27 @@ public class Main extends Application {
     private final static FileChooser FILE_CHOOSER = makeChooser(DATA_FILE_EXTENSION);
     // internal configuration file
     public static final String INTERNAL_CONFIGURATION = "cellsociety.Version";
+    // width and height of application window
+    public static final int SCENE_WIDTH = 1200;
+    public static final int SCENE_HEIGHT = 800;
 
     /**
      * @see Application#start(Stage)
      */
     @Override
     public void start (Stage primaryStage) {
-        showMessage(AlertType.INFORMATION, String.format("Version: %s", getVersion()));
-        File dataFile = FILE_CHOOSER.showOpenDialog(primaryStage);
-        if (dataFile != null) {
-            int numBlocks = calculateNumBlocks(dataFile);
-            if (numBlocks != 0) {
-                showMessage(AlertType.INFORMATION, String.format("Number of Blocks = %d", numBlocks));
-            }
-        }
+        UserView view = new UserView(SCENE_WIDTH, SCENE_HEIGHT, primaryStage);
+
+        view.resetView();
+
+//        showMessage(AlertType.INFORMATION, String.format("Version: %s", getVersion()));
+//        File dataFile = FILE_CHOOSER.showOpenDialog(primaryStage);
+//        if (dataFile != null) {
+//            int numBlocks = calculateNumBlocks(dataFile);
+//            if (numBlocks != 0) {
+//                showMessage(AlertType.INFORMATION, String.format("Number of Blocks = %d", numBlocks));
+//            }
+//        }
     }
 
     /**
