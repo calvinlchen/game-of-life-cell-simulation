@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class XMLUtils {
 
-    private final String FILE_PATH_PREFIX = ""; //makes the assumption that all files will be in the same location.
+    private final String FILE_PATH_PREFIX = "cellsociety/xmls/"; //makes the assumption that all files will be in the same location.
 
     /**
      * A method that reads a pre-existing xml file.
