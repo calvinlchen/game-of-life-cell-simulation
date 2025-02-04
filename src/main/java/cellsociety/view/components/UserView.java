@@ -1,0 +1,163 @@
+package cellsociety.view.components;
+
+import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.XMLData;
+import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+/**
+ * UserView manages the main display window for the simulation.
+ */
+public class UserView {
+  /**
+   * Defines the possible states of the program
+   */
+  public enum ViewState {
+    EMPTY, LOAD, RUN, PAUSE, ERROR, SAVE
+  }
+
+  public static final String TITLE = "Cell Society";
+  public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
+
+  private int mySceneWidth;
+  private int mySceneHeight;
+  private ViewState myState;
+  private Stage myStage;
+  private BorderPane myRoot;
+  private Timeline myAnimation;
+
+  // Components of the UI
+  private SimulationView mySimulationView;
+  private ControlPanel myControlPanel;
+
+  public UserView(int sceneWidth, int sceneHeight, Stage stage) {
+    myStage = stage;
+    mySceneWidth = sceneWidth;
+    mySceneHeight = sceneHeight;
+    resetView();
+  }
+
+  /**
+   * Sets view to its initial state with an empty grid area.
+   */
+  public void resetView() {
+    myState = ViewState.EMPTY;
+    myRoot = new BorderPane();
+
+    // Initialize UI components
+    mySimulationView = new SimulationView(mySceneWidth*GRID_PROPORTION_OF_SCREEN,
+        mySceneHeight*GRID_PROPORTION_OF_SCREEN);
+    myControlPanel = new ControlPanel(this); // Pass reference for event handling
+
+    // Set components in BorderPane
+    myRoot.setLeft(mySimulationView.getDisplay());
+    myRoot.setRight(myControlPanel.getPanel());
+
+    initializeScene();
+  }
+
+  /**
+   * Initializes the scene.
+   */
+  private void initializeScene() {
+    Scene scene = new Scene(myRoot, mySceneWidth, mySceneHeight);
+    myStage.setScene(scene);
+    myStage.setTitle(TITLE);
+    myStage.show();
+  }
+
+  /**
+   * Starts the simulation animation.
+   */
+  public void startSimulation() {
+    myState = ViewState.RUN;
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(1),
+        e -> mySimulationView.stepGridSimulation()));
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    myAnimation.play();
+  }
+
+  /**
+   * Pauses the simulation animation.
+   */
+  public void pauseSimulation() {
+    myState = ViewState.PAUSE;
+    if (myAnimation != null) {
+      myAnimation.pause();
+    }
+  }
+
+  /**
+   * Stops and resets the simulation.
+   */
+  public void stopAndResetSimulation() {
+    myState = ViewState.EMPTY;
+    if (myAnimation != null) {
+      myAnimation.stop();
+    }
+    mySimulationView.resetGrid();
+  }
+
+  /**
+   * Requests a file to be loaded into the simulation.
+   */
+  public void loadSimulation() {
+    myState = ViewState.LOAD;
+  }
+
+  /**
+   * Requests a simulation to be saved.
+   */
+  public void saveSimulation() {
+    myState = ViewState.SAVE;
+  }
+
+  /**
+   * Loads a GAME OF LIFE simulation with random cell state layout.
+   */
+  public void loadRandomGameOfLife() {
+    stopAndResetSimulation();
+
+    XMLData randomXMLData = new XMLData();
+
+    // Set simulation metadata
+    randomXMLData.setType(SimType.GAMEOFLIFE);
+    randomXMLData.setTitle("Game of Life Test Simulation");
+    randomXMLData.setAuthor("Test Author");
+    randomXMLData.setDescription("This is a test simulation of Conway's Game of Life.");
+
+    // Set grid dimensions
+    int numRows = 50;
+    int numCols = 75;
+    randomXMLData.setGridRowNum(numRows);
+    randomXMLData.setGridColNum(numCols);
+
+    // Initialize cell states randomly
+    ArrayList<Enum> cellStateList = new ArrayList<>();
+    Random random = new Random();
+
+    for (int i = 0; i < numRows * numCols; i++) {
+      // Randomly assign ALIVE or DEAD
+      GameOfLifeStates state = random.nextBoolean() ? GameOfLifeStates.ALIVE : GameOfLifeStates.DEAD;
+      cellStateList.add(state);
+    }
+
+    randomXMLData.setCellStateList(cellStateList);
+
+    // Set default parameters (Game of Life does not require any, but included for completeness)
+    Map<String, Double> parameters = new HashMap<>();
+    randomXMLData.setParameters(parameters);
+
+    mySimulationView.configureFromXML(randomXMLData);
+    mySimulationView.initializeGridView();
+  }
+}
