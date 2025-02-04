@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
+
   private final XMLData xmlData;
-  private Grid<S,T> myGrid;
+  private Grid<S, T> myGrid;
 
   public Simulation(XMLData data) {
     xmlData = data;
@@ -74,15 +75,22 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   public void step() {
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<S,T> cell = myGrid.getCell(row, col);
+        Cell<S, T> cell = myGrid.getCell(row, col);
         cell.calcNextState();
       }
     }
 
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<S,T> cell = myGrid.getCell(row, col);
+        Cell<S, T> cell = myGrid.getCell(row, col);
         cell.step();
+      }
+    }
+
+    for (int row = 0; row < xmlData.getGridRowNum(); row++) {
+      for (int col = 0; col < xmlData.getGridColNum(); col++) {
+        Cell<S, T> cell = myGrid.getCell(row, col);
+        cell.resetParameters();
       }
     }
   }
@@ -94,6 +102,6 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
    * @throws IllegalArgumentException if the x and y are an invalid position on the grid
    */
   public S getCurrentState(int row, int col) {
-    return myGrid.getCell(row,col).getCurrentState();
+    return myGrid.getCell(row, col).getCurrentState();
   }
 }

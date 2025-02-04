@@ -59,6 +59,15 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    */
   public abstract void step();
 
+  /**
+   * Resets parameters per step
+   *
+   * <p> Assumption: assumes already called calcNextState
+   */
+  public void resetParameters() {
+    return;
+  }
+
   // ==== Setters and Getters ====
 
   /**
