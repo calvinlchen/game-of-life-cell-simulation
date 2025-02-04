@@ -26,7 +26,7 @@ public class UserView {
   }
 
   public static final String TITLE = "Cell Society";
-  public static final double GRID_PROPORTION_OF_SCREEN = 0.75;
+  public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
 
   private int mySceneWidth;
   private int mySceneHeight;
