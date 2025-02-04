@@ -1,11 +1,10 @@
 package cellsociety.model.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.StateEnum;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * An object that holds simulation data
@@ -20,7 +19,7 @@ public class XMLData {
   private String description; //description of simulation behavior
   private int gridRowNum; //number of rows in a grid
   private int gridColNum; //number of columns in grid.
-  private ArrayList<List<StateEnum>> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
+  private ArrayList<StateEnum> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
   private Map<String, Double> parameters; //<parameter name as string, value>
 
     /**
@@ -136,7 +135,7 @@ public class XMLData {
      *
      * @return the cellStateList
      */
-    public ArrayList<List<StateEnum>> getCellStateList() {
+    public ArrayList<StateEnum> getCellStateList() {
         return cellStateList;
     }
 
@@ -145,7 +144,7 @@ public class XMLData {
      *
      * @param cellStateList the new ArrayList<List<stateEnum>> value for cellStateList
      */
-    public void setCellStateList(ArrayList<List<StateEnum>> cellStateList) {
+    public void setCellStateList(ArrayList<StateEnum> cellStateList) {
         this.cellStateList = cellStateList;
     }
 
