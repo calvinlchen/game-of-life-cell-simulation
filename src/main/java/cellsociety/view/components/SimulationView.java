@@ -150,4 +150,12 @@ public class SimulationView {
   public void resetGrid() {
     myDisplay.getChildren().clear();
   }
+
+  /**
+   * Get the Simulation model object represented by this view
+   * @return null or Simulation object
+   */
+  public Simulation getSimulation() {
+    return mySimulation;
+  }
 }
