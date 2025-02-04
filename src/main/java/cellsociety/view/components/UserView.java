@@ -27,7 +27,9 @@ public class UserView {
 
   public static final String TITLE = "Cell Society";
   public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
-  public static final double DEFAULT_SIM_STEP_TIME = 0.5;
+  public static final double DEFAULT_SIM_STEP_TIME = 0.5; // in seconds
+  public static final double MIN_SIM_STEP_TIME = 0.02;
+  public static final double MAX_SIM_STEP_TIME = 4;
 
   private int mySceneWidth;
   private int mySceneHeight;
@@ -35,6 +37,8 @@ public class UserView {
   private Stage myStage;
   private BorderPane myRoot;
   private Timeline myAnimation;
+  // DEFAULT_SIM_STEP_TIME is DIVIDED by mySpeedFactor to get number of seconds between steps.
+  private double mySpeedFactor;
 
   // Components of the UI
   private SimulationView mySimulationView;
@@ -44,6 +48,9 @@ public class UserView {
     myStage = stage;
     mySceneWidth = sceneWidth;
     mySceneHeight = sceneHeight;
+
+    // by default, run simulation at default speed
+    mySpeedFactor = 1;
     resetView();
   }
 
@@ -63,6 +70,9 @@ public class UserView {
     myRoot.setLeft(mySimulationView.getDisplay());
     myRoot.setRight(myControlPanel.getPanel());
 
+    // Set simulation speed to default
+    mySpeedFactor = 1;
+
     initializeScene();
   }
 
@@ -76,42 +86,47 @@ public class UserView {
     myStage.show();
   }
 
+  private boolean checkSimulationExists() {
+    return (mySimulationView != null && mySimulationView.getSimulation() != null);
+  }
+
   /**
    * Starts the simulation animation.
    */
-  public void startSimulation() {
-    if (mySimulationView == null || mySimulationView.getSimulation() == null) {
+  public void playSimulation() {
+    if (!checkSimulationExists()) {
       // No simulation is loaded, so do nothing
       return;
     }
 
-    if (myAnimation != null && myAnimation.getStatus() == Timeline.Status.RUNNING) {
+    if (myAnimation != null && myState == ViewState.RUN) {
       // If the animation is already running, do nothing
       return;
     }
 
-    if (myAnimation != null && myAnimation.getStatus() == Timeline.Status.PAUSED) {
+    if (myAnimation != null && myState == ViewState.PAUSE) {
       // If the animation is paused, resume it
-      myAnimation.play();
-      myState = ViewState.RUN;
+      myAnimation.stop();
+      // Account for changes to simulation speed while paused (user hitting speed up / slow down buttons)
+      playNewAnimation();
       return;
     }
 
     // Otherwise, create a new animation and start it
-    myState = ViewState.RUN;
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
+    myState = ViewState.RUN;
   }
 
   /**
    * Pauses the simulation animation.
    */
   public void pauseSimulation() {
-    myState = ViewState.PAUSE;
     if (myAnimation != null) {
       myAnimation.pause();
+      myState = ViewState.PAUSE;
     }
   }
 
@@ -123,6 +138,7 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
+    mySpeedFactor = 1;
     mySimulationView.resetGrid();
   }
 
@@ -131,6 +147,7 @@ public class UserView {
    */
   public void loadSimulation() {
     myState = ViewState.LOAD;
+    mySpeedFactor = 1;
   }
 
   /**
@@ -138,6 +155,44 @@ public class UserView {
    */
   public void saveSimulation() {
     myState = ViewState.SAVE;
+  }
+
+  /**
+   * Change the speed of simulation view stepper based on an adjustmentFactor multiplier.
+   * @param adjustmentFactor Speed multiplier value. For example 2.0 will result in the animation running twice as fast.
+   */
+  public void changeSimulationSpeed(double adjustmentFactor) {
+    if (!checkSimulationExists()) {
+      return;
+    }
+    double newSpeedFactor = mySpeedFactor * adjustmentFactor;
+    // Only change the animation speed if the new speed is within bounds
+    if (checkStepTimeWithinBounds(DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
+      mySpeedFactor = newSpeedFactor;
+      if(myAnimation != null) {
+        if(myState == ViewState.RUN) {
+          playNewAnimation();
+        }
+      }
+    }
+  }
+
+  private boolean checkStepTimeWithinBounds(double stepTime) {
+    return (stepTime >= MIN_SIM_STEP_TIME && stepTime <= MAX_SIM_STEP_TIME);
+  }
+
+  /**
+   * Initializes an animation based on the current mySpeedFactor
+   */
+  private void playNewAnimation() {
+    if (myAnimation != null) {
+      myAnimation.stop();
+    }
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
+        e -> mySimulationView.stepGridSimulation()));
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    myAnimation.play();
+    myState = ViewState.RUN;
   }
 
   /**
@@ -178,5 +233,6 @@ public class UserView {
 
     mySimulationView.configureFromXML(randomXMLData);
     mySimulationView.initializeGridView();
+    myState = ViewState.LOAD;
   }
 }
