@@ -19,6 +19,9 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   private int myNextStepsSurvived;
   private int myNextEnergy;
 
+  private boolean consumed;
+  private WaTorCell movedFrom;
+
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
@@ -29,13 +32,7 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
     super(state);
     myRule = rule;
 
-    myStepsSurvived = 0;
-    myEnergy =
-        state == WaTorStates.SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
-            .intValue() : 0;
-
-    myNextStepsSurvived = 0;
-    myNextEnergy = 0;
+    initializeDefaultVariables(state);
   }
 
   /**
@@ -49,6 +46,10 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
     super(state, position);
     myRule = rule;
 
+    initializeDefaultVariables(state);
+  }
+
+  private void initializeDefaultVariables(WaTorStates state) {
     myStepsSurvived = 0;
     myEnergy =
         state == WaTorStates.SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
@@ -56,6 +57,9 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
 
     myNextStepsSurvived = 0;
     myNextEnergy = 0;
+
+    consumed = false;
+    movedFrom = null;
   }
 
   /**
@@ -68,12 +72,52 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   }
 
   /**
+   * Set the current steps survived
+   *
+   * <p> This should only be used on tests
+   *
+   * @param stepsSurvived - the current steps survived
+   */
+  public void setStepsSurvived(int stepsSurvived) {
+    myStepsSurvived = stepsSurvived;
+  }
+
+  /**
+   * Set the energy to a specific amount
+   *
+   * <p> This should only be used on tests
+   *
+   * @param energy - the energy left
+   */
+  public void setEnergy(int energy) {
+    myEnergy = energy;
+  }
+
+  /**
    * Get the current energy level of the cell
    *
    * @return the energy level of the cell
    */
   public int getEnergy() {
     return myEnergy;
+  }
+
+  /**
+   * Return if this cell has been consumed
+   *
+   * @return true if the cell in the current state has been consumed
+   */
+  public boolean isConsumed() {
+    return consumed;
+  }
+
+  /**
+   * Set the state of if the cell has been consumed
+   *
+   * @param consumed - true if the cell is consumed
+   */
+  public void setConsumed(boolean consumed) {
+    this.consumed = consumed;
   }
 
   /**
@@ -112,14 +156,29 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
     myNextEnergy = energy;
   }
 
+  public void setNextState(WaTorStates state, int stepsSurvived, int energy, WaTorCell movedFrom) {
+    this.movedFrom = movedFrom;
+    setNextState(state, stepsSurvived, energy);
+  }
+
   /**
    * Steps the current state to the next state as well as the cell values
    */
   @Override
   public void step() {
-    setCurrentState(getNextState());
+    if (movedFrom != null && movedFrom.isConsumed()) {
+      setNextState(WaTorStates.EMPTY);
+      setCurrentState(WaTorStates.EMPTY);
+    } else {
+      setCurrentState(getNextState());
+    }
+  }
 
+  @Override
+  public void resetParameters() {
     myStepsSurvived = myNextStepsSurvived;
     myEnergy = myNextEnergy;
+    consumed = false;
+    movedFrom = null;
   }
 }
