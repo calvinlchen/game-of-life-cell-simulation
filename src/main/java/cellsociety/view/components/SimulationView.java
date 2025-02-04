@@ -13,8 +13,8 @@ import javafx.scene.layout.Pane;
  */
 public class SimulationView {
   private Pane myDisplay;
-  private int myGridWidth;
-  private int myGridHeight;
+  private double myGridWidth;
+  private double myGridHeight;
   private CellView[][] myCellViews;
   private double myCellWidth;
   private double myCellHeight;
@@ -22,7 +22,7 @@ public class SimulationView {
   private XMLData myXML;
   private Simulation mySimulation;
 
-  public SimulationView(int width, int height) {
+  public SimulationView(double width, double height) {
     myDisplay = new Pane();
     myGridWidth = width;
     myGridHeight = height;
@@ -50,8 +50,8 @@ public class SimulationView {
 
     int numRows = xmlData.getGridRowNum();
     int numCols = xmlData.getGridColNum();
-    myCellWidth = (double) myGridWidth / numRows;
-    myCellHeight = (double) myGridHeight / numCols;
+    myCellWidth = (double) myGridWidth / numCols;
+    myCellHeight = (double) myGridHeight / numRows;
 
     myCellViews = new CellView[numRows][numCols];
 
@@ -119,9 +119,9 @@ public class SimulationView {
   private double[] getCellPosition(int row, int column) {
     double[] cellPositions = new double[2];
     // x-position
-    cellPositions[0] = (double) (myGridWidth / myCellViews.length)  * column;
+    cellPositions[0] = (double) myCellWidth  * column;
     // y-position
-    cellPositions[1] = (double) (myGridHeight / myCellViews[0].length) * row;
+    cellPositions[1] = (double) myCellHeight * row;
     return cellPositions;
   }
 
@@ -129,6 +129,10 @@ public class SimulationView {
    * Updates all cell states based on simulation rules, and updates cell colors accordingly.
    */
   public void stepGridSimulation() {
+    if (mySimulation == null) {
+      return;
+    }
+
     // update Cell object states based on simulation type
     mySimulation.step();
 
