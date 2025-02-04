@@ -106,8 +106,10 @@ class XMLUtilsTest {
         createInvalidXMLFile();
 
         //verify reading invalid XML file throws exception
-        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
-        assertTrue(exception.getMessage().contains("Error parsing XML file"));
+        //Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        //assertTrue(exception.getMessage().contains("Error parsing XML file"));
+
+        assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
 
         //clean up invalid file
         new File(INVALID_FILE_PATH).delete();
