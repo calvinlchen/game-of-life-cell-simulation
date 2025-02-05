@@ -28,8 +28,6 @@ import java.util.Objects;
  */
 public class XMLUtils {
 
-    private final String FILE_PATH_PREFIX = "cellsociety/xmls/"; //makes the assumption that all files will be in the same location.
-
     /**
      * A method that reads a pre-existing xml file.
      *
@@ -40,7 +38,6 @@ public class XMLUtils {
         XMLData xmlObject = new XMLData();
 
         try {
-            // File fXmlFile = new File(FILE_PATH_PREFIX + fileName + ".xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -117,15 +114,18 @@ public class XMLUtils {
     }
 
     /**
-     * A method that writes a simulation data to both pre-existing and non existing xml files.
+up     * A method that writes a simulation data to both pre-existing and non-existing xml files.
      *
-     * @param fileName a string variable of the file's name
+     * @param file a File object where the XML should be stored
      * @param title a String variable of the title of the simulation
      * @param author a String variable of the author of the simulation
      * @param description a String variable of the description of the simulation
      * @param simulation a simulation object that holds the current state of all cells.
      */
-    public void writeToXML(String fileName, String title, String author, String description, Simulation simulation) {
+    public void writeToXML(File file, String title, String author, String description, Simulation simulation) {
+        if (file == null) {
+            throw new XMLException("No file selected for saving.");
+        }
 
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -176,15 +176,15 @@ public class XMLUtils {
                 gridElement.appendChild(paramElement);
             }
 
-            //write the content into XML file
+            // Write the content into the selected XML file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(FILE_PATH_PREFIX + fileName + ".xml"));
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
 
         } catch (Exception e) {
-            throw new XMLException(e.getMessage());
+            throw new XMLException("Error saving XML file: " + e.getMessage());
         }
 
     }
