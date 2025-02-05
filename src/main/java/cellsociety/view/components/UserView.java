@@ -5,6 +5,7 @@ import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.view.utils.DateTime;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -49,7 +51,7 @@ public class UserView {
   // Components of the UI
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
-  private final XMLUtils xmlReader = new XMLUtils();
+  private final XMLUtils xmlUtils = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
     myStage = stage;
@@ -145,22 +147,22 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
-    mySpeedFactor = 1;
     mySimulationView.resetGrid();
+    mySpeedFactor = 1;
   }
 
   /**
    * Requests a file to be loaded into the simulation.
    */
   public void loadSimulation() {
-    File dataFile = FileExplorer.getFileChooser().showOpenDialog(myStage);
+    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
       try {
         stopAndResetSimulation();
         myState = ViewState.LOAD;
         // Upload simulation to mySimulationView
-        mySimulationView.configureFromXML(xmlReader.readXML(dataFile));
+        mySimulationView.configureFromXML(xmlUtils.readXML(dataFile));
         mySimulationView.initializeGridView();
       }
       catch (XMLException e) {
@@ -179,7 +181,33 @@ public class UserView {
    * Requests a simulation to be saved.
    */
   public void saveSimulation() {
-    myState = ViewState.SAVE;
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, "No simulation to save.");
+      return;
+    }
+
+    pauseSimulation();
+
+    // Open file chooser for saving
+    FileChooser fileChooser = FileExplorer.getSaveFileChooser();
+    fileChooser.setInitialFileName("simulation_" + DateTime.getLocalDateTime() + ".xml"); // Default filename
+    File saveFile = fileChooser.showSaveDialog(myStage);
+
+    if (saveFile != null) {
+      myState = ViewState.SAVE;
+      try {
+        xmlUtils.writeToXML(saveFile,
+            mySimulationView.getSimulation().getXMLData().getTitle(),
+            mySimulationView.getSimulation().getXMLData().getAuthor(),
+            mySimulationView.getSimulation().getXMLData().getDescription(),
+            mySimulationView.getSimulation());
+        showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
+      } catch (Exception e) {
+        showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
+      }
+    }
+    // Return myState to paused state.
+    pauseSimulation();
   }
 
   /**

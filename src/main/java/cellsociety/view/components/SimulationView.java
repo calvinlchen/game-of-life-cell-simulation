@@ -138,6 +138,7 @@ public class SimulationView {
    */
   public void resetGrid() {
     myDisplay.getChildren().clear();
+    mySimulation = null;
   }
 
   /**

@@ -8,12 +8,13 @@ public class FileExplorer {
   // kind of data files to look for
   public static final String DATA_FILE_EXTENSION = "*.xml";
   // NOTE: make ONE chooser since generally accepted behavior is that it remembers where user left it last
-  private final static FileChooser FILE_CHOOSER = makeChooser(DATA_FILE_EXTENSION);
+  private final static FileChooser FILE_LOAD_CHOOSER = makeChooser("Open Data File", DATA_FILE_EXTENSION);
+  private static final FileChooser FILE_SAVE_CHOOSER = makeChooser("Save Data File", DATA_FILE_EXTENSION);
 
   // set some sensible defaults when the FileChooser is created
-  public static FileChooser makeChooser (String extensionAccepted) {
+  private static FileChooser makeChooser(String title, String extensionAccepted) {
     FileChooser result = new FileChooser();
-    result.setTitle("Open Data File");
+    result.setTitle(title);
     // pick a reasonable place to start searching for files
     result.setInitialDirectory(new File(Main.DATA_FILE_FOLDER));
     result.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Data Files", extensionAccepted));
@@ -21,10 +22,19 @@ public class FileExplorer {
   }
 
   /**
-   * Get the FileChooser object for opening File Explorer to pick a file
+   * Get the FileChooser object for opening File Explorer to LOAD a file
    * @return FileChooser object which allows a file to be selected
    */
-  public static FileChooser getFileChooser() {
-    return FILE_CHOOSER;
+  public static FileChooser getFileLoadChooser() {
+    return FILE_LOAD_CHOOSER;
+  }
+
+
+  /**
+   * Get the FileChooser object for opening File Explorer to SAVE a file
+   * @return FileChooser object which allows a save-file location to be selected
+   */
+  public static FileChooser getSaveFileChooser() {
+    return FILE_SAVE_CHOOSER;
   }
 }
