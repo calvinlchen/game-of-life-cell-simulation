@@ -1,7 +1,6 @@
 package cellsociety.view.components;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -18,10 +17,9 @@ public class ControlPanel {
   private Button mySaveButton;
   private Button myRandomButton;
   private HBox mySpeedPanel;
-  private TextArea myStatusTextBox;
 
   public ControlPanel(UserView userView) {
-    this.myUserView = userView;
+    myUserView = userView;
     myPanel = new VBox(10);
     initializeControls();
   }
@@ -47,13 +45,8 @@ public class ControlPanel {
 
     mySpeedPanel = makeSpeedPanel();
 
-    myStatusTextBox = new TextArea();
-    myStatusTextBox.setPrefHeight(400);
-    myStatusTextBox.setPrefWidth(150);
-    myStatusTextBox.setEditable(false);
-
     myPanel.getChildren().addAll(myPlayButton, myPauseButton, myStopButton, myLoadButton,
-        mySaveButton, myRandomButton, mySpeedPanel, myStatusTextBox);
+        mySaveButton, myRandomButton, mySpeedPanel);
   }
 
   private HBox makeSpeedPanel() {

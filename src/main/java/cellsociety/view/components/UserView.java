@@ -45,6 +45,7 @@ public class UserView {
   // Components of the UI
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
+  private InformationBox myInformationBox;
   private final XMLUtils xmlUtils = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
@@ -68,10 +69,12 @@ public class UserView {
     mySimulationView = new SimulationView(mySceneWidth*GRID_PROPORTION_OF_SCREEN,
         mySceneHeight*GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
+    myInformationBox = new InformationBox();
 
     // Set components in BorderPane
     myRoot.setLeft(mySimulationView.getDisplay());
     myRoot.setRight(myControlPanel.getPanel());
+    myRoot.setBottom(myInformationBox.getTextArea());
 
     // Set simulation speed to default
     mySpeedFactor = 1;
