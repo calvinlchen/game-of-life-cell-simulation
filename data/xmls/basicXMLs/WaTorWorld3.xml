@@ -1,0 +1,89 @@
+<simulation>
+    <metadata>
+        <type>Wa-Tor World</type>
+        <title>Noah's Ark. Kinda</title>
+        <author>Noah</author>
+        <description>Noah's ark if it made even less sense.</description>
+    </metadata>
+
+    <grid rows="8" columns="8">
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+    </grid>
+
+    <parameters>
+        <parameter name="fishReproductionTime" value="1"/>
+        <parameter name="sharkEnergyGain" value="2"/>
+        <parameter name="sharkReproductionTime" value="3"/>
+        <parameter name="sharkInitialEnergy" value="3"/>
+    </parameters>
+</simulation>

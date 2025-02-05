@@ -1,0 +1,41 @@
+<simulation>
+    <metadata>
+        <type>Wa-Tor World</type>
+        <title>Plenty of Fish in the Sea</title>
+        <author>Plenty O' Fish Dating Site</author>
+        <description>This is an accurate representation of dating culture nowadays. Whether you are the shark or the fish remains to be seen.</description>
+    </metadata>
+
+    <grid rows="4" columns="5">
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+    </grid>
+
+    <parameters>
+        <parameter name="fishReproductionTime" value="6"/>
+        <parameter name="sharkEnergyGain" value="1"/>
+        <parameter name="sharkReproductionTime" value="4"/>
+        <parameter name="sharkInitialEnergy" value="4"/>
+    </parameters>
+</simulation>
