@@ -1,0 +1,127 @@
+<simulation>
+    <metadata>
+        <type>Wa-Tor World</type>
+        <title>Fish are friends, not food</title>
+        <author>Bruce</author>
+        <description>read this in an aussie accent.</description>
+    </metadata>
+
+    <grid rows="10" columns="10">
+        <cell row="0" col="0" state="fish"/>
+        <cell row="0" col="1" state="shark"/>
+        <cell row="0" col="2" state="fish"/>
+        <cell row="0" col="3" state="fish"/>
+        <cell row="0" col="4" state="fish"/>
+        <cell row="0" col="5" state="fish"/>
+        <cell row="0" col="6" state="fish"/>
+        <cell row="0" col="7" state="fish"/>
+        <cell row="0" col="8" state="shark"/>
+        <cell row="0" col="9" state="shark"/>
+
+        <cell row="1" col="0" state="fish"/>
+        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="2" state="empty"/>
+        <cell row="1" col="3" state="empty"/>
+        <cell row="1" col="4" state="empty"/>
+        <cell row="1" col="5" state="empty"/>
+        <cell row="1" col="6" state="empty"/>
+        <cell row="1" col="7" state="empty"/>
+        <cell row="1" col="8" state="empty"/>
+        <cell row="1" col="9" state="shark"/>
+
+        <cell row="2" col="0" state="fish"/>
+        <cell row="2" col="1" state="empty"/>
+        <cell row="2" col="2" state="empty"/>
+        <cell row="2" col="3" state="empty"/>
+        <cell row="2" col="4" state="empty"/>
+        <cell row="2" col="5" state="empty"/>
+        <cell row="2" col="6" state="empty"/>
+        <cell row="2" col="7" state="empty"/>
+        <cell row="2" col="8" state="empty"/>
+        <cell row="2" col="9" state="shark"/>
+
+        <cell row="3" col="0" state="fish"/>
+        <cell row="3" col="1" state="empty"/>
+        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="3" state="empty"/>
+        <cell row="3" col="4" state="empty"/>
+        <cell row="3" col="5" state="empty"/>
+        <cell row="3" col="6" state="empty"/>
+        <cell row="3" col="7" state="empty"/>
+        <cell row="3" col="8" state="empty"/>
+        <cell row="3" col="9" state="fish"/>
+
+        <cell row="4" col="0" state="fish"/>
+        <cell row="4" col="1" state="empty"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="empty"/>
+        <cell row="4" col="4" state="empty"/>
+        <cell row="4" col="5" state="empty"/>
+        <cell row="4" col="6" state="empty"/>
+        <cell row="4" col="7" state="empty"/>
+        <cell row="4" col="8" state="empty"/>
+        <cell row="4" col="9" state="fish"/>
+
+        <cell row="5" col="0" state="fish"/>
+        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="2" state="empty"/>
+        <cell row="5" col="3" state="empty"/>
+        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="5" state="empty"/>
+        <cell row="5" col="6" state="empty"/>
+        <cell row="5" col="7" state="empty"/>
+        <cell row="5" col="8" state="empty"/>
+        <cell row="5" col="9" state="fish"/>
+
+        <cell row="6" col="0" state="shark"/>
+        <cell row="6" col="1" state="empty"/>
+        <cell row="6" col="2" state="empty"/>
+        <cell row="6" col="3" state="empty"/>
+        <cell row="6" col="4" state="empty"/>
+        <cell row="6" col="5" state="empty"/>
+        <cell row="6" col="6" state="empty"/>
+        <cell row="6" col="7" state="empty"/>
+        <cell row="6" col="8" state="empty"/>
+        <cell row="6" col="9" state="fish"/>
+
+        <cell row="7" col="0" state="fish"/>
+        <cell row="7" col="1" state="empty"/>
+        <cell row="7" col="2" state="empty"/>
+        <cell row="7" col="3" state="empty"/>
+        <cell row="7" col="4" state="empty"/>
+        <cell row="7" col="5" state="empty"/>
+        <cell row="7" col="6" state="empty"/>
+        <cell row="7" col="7" state="empty"/>
+        <cell row="7" col="8" state="empty"/>
+        <cell row="7" col="9" state="fish"/>
+
+        <cell row="8" col="0" state="fish"/>
+        <cell row="8" col="1" state="empty"/>
+        <cell row="8" col="2" state="empty"/>
+        <cell row="8" col="3" state="empty"/>
+        <cell row="8" col="4" state="empty"/>
+        <cell row="8" col="5" state="empty"/>
+        <cell row="8" col="6" state="empty"/>
+        <cell row="8" col="7" state="empty"/>
+        <cell row="8" col="8" state="empty"/>
+        <cell row="8" col="9" state="fish"/>
+
+        <cell row="9" col="0" state="fish"/>
+        <cell row="9" col="1" state="shark"/>
+        <cell row="9" col="2" state="fish"/>
+        <cell row="9" col="3" state="fish"/>
+        <cell row="9" col="4" state="fish"/>
+        <cell row="9" col="5" state="shark"/>
+        <cell row="9" col="6" state="fish"/>
+        <cell row="9" col="7" state="fish"/>
+        <cell row="9" col="8" state="shark"/>
+        <cell row="9" col="9" state="fish"/>
+    </grid>
+
+    <parameters>
+        <parameter name="fishReproductionTime" value="2"/>
+        <parameter name="sharkEnergyGain" value="2"/>
+        <parameter name="sharkReproductionTime" value="7"/>
+        <parameter name="sharkInitialEnergy" value="3"/>
+    </parameters>
+</simulation>
