@@ -1,0 +1,19 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Life Simulation 1</title>
+        <author>Robert C. Duvall</author>
+        <description>This is my first Game of Life simulation!</description>
+    </metadata>
+
+    <grid rows="2" columns="2">
+        <cell row="0" col="0" state="alive"/>
+        <cell row="0" col="1" state="dead"/>
+        <cell row="1" col="0" state="alive"/>
+        <cell row="1" col="1" state="alive"/>
+    </grid>
+
+    <parameters>
+        <!-- This is the parameter values -->
+    </parameters>
+</simulation>
