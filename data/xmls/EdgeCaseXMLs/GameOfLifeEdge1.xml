@@ -1,0 +1,43 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Top + Right Corner</title>
+        <author>BooBoo da fool</author>
+        <description>There is no life, only war.</description>
+    </metadata>
+
+    <grid rows="7" columns="4">
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+    </grid>
+
+    <parameters>
+        <!-- This is the parameter values -->
+    </parameters>
+</simulation>

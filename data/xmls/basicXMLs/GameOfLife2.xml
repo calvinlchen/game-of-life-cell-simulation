@@ -1,0 +1,39 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>post moses abridged</title>
+        <author>Moses</author>
+        <description>Life clings together, but for how long...</description>
+    </metadata>
+
+    <grid rows="6" columns="4">
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+    </grid>
+
+    <parameters>
+        <!-- This is the parameter values -->
+    </parameters>
+</simulation>
