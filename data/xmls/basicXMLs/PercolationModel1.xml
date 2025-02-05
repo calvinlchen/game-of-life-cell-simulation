@@ -1,6 +1,6 @@
 <simulation>
     <metadata>
-        <type>Percolator</type>
+        <type>Percolation</type>
         <title>Spilt Water</title>
         <author>Aquaman</author>
         <description>Oh naur.</description>
@@ -10,23 +10,23 @@
         <cell row="0" col="0" state="blocked"/>
         <cell row="0" col="1" state="percolated"/>
         <cell row="1" col="0" state="percolated"/>
-        <cell row="1" col="1" state="empty"/>
-        <cell row="0" col="0" state="empty"/>
-        <cell row="0" col="1" state="empty"/>
+        <cell row="1" col="1" state="open"/>
+        <cell row="0" col="0" state="open"/>
+        <cell row="0" col="1" state="open"/>
         <cell row="1" col="0" state="blocked"/>
-        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="1" state="open"/>
         <cell row="0" col="0" state="percolated"/>
         <cell row="0" col="1" state="blocked"/>
         <cell row="1" col="0" state="blocked"/>
-        <cell row="1" col="1" state="empty"/>
-        <cell row="0" col="0" state="empty"/>
-        <cell row="0" col="1" state="empty"/>
-        <cell row="1" col="0" state="empty"/>
+        <cell row="1" col="1" state="open"/>
+        <cell row="0" col="0" state="open"/>
+        <cell row="0" col="1" state="open"/>
+        <cell row="1" col="0" state="open"/>
         <cell row="1" col="1" state="percolated"/>
         <cell row="1" col="0" state="blocked"/>
-        <cell row="1" col="1" state="empty"/>
-        <cell row="0" col="0" state="empty"/>
-        <cell row="0" col="0" state="empty"/>
+        <cell row="1" col="1" state="open"/>
+        <cell row="0" col="0" state="open"/>
+        <cell row="0" col="0" state="open"/>
     </grid>
 
     <parameters>
