@@ -153,6 +153,21 @@ public class UserView {
    * Requests a file to be loaded into the simulation.
    */
   public void loadSimulation() {
+    File dataFile = FileSelector.getFileChooser().showOpenDialog(myStage);
+    if (dataFile != null) {
+      System.out.println("Loading file: " + dataFile.getName());
+      try {
+        stopAndResetSimulation();
+        myState = ViewState.LOAD;
+        // Upload simulation to mySimulationView
+        mySimulationView.configureFromXML(xmlReader.readXML(dataFile));
+        mySimulationView.initializeGridView();
+      }
+      catch (XMLException e) {
+        myState = ViewState.ERROR;
+        showMessage(AlertType.ERROR, e.getMessage());
+      }
+    }
   }
 
   // display given message to user using the given type of Alert dialog box
