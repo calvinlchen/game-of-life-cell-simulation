@@ -7,6 +7,7 @@ import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.model.util.constants.CellStates.PercolationStates;
 import cellsociety.model.util.constants.CellStates.SegregationStates;
+import cellsociety.model.util.constants.CellStates.WaTorStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.layout.Pane;
 
@@ -52,8 +53,8 @@ public class SimulationView {
 
     int numRows = xmlData.getGridRowNum();
     int numCols = xmlData.getGridColNum();
-    myCellWidth = (double) myGridWidth / numCols;
-    myCellHeight = (double) myGridHeight / numRows;
+    myCellWidth = myGridWidth / numCols;
+    myCellHeight = myGridHeight / numRows;
 
     myCellViews = new CellView[numRows][numCols];
 
@@ -88,9 +89,7 @@ public class SimulationView {
       case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, (FireStates) cellState);
       case PERCOLATION -> cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, (PercolationStates) cellState);
       case SEGREGATION -> cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, (SegregationStates) cellState);
-      case WATOR -> {
-        // TODO: WaTor cell creation implementation
-      }
+      case WATOR -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, (WaTorStates) cellState);
       default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
     }
 
@@ -109,9 +108,9 @@ public class SimulationView {
   private double[] getCellPosition(int row, int column) {
     double[] cellPositions = new double[2];
     // x-position
-    cellPositions[0] = (double) myCellWidth  * column;
+    cellPositions[0] = myCellWidth  * column;
     // y-position
-    cellPositions[1] = (double) myCellHeight * row;
+    cellPositions[1] = myCellHeight * row;
     return cellPositions;
   }
 
