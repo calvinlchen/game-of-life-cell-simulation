@@ -4,7 +4,7 @@ import cellsociety.Main;
 import java.io.File;
 import javafx.stage.FileChooser;
 
-public class FileSelector {
+public class FileExplorer {
   // kind of data files to look for
   public static final String DATA_FILE_EXTENSION = "*.xml";
   // NOTE: make ONE chooser since generally accepted behavior is that it remembers where user left it last

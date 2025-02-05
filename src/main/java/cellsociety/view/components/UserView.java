@@ -153,7 +153,7 @@ public class UserView {
    * Requests a file to be loaded into the simulation.
    */
   public void loadSimulation() {
-    File dataFile = FileSelector.getFileChooser().showOpenDialog(myStage);
+    File dataFile = FileExplorer.getFileChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
       try {
