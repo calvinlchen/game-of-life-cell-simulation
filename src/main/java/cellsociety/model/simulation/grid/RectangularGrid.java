@@ -2,9 +2,6 @@ package cellsociety.model.simulation.grid;
 
 import cellsociety.model.interfaces.Grid;
 import cellsociety.model.interfaces.Cell;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.SimulationTypes;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

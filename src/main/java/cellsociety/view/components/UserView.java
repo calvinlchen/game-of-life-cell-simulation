@@ -1,21 +1,17 @@
 package cellsociety.view.components;
 
-import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.view.utils.DateTime;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -36,11 +32,11 @@ public class UserView {
   public static final double MIN_SIM_STEP_TIME = 0.02;
   public static final double MAX_SIM_STEP_TIME = 4;
 
-  private int mySceneWidth;
-  private int mySceneHeight;
+  private final int mySceneWidth;
+  private final int mySceneHeight;
+  private final Stage myStage;
 
   private ViewState myState;
-  private Stage myStage;
   private BorderPane myRoot;
   private Timeline myAnimation;
   // DEFAULT_SIM_STEP_TIME is DIVIDED by mySpeedFactor to get number of seconds between steps.
@@ -49,7 +45,7 @@ public class UserView {
   // Components of the UI
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
-  private final XMLUtils xmlReader = new XMLUtils();
+  private final XMLUtils xmlUtils = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
     myStage = stage;
@@ -145,22 +141,22 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
-    mySpeedFactor = 1;
     mySimulationView.resetGrid();
+    mySpeedFactor = 1;
   }
 
   /**
    * Requests a file to be loaded into the simulation.
    */
   public void loadSimulation() {
-    File dataFile = FileSelector.getFileChooser().showOpenDialog(myStage);
+    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
       try {
         stopAndResetSimulation();
         myState = ViewState.LOAD;
         // Upload simulation to mySimulationView
-        mySimulationView.configureFromXML(xmlReader.readXML(dataFile));
+        mySimulationView.configureFromXML(xmlUtils.readXML(dataFile));
         mySimulationView.initializeGridView();
       }
       catch (XMLException e) {
@@ -179,7 +175,33 @@ public class UserView {
    * Requests a simulation to be saved.
    */
   public void saveSimulation() {
-    myState = ViewState.SAVE;
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, "No simulation to save.");
+      return;
+    }
+
+    pauseSimulation();
+
+    // Open file chooser for saving
+    FileChooser fileChooser = FileExplorer.getSaveFileChooser();
+    fileChooser.setInitialFileName("simulation_" + DateTime.getLocalDateTime() + ".xml"); // Default filename
+    File saveFile = fileChooser.showSaveDialog(myStage);
+
+    if (saveFile != null) {
+      myState = ViewState.SAVE;
+      try {
+        xmlUtils.writeToXML(saveFile,
+            mySimulationView.getSimulation().getXMLData().getTitle(),
+            mySimulationView.getSimulation().getXMLData().getAuthor(),
+            mySimulationView.getSimulation().getXMLData().getDescription(),
+            mySimulationView.getSimulation());
+        showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
+      } catch (Exception e) {
+        showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
+      }
+    }
+    // Return myState to paused state.
+    pauseSimulation();
   }
 
   /**
@@ -226,35 +248,7 @@ public class UserView {
   public void loadRandomGameOfLife() {
     stopAndResetSimulation();
 
-    XMLData randomXMLData = new XMLData();
-
-    // Set simulation metadata
-    randomXMLData.setType(SimType.GAMEOFLIFE);
-    randomXMLData.setTitle("Game of Life Test Simulation");
-    randomXMLData.setAuthor("Test Author");
-    randomXMLData.setDescription("This is a test simulation of Conway's Game of Life.");
-
-    // Set grid dimensions
-    int numRows = 50;
-    int numCols = 75;
-    randomXMLData.setGridRowNum(numRows);
-    randomXMLData.setGridColNum(numCols);
-
-    // Initialize cell states randomly
-    ArrayList<Enum> cellStateList = new ArrayList<>();
-    Random random = new Random();
-
-    for (int i = 0; i < numRows * numCols; i++) {
-      // Randomly assign ALIVE or DEAD
-      GameOfLifeStates state = random.nextBoolean() ? GameOfLifeStates.ALIVE : GameOfLifeStates.DEAD;
-      cellStateList.add(state);
-    }
-
-    randomXMLData.setCellStateList(cellStateList);
-
-    // Set default parameters (Game of Life does not require any, but included for completeness)
-    Map<String, Double> parameters = new HashMap<>();
-    randomXMLData.setParameters(parameters);
+    XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
     mySimulationView.configureFromXML(randomXMLData);
     mySimulationView.initializeGridView();
