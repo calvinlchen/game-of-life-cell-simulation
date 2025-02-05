@@ -6,7 +6,7 @@
         <description>...</description>
     </metadata>
 
-    <grid rows="9" columns="10">
+    <grid rows="8" columns="10">
         <cell row="1" col="0" state="fish"/>
         <cell row="1" col="1" state="fish"/>
         <cell row="1" col="2" state="empty"/>
