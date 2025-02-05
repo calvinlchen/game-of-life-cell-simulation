@@ -1,5 +1,7 @@
 package cellsociety;
 
+import static cellsociety.view.components.UserView.showMessage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -17,19 +19,19 @@ import org.xml.sax.SAXException;
 
 import cellsociety.view.components.UserView;
 
+import cellsociety.model.util.XMLUtils;
+
 
 /**
  * Feel free to completely change this code or delete it entirely. 
  */
 public class Main extends Application {
-    // kind of data files to look for
-    public static final String DATA_FILE_EXTENSION = "*.xml";
-    // default to start in the data folder to make it easy on the user to find
-    public static final String DATA_FILE_FOLDER = System.getProperty("user.dir") + "/data";
-    // NOTE: make ONE chooser since generally accepted behavior is that it remembers where user left it last
-    private final static FileChooser FILE_CHOOSER = makeChooser(DATA_FILE_EXTENSION);
+
     // internal configuration file
     public static final String INTERNAL_CONFIGURATION = "cellsociety.Version";
+    // default to start in the data folder to make it easy on the user to find
+    public static final String DATA_FILE_FOLDER = System.getProperty("user.dir") + "/data";
+
     // width and height of application window
     public static final int SCENE_WIDTH = 1200;
     public static final int SCENE_HEIGHT = 800;
@@ -43,14 +45,7 @@ public class Main extends Application {
 
         view.resetView();
 
-//        showMessage(AlertType.INFORMATION, String.format("Version: %s", getVersion()));
-//        File dataFile = FILE_CHOOSER.showOpenDialog(primaryStage);
-//        if (dataFile != null) {
-//            int numBlocks = calculateNumBlocks(dataFile);
-//            if (numBlocks != 0) {
-//                showMessage(AlertType.INFORMATION, String.format("Number of Blocks = %d", numBlocks));
-//            }
-//        }
+        showMessage(AlertType.INFORMATION, String.format("Version: %s", getVersion()));
     }
 
     /**
@@ -96,21 +91,6 @@ public class Main extends Application {
             // FIXME: empty string or exception? In some cases it may be an error to not find any text
             return "";
         }
-    }
-
-    // display given message to user using the given type of Alert dialog box
-    void showMessage (AlertType type, String message) {
-        new Alert(type, message).showAndWait();
-    }
-
-    // set some sensible defaults when the FileChooser is created
-    private static FileChooser makeChooser (String extensionAccepted) {
-        FileChooser result = new FileChooser();
-        result.setTitle("Open Data File");
-        // pick a reasonable place to start searching for files
-        result.setInitialDirectory(new File(DATA_FILE_FOLDER));
-        result.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Data Files", extensionAccepted));
-        return result;
     }
 
     /**

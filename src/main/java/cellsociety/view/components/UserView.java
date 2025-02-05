@@ -2,7 +2,10 @@ package cellsociety.view.components;
 
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
+import cellsociety.model.util.constants.exceptions.XMLException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +13,8 @@ import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -33,6 +38,7 @@ public class UserView {
 
   private int mySceneWidth;
   private int mySceneHeight;
+
   private ViewState myState;
   private Stage myStage;
   private BorderPane myRoot;
@@ -43,6 +49,7 @@ public class UserView {
   // Components of the UI
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
+  private final XMLUtils xmlReader = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
     myStage = stage;
@@ -146,8 +153,11 @@ public class UserView {
    * Requests a file to be loaded into the simulation.
    */
   public void loadSimulation() {
-    myState = ViewState.LOAD;
-    mySpeedFactor = 1;
+  }
+
+  // display given message to user using the given type of Alert dialog box
+  public static void showMessage (AlertType type, String message) {
+    new Alert(type, message).showAndWait();
   }
 
   /**
