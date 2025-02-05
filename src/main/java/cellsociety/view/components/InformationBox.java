@@ -39,7 +39,7 @@ public class InformationBox {
     infoText.append("Grid Size: ").append(data.getGridRowNum()).append(" x ").append(data.getGridColNum()).append("\n");
     infoText.append("Parameters: ");
     for (Map.Entry<String, Double> entry : data.getParameters().entrySet()) {
-      infoText.append(" - ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
+      infoText.append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
     }
     infoText.append("\n");
     infoText.append("Description: ").append(data.getDescription()).append("\n");
