@@ -21,8 +21,8 @@ class FireCellTest {
 
   @BeforeEach
   void setUp() {
-    ruleDefault = new FireRule(Map.of("f", 0.0, "p", 0.0));
-    ruleMax = new FireRule(Map.of("f", 1.0, "p", 1.0));
+    ruleDefault = new FireRule(Map.of("ignitionLikelihood", 0.0, "treeSpawnLikelihood", 0.0));
+    ruleMax = new FireRule(Map.of("ignitionLikelihood", 1.0, "treeSpawnLikelihood", 1.0));
   }
 
   @Test
