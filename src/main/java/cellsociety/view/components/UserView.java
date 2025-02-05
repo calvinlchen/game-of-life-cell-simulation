@@ -158,18 +158,23 @@ public class UserView {
       System.out.println("Loading file: " + dataFile.getName());
       try {
         stopAndResetSimulation();
-        myState = ViewState.LOAD;
-        // Upload simulation to mySimulationView
-        mySimulationView.configureFromXML(xmlUtils.readXML(dataFile));
-        mySimulationView.initializeGridView();
-        // Update text box with simulation information
-        myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
+        configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile));
       }
       catch (XMLException e) {
         myState = ViewState.ERROR;
         showMessage(AlertType.ERROR, e.getMessage());
       }
     }
+  }
+
+  private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
+    // Set program state
+    myState = ViewState.LOAD;
+    // Upload simulation to mySimulationView
+    mySimulationView.configureFromXML(xmlUtils);
+    mySimulationView.initializeGridView();
+    // Update text box with simulation information
+    myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
   }
 
   // display given message to user using the given type of Alert dialog box
@@ -256,9 +261,6 @@ public class UserView {
 
     XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
-    mySimulationView.configureFromXML(randomXMLData);
-    mySimulationView.initializeGridView();
-    myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
-    myState = ViewState.LOAD;
+    configureAndDisplaySimFromXML(randomXMLData);
   }
 }
