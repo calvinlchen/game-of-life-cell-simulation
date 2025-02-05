@@ -144,6 +144,34 @@ class XMLUtilsTest {
         new File(INVALID_FILE_PATH).delete();
     }
 
+    @Test
+    void testTooFewCellsInXML() {
+        //create XML file where total number of cells < rows*columns
+        createFewerCellsThanCapacityXML();
+
+        //verify reading XML file with invalid cell state throws exception
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
+        assertTrue(exception.getMessage().contains("Error: Expected 4 <cell> elements, but found 3"));
+
+        //clean up invalid file
+        new File(INVALID_FILE_PATH).delete();
+    }
+
+    @Test
+    void testTooManyCellsInXML() {
+        //create XML file where total number of cells > rows*columns
+        createMoreCellsThanCapacityXML();
+
+        //verify reading XML file with invalid cell state throws exception
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
+        assertTrue(exception.getMessage().contains("Error: Expected 4 <cell> elements, but found 5"));
+
+        //clean up invalid file
+        new File(INVALID_FILE_PATH).delete();
+    }
+
     private void createTestXMLFile() {
         String xmlContent = """
                 <simulation>
@@ -219,6 +247,70 @@ class XMLUtilsTest {
                     </grid>
                     <parameters>
                         <parameter name="ignitionLikelihood" value="0.5"/>
+                    </parameters>
+                </simulation>
+                """;
+
+        try {
+            File file = new File(INVALID_FILE_PATH);
+            file.createNewFile();
+            java.nio.file.Files.write(file.toPath(), invalidSimulationTypeXmlContent.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createFewerCellsThanCapacityXML() {
+        String invalidSimulationTypeXmlContent = """
+                <simulation>
+                    <metadata>
+                        <type>Game of Life</type>
+                        <title>Life Simulation 1</title>
+                        <author>Robert C. Duvall</author>
+                        <description>This is my first Game of Life simulation!</description>
+                    </metadata>
+                
+                    <grid rows="2" columns="2">
+                        <cell row="0" col="0" state="alive"/>
+                        <cell row="0" col="1" state="dead"/>
+                        <cell row="1" col="0" state="alive"/>
+                    </grid>
+                
+                    <parameters>
+                        <!-- This is the parameter values -->
+                    </parameters>
+                </simulation>
+                """;
+
+        try {
+            File file = new File(INVALID_FILE_PATH);
+            file.createNewFile();
+            java.nio.file.Files.write(file.toPath(), invalidSimulationTypeXmlContent.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createMoreCellsThanCapacityXML() {
+        String invalidSimulationTypeXmlContent = """
+                <simulation>
+                    <metadata>
+                        <type>Game of Life</type>
+                        <title>Life Simulation 1</title>
+                        <author>Robert C. Duvall</author>
+                        <description>This is my first Game of Life simulation!</description>
+                    </metadata>
+                
+                    <grid rows="2" columns="2">
+                        <cell row="0" col="0" state="alive"/>
+                        <cell row="0" col="1" state="dead"/>
+                        <cell row="1" col="0" state="alive"/>
+                        <cell row="1" col="1" state="alive"/>
+                        <cell row="1" col="1" state="alive"/>
+                    </grid>
+                
+                    <parameters>
+                        <!-- This is the parameter values -->
                     </parameters>
                 </simulation>
                 """;

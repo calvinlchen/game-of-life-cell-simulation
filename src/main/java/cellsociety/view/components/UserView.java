@@ -45,6 +45,7 @@ public class UserView {
   // Components of the UI
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
+  private InformationBox myInformationBox;
   private final XMLUtils xmlUtils = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
@@ -68,10 +69,12 @@ public class UserView {
     mySimulationView = new SimulationView(mySceneWidth*GRID_PROPORTION_OF_SCREEN,
         mySceneHeight*GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
+    myInformationBox = new InformationBox();
 
     // Set components in BorderPane
     myRoot.setLeft(mySimulationView.getDisplay());
     myRoot.setRight(myControlPanel.getPanel());
+    myRoot.setBottom(myInformationBox.getTextArea());
 
     // Set simulation speed to default
     mySpeedFactor = 1;
@@ -142,6 +145,7 @@ public class UserView {
       myAnimation.stop();
     }
     mySimulationView.resetGrid();
+    myInformationBox.emptyFields();
     mySpeedFactor = 1;
   }
 
@@ -152,18 +156,25 @@ public class UserView {
     File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
+      stopAndResetSimulation();
       try {
-        stopAndResetSimulation();
-        myState = ViewState.LOAD;
-        // Upload simulation to mySimulationView
-        mySimulationView.configureFromXML(xmlUtils.readXML(dataFile));
-        mySimulationView.initializeGridView();
+        configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile));
       }
       catch (XMLException e) {
         myState = ViewState.ERROR;
         showMessage(AlertType.ERROR, e.getMessage());
       }
     }
+  }
+
+  private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
+    // Set program state
+    myState = ViewState.LOAD;
+    // Upload simulation to mySimulationView
+    mySimulationView.configureFromXML(xmlUtils);
+    mySimulationView.initializeGridView();
+    // Update text box with simulation information
+    myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
   }
 
   // display given message to user using the given type of Alert dialog box
@@ -196,7 +207,8 @@ public class UserView {
             mySimulationView.getSimulation().getXMLData().getDescription(),
             mySimulationView.getSimulation());
         showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
-      } catch (Exception e) {
+      } catch (XMLException e) {
+        myState = ViewState.ERROR;
         showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
       }
     }
@@ -250,8 +262,6 @@ public class UserView {
 
     XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
-    mySimulationView.configureFromXML(randomXMLData);
-    mySimulationView.initializeGridView();
-    myState = ViewState.LOAD;
+    configureAndDisplaySimFromXML(randomXMLData);
   }
 }

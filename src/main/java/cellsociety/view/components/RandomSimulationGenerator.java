@@ -17,9 +17,9 @@ public class RandomSimulationGenerator {
 
     // Set simulation metadata
     randomXMLData.setType(SimType.GAMEOFLIFE);
-    randomXMLData.setTitle("Game of Life Test Simulation");
-    randomXMLData.setAuthor("Test Author");
-    randomXMLData.setDescription("This is a test simulation of Conway's Game of Life.");
+    randomXMLData.setTitle("Game of Life Random Simulation");
+    randomXMLData.setAuthor("Cell Society");
+    randomXMLData.setDescription("This is a randomly generated simulation of Conway's Game of Life.");
 
     // Set grid dimensions
     int numRows = 50;
