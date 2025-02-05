@@ -14,6 +14,10 @@ public class ControlPanel {
   private final UserView myUserView;
   private final List<Button> myButtons;
 
+  /**
+   * Contains a column of control buttons for Cell Society
+   * @param userView the view controller through which a button initiates its action when clicked
+   */
   public ControlPanel(UserView userView) {
     myUserView = userView;
     myPanel = new VBox(12);
@@ -65,6 +69,10 @@ public class ControlPanel {
     return speedPanel;
   }
 
+  /**
+   * Return the vertical panel of control buttons
+   * @return VBox panel view containing all button elements
+   */
   public VBox getPanel() {
     return myPanel;
   }
