@@ -9,12 +9,12 @@
     <grid rows="9" columns="10">
         <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
         <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
         <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
         <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
     </grid>
 
