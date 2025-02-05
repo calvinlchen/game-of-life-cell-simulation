@@ -5,6 +5,7 @@ import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
+import cellsociety.model.util.constants.CellStates.PercolationStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.layout.Pane;
 
@@ -82,19 +83,9 @@ public class SimulationView {
     CellView<?> cellView = null;
 
     switch (simType) {
-      case GAMEOFLIFE -> {
-        if (cellState instanceof GameOfLifeStates) {
-          cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, (GameOfLifeStates) cellState);
-        }
-      }
-      case FIRE -> {
-        if (cellState instanceof FireStates) {
-          cellView = new FireCellView(x, y, myCellWidth, myCellHeight, (FireStates) cellState);
-        }
-      }
-      case PERCOLATION -> {
-        // TODO: Percolation cell creation implementation
-      }
+      case GAMEOFLIFE -> cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, (GameOfLifeStates) cellState);
+      case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, (FireStates) cellState);
+      case PERCOLATION -> cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, (PercolationStates) cellState);
       case SEGREGATION -> {
         // TODO: Segregation cell creation implementation
       }
