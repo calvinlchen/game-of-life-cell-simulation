@@ -156,8 +156,8 @@ public class UserView {
     File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
+      stopAndResetSimulation();
       try {
-        stopAndResetSimulation();
         configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile));
       }
       catch (XMLException e) {
@@ -207,7 +207,8 @@ public class UserView {
             mySimulationView.getSimulation().getXMLData().getDescription(),
             mySimulationView.getSimulation());
         showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
-      } catch (Exception e) {
+      } catch (XMLException e) {
+        myState = ViewState.ERROR;
         showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
       }
     }
