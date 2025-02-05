@@ -6,16 +6,14 @@
         <description>I went canoing. once. </description>
     </metadata>
 
-    <grid rows="9" columns="10">
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
-        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+    <grid rows="7" columns="7">
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
     </grid>
 
     <parameters>
