@@ -24,7 +24,6 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
   public GameOfLifeStates apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    // TODO: for now there are no parameters
     if (cell.getCurrentState() == GameOfLifeStates.ALIVE &&
         (aliveNeighbors < 2 || aliveNeighbors > 3)) {
       return GameOfLifeStates.DEAD;

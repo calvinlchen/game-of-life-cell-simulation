@@ -29,13 +29,11 @@ public class FireRule extends Rule<FireStates, FireCell> {
     } else if (cell.getCurrentState() == FireStates.TREE && neighborIsBurning(cell)) {
       return FireStates.BURNING;
     } else if (cell.getCurrentState() == FireStates.TREE) {
-      // TODO: default probability for f
       double f = getParameters().getOrDefault("ignitionLikelihood", 0.0);
       if (Math.random() < f) {
         return FireStates.BURNING;
       }
     } else {
-      // TODO: default probability for p
       double p = getParameters().getOrDefault("treeSpawnLikelihood", 0.0);
       if (Math.random() < p) {
         return FireStates.TREE;

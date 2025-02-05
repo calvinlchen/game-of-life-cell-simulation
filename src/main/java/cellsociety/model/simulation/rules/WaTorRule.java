@@ -64,6 +64,7 @@ public class WaTorRule extends Rule<WaTorStates, WaTorCell> {
     return null;
   }
 
+  // TODO: refactor to be shorter -- specially movement no mater if reproduce or not
   private WaTorStates handleShark(WaTorCell cell) {
     WaTorCell fishNeighbor = findFishCell(cell);
     WaTorCell emptyNeighbor = findEmptyCell(cell);

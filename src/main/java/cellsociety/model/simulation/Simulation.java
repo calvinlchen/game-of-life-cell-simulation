@@ -24,6 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Simulation class, creates the grid from the given xml data, provides public methods for the
+ * view/xml data to step through the simulation and get the current state of the cells
+ *
+ * @param <S> - the type of state for the cells, must be an Enum
+ * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @author Jessica Chen
+ */
 public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
 
   private final XMLData xmlData;
@@ -70,7 +78,7 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   }
 
   /**
-   * moves all cells in the simulation up by one step
+   * Moves all cells in the simulation up by one step
    */
   public void step() {
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
