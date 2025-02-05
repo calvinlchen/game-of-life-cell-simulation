@@ -33,7 +33,8 @@ class XMLUtilsTest {
         createTestXMLFile();
 
         //read XML file
-        XMLData xmlData = xmlUtils.readXML(TEST_FILE_NAME);
+        File fXmlFile = new File(TEST_FILE_PATH);
+        XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
         assertEquals(SimType.FIRE, xmlData.getType());
@@ -68,10 +69,12 @@ class XMLUtilsTest {
         Simulation<?, ?> simulation = createTestSimulation();
 
         //write simulation data to an XML file
-        xmlUtils.writeToXML(TEST_FILE_NAME, "Fire Sim", "Vincent Price", "This simulation is fire", simulation);
+        File fXmlFile = new File(TEST_FILE_PATH);
+        xmlUtils.writeToXML(fXmlFile, "Fire Sim", "Vincent Price", "This simulation is fire", simulation);
 
         //read XML file back to verify contents
-        XMLData xmlData = xmlUtils.readXML(TEST_FILE_NAME);
+
+        XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
         assertEquals(SimType.FIRE, xmlData.getType());
@@ -106,7 +109,8 @@ class XMLUtilsTest {
         createInvalidXMLFile();
 
         //verify reading invalid XML file throws exception
-        assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME)); //will throw "end tag" error before parsing error
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile)); //will throw "end tag" error before parsing error
 
         //clean up invalid file
         new File(INVALID_FILE_PATH).delete();
@@ -118,7 +122,8 @@ class XMLUtilsTest {
         createInvalidSimulationTypeXMLFile();
 
         //verify reading XML file with invalid simulation type throws exception
-        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
         assertTrue(exception.getMessage().contains("Unknown simulation type"));
 
         //clean up invalid file
@@ -131,7 +136,8 @@ class XMLUtilsTest {
         createInvalidCellStateXMLFile();
 
         //verify reading XML file with invalid cell state throws exception
-        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
         assertTrue(exception.getMessage().contains("Unknown cell state"));
 
         //clean up invalid file
