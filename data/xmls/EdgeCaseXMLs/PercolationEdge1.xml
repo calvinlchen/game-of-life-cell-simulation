@@ -12,119 +12,119 @@
         <cell row="0" col="1" state="percolated"/>
         <cell row="0" col="2" state="percolated"/>
         <cell row="0" col="3" state="blocked"/>
-        <cell row="0" col="4" state="empty"/>
-        <cell row="0" col="5" state="empty"/>
+        <cell row="0" col="4" state="open"/>
+        <cell row="0" col="5" state="open"/>
         <cell row="0" col="6" state="blocked"/>
         <cell row="0" col="7" state="blocked"/>
-        <cell row="0" col="8" state="empty"/>
+        <cell row="0" col="8" state="open"/>
         <cell row="0" col="9" state="percolated"/>
 
         <!-- Middle rows with mix of states -->
         <cell row="1" col="0" state="percolated"/>
-        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="1" state="open"/>
         <cell row="1" col="2" state="blocked"/>
         <cell row="1" col="3" state="blocked"/>
         <cell row="1" col="4" state="blocked"/>
-        <cell row="1" col="5" state="empty"/>
-        <cell row="1" col="6" state="empty"/>
+        <cell row="1" col="5" state="open"/>
+        <cell row="1" col="6" state="open"/>
         <cell row="1" col="7" state="blocked"/>
-        <cell row="1" col="8" state="empty"/>
-        <cell row="1" col="9" state="empty"/>
+        <cell row="1" col="8" state="open"/>
+        <cell row="1" col="9" state="open"/>
 
-        <cell row="2" col="0" state="empty"/>
+        <cell row="2" col="0" state="open"/>
         <cell row="2" col="1" state="blocked"/>
-        <cell row="2" col="2" state="empty"/>
-        <cell row="2" col="3" state="empty"/>
+        <cell row="2" col="2" state="open"/>
+        <cell row="2" col="3" state="open"/>
         <cell row="2" col="4" state="blocked"/>
-        <cell row="2" col="5" state="empty"/>
+        <cell row="2" col="5" state="open"/>
         <cell row="2" col="6" state="blocked"/>
-        <cell row="2" col="7" state="empty"/>
+        <cell row="2" col="7" state="open"/>
         <cell row="2" col="8" state="blocked"/>
-        <cell row="2" col="9" state="empty"/>
+        <cell row="2" col="9" state="open"/>
 
-        <cell row="3" col="0" state="empty"/>
-        <cell row="3" col="1" state="empty"/>
-        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="0" state="open"/>
+        <cell row="3" col="1" state="open"/>
+        <cell row="3" col="2" state="open"/>
         <cell row="3" col="3" state="blocked"/>
-        <cell row="3" col="4" state="empty"/>
-        <cell row="3" col="5" state="empty"/>
+        <cell row="3" col="4" state="open"/>
+        <cell row="3" col="5" state="open"/>
         <cell row="3" col="6" state="blocked"/>
-        <cell row="3" col="7" state="empty"/>
+        <cell row="3" col="7" state="open"/>
         <cell row="3" col="8" state="blocked"/>
         <cell row="3" col="9" state="blocked"/>
 
-        <cell row="4" col="0" state="empty"/>
+        <cell row="4" col="0" state="open"/>
         <cell row="4" col="1" state="blocked"/>
         <cell row="4" col="2" state="blocked"/>
-        <cell row="4" col="3" state="empty"/>
+        <cell row="4" col="3" state="open"/>
         <cell row="4" col="4" state="blocked"/>
-        <cell row="4" col="5" state="empty"/>
-        <cell row="4" col="6" state="empty"/>
+        <cell row="4" col="5" state="open"/>
+        <cell row="4" col="6" state="open"/>
         <cell row="4" col="7" state="blocked"/>
-        <cell row="4" col="8" state="empty"/>
+        <cell row="4" col="8" state="open"/>
         <cell row="4" col="9" state="percolated"/>
 
         <cell row="5" col="0" state="blocked"/>
-        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="1" state="open"/>
         <cell row="5" col="2" state="blocked"/>
-        <cell row="5" col="3" state="empty"/>
-        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="3" state="open"/>
+        <cell row="5" col="4" state="open"/>
         <cell row="5" col="5" state="blocked"/>
-        <cell row="5" col="6" state="empty"/>
+        <cell row="5" col="6" state="open"/>
         <cell row="5" col="7" state="blocked"/>
-        <cell row="5" col="8" state="empty"/>
+        <cell row="5" col="8" state="open"/>
         <cell row="5" col="9" state="percolated"/>
 
         <cell row="6" col="0" state="percolated"/>
-        <cell row="6" col="1" state="empty"/>
-        <cell row="6" col="2" state="empty"/>
+        <cell row="6" col="1" state="open"/>
+        <cell row="6" col="2" state="open"/>
         <cell row="6" col="3" state="blocked"/>
-        <cell row="6" col="4" state="empty"/>
-        <cell row="6" col="5" state="empty"/>
+        <cell row="6" col="4" state="open"/>
+        <cell row="6" col="5" state="open"/>
         <cell row="6" col="6" state="blocked"/>
         <cell row="6" col="7" state="blocked"/>
-        <cell row="6" col="8" state="empty"/>
+        <cell row="6" col="8" state="open"/>
         <cell row="6" col="9" state="percolated"/>
 
         <cell row="7" col="0" state="percolated"/>
-        <cell row="7" col="1" state="empty"/>
+        <cell row="7" col="1" state="open"/>
         <cell row="7" col="2" state="blocked"/>
-        <cell row="7" col="3" state="empty"/>
-        <cell row="7" col="4" state="empty"/>
-        <cell row="7" col="5" state="empty"/>
+        <cell row="7" col="3" state="open"/>
+        <cell row="7" col="4" state="open"/>
+        <cell row="7" col="5" state="open"/>
         <cell row="7" col="6" state="blocked"/>
-        <cell row="7" col="7" state="empty"/>
+        <cell row="7" col="7" state="open"/>
         <cell row="7" col="8" state="blocked"/>
         <cell row="7" col="9" state="percolated"/>
 
-        <cell row="3" col="0" state="empty"/>
-        <cell row="3" col="1" state="empty"/>
-        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="0" state="open"/>
+        <cell row="3" col="1" state="open"/>
+        <cell row="3" col="2" state="open"/>
         <cell row="3" col="3" state="blocked"/>
-        <cell row="3" col="4" state="empty"/>
-        <cell row="3" col="5" state="empty"/>
+        <cell row="3" col="4" state="open"/>
+        <cell row="3" col="5" state="open"/>
         <cell row="3" col="6" state="blocked"/>
-        <cell row="3" col="7" state="empty"/>
+        <cell row="3" col="7" state="open"/>
         <cell row="3" col="8" state="blocked"/>
         <cell row="3" col="9" state="blocked"/>
 
         <cell row="5" col="0" state="blocked"/>
-        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="1" state="open"/>
         <cell row="5" col="2" state="blocked"/>
-        <cell row="5" col="3" state="empty"/>
-        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="3" state="open"/>
+        <cell row="5" col="4" state="open"/>
         <cell row="5" col="5" state="blocked"/>
-        <cell row="5" col="6" state="empty"/>
+        <cell row="5" col="6" state="open"/>
         <cell row="5" col="7" state="blocked"/>
-        <cell row="5" col="8" state="empty"/>
+        <cell row="5" col="8" state="open"/>
         <cell row="5" col="9" state="percolated"/>
 
-        <cell row="5" col="6" state="empty"/>
+        <cell row="5" col="6" state="open"/>
         <cell row="5" col="7" state="blocked"/>
-        <cell row="5" col="8" state="empty"/>
+        <cell row="5" col="8" state="open"/>
         <cell row="5" col="9" state="percolated"/>
-        <cell row="8" col="0" state="empty"/>
-        <cell row="8" col="9" state="empty"/>
+        <cell row="8" col="0" state="open"/>
+        <cell row="8" col="9" state="open"/>
         <cell row="9" col="0" state="blocked"/>
         <cell row="9" col="9" state="percolated"/>
         <cell row="10" col="0" state="percolated"/>
