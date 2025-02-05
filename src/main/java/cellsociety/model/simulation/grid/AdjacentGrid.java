@@ -2,7 +2,6 @@ package cellsociety.model.simulation.grid;
 
 import cellsociety.model.interfaces.Grid;
 import cellsociety.model.interfaces.Cell;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
