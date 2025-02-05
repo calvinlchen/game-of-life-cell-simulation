@@ -47,6 +47,9 @@ public class XMLUtils {
             doc.getDocumentElement().normalize();
 
             NodeList simulationList = doc.getElementsByTagName("simulation");
+            if (simulationList.getLength() == 0) {
+                throw new IllegalArgumentException("No <simulation> tag found in the XML file.");
+            }
 
             for (int i = 0; i < simulationList.getLength(); i++) { //just in case there is somehow more than one simulation?
                 Node simulationNode = simulationList.item(i);
