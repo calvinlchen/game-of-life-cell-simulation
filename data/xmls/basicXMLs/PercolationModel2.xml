@@ -1,6 +1,6 @@
 <simulation>
     <metadata>
-        <type>Percolator</type>
+        <type>Percolation</type>
         <title>Flooded Path</title>
         <author>Katara</author>
         <description>The water finds a way.</description>
