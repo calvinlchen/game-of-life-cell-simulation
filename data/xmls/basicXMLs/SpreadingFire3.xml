@@ -1,0 +1,63 @@
+<simulation>
+    <metadata>
+        <type>Spreading of Fire</type>
+        <title>Trees Fight Back</title>
+        <author>Persephone and Demeter</author>
+        <description>whats going on here</description>
+    </metadata>
+
+    <grid rows="6" columns="7">
+        <cell row="0" col="0" state="burning"/>
+        <cell row="0" col="1" state="tree"/>
+        <cell row="0" col="2" state="empty"/>
+        <cell row="0" col="3" state="burning"/>
+        <cell row="0" col="4" state="burning"/>
+        <cell row="0" col="5" state="burning"/>
+        <cell row="0" col="6" state="burning"/>
+
+        <cell row="1" col="0" state="tree"/>
+        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="2" state="burning"/>
+        <cell row="1" col="3" state="burning"/>
+        <cell row="1" col="4" state="burning"/>
+        <cell row="1" col="5" state="empty"/>
+        <cell row="1" col="6" state="tree"/>
+
+        <cell row="2" col="0" state="tree"/>
+        <cell row="2" col="1" state="tree"/>
+        <cell row="2" col="2" state="burning"/>
+        <cell row="2" col="3" state="burning"/>
+        <cell row="2" col="4" state="empty"/>
+        <cell row="2" col="5" state="burning"/>
+        <cell row="2" col="6" state="tree"/>
+
+        <cell row="3" col="0" state="empty"/>
+        <cell row="3" col="1" state="burning"/>
+        <cell row="3" col="2" state="burning"/>
+        <cell row="3" col="3" state="empty"/>
+        <cell row="3" col="4" state="burning"/>
+        <cell row="3" col="5" state="tree"/>
+        <cell row="3" col="6" state="burning"/>
+
+        <cell row="4" col="0" state="burning"/>
+        <cell row="4" col="1" state="tree"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="burning"/>
+        <cell row="4" col="4" state="burning"/>
+        <cell row="4" col="5" state="empty"/>
+        <cell row="4" col="6" state="tree"/>
+
+        <cell row="5" col="0" state="tree"/>
+        <cell row="5" col="1" state="burning"/>
+        <cell row="5" col="2" state="burning"/>
+        <cell row="5" col="3" state="tree"/>
+        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="5" state="burning"/>
+        <cell row="5" col="6" state="burning"/>
+    </grid>
+
+    <parameters>
+        <parameter name="ignitionLikelihood" value="0.2"/>
+        <parameter name="treeSpawnLikelihood" value="0.7"/>
+    </parameters>
+</simulation>

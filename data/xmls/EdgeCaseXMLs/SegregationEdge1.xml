@@ -1,0 +1,124 @@
+<simulation>
+    <metadata>
+        <type>Model of Segregation</type>
+        <title>It's Always Been About Love and Hate</title>
+        <author>Kendrick Lamar</author>
+        <description>Now let me say I'm the biggest hater...</description>
+    </metadata>
+
+    <grid rows="10" columns="10">
+        <cell row="0" col="0" state="agentA"/>
+        <cell row="0" col="1" state="agentB"/>
+        <cell row="0" col="2" state="agentA"/>
+        <cell row="0" col="3" state="agentB"/>
+        <cell row="0" col="4" state="agentA"/>
+        <cell row="0" col="5" state="agentA"/>
+        <cell row="0" col="6" state="agentB"/>
+        <cell row="0" col="7" state="agentA"/>
+        <cell row="0" col="8" state="agentB"/>
+        <cell row="0" col="9" state="agentB"/>
+
+        <cell row="1" col="0" state="agentA"/>
+        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="2" state="empty"/>
+        <cell row="1" col="3" state="empty"/>
+        <cell row="1" col="4" state="empty"/>
+        <cell row="1" col="5" state="empty"/>
+        <cell row="1" col="6" state="empty"/>
+        <cell row="1" col="7" state="empty"/>
+        <cell row="1" col="8" state="empty"/>
+        <cell row="1" col="9" state="agentA"/>
+
+        <cell row="2" col="0" state="agentB"/>
+        <cell row="2" col="1" state="empty"/>
+        <cell row="2" col="2" state="empty"/>
+        <cell row="2" col="3" state="empty"/>
+        <cell row="2" col="4" state="empty"/>
+        <cell row="2" col="5" state="empty"/>
+        <cell row="2" col="6" state="empty"/>
+        <cell row="2" col="7" state="empty"/>
+        <cell row="2" col="8" state="empty"/>
+        <cell row="2" col="9" state="agentB"/>
+
+        <cell row="3" col="0" state="agentA"/>
+        <cell row="3" col="1" state="empty"/>
+        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="3" state="empty"/>
+        <cell row="3" col="4" state="empty"/>
+        <cell row="3" col="5" state="empty"/>
+        <cell row="3" col="6" state="empty"/>
+        <cell row="3" col="7" state="empty"/>
+        <cell row="3" col="8" state="empty"/>
+        <cell row="3" col="9" state="agentA"/>
+
+        <cell row="4" col="0" state="agentB"/>
+        <cell row="4" col="1" state="empty"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="empty"/>
+        <cell row="4" col="4" state="empty"/>
+        <cell row="4" col="5" state="empty"/>
+        <cell row="4" col="6" state="empty"/>
+        <cell row="4" col="7" state="empty"/>
+        <cell row="4" col="8" state="empty"/>
+        <cell row="4" col="9" state="agentB"/>
+
+        <cell row="5" col="0" state="agentA"/>
+        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="2" state="empty"/>
+        <cell row="5" col="3" state="empty"/>
+        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="5" state="empty"/>
+        <cell row="5" col="6" state="empty"/>
+        <cell row="5" col="7" state="empty"/>
+        <cell row="5" col="8" state="empty"/>
+        <cell row="5" col="9" state="agentA"/>
+
+        <cell row="6" col="0" state="agentB"/>
+        <cell row="6" col="1" state="empty"/>
+        <cell row="6" col="2" state="empty"/>
+        <cell row="6" col="3" state="empty"/>
+        <cell row="6" col="4" state="empty"/>
+        <cell row="6" col="5" state="empty"/>
+        <cell row="6" col="6" state="empty"/>
+        <cell row="6" col="7" state="empty"/>
+        <cell row="6" col="8" state="empty"/>
+        <cell row="6" col="9" state="agentB"/>
+
+        <cell row="7" col="0" state="agentA"/>
+        <cell row="7" col="1" state="empty"/>
+        <cell row="7" col="2" state="empty"/>
+        <cell row="7" col="3" state="empty"/>
+        <cell row="7" col="4" state="empty"/>
+        <cell row="7" col="5" state="empty"/>
+        <cell row="7" col="6" state="empty"/>
+        <cell row="7" col="7" state="empty"/>
+        <cell row="7" col="8" state="empty"/>
+        <cell row="7" col="9" state="agentA"/>
+
+        <cell row="8" col="0" state="agentB"/>
+        <cell row="8" col="1" state="empty"/>
+        <cell row="8" col="2" state="empty"/>
+        <cell row="8" col="3" state="empty"/>
+        <cell row="8" col="4" state="empty"/>
+        <cell row="8" col="5" state="empty"/>
+        <cell row="8" col="6" state="empty"/>
+        <cell row="8" col="7" state="empty"/>
+        <cell row="8" col="8" state="empty"/>
+        <cell row="8" col="9" state="agentB"/>
+
+        <cell row="9" col="0" state="agentA"/>
+        <cell row="9" col="1" state="agentB"/>
+        <cell row="9" col="2" state="agentA"/>
+        <cell row="9" col="3" state="agentA"/>
+        <cell row="9" col="4" state="agentB"/>
+        <cell row="9" col="5" state="agentB"/>
+        <cell row="9" col="6" state="agentA"/>
+        <cell row="9" col="7" state="agentB"/>
+        <cell row="9" col="8" state="agentB"/>
+        <cell row="9" col="9" state="agentA"/>
+    </grid>
+
+    <parameters>
+        <parameter name="toleranceThreshold" value="0.1"/>
+    </parameters>
+</simulation>

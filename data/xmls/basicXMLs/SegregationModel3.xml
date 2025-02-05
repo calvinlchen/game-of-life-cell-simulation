@@ -1,0 +1,50 @@
+<simulation>
+    <metadata>
+        <type>Model of Segregation</type>
+        <title>Pre-Segregated</title>
+        <author>Herbert Hoover</author>
+        <description>Awfully convenient...</description>
+    </metadata>
+
+    <grid rows="6" columns="5">
+        <cell row="0" col="0" state="agentA"/>
+        <cell row="0" col="1" state="agentA"/>
+        <cell row="0" col="2" state="empty"/>
+        <cell row="0" col="3" state="agentB"/>
+        <cell row="0" col="4" state="agentB"/>
+
+        <cell row="1" col="0" state="agentA"/>
+        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="2" state="empty"/>
+        <cell row="1" col="3" state="empty"/>
+        <cell row="1" col="4" state="agentB"/>
+
+        <cell row="2" col="0" state="empty"/>
+        <cell row="2" col="1" state="agentA"/>
+        <cell row="2" col="2" state="empty"/>
+        <cell row="2" col="3" state="agentB"/>
+        <cell row="2" col="4" state="empty"/>
+
+        <cell row="3" col="0" state="agentA"/>
+        <cell row="3" col="1" state="empty"/>
+        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="3" state="empty"/>
+        <cell row="3" col="4" state="agentB"/>
+
+        <cell row="4" col="0" state="agentA"/>
+        <cell row="4" col="1" state="agentA"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="agentB"/>
+        <cell row="4" col="4" state="agentB"/>
+
+        <cell row="5" col="0" state="empty"/>
+        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="2" state="empty"/>
+        <cell row="5" col="3" state="empty"/>
+        <cell row="5" col="4" state="empty"/>
+    </grid>
+
+    <parameters>
+        <parameter name="toleranceThreshold" value="0.2"/>
+    </parameters>
+</simulation>

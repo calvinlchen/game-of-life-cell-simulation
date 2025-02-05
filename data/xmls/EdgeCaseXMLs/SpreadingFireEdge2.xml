@@ -1,0 +1,87 @@
+<simulation>
+    <metadata>
+        <type>Spreading of Fire</type>
+        <title>Wasteland</title>
+        <author>New Vegas</author>
+        <description>The fires might not spread, but is there much point in surviving anyway?</description>
+    </metadata>
+
+    <grid rows="9" columns="7">
+        <cell row="0" col="0" state="empty"/>
+        <cell row="0" col="1" state="empty"/>
+        <cell row="0" col="2" state="tree"/>
+        <cell row="0" col="3" state="empty"/>
+        <cell row="0" col="4" state="empty"/>
+        <cell row="0" col="5" state="burning"/>
+        <cell row="0" col="6" state="empty"/>
+
+        <cell row="1" col="0" state="empty"/>
+        <cell row="1" col="1" state="tree"/>
+        <cell row="1" col="2" state="empty"/>
+        <cell row="1" col="3" state="empty"/>
+        <cell row="1" col="4" state="empty"/>
+        <cell row="1" col="5" state="tree"/>
+        <cell row="1" col="6" state="empty"/>
+
+        <cell row="2" col="0" state="burning"/>
+        <cell row="2" col="1" state="empty"/>
+        <cell row="2" col="2" state="empty"/>
+        <cell row="2" col="3" state="tree"/>
+        <cell row="2" col="4" state="empty"/>
+        <cell row="2" col="5" state="empty"/>
+        <cell row="2" col="6" state="empty"/>
+
+        <cell row="3" col="0" state="empty"/>
+        <cell row="3" col="1" state="empty"/>
+        <cell row="3" col="2" state="empty"/>
+        <cell row="3" col="3" state="empty"/>
+        <cell row="3" col="4" state="empty"/>
+        <cell row="3" col="5" state="tree"/>
+        <cell row="3" col="6" state="empty"/>
+
+        <cell row="4" col="0" state="tree"/>
+        <cell row="4" col="1" state="empty"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="empty"/>
+        <cell row="4" col="4" state="burning"/>
+        <cell row="4" col="5" state="empty"/>
+        <cell row="4" col="6" state="empty"/>
+
+        <cell row="5" col="0" state="empty"/>
+        <cell row="5" col="1" state="empty"/>
+        <cell row="5" col="2" state="tree"/>
+        <cell row="5" col="3" state="empty"/>
+        <cell row="5" col="4" state="empty"/>
+        <cell row="5" col="5" state="empty"/>
+        <cell row="5" col="6" state="tree"/>
+
+        <cell row="6" col="0" state="empty"/>
+        <cell row="6" col="1" state="empty"/>
+        <cell row="6" col="2" state="empty"/>
+        <cell row="6" col="3" state="empty"/>
+        <cell row="6" col="4" state="tree"/>
+        <cell row="6" col="5" state="empty"/>
+        <cell row="6" col="6" state="empty"/>
+
+        <cell row="7" col="0" state="burning"/>
+        <cell row="7" col="1" state="empty"/>
+        <cell row="7" col="2" state="empty"/>
+        <cell row="7" col="3" state="empty"/>
+        <cell row="7" col="4" state="empty"/>
+        <cell row="7" col="5" state="tree"/>
+        <cell row="7" col="6" state="empty"/>
+
+        <cell row="8" col="0" state="empty"/>
+        <cell row="8" col="1" state="empty"/>
+        <cell row="8" col="2" state="tree"/>
+        <cell row="8" col="3" state="empty"/>
+        <cell row="8" col="4" state="empty"/>
+        <cell row="8" col="5" state="empty"/>
+        <cell row="8" col="6" state="empty"/>
+    </grid>
+
+    <parameters>
+        <parameter name="ignitionLikelihood" value="0.4"/>
+        <parameter name="treeSpawnLikelihood" value="0.2"/>
+    </parameters>
+</simulation>

@@ -1,0 +1,50 @@
+<simulation>
+    <metadata>
+        <type>Percolator</type>
+        <title>Flooded Path</title>
+        <author>Katara</author>
+        <description>The water finds a way.</description>
+    </metadata>
+
+    <grid rows="6" columns="5">
+        <cell row="0" col="0" state="percolated"/>
+        <cell row="0" col="1" state="percolated"/>
+        <cell row="0" col="2" state="blocked"/>
+        <cell row="0" col="3" state="empty"/>
+        <cell row="0" col="4" state="empty"/>
+
+        <cell row="1" col="0" state="percolated"/>
+        <cell row="1" col="1" state="empty"/>
+        <cell row="1" col="2" state="blocked"/>
+        <cell row="1" col="3" state="empty"/>
+        <cell row="1" col="4" state="empty"/>
+
+        <cell row="2" col="0" state="percolated"/>
+        <cell row="2" col="1" state="percolated"/>
+        <cell row="2" col="2" state="empty"/>
+        <cell row="2" col="3" state="empty"/>
+        <cell row="2" col="4" state="blocked"/>
+
+        <cell row="3" col="0" state="blocked"/>
+        <cell row="3" col="1" state="percolated"/>
+        <cell row="3" col="2" state="percolated"/>
+        <cell row="3" col="3" state="blocked"/>
+        <cell row="3" col="4" state="empty"/>
+
+        <cell row="4" col="0" state="empty"/>
+        <cell row="4" col="1" state="percolated"/>
+        <cell row="4" col="2" state="empty"/>
+        <cell row="4" col="3" state="empty"/>
+        <cell row="4" col="4" state="percolated"/>
+
+        <cell row="5" col="0" state="empty"/>
+        <cell row="5" col="1" state="blocked"/>
+        <cell row="5" col="2" state="empty"/>
+        <cell row="5" col="3" state="percolated"/>
+        <cell row="5" col="4" state="empty"/>
+    </grid>
+
+    <parameters>
+        <!-- This is where parameters would go -->
+    </parameters>
+</simulation>
