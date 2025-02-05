@@ -8,16 +8,16 @@ public class FileExplorer {
   // kind of data files to look for
   public static final String DATA_FILE_EXTENSION = "*.xml";
   // NOTE: make ONE chooser since generally accepted behavior is that it remembers where user left it last
-  private final static FileChooser FILE_LOAD_CHOOSER = makeChooser("Open Data File", DATA_FILE_EXTENSION);
-  private static final FileChooser FILE_SAVE_CHOOSER = makeChooser("Save Data File", DATA_FILE_EXTENSION);
+  private final static FileChooser FILE_LOAD_CHOOSER = makeChooser("Open Data File");
+  private static final FileChooser FILE_SAVE_CHOOSER = makeChooser("Save Data File");
 
   // set some sensible defaults when the FileChooser is created
-  private static FileChooser makeChooser(String title, String extensionAccepted) {
+  private static FileChooser makeChooser(String title) {
     FileChooser result = new FileChooser();
     result.setTitle(title);
     // pick a reasonable place to start searching for files
     result.setInitialDirectory(new File(Main.DATA_FILE_FOLDER));
-    result.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Data Files", extensionAccepted));
+    result.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Data Files", DATA_FILE_EXTENSION));
     return result;
   }
 

@@ -38,11 +38,11 @@ public class UserView {
   public static final double MIN_SIM_STEP_TIME = 0.02;
   public static final double MAX_SIM_STEP_TIME = 4;
 
-  private int mySceneWidth;
-  private int mySceneHeight;
+  private final int mySceneWidth;
+  private final int mySceneHeight;
+  private final Stage myStage;
 
   private ViewState myState;
-  private Stage myStage;
   private BorderPane myRoot;
   private Timeline myAnimation;
   // DEFAULT_SIM_STEP_TIME is DIVIDED by mySpeedFactor to get number of seconds between steps.
