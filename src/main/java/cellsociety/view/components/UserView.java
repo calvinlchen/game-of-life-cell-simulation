@@ -145,6 +145,7 @@ public class UserView {
       myAnimation.stop();
     }
     mySimulationView.resetGrid();
+    myInformationBox.emptyFields();
     mySpeedFactor = 1;
   }
 
@@ -161,6 +162,8 @@ public class UserView {
         // Upload simulation to mySimulationView
         mySimulationView.configureFromXML(xmlUtils.readXML(dataFile));
         mySimulationView.initializeGridView();
+        // Update text box with simulation information
+        myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
       }
       catch (XMLException e) {
         myState = ViewState.ERROR;
@@ -255,6 +258,7 @@ public class UserView {
 
     mySimulationView.configureFromXML(randomXMLData);
     mySimulationView.initializeGridView();
+    myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
     myState = ViewState.LOAD;
   }
 }
