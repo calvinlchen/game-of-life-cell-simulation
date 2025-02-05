@@ -97,6 +97,9 @@ public class XMLUtils {
 
                     //extract cell info
                     NodeList cellList = gridElement.getElementsByTagName("cell");
+                    if (cellList.getLength() != rows * columns) {
+                        throw new XMLException("Error: Expected " + (rows * columns) + " <cell> elements, but found " + cellList.getLength());
+                    }
                     xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType()));
 
                     //extract parameter info
