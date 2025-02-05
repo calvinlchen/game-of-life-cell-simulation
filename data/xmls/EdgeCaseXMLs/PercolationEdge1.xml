@@ -1,6 +1,6 @@
 <simulation>
     <metadata>
-        <type>Percolator</type>
+        <type>Percolation</type>
         <title>Encroaching Tide</title>
         <author>Neptune</author>
         <description>The water seeps in from all sides.</description>
