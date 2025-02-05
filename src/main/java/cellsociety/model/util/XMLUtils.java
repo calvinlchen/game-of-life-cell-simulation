@@ -33,14 +33,14 @@ public class XMLUtils {
     /**
      * A method that reads a pre-existing xml file.
      *
-     * @param fileName a string variable of the file's name
+     * @param fXmlFile a File object containing the XML
      * @return an XMLData object with all information found from the provided xml file
      */
-    public XMLData readXML(String fileName) {
+    public XMLData readXML(File fXmlFile) {
         XMLData xmlObject = new XMLData();
 
         try {
-            File fXmlFile = new File(FILE_PATH_PREFIX + fileName + ".xml");
+            // File fXmlFile = new File(FILE_PATH_PREFIX + fileName + ".xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
