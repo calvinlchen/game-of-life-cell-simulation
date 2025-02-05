@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
  * Manages control buttons and status messages. (VBox suggested by ChatGPT.)
  */
 public class ControlPanel {
-  private VBox myPanel;
-  private UserView myUserView;
+  private final VBox myPanel;
+  private final UserView myUserView;
   private Button myPlayButton;
   private Button myPauseButton;
   private Button myStopButton;
@@ -20,7 +20,7 @@ public class ControlPanel {
 
   public ControlPanel(UserView userView) {
     myUserView = userView;
-    myPanel = new VBox(10);
+    myPanel = new VBox(12);
     initializeControls();
   }
 
@@ -31,13 +31,13 @@ public class ControlPanel {
     myPauseButton = new Button("Pause");
     myPauseButton.setOnAction(e -> myUserView.pauseSimulation());
 
-    myStopButton = new Button("Reset");
+    myStopButton = new Button("Clear Grid");
     myStopButton.setOnAction(e -> myUserView.stopAndResetSimulation());
 
-    myLoadButton = new Button("Load New");
+    myLoadButton = new Button("Load New File");
     myLoadButton.setOnAction(e -> myUserView.loadSimulation());
 
-    mySaveButton = new Button("Save");
+    mySaveButton = new Button("Save As");
     mySaveButton.setOnAction(e -> myUserView.saveSimulation());
 
     myRandomButton = new Button("Random Game of Life");
@@ -50,7 +50,7 @@ public class ControlPanel {
   }
 
   private HBox makeSpeedPanel() {
-    HBox speedPanel = new HBox(10);
+    HBox speedPanel = new HBox(6);
 
     Button speedUpButton = new Button("Speed Up");
     speedUpButton.setOnAction(e -> myUserView.changeSimulationSpeed(2.0));
