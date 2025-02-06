@@ -74,7 +74,7 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   /**
    * Set the current steps survived
    *
-   * <p> This should only be used on tests
+   * <p> currently only used in tests, because can set in other ways in rules
    *
    * @param stepsSurvived - the current steps survived
    */
@@ -85,7 +85,7 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   /**
    * Set the energy to a specific amount
    *
-   * <p> This should only be used on tests
+   * <p> currently only used in tests, because can set in other ways in rules
    *
    * @param energy - the energy left
    */
