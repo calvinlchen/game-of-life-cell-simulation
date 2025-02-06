@@ -43,19 +43,25 @@
 
 ### New Abstractions
 
-#### Abstraction #1
+#### Position
 * Description
+  * how to index cells (both position wise and also unique)
 
 * How it supports making it easier to implement new features
+  * when cell indexes are not clearly a grid
 
 
-#### Abstraction #2
+#### FileReader
 * Description
+  * file reader for different types of files
 
 * How it supports making it easier to implement new features
+  * makes it easier to read different types of files (ex. if the parameters were passed in from json than xml)
 
 
-#### Abstraction #3
+#### CellModel
 * Description
+  * Abstracts the image of the cell 
 
 * How it supports making it easier to implement new features
+  * it helps implements things so the cell doesn't necessarilty need to be a colored rectangle

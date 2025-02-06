@@ -1,6 +1,6 @@
 # Cell Society API Lab Discussion
-### NAMES
-### TEAM
+### Jessica Chen, Calvin Chen, Kyaira Boughton
+### TEAM 3
 
 
 ## Current Simulation Model API
