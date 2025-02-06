@@ -24,20 +24,35 @@ public class FireRule extends Rule<FireStates, FireCell> {
 
   @Override
   public FireStates apply(FireCell cell) {
-    if (cell.getCurrentState() == FireStates.BURNING) {
-      return FireStates.EMPTY;
-    } else if (cell.getCurrentState() == FireStates.TREE && neighborIsBurning(cell)) {
+    switch (cell.getCurrentState()) {
+      case BURNING:
+        return FireStates.EMPTY;
+      case TREE:
+        return handleTree(cell);
+      case EMPTY:
+        return handleEmpty(cell);
+      default:
+        return cell.getCurrentState();
+    }
+  }
+
+  private FireStates handleTree(FireCell cell) {
+    if (neighborIsBurning(cell)) {
       return FireStates.BURNING;
-    } else if (cell.getCurrentState() == FireStates.TREE) {
-      double f = getParameters().getOrDefault("ignitionLikelihood", 0.0);
-      if (Math.random() < f) {
-        return FireStates.BURNING;
-      }
-    } else {
-      double p = getParameters().getOrDefault("treeSpawnLikelihood", 0.0);
-      if (Math.random() < p) {
-        return FireStates.TREE;
-      }
+    }
+
+    double f = getParameters().getOrDefault("ignitionLikelihood", 0.0);
+    if (Math.random() < f) {
+      return FireStates.BURNING;
+    }
+
+    return cell.getCurrentState();
+  }
+
+  private FireStates handleEmpty(FireCell cell) {
+    double p = getParameters().getOrDefault("treeSpawnLikelihood", 0.0);
+    if (Math.random() < p) {
+      return FireStates.TREE;
     }
     return cell.getCurrentState();
   }

@@ -66,7 +66,7 @@ class CellTest {
   @Test
   @DisplayName("Set and get next state correctly")
   void nextState_SetAndGet_Verified() {
-    assertNull(cell.getNextState());
+    assertEquals(CellTestState.ALIVE, cell.getNextState());
     cell.setNextState(CellTestState.DEAD);
     assertEquals(CellTestState.DEAD, cell.getNextState());
   }
