@@ -1,7 +1,7 @@
 package cellsociety.model.simulation;
 
-import cellsociety.model.interfaces.Cell;
-import cellsociety.model.interfaces.Grid;
+import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.cell.PercolationCell;
@@ -16,12 +16,6 @@ import cellsociety.model.simulation.rules.SegregationRule;
 import cellsociety.model.simulation.rules.WaTorRule;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
-import cellsociety.model.util.constants.CellStates.FireStates;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
-import cellsociety.model.util.constants.CellStates.SimulationTypes;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

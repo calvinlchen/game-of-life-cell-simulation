@@ -1,7 +1,8 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.rules;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

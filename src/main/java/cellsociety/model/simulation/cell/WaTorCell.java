@@ -1,8 +1,6 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.WaTorRule;
-import java.util.ResourceBundle;
 
 /**
  * Class for representing cell for WaTor simulation

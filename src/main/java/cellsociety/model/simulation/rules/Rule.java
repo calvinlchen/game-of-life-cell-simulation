@@ -1,6 +1,6 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.rules;
 
-import cellsociety.model.simulation.cell.WaTorCell;
+import cellsociety.model.simulation.cell.Cell;
 import java.util.Map;
 import java.util.ResourceBundle;
 

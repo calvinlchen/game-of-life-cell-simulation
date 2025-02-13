@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.*;
 import cellsociety.model.util.XMLData;
-import cellsociety.model.util.constants.CellStates.*;
 import cellsociety.model.util.SimulationTypes.SimType;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,5 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.SegregationRule;
 
 

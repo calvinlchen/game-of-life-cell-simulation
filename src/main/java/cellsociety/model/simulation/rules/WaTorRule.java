@@ -1,7 +1,5 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Cell;
-import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.WaTorCell;
 import java.util.List;
 import java.util.Map;

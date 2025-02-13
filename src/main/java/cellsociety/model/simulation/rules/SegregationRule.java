@@ -1,8 +1,6 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.SegregationCell;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;

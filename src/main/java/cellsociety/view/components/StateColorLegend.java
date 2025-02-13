@@ -1,11 +1,6 @@
 package cellsociety.view.components;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates.FireStates;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -14,7 +9,6 @@ import javafx.scene.layout.HBox;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.function.Function;
 
 /**
  * StateColorLegend dynamically displays state names and colors based on the loaded simulation type.

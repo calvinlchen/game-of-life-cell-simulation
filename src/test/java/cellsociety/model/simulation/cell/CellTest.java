@@ -1,4 +1,4 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 

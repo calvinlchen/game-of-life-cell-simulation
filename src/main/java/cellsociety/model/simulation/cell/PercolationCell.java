@@ -1,8 +1,6 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.PercolationRule;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
 
 /**
  * Class for representing cell for Percolation simulation

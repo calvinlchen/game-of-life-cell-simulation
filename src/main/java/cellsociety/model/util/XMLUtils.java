@@ -2,7 +2,6 @@ package cellsociety.model.util;
 
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
 import java.util.ResourceBundle;
 import org.w3c.dom.Document;

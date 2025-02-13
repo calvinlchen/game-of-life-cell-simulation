@@ -1,14 +1,14 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-enum GridTestState { ALIVE, DEAD; }   // Testing enum for states
 
 /**
  * Test cell for testing Grid

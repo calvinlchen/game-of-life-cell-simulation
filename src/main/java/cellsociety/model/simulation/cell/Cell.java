@@ -1,4 +1,4 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.cell;
 
 import java.util.ArrayList;
 import java.util.List;

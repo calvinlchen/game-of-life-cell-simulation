@@ -3,7 +3,6 @@ package cellsociety.model.simulation.cell;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.rules.PercolationRule;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

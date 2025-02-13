@@ -1,5 +1,6 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.grid;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 

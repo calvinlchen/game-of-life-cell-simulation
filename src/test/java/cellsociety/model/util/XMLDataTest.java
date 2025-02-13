@@ -1,7 +1,6 @@
 package cellsociety.model.util;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

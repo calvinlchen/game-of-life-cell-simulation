@@ -3,7 +3,6 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.WaTorCell;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

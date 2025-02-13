@@ -2,7 +2,6 @@ package cellsociety.view.components;
 
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

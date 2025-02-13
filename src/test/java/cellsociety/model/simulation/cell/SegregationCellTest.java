@@ -4,7 +4,6 @@ package cellsociety.model.simulation.cell;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.rules.SegregationRule;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

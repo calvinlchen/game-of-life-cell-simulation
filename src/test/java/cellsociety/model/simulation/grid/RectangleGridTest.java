@@ -2,7 +2,7 @@ package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.interfaces.Cell;
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

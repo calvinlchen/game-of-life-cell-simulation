@@ -3,11 +3,6 @@ package cellsociety.view.components;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates.FireStates;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.layout.Pane;
 

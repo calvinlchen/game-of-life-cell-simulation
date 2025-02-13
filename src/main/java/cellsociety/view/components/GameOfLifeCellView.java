@@ -1,6 +1,5 @@
 package cellsociety.view.components;
 
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 

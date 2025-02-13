@@ -1,8 +1,6 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Rule;
 import cellsociety.model.simulation.cell.FireCell;
-import cellsociety.model.util.constants.CellStates.FireStates;
 import java.util.Map;
 
 
