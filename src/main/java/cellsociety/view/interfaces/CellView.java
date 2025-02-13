@@ -6,14 +6,12 @@ import javafx.scene.shape.Shape;
 
 /**
  * Abstract class representing a Cell's visual representation.
- *
- * @param <S> The state type of the cell (must be an Enum).
  */
-public abstract class CellView<S extends Enum<S>> {
+public abstract class CellView {
   public static Color DEFAULT_FILL = Color.BLACK;
   public static Color DEFAULT_OUTLINE = Color.WHITE;
 
-  protected S myCellState;
+  protected int myCellState;
   protected Shape myShape;
 
   /**
@@ -22,10 +20,10 @@ public abstract class CellView<S extends Enum<S>> {
    * @param y y-position of the cell (relative to the Scene)
    * @param width width of the cell
    * @param height height of the cell
-   * @param cellState the current state represented by this cell (from the simulation type's enum)
+   * @param cellState the current state represented by this cell
    * @author Calvin Chen
    */
-  protected CellView(double x, double y, double width, double height, S cellState) {
+  protected CellView(double x, double y, double width, double height, int cellState) {
     myCellState = cellState;
     myShape = createShape(x,y,width,height);
     updateViewColor(); // Set color based on cell state
@@ -55,7 +53,7 @@ public abstract class CellView<S extends Enum<S>> {
    * Set the State represented by this cell view
    * @param state corresponding State
    */
-  public void setCellState(S state) {
+  public void setCellState(int state) {
     myCellState = state;
     updateViewColor();  // Update the color of the cell to match its new represented state
   }
@@ -64,7 +62,7 @@ public abstract class CellView<S extends Enum<S>> {
    * Return the State represented by this cell view
    * @return corresponding State
    */
-  public S getCellState() {
+  public int getCellState() {
     return myCellState;
   }
 
@@ -86,5 +84,5 @@ public abstract class CellView<S extends Enum<S>> {
   /**
    * Abstract method to be implemented by subclasses to provide state-to-color mapping. (ChatGPT)
    */
-  protected abstract Color getColorForState(S state);
+  protected abstract Color getColorForState(int state);
 }

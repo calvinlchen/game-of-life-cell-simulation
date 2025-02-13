@@ -46,17 +46,16 @@ public class Simulation<T extends Cell<T>> {
     List<Cell> cellList = new ArrayList<>();
     Map<String, Double> params = xmlData.getParameters();
     for (Enum state : xmlData.getCellStateList()) {
-      // also all of these 0 should be turned into states
       switch (xmlData.getType()) {
-        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(0,
+        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(state,
             new GameOfLifeRule(params)));
-        case SEGREGATION -> cellList.add(new SegregationCell(0,
+        case SEGREGATION -> cellList.add(new SegregationCell(state,
             new SegregationRule(params)));
-        case FIRE -> cellList.add(new FireCell(0,
+        case FIRE -> cellList.add(new FireCell(state,
             new FireRule(params)));
-        case PERCOLATION -> cellList.add(new PercolationCell(0,
+        case PERCOLATION -> cellList.add(new PercolationCell(state,
             new PercolationRule(params)));
-        case WATOR -> cellList.add(new WaTorCell(0,
+        case WATOR -> cellList.add(new WaTorCell(state,
             new WaTorRule(params)));
       }
     }

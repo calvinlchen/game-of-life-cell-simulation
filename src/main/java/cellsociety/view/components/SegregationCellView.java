@@ -4,9 +4,9 @@ import cellsociety.model.util.constants.CellStates.SegregationStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class SegregationCellView extends CellView<SegregationStates> {
+public class SegregationCellView extends CellView {
 
-  public SegregationCellView(double x, double y, double width, double height, SegregationStates cellState) {
+  public SegregationCellView(double x, double y, double width, double height, int cellState) {
     super(x, y, width, height, cellState);
   }
 
@@ -14,11 +14,11 @@ public class SegregationCellView extends CellView<SegregationStates> {
    * Maps a Percolation state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(SegregationStates state) {
+  protected Color getColorForState(int state) {
     return switch (state) {
-      case EMPTY -> DEFAULT_FILL;
-      case AGENT_A -> Color.RED;
-      case AGENT_B -> Color.LIGHTBLUE;
+      case 1 -> Color.RED;
+      case 2 -> Color.LIGHTBLUE;
+      default -> DEFAULT_FILL;
     };
   }
 }

@@ -4,9 +4,9 @@ import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class FireCellView extends CellView<FireStates> {
+public class FireCellView extends CellView {
 
-  public FireCellView(double x, double y, double width, double height, FireStates cellState) {
+  public FireCellView(double x, double y, double width, double height, int cellState) {
     super(x, y, width, height, cellState);
   }
 
@@ -14,11 +14,11 @@ public class FireCellView extends CellView<FireStates> {
    * Maps a Spreading of Fire state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(FireStates state) {
+  protected Color getColorForState(int state) {
     return switch (state) {
-      case EMPTY -> DEFAULT_FILL;
-      case TREE -> Color.GREEN;
-      case BURNING -> Color.RED;
+      case 1 -> Color.GREEN;
+      case 2 -> Color.RED;
+      default -> DEFAULT_FILL;
     };
   }
 }

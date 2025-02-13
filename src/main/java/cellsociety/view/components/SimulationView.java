@@ -77,19 +77,19 @@ public class SimulationView {
     }
   }
 
-  private void createCellView(int cellRow, int cellCol, Enum<?> cellState, SimType simType) {
+  private void createCellView(int cellRow, int cellCol, int cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
     double x = position[0];
     double y = position[1];
 
-    CellView<?> cellView = null;
+    CellView cellView = null;
 
     switch (simType) {
-      case GAMEOFLIFE -> cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, (GameOfLifeStates) cellState);
-      case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, (FireStates) cellState);
-      case PERCOLATION -> cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, (PercolationStates) cellState);
-      case SEGREGATION -> cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, (SegregationStates) cellState);
-      case WATOR -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, (WaTorStates) cellState);
+      case GAMEOFLIFE -> cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case PERCOLATION -> cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case SEGREGATION -> cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case WATOR -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
       default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
     }
 
