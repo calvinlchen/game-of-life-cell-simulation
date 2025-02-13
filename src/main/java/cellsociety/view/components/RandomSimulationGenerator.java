@@ -28,12 +28,12 @@ public class RandomSimulationGenerator {
     randomXMLData.setGridColNum(numCols);
 
     // Initialize cell states randomly
-    ArrayList<Enum> cellStateList = new ArrayList<>();
+    ArrayList<Integer> cellStateList = new ArrayList<>();
     Random random = new Random();
 
     for (int i = 0; i < numRows * numCols; i++) {
       // Randomly assign ALIVE or DEAD
-      GameOfLifeStates state = random.nextBoolean() ? GameOfLifeStates.ALIVE : GameOfLifeStates.DEAD;
+      int state = random.nextBoolean() ? 1 : 0;
       cellStateList.add(state);
     }
 

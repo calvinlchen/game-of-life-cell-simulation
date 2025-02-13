@@ -4,6 +4,7 @@ import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import java.util.ResourceBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,6 +28,12 @@ import java.util.Objects;
  * @author Kyaira Boughton
  */
 public class XMLUtils {
+    private ResourceBundle myResources;
+    public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
+
+    public XMLUtils() {
+        myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
+    }
 
     /**
      * A method that reads a pre-existing xml file.
@@ -209,25 +216,55 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
         for (int i=0; i<rowNum; i++){ //for loop to build array list of cellstates
             for (int j=0; j<colNum; j++){
 
-                Enum currentCellState = simulation.getCurrentState(i, j); //returns the current state of a specific cell
+                int currentCellState = simulation.getCurrentState(i, j); //returns the current state of a specific cell
 
-                switch (currentCellState) { //turns cell state enums into strings
+                switch (simulation.getSimulationType()) {
 
-                    case CellStates.GameOfLifeStates.ALIVE -> cellStateList.add("alive");
-                    case CellStates.GameOfLifeStates.DEAD -> cellStateList.add("dead");
-                    case CellStates.PercolationStates.BLOCKED -> cellStateList.add("blocked");
-                    case CellStates.PercolationStates.OPEN -> cellStateList.add("open");
-                    case CellStates.PercolationStates.PERCOLATED -> cellStateList.add("percolated");
-                    case CellStates.FireStates.TREE -> cellStateList.add("tree");
-                    case CellStates.FireStates.EMPTY -> cellStateList.add("empty");
-                    case CellStates.FireStates.BURNING -> cellStateList.add("burning");
-                    case CellStates.SegregationStates.EMPTY -> cellStateList.add("empty");
-                    case CellStates.SegregationStates.AGENT_A -> cellStateList.add("agentA");
-                    case CellStates.SegregationStates.AGENT_B -> cellStateList.add("agentB");
-                    case CellStates.WaTorStates.EMPTY -> cellStateList.add("empty");
-                    case CellStates.WaTorStates.FISH-> cellStateList.add("fish");
-                    case CellStates.WaTorStates.SHARK -> cellStateList.add("shark");
-                    default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                    case SimType.GAMEOFLIFE -> {
+                        switch (currentCellState){
+                            case 1 -> cellStateList.add("alive");
+                            case 0 -> cellStateList.add("dead");
+                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                        }
+                    }
+
+                    case SimType.PERCOLATION -> {
+                        switch (currentCellState){
+                            case 0 -> cellStateList.add("blocked");
+                            case 1 -> cellStateList.add("open");
+                            case 2-> cellStateList.add("percolated");
+                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                        }
+                    }
+
+                    case SimType.FIRE -> {
+                        switch (currentCellState){
+                            case 1 -> cellStateList.add("tree");
+                            case 0 -> cellStateList.add("empty");
+                            case 2 -> cellStateList.add("burning");
+                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                        }
+                    }
+
+                    case SimType.SEGREGATION -> {
+                        switch (currentCellState){
+                            case 0 -> cellStateList.add("empty");
+                            case 1 -> cellStateList.add("agentA");
+                            case 2 -> cellStateList.add("agentB");
+                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                        }
+                    }
+
+                    case SimType.WATOR -> {
+                        switch (currentCellState) {
+                            case 0 -> cellStateList.add("empty");
+                            case 1 -> cellStateList.add("fish");
+                            case 2 -> cellStateList.add("shark");
+                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+                        }
+                    }
+
+                    default -> throw new IllegalArgumentException("Unknown simulation type: " + simulation.getSimulationType());
 
                 }
             }
@@ -242,9 +279,9 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
      * @param cellList an NodeList variable that holds the xml data's cell data
      * @param SimulationType an Enum representing the intended simulation type
      */
-    private ArrayList<Enum> cellStatesToEnum (NodeList cellList, Enum SimulationType){
+    private ArrayList<Integer> cellStatesToEnum (NodeList cellList, Enum SimulationType){
 
-        ArrayList<Enum> cellStateEnums = new ArrayList<>();
+        ArrayList<Integer> cellStateEnums = new ArrayList<>();
 
         for (int j = 0; j < cellList.getLength(); j++) {
             Element cellElement = (Element) cellList.item(j);
@@ -255,44 +292,44 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
 
                 case SimType.GAMEOFLIFE -> {
                     switch (currentCellState){
-                        case ("alive") -> cellStateEnums.add(CellStates.GameOfLifeStates.ALIVE);
-                        case ("dead") -> cellStateEnums.add(CellStates.GameOfLifeStates.DEAD);
+                        case ("alive") -> cellStateEnums.add(getStateProperty("GAMEOFLIFE_ALIVE"));
+                        case ("dead") -> cellStateEnums.add(getStateProperty("GAMEOFLIFE_DEAD"));
                         default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.PERCOLATION -> {
                     switch (currentCellState){
-                        case ("blocked") -> cellStateEnums.add(CellStates.PercolationStates.BLOCKED);
-                        case ("open") -> cellStateEnums.add(CellStates.PercolationStates.OPEN);
-                        case ("percolated") -> cellStateEnums.add(CellStates.PercolationStates.PERCOLATED);
+                        case ("blocked") -> cellStateEnums.add(getStateProperty("PERCOLATION_BLOCKED"));
+                        case ("open") -> cellStateEnums.add(getStateProperty("PERCOLATION_OPEN"));
+                        case ("percolated") -> cellStateEnums.add(getStateProperty("PERCOLATION_PERCOLATED"));
                         default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.FIRE -> {
                     switch (currentCellState){
-                        case ("tree") -> cellStateEnums.add(CellStates.FireStates.TREE);
-                        case ("empty") -> cellStateEnums.add(CellStates.FireStates.EMPTY);
-                        case ("burning") -> cellStateEnums.add(CellStates.FireStates.BURNING);
+                        case ("tree") -> cellStateEnums.add(getStateProperty("FIRE_TREE"));
+                        case ("empty") -> cellStateEnums.add(getStateProperty("FIRE_EMPTY"));
+                        case ("burning") -> cellStateEnums.add(getStateProperty("FIRE_BURNING"));
                         default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.SEGREGATION -> {
                     switch (currentCellState){
-                        case ("agentA") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_A);
-                        case ("empty") -> cellStateEnums.add(CellStates.SegregationStates.EMPTY);
-                        case ("agentB") -> cellStateEnums.add(CellStates.SegregationStates.AGENT_B);
+                        case ("agentA") -> cellStateEnums.add(getStateProperty("SEGREGATION_A"));
+                        case ("empty") -> cellStateEnums.add(getStateProperty("SEGREGATION_EMPTY"));
+                        case ("agentB") -> cellStateEnums.add(getStateProperty("SEGREGATION_B"));
                         default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
 
                 case SimType.WATOR -> {
                     switch (currentCellState) {
-                        case ("fish") -> cellStateEnums.add(CellStates.WaTorStates.FISH);
-                        case ("empty") -> cellStateEnums.add(CellStates.WaTorStates.EMPTY);
-                        case ("shark") -> cellStateEnums.add(CellStates.WaTorStates.SHARK);
+                        case ("fish") -> cellStateEnums.add(getStateProperty("WATOR_FISH"));
+                        case ("empty") -> cellStateEnums.add(getStateProperty("WATOR_EMPTY"));
+                        case ("shark") -> cellStateEnums.add(getStateProperty("WATOR_SHARK"));
                         default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                     }
                 }
@@ -325,5 +362,17 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
 
         return parameters;
 
+    }
+
+    /**
+     * Returns the int associated with the state from the resource property
+     *
+     * TODO: refactor this to be a single utils files
+     *
+     * @param key - the String key associated with the state
+     * @return the int associated with the property's key
+     */
+    private int getStateProperty(String key) {
+        return Integer.parseInt(myResources.getString(key));
     }
 }

@@ -14,11 +14,13 @@ import cellsociety.model.simulation.rules.GameOfLifeRule;
 import cellsociety.model.simulation.rules.PercolationRule;
 import cellsociety.model.simulation.rules.SegregationRule;
 import cellsociety.model.simulation.rules.WaTorRule;
+import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.constants.CellStates.FireStates;
 import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.model.util.constants.CellStates.PercolationStates;
 import cellsociety.model.util.constants.CellStates.SegregationStates;
+import cellsociety.model.util.constants.CellStates.SimulationTypes;
 import cellsociety.model.util.constants.CellStates.WaTorStates;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class Simulation<T extends Cell<T>> {
   private void setUpGrid() {
     List<Cell> cellList = new ArrayList<>();
     Map<String, Double> params = xmlData.getParameters();
-    for (Enum state : xmlData.getCellStateList()) {
+    for (Integer state : xmlData.getCellStateList()) {
       switch (xmlData.getType()) {
         case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(state,
             new GameOfLifeRule(params)));
@@ -114,5 +116,9 @@ public class Simulation<T extends Cell<T>> {
 
   public XMLData getXMLData() {
     return xmlData;
+  }
+
+  public SimType getSimulationType() {
+    return xmlData.getType();
   }
 }
