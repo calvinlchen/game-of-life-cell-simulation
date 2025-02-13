@@ -25,33 +25,33 @@ class SegregationCellTest {
   @Test
   @DisplayName("Cell initializes with correct state")
   void cellInitializesWithCorrectState() {
-    SegregationCell cell = new SegregationCell(SegregationStates.AGENT_A, rule);
-    assertEquals(SegregationStates.AGENT_A, cell.getCurrentState());
+    SegregationCell cell = new SegregationCell(1, rule);
+    assertEquals(1, cell.getCurrentState());
   }
 
   // actual test for correctness is really on the rules, this is just to check if the update is good
   @Test
   @DisplayName("Cell correctly calculates next state")
   void cellCorrectlyCalculatesNextState() {
-    SegregationCell cell = new SegregationCell(SegregationStates.AGENT_A, rule);
+    SegregationCell cell = new SegregationCell(1, rule);
     List<SegregationCell> neighbors = List.of(
-        new SegregationCell(SegregationStates.AGENT_A, rule),
-        new SegregationCell(SegregationStates.AGENT_B, rule),
-        new SegregationCell(SegregationStates.AGENT_B, rule),
-        new SegregationCell(SegregationStates.EMPTY, rule)
+        new SegregationCell(1, rule),
+        new SegregationCell(2, rule),
+        new SegregationCell(2, rule),
+        new SegregationCell(0, rule)
     );
     cell.setNeighbors(neighbors);
     cell.calcNextState();
-    assertEquals(SegregationStates.AGENT_A, cell.getCurrentState());
-    assertEquals(SegregationStates.EMPTY, cell.getNextState());
+    assertEquals(1, cell.getCurrentState());
+    assertEquals(0, cell.getNextState());
   }
 
   @Test
   @DisplayName("Cell updates to next state on step")
   void cellUpdatesToNextStateOnStep() {
-    SegregationCell cell = new SegregationCell(SegregationStates.AGENT_A, rule);
-    cell.setNextState(SegregationStates.EMPTY);
+    SegregationCell cell = new SegregationCell(1, rule);
+    cell.setNextState(0);
     cell.step();
-    assertEquals(SegregationStates.EMPTY, cell.getCurrentState());
+    assertEquals(0, cell.getCurrentState());
   }
 }

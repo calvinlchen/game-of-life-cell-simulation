@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
 
 class SimulationTest {
 
-  private Simulation<GameOfLifeStates, GameOfLifeCell> gameOfLifeSimulation;
-  private Simulation<SegregationStates, SegregationCell> segregationSimulation;
-  private Simulation<FireStates, FireCell> fireSimulation;
-  private Simulation<PercolationStates, PercolationCell> percolationSimulation;
-  private Simulation<WaTorStates, WaTorCell> watorSimulation;
+  private Simulation<GameOfLifeCell> gameOfLifeSimulation;
+  private Simulation<SegregationCell> segregationSimulation;
+  private Simulation<FireCell> fireSimulation;
+  private Simulation<PercolationCell> percolationSimulation;
+  private Simulation<WaTorCell> watorSimulation;
   private XMLData xmlData;
 
   @BeforeEach
@@ -30,47 +30,47 @@ class SimulationTest {
 
     xmlData.setType(SimType.GAMEOFLIFE);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        GameOfLifeStates.ALIVE, GameOfLifeStates.DEAD, GameOfLifeStates.ALIVE,
-        GameOfLifeStates.DEAD, GameOfLifeStates.ALIVE, GameOfLifeStates.DEAD,
-        GameOfLifeStates.ALIVE, GameOfLifeStates.DEAD, GameOfLifeStates.ALIVE)));
+        1, 0, 1,
+        0, 1, 0,
+        1, 0, 1)));
     gameOfLifeSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.SEGREGATION);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        SegregationStates.EMPTY, SegregationStates.AGENT_A, SegregationStates.AGENT_B,
-        SegregationStates.AGENT_B, SegregationStates.AGENT_B, SegregationStates.AGENT_B,
-        SegregationStates.AGENT_B, SegregationStates.AGENT_B, SegregationStates.AGENT_B)));
+        0, 1, 2,
+        2, 2, 2,
+        2, 2, 2)));
     segregationSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.FIRE);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        FireStates.BURNING, FireStates.TREE, FireStates.EMPTY,
-        FireStates.TREE, FireStates.BURNING, FireStates.EMPTY,
-        FireStates.TREE, FireStates.TREE, FireStates.EMPTY)));
+        2, 1, 0,
+        1, 2, 0,
+        1, 1, 0)));
     fireSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.PERCOLATION);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        PercolationStates.OPEN, PercolationStates.PERCOLATED, PercolationStates.PERCOLATED,
-        PercolationStates.BLOCKED, PercolationStates.BLOCKED, PercolationStates.PERCOLATED,
-        PercolationStates.OPEN, PercolationStates.OPEN, PercolationStates.PERCOLATED)));
+        1, 2, 2,
+        0, 0, 2,
+        1, 1, 2)));
     percolationSimulation = new Simulation<>(xmlData);
 
     xmlData.setType(SimType.WATOR);
     xmlData.setCellStateList(new ArrayList<>(List.of(
-        WaTorStates.FISH, WaTorStates.SHARK, WaTorStates.EMPTY,
-        WaTorStates.EMPTY, WaTorStates.EMPTY, WaTorStates.EMPTY,
-        WaTorStates.EMPTY, WaTorStates.EMPTY, WaTorStates.EMPTY)));
+        1, 2, 0,
+        0, 0, 0,
+        0, 0, 0)));
     watorSimulation = new Simulation<>(xmlData);
   }
 
   @Test
   void testInitialization() {
-    assertEquals(GameOfLifeStates.ALIVE, gameOfLifeSimulation.getCurrentState(0, 0));
-    assertEquals(SegregationStates.EMPTY, segregationSimulation.getCurrentState(0, 0));
-    assertEquals(FireStates.BURNING, fireSimulation.getCurrentState(0, 0));
-    assertEquals(PercolationStates.OPEN, percolationSimulation.getCurrentState(0, 0));
-    assertEquals(WaTorStates.FISH, watorSimulation.getCurrentState(0, 0));
+    assertEquals(1, gameOfLifeSimulation.getCurrentState(0, 0));
+    assertEquals(0, segregationSimulation.getCurrentState(0, 0));
+    assertEquals(2, fireSimulation.getCurrentState(0, 0));
+    assertEquals(1, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(1, watorSimulation.getCurrentState(0, 0));
   }
 
   @Test
@@ -80,11 +80,11 @@ class SimulationTest {
     fireSimulation.step();
     percolationSimulation.step();
     watorSimulation.step();
-    assertEquals(GameOfLifeStates.DEAD, gameOfLifeSimulation.getCurrentState(0, 0));
-    assertEquals(SegregationStates.AGENT_A, segregationSimulation.getCurrentState(0, 0));
-    assertEquals(FireStates.EMPTY, fireSimulation.getCurrentState(0, 0));
-    assertEquals(PercolationStates.PERCOLATED, percolationSimulation.getCurrentState(0, 0));
-    assertEquals(WaTorStates.SHARK, watorSimulation.getCurrentState(0, 0));
+    assertEquals(0, gameOfLifeSimulation.getCurrentState(0, 0));
+    assertEquals(1, segregationSimulation.getCurrentState(0, 0));
+    assertEquals(0, fireSimulation.getCurrentState(0, 0));
+    assertEquals(2, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(2, watorSimulation.getCurrentState(0, 0));
   }
 
   @Test

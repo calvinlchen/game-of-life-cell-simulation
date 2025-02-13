@@ -14,12 +14,12 @@ enum GridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing RectangularGrid
  */
-class TestRectangularGridCell extends Cell<GridTestState, TestRectangularGridCell> {
-  public TestRectangularGridCell(GridTestState state) {
+class TestRectangularGridCell extends Cell<TestRectangularGridCell> {
+  public TestRectangularGridCell(int state) {
     super(state);
   }
 
-  public TestRectangularGridCell(GridTestState state, int[] position) {
+  public TestRectangularGridCell(int state, int[] position) {
     super(state, position);
   }
 
@@ -38,14 +38,14 @@ class TestRectangularGridCell extends Cell<GridTestState, TestRectangularGridCel
  * Tester for RectangularGrid class
  */
 class RectangularGridTest {
-  private RectangularGrid<GridTestState, TestRectangularGridCell> grid;
+  private RectangularGrid<TestRectangularGridCell> grid;
   private List<TestRectangularGridCell> cells;
 
   @BeforeEach
   void setUp() {
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestRectangularGridCell(GridTestState.ALIVE));
+      cells.add(new TestRectangularGridCell(1));
     }
     grid = new RectangularGrid<>(cells, 3, 3);
   }

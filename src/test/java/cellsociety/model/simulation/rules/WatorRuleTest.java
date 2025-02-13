@@ -30,82 +30,82 @@ class WaTorRuleTest {
   @Test
   @DisplayName("Fish moves to empty space")
   void fish_Moves() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.FISH, 4, 0, 0);
-    assertEquals(WaTorStates.EMPTY, rule.apply(cell));
+    WaTorCell cell = createCellWithStateAndNeighbors(1, 4, 0, 0);
+    assertEquals(0, rule.apply(cell));
   }
 
   @Test
   @DisplayName("Fish moves to empty space and reproduces")
   void fish_MovesAndReproduces() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.FISH, 4, 0, 0);
+    WaTorCell cell = createCellWithStateAndNeighbors(1, 4, 0, 0);
     cell.setStepsSurvived(2);
-    assertEquals(WaTorStates.FISH, rule.apply(cell));
-    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == WaTorStates.FISH));
+    assertEquals(1, rule.apply(cell));
+    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == 1));
   }
 
   @Test
   @DisplayName("Fish stays if no empty space available")
   void fish_Stays_NoEmptySpaces() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.FISH, 0, 2, 2);
-    assertNull(rule.apply(cell));
+    WaTorCell cell = createCellWithStateAndNeighbors(1, 0, 2, 2);
+    assertEquals(-1, rule.apply(cell));
   }
 
   @Test
   @DisplayName("Shark moves to empty space")
   void shark_MovesToEmpty() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.SHARK, 4, 0, 0);
-    assertEquals(WaTorStates.EMPTY, rule.apply(cell));
-    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == WaTorStates.SHARK));
+    WaTorCell cell = createCellWithStateAndNeighbors(2, 4, 0, 0);
+    assertEquals(0, rule.apply(cell));
+    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == 2));
   }
 
   @Test
   @DisplayName("Shark eats fish and gains energy")
   void shark_EatsFish() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.SHARK,  2, 0, 2);
-    assertEquals(WaTorStates.EMPTY, rule.apply(cell));
-    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == WaTorStates.SHARK));
+    WaTorCell cell = createCellWithStateAndNeighbors(2,  2, 0, 2);
+    assertEquals(0, rule.apply(cell));
+    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == 2));
     assertTrue(cell.getNeighbors().stream().anyMatch(WaTorCell::isConsumed));
   }
 
   @Test
   @DisplayName("Shark moves to empty space and reproduces")
   void shark_MovesToEmptySpaceAndReproduces() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.SHARK, 4, 0, 0);
+    WaTorCell cell = createCellWithStateAndNeighbors(2, 4, 0, 0);
     cell.setStepsSurvived(2);
-    assertEquals(WaTorStates.SHARK, rule.apply(cell));
-    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == WaTorStates.SHARK));
+    assertEquals(2, rule.apply(cell));
+    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == 2));
   }
 
   @Test
   @DisplayName("Shark eats fish and reproduces")
   void Shark_EatsFishAndReproduces() {
-    WaTorCell cell = createCellWithStateAndNeighbors(WaTorStates.SHARK,  2, 0, 2);
+    WaTorCell cell = createCellWithStateAndNeighbors(2,  2, 0, 2);
     cell.setStepsSurvived(2);
-    assertEquals(WaTorStates.SHARK, rule.apply(cell));
-    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == WaTorStates.SHARK));
+    assertEquals(2, rule.apply(cell));
+    assertTrue(cell.getNeighbors().stream().anyMatch(neighbor -> neighbor.getNextState() == 2));
     assertTrue(cell.getNeighbors().stream().anyMatch(WaTorCell::isConsumed));
   }
 
   @Test
   @DisplayName("Shark dies when energy reaches zero")
   void shark_Dies_WhenEnergyZero() {
-    WaTorCell cell = new WaTorCell(WaTorStates.SHARK, rule);
+    WaTorCell cell = new WaTorCell(2, rule);
     cell.setEnergy(1);
-    assertEquals(WaTorStates.EMPTY, rule.apply(cell));
+    assertEquals(0, rule.apply(cell));
   }
 
-  private WaTorCell createCellWithStateAndNeighbors(WaTorStates state, int emptyNeighbors, int sharkNeighbors, int fishNeighbors) {
+  private WaTorCell createCellWithStateAndNeighbors(int state, int emptyNeighbors, int sharkNeighbors, int fishNeighbors) {
     WaTorCell cell = new WaTorCell(state, rule);
     List<WaTorCell> neighbors = new ArrayList<>();
 
     for (int i = 0; i < emptyNeighbors - 1; i++) {
-      neighbors.add(new WaTorCell(WaTorStates.EMPTY, rule));
+      neighbors.add(new WaTorCell(0, rule));
     }
     for (int i = 0; i < sharkNeighbors - 1; i++) {
-      neighbors.add(new WaTorCell(WaTorStates.SHARK, rule));
+      neighbors.add(new WaTorCell(2, rule));
     }
     for (int i = 0; i < fishNeighbors - 1; i++) {
-      neighbors.add(new WaTorCell(WaTorStates.FISH, rule));
+      neighbors.add(new WaTorCell(1, rule));
     }
 
     cell.setNeighbors(neighbors);

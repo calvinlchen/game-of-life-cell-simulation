@@ -41,7 +41,7 @@ class CellTest {
 
   @BeforeEach
   void setUp() {
-    cell = new TestCell(1);
+    cell = new TestCell(0);
     neighbor = new TestCell(0);
   }
 
@@ -118,24 +118,6 @@ class CellTest {
   // Negative Tests
 
   @Test
-  @DisplayName("Set initial state to null")
-  void initialState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(null));
-  }
-
-  @Test
-  @DisplayName("Set current state to null")
-  void currentState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setCurrentState(null));
-  }
-
-  @Test
-  @DisplayName("Set next state to null")
-  void nextState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setNextState(null));
-  }
-
-  @Test
   @DisplayName("Set invalid number of position arguments in position constructor")
   void positionConstructor_InvalidPosition_IllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> new TestCell(0, new int[]{0}));
@@ -158,13 +140,6 @@ class CellTest {
   void position_Null_IllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cell.setPosition(null));
   }
-
-  @Test
-  @DisplayName("Set neighbors to null")
-  void neighbors_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setNeighbors(null));
-  }
-
 
   @Test
   @DisplayName("Add the same neighbor")
