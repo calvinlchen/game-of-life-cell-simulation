@@ -43,19 +43,20 @@ public class Simulation<T extends Cell<T>> {
   }
 
   private void setUpGrid() {
-    List<T> cellList = new ArrayList<>();
+    List<Cell> cellList = new ArrayList<>();
     Map<String, Double> params = xmlData.getParameters();
     for (Enum state : xmlData.getCellStateList()) {
+      // also all of these 0 should be turned into states
       switch (xmlData.getType()) {
-        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(state,
+        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(0,
             new GameOfLifeRule(params)));
-        case SEGREGATION -> cellList.add(new SegregationCell(state,
+        case SEGREGATION -> cellList.add(new SegregationCell(0,
             new SegregationRule(params)));
-        case FIRE -> cellList.add(new FireCell(state,
+        case FIRE -> cellList.add(new FireCell(0,
             new FireRule(params)));
-        case PERCOLATION -> cellList.add(new PercolationCell(state,
+        case PERCOLATION -> cellList.add(new PercolationCell(0,
             new PercolationRule(params)));
-        case WATOR -> cellList.add(new WaTorCell(state,
+        case WATOR -> cellList.add(new WaTorCell(0,
             new WaTorRule(params)));
       }
     }
