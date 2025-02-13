@@ -1,5 +1,6 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.grid;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +12,10 @@ import java.util.List;
  *
  * <p> Reference for generics: https://www.geeksforgeeks.org/generics-in-java/
  *
- * @param <S> - the type of state for the cells, must be an Enum
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public abstract class Grid<S extends Enum<S>, T extends Cell<S, T>> {
+public abstract class Grid<T extends Cell<T>> {
 
   private final List<List<T>> myGrid;
   private final int myRows;

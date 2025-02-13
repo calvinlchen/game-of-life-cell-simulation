@@ -2,8 +2,8 @@ package cellsociety.model.util;
 
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,12 +47,12 @@ class XMLUtilsTest {
         assertEquals(2, xmlData.getGridColNum());
 
         //verify cell states
-        ArrayList<Enum> cellStates = xmlData.getCellStateList();
+        List<Integer> cellStates = xmlData.getCellStateList();
         assertEquals(4, cellStates.size());
-        assertEquals(CellStates.FireStates.BURNING, cellStates.get(0));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(1));
-        assertEquals(CellStates.FireStates.EMPTY, cellStates.get(2));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(3));
+        assertEquals(2, cellStates.get(0));
+        assertEquals(1, cellStates.get(1));
+        assertEquals(0, cellStates.get(2));
+        assertEquals(1, cellStates.get(3));
 
         //verify parameters
         Map<String, Double> parameters = xmlData.getParameters();
@@ -66,7 +66,7 @@ class XMLUtilsTest {
     @Test
     void testWriteToXML() {
         //create simulation object with test data
-        Simulation<?, ?> simulation = createTestSimulation();
+        Simulation<?> simulation = createTestSimulation();
 
         //write simulation data to an XML file
         File fXmlFile = new File(TEST_FILE_PATH);
@@ -87,12 +87,12 @@ class XMLUtilsTest {
         assertEquals(2, xmlData.getGridColNum());
 
         //verify cell states
-        ArrayList<Enum> cellStates = xmlData.getCellStateList();
+        List<Integer> cellStates = xmlData.getCellStateList();
         assertEquals(4, cellStates.size());
-        assertEquals(CellStates.FireStates.BURNING, cellStates.get(0));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(1));
-        assertEquals(CellStates.FireStates.EMPTY, cellStates.get(2));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(3));
+        assertEquals(2, cellStates.get(0));
+        assertEquals(1, cellStates.get(1));
+        assertEquals(0, cellStates.get(2));
+        assertEquals(1, cellStates.get(3));
 
         //verify parameters
         Map<String, Double> parameters = xmlData.getParameters(); //param is null for some reason
@@ -354,7 +354,7 @@ class XMLUtilsTest {
         }
     }
 
-    private Simulation<?, ?> createTestSimulation() {
+    private Simulation<?> createTestSimulation() {
         //create XMLData with test data
         XMLData xmlData = new XMLData();
         xmlData.setType(SimType.FIRE);
@@ -365,11 +365,11 @@ class XMLUtilsTest {
         xmlData.setGridColNum(2);
 
         //set cell states
-        ArrayList<Enum> cellStates = new ArrayList<>();
-        cellStates.add(CellStates.FireStates.BURNING);
-        cellStates.add(CellStates.FireStates.TREE);
-        cellStates.add(CellStates.FireStates.EMPTY);
-        cellStates.add(CellStates.FireStates.TREE);
+        ArrayList<Integer> cellStates = new ArrayList<>();
+        cellStates.add(2);
+        cellStates.add(1);
+        cellStates.add(0);
+        cellStates.add(1);
         xmlData.setCellStateList(cellStates);
 
         //set parameters
@@ -380,12 +380,12 @@ class XMLUtilsTest {
         //create mock Simulation object
         return new Simulation(xmlData) {
             @Override
-            public Enum<?> getCurrentState(int row, int col) {
+            public int getCurrentState(int row, int col) {
                 //mock cell states for 2x2 grid
-                if (row == 0 && col == 0) return CellStates.FireStates.BURNING;
-                if (row == 0 && col == 1) return CellStates.FireStates.TREE;
-                if (row == 1 && col == 0) return CellStates.FireStates.EMPTY;
-                if (row == 1 && col == 1) return CellStates.FireStates.TREE;
+                if (row == 0 && col == 0) return 2;
+                if (row == 0 && col == 1) return 1;
+                if (row == 1 && col == 0) return 0;
+                if (row == 1 && col == 1) return 1;
                 throw new IllegalArgumentException("Invalid row or column");
             }
         };

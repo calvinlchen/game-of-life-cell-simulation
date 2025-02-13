@@ -2,7 +2,7 @@ package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.interfaces.Cell;
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +14,12 @@ enum AdjacentGridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing AdjacentGrid
  */
-class TestAdjacentGridCell extends Cell<AdjacentGridTestState, TestAdjacentGridCell> {
-  public TestAdjacentGridCell(AdjacentGridTestState state) {
+class TestAdjacentGridCell extends Cell<TestAdjacentGridCell> {
+  public TestAdjacentGridCell(int state) {
     super(state);
   }
 
-  public TestAdjacentGridCell(AdjacentGridTestState state, int[] position) {
+  public TestAdjacentGridCell(int state, int[] position) {
     super(state, position);
   }
 
@@ -38,14 +38,14 @@ class TestAdjacentGridCell extends Cell<AdjacentGridTestState, TestAdjacentGridC
  * Tester for AdjacentGrid class
  */
 class AdjacentGridTest {
-  private AdjacentGrid<AdjacentGridTestState, TestAdjacentGridCell> grid;
+  private AdjacentGrid<TestAdjacentGridCell> grid;
   private List<TestAdjacentGridCell> cells;
 
   @BeforeEach
   void setUp() {
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestAdjacentGridCell(AdjacentGridTestState.ALIVE));
+      cells.add(new TestAdjacentGridCell(1));
     }
     grid = new AdjacentGrid<>(cells, 3, 3);
   }

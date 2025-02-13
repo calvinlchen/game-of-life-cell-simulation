@@ -1,49 +1,51 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.cell;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Abstract class for representing a general cell.
  *
  * <p> Cells hold their state and neighbors
  *
- * @param <S> - the type of state this cell holds defined by the enum in the subclass
- * @param <U> - the type of neighbors, must be a subclass of Cell<S>
+ * @param <C> - the type of cell, must be a subclass of Cell
  * @author Jessica Chen
  */
-public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
+public abstract class Cell<C extends Cell<C>> {
 
-  private List<U> neighbors;
-  private S currentState;
-  private S nextState;
+  private List<C> neighbors;
+  private int currentState;
+  private int nextState;
   private int[] position;
+
+  private ResourceBundle myResources;
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
 
   /**
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
-   * @throws IllegalArgumentException if state is null
    */
-  public Cell(S state) {
-    if (state == null) {
-      throw new IllegalArgumentException("State cannot be null");
-    }
+  public Cell(int state) {
     this.currentState = state;
     this.nextState = state;
     neighbors = new ArrayList<>();
+
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
   }
 
   /**
-   * Constructs a cell with specified initial state.
+   * Constructs a cell with specified initial state with a position.
    *
    * @param state    - the initial state of the cell
    * @param position - the position of a the cell
-   * @throws IllegalArgumentException if state or position is null
    */
-  public Cell(S state, int[] position) {
+  public Cell(int state, int[] position) {
     this(state);
     setPosition(position);
+
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
   }
 
   /**
@@ -75,7 +77,7 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    *
    * @return the current state of the cell
    */
-  public S getCurrentState() {
+  public int getCurrentState() {
     return currentState;
   }
 
@@ -83,12 +85,8 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    * Sets the value of current state to the passed in state
    *
    * @param state - state to set the current state of the cell
-   * @throws IllegalArgumentException if state is null
    */
-  public void setCurrentState(S state) {
-    if (state == null) {
-      throw new IllegalArgumentException("Current state cannot be null");
-    }
+  public void setCurrentState(int state) {
     currentState = state;
   }
 
@@ -97,7 +95,7 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    *
    * @return the next state of the cell
    */
-  public S getNextState() {
+  public int getNextState() {
     return nextState;
   }
 
@@ -106,12 +104,8 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    * in state
    *
    * @param state - state the cell will be on the next step of the simulation
-   * @throws IllegalArgumentException if state is null
    */
-  public void setNextState(S state) {
-    if (state == null) {
-      throw new IllegalArgumentException("Next state cannot be null");
-    }
+  public void setNextState(int state) {
     nextState = state;
   }
 
@@ -142,7 +136,7 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    *
    * @return a list of neighboring cells
    */
-  public List<U> getNeighbors() {
+  public List<C> getNeighbors() {
     return neighbors;
   }
 
@@ -150,12 +144,8 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    * Sets the neighbors of the cell
    *
    * @param neighbors - a list of neighboring cells to set
-   * @throws IllegalArgumentException if neighbors is null
    */
-  public void setNeighbors(List<U> neighbors) {
-    if (neighbors == null) {
-      throw new IllegalArgumentException("Neighbors list cannot be null");
-    }
+  public void setNeighbors(List<C> neighbors) {
     this.neighbors = neighbors;
   }
 
@@ -164,9 +154,8 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    *
    * @param neighbor - the cell to be added as a neighbor
    * @return true if successfully added false otherwise (list adding)
-   * @throws IllegalArgumentException if neighbor is null or already contained
    */
-  public boolean addNeighbor(U neighbor) {
+  public boolean addNeighbor(C neighbor) {
     if (neighbor == null) {
       throw new IllegalArgumentException("Neighbor cannot be null");
     } else if (neighbors.contains(neighbor)) {
@@ -180,14 +169,23 @@ public abstract class Cell<S extends Enum<S>, U extends Cell<S, U>> {
    *
    * @param neighbor - the cell to be removed from neighbors
    * @return true if the neighbor was successfully removed; false otherwise
-   * @throws IllegalArgumentException if neighbor is null or not in the list
    */
-  public boolean removeNeighbor(U neighbor) {
+  public boolean removeNeighbor(C neighbor) {
     if (neighbor == null) {
       throw new IllegalArgumentException("Neighbor to remove cannot be null");
     } else if (!neighbors.contains(neighbor)) {
       throw new IllegalArgumentException("Neighbor is not in the list");
     }
     return neighbors.remove(neighbor);
+  }
+
+  /**
+   * Returns the int associated with the state from the resource property
+   *
+   * @param key - the String key associated with the state
+   * @return the int associated with the property's key
+   */
+  public int getStateProperty(String key) {
+    return Integer.parseInt(myResources.getString(key));
   }
 }

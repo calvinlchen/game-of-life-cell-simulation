@@ -1,24 +1,24 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-enum GridTestState { ALIVE, DEAD; }   // Testing enum for states
 
 /**
  * Test cell for testing Grid
  */
-class TestGridCell extends Cell<GridTestState, TestGridCell> {
-  public TestGridCell(GridTestState state) {
+class TestGridCell extends Cell<TestGridCell> {
+  public TestGridCell(int state) {
     super(state);
   }
 
-  public TestGridCell(GridTestState state, int[] position) {
+  public TestGridCell(int state, int[] position) {
     super(state, position);
   }
 
@@ -37,7 +37,7 @@ class TestGridCell extends Cell<GridTestState, TestGridCell> {
  * Tester for Grid class
  */
 class GridTest {
-  private Grid<GridTestState, TestGridCell> grid;
+  private Grid<TestGridCell> grid;
   private List<TestGridCell> cells;
 
   // Positive Tests
@@ -46,7 +46,7 @@ class GridTest {
   void setUp() {
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestGridCell(GridTestState.ALIVE));
+      cells.add(new TestGridCell(1));
     }
     grid = new Grid<>(cells, 3, 3) {
       @Override
@@ -74,7 +74,7 @@ class GridTest {
   @Test
   @DisplayName("Set cell at valid position")
   void setCell_ValidPosition_Verified() {
-    TestGridCell newCell = new TestGridCell(GridTestState.DEAD);
+    TestGridCell newCell = new TestGridCell(0);
     grid.setCell(1, 1, newCell);
     assertEquals(newCell, grid.getCell(1, 1));
   }
@@ -123,13 +123,13 @@ class GridTest {
   @Test
   @DisplayName("Set cell at invalid negative position throws exception")
   void setCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(-1, 1, new TestGridCell(GridTestState.ALIVE)));
+    assertThrows(IllegalArgumentException.class, () -> grid.setCell(-1, 1, new TestGridCell(1)));
   }
 
   @Test
   @DisplayName("Set cell at invalid position position throws exception")
   void setCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 4, new TestGridCell(GridTestState.ALIVE)));
+    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 4, new TestGridCell(1)));
   }
 
   @Test

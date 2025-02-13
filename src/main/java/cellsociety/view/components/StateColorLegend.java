@@ -1,11 +1,6 @@
 package cellsociety.view.components;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates.FireStates;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -14,22 +9,25 @@ import javafx.scene.layout.HBox;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.function.Function;
 
 /**
- * StateColorLegend dynamically displays state names and colors based on the loaded simulation type.
+ * StateColorLegend dynamically displays state names and colors based on the loaded simulation
+ * type.
+ *
  * @author ChatGPT 4o
  */
 public class StateColorLegend {
+
   private final VBox myLegendBox;
 
   public StateColorLegend() {
     myLegendBox = new VBox();
-    myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING/2);
+    myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING / 2);
   }
 
   /**
    * Return view of color-state legend
+   *
    * @return VBox object containing legend view
    */
   public VBox getLegendBox() {
@@ -42,11 +40,13 @@ public class StateColorLegend {
   public void updateLegend(SimType simulationType) {
     myLegendBox.getChildren().clear();
 
-    Map<String, Color> stateColorMap = getStateColorMap(simulationType);
+    Map<Integer, String> stateNameMap = getStateNameMap(simulationType);
+    Map<Integer, Color> stateColorMap = getStateColorMap(simulationType);
 
-    for (Map.Entry<String, Color> entry : stateColorMap.entrySet()) {
-      String stateName = entry.getKey();
-      Color stateColor = entry.getValue();
+    for (Map.Entry<Integer, String> entry : stateNameMap.entrySet()) {
+      int stateValue = entry.getKey();
+      String stateName = entry.getValue();
+      Color stateColor = stateColorMap.getOrDefault(stateValue, Color.GRAY);
 
       HBox legendItem = new HBox();
       legendItem.setSpacing(10);
@@ -65,43 +65,51 @@ public class StateColorLegend {
   }
 
   /**
-   * Uses each simulation type’s corresponding CellView subclass to get colors dynamically.
+   * Retrieves the appropriate `getColorForState()` method based on simulation type.
    */
-  private Map<String, Color> getStateColorMap(SimType simulationType) {
-    Map<String, Color> stateColorMap = new HashMap<>();
+  private Map<Integer, Color> getStateColorMap(SimType simulationType) {
+    Map<Integer, Color> stateColorMap = new HashMap<>();
 
-    Function<Enum<?>, Color> colorFunction = getColorFunction(simulationType);
-
-    for (Enum<?> state : getStateEnums(simulationType)) {
-      stateColorMap.put(state.name(), colorFunction.apply(state));
+    switch (simulationType) {
+      case GAMEOFLIFE -> {
+        stateColorMap.put(0, new GameOfLifeCellView(0, 0, 0, 0, 0).getColorForState(0));
+        stateColorMap.put(1, new GameOfLifeCellView(0, 0, 0, 0, 1).getColorForState(1));
+      }
+      case FIRE -> {
+        stateColorMap.put(0, new FireCellView(0, 0, 0, 0, 0).getColorForState(0));
+        stateColorMap.put(1, new FireCellView(0, 0, 0, 0, 1).getColorForState(1));
+        stateColorMap.put(2, new FireCellView(0, 0, 0, 0, 2).getColorForState(2));
+      }
+      case PERCOLATION -> {
+        stateColorMap.put(0, new PercolationCellView(0, 0, 0, 0, 0).getColorForState(0));
+        stateColorMap.put(1, new PercolationCellView(0, 0, 0, 0, 1).getColorForState(1));
+        stateColorMap.put(2, new PercolationCellView(0, 0, 0, 0, 2).getColorForState(2));
+      }
+      case SEGREGATION -> {
+        stateColorMap.put(0, new SegregationCellView(0, 0, 0, 0, 0).getColorForState(0));
+        stateColorMap.put(1, new SegregationCellView(0, 0, 0, 0, 1).getColorForState(1));
+        stateColorMap.put(2, new SegregationCellView(0, 0, 0, 0, 2).getColorForState(2));
+      }
+      case WATOR -> {
+        stateColorMap.put(0, new WaTorCellView(0, 0, 0, 0, 0).getColorForState(0));
+        stateColorMap.put(1, new WaTorCellView(0, 0, 0, 0, 1).getColorForState(1));
+        stateColorMap.put(2, new WaTorCellView(0, 0, 0, 0, 2).getColorForState(2));
+      }
     }
 
     return stateColorMap;
   }
 
   /**
-   * Retrieves the appropriate `getColorForState()` method based on simulation type.
+   * Maps each state value to its corresponding name.
    */
-  private Function<Enum<?>, Color> getColorFunction(SimType simulationType) {
+  private Map<Integer, String> getStateNameMap(SimType simulationType) {
     return switch (simulationType) {
-      case GAMEOFLIFE -> state -> new GameOfLifeCellView(0, 0, 0, 0, (GameOfLifeStates) state).getColorForState((GameOfLifeStates) state);
-      case FIRE -> state -> new FireCellView(0, 0, 0, 0, (FireStates) state).getColorForState((FireStates) state);
-      case PERCOLATION -> state -> new PercolationCellView(0, 0, 0, 0, (PercolationStates) state).getColorForState((PercolationStates) state);
-      case SEGREGATION -> state -> new SegregationCellView(0, 0, 0, 0, (SegregationStates) state).getColorForState((SegregationStates) state);
-      case WATOR -> state -> new WaTorCellView(0, 0, 0, 0, (WaTorStates) state).getColorForState((WaTorStates) state);
-    };
-  }
-
-  /**
-   * Retrieves the correct Enum values for each simulation type.
-   */
-  private Enum<?>[] getStateEnums(SimType simulationType) {
-    return switch (simulationType) {
-      case GAMEOFLIFE -> cellsociety.model.util.constants.CellStates.GameOfLifeStates.values();
-      case FIRE -> cellsociety.model.util.constants.CellStates.FireStates.values();
-      case PERCOLATION -> cellsociety.model.util.constants.CellStates.PercolationStates.values();
-      case SEGREGATION -> cellsociety.model.util.constants.CellStates.SegregationStates.values();
-      case WATOR -> cellsociety.model.util.constants.CellStates.WaTorStates.values();
+      case GAMEOFLIFE -> Map.of(0, "Dead", 1, "Alive");
+      case FIRE -> Map.of(0, "Empty", 1, "Tree", 2, "Burning");
+      case PERCOLATION -> Map.of(0, "Blocked", 1, "Open", 2, "Percolated");
+      case SEGREGATION -> Map.of(0, "Empty", 1, "Group A", 2, "Group B");
+      case WATOR -> Map.of(0, "Empty", 1, "Fish", 2, "Shark");
     };
   }
 }

@@ -1,4 +1,4 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,17 +8,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-enum CellTestState { ALIVE, DEAD; }   // testing enum for states
 
 /**
  * Test cell for testing
  */
-class TestCell extends Cell<CellTestState, TestCell> {
-  public TestCell(CellTestState state) {
+class TestCell extends Cell<TestCell> {
+  public TestCell(int state) {
     super(state);
   }
 
-  public TestCell(CellTestState state, int[] position) {
+  public TestCell(int state, int[] position) {
     super(state, position);
   }
 
@@ -42,8 +41,8 @@ class CellTest {
 
   @BeforeEach
   void setUp() {
-    cell = new TestCell(CellTestState.ALIVE);
-    neighbor = new TestCell(CellTestState.DEAD);
+    cell = new TestCell(0);
+    neighbor = new TestCell(0);
   }
 
   // Positive Checks
@@ -51,31 +50,31 @@ class CellTest {
   @Test
   @DisplayName("Initial state is set correctly")
   void initialState_Verified() {
-    assertEquals(CellTestState.ALIVE, cell.getCurrentState());
+    assertEquals(0, cell.getCurrentState());
     assertEquals(0, cell.getNeighbors().size());
   }
 
   @Test
   @DisplayName("Set and get current state correctly")
   void currentState_SetAndGet_Verified() {
-    assertEquals(CellTestState.ALIVE, cell.getCurrentState());
-    cell.setCurrentState(CellTestState.DEAD);
-    assertEquals(CellTestState.DEAD, cell.getCurrentState());
+    assertEquals(0, cell.getCurrentState());
+    cell.setCurrentState(1);
+    assertEquals(1, cell.getCurrentState());
   }
 
   @Test
   @DisplayName("Set and get next state correctly")
   void nextState_SetAndGet_Verified() {
-    assertEquals(CellTestState.ALIVE, cell.getNextState());
-    cell.setNextState(CellTestState.DEAD);
-    assertEquals(CellTestState.DEAD, cell.getNextState());
+    assertEquals(0, cell.getNextState());
+    cell.setNextState(1);
+    assertEquals(1, cell.getNextState());
   }
 
   @Test
   @DisplayName("Set position constructor correctly")
   void positionConstructor_Verified() {
     int[] position = {2, 3};
-    Cell<CellTestState, TestCell> cellWithPosition = new TestCell(CellTestState.ALIVE, position);
+    Cell<TestCell> cellWithPosition = new TestCell(0, position);
     assertArrayEquals(position, cellWithPosition.getPosition());
   }
 
@@ -119,33 +118,15 @@ class CellTest {
   // Negative Tests
 
   @Test
-  @DisplayName("Set initial state to null")
-  void initialState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(null));
-  }
-
-  @Test
-  @DisplayName("Set current state to null")
-  void currentState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setCurrentState(null));
-  }
-
-  @Test
-  @DisplayName("Set next state to null")
-  void nextState_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setNextState(null));
-  }
-
-  @Test
   @DisplayName("Set invalid number of position arguments in position constructor")
   void positionConstructor_InvalidPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(CellTestState.ALIVE, new int[]{0}));
+    assertThrows(IllegalArgumentException.class, () -> new TestCell(0, new int[]{0}));
   }
 
   @Test
   @DisplayName("Set position to null in position constructor")
   void positionConstructor_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(CellTestState.ALIVE, null));
+    assertThrows(IllegalArgumentException.class, () -> new TestCell(0, null));
   }
 
   @Test
@@ -159,13 +140,6 @@ class CellTest {
   void position_Null_IllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cell.setPosition(null));
   }
-
-  @Test
-  @DisplayName("Set neighbors to null")
-  void neighbors_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setNeighbors(null));
-  }
-
 
   @Test
   @DisplayName("Add the same neighbor")

@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
  * Manages control buttons and status messages. (VBox suggested by ChatGPT.)
  */
 public class ControlPanel {
+
   public static final int VBOX_SPACING = 12;
 
   private final VBox myPanel;
@@ -18,6 +19,7 @@ public class ControlPanel {
 
   /**
    * Contains a column of control buttons for Cell Society
+   *
    * @param userView the view controller through which a button initiates its action when clicked
    */
   public ControlPanel(UserView userView) {
@@ -60,7 +62,7 @@ public class ControlPanel {
   }
 
   private HBox makeSpeedPanel() {
-    HBox speedPanel = new HBox((double)VBOX_SPACING/2);
+    HBox speedPanel = new HBox((double) VBOX_SPACING / 2);
 
     Button speedUpButton = new Button("Speed Up");
     speedUpButton.setOnAction(e -> myUserView.changeSimulationSpeed(2.0));
@@ -73,6 +75,7 @@ public class ControlPanel {
 
   /**
    * Return the vertical panel of control buttons
+   *
    * @return VBox panel view containing all button elements
    */
   public VBox getPanel() {

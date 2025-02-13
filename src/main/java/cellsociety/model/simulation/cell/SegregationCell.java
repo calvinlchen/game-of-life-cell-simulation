@@ -1,17 +1,17 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.SegregationRule;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
+
 
 /**
  * Class for representing cell for Schelling's Model of Segregation simulation
  *
  * @author Jessica Chen
  */
-public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
+public class SegregationCell extends Cell<SegregationCell> {
 
   private final SegregationRule myRule;
+  private final int SEGREGATION_EMPTY;
 
   /**
    * Constructs a cell with specified initial state.
@@ -19,9 +19,11 @@ public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
    * @param state - the initial state of the cell
    * @param rule  - Schelling's Model of Segregation Rule to calculate next state
    */
-  public SegregationCell(SegregationStates state, SegregationRule rule) {
+  public SegregationCell(int state, SegregationRule rule) {
     super(state);
     myRule = rule;
+
+    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
 
   /**
@@ -31,9 +33,11 @@ public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
    * @param position - the initial position of the cell
    * @param rule     - Schelling's Model of Segregation Rule to calculate next state
    */
-  public SegregationCell(SegregationStates state, int[] position, SegregationRule rule) {
+  public SegregationCell(int state, int[] position, SegregationRule rule) {
     super(state, position);
     myRule = rule;
+
+    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
 
   @Override
@@ -41,7 +45,7 @@ public class SegregationCell extends Cell<SegregationStates, SegregationCell> {
     // check to make sure you aren't overriding already calculated stuff
     // namely in a prior thing you were empty and then someone moved into you because
     // they weren't satisfied
-    if (!(getCurrentState() == SegregationStates.EMPTY && getNextState() != SegregationStates.EMPTY)) {
+    if (!(getCurrentState() == SEGREGATION_EMPTY && getNextState() != SEGREGATION_EMPTY)) {
       setNextState(myRule.apply(this));
     }
   }

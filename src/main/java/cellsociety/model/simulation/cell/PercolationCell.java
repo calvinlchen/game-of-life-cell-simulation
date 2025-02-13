@@ -1,15 +1,13 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.PercolationRule;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
 
 /**
  * Class for representing cell for Percolation simulation
  *
  * @author Jessica Chen
  */
-public class PercolationCell extends Cell<PercolationStates, PercolationCell> {
+public class PercolationCell extends Cell<PercolationCell> {
 
   private final PercolationRule myRule;
 
@@ -19,7 +17,7 @@ public class PercolationCell extends Cell<PercolationStates, PercolationCell> {
    * @param state - the initial state of the cell
    * @param rule  - the Percolation rule to calculate the next state
    */
-  public PercolationCell(PercolationStates state, PercolationRule rule) {
+  public PercolationCell(int state, PercolationRule rule) {
     super(state);
     myRule = rule;
   }
@@ -31,7 +29,7 @@ public class PercolationCell extends Cell<PercolationStates, PercolationCell> {
    * @param position - the initial position of the cell
    * @param rule     - the Percolation rule to calculate the next state
    */
-  public PercolationCell(PercolationStates state, int[] position, PercolationRule rule) {
+  public PercolationCell(int state, int[] position, PercolationRule rule) {
     super(state, position);
     myRule = rule;
   }

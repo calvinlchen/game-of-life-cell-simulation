@@ -1,6 +1,8 @@
-package cellsociety.model.interfaces;
+package cellsociety.model.simulation.rules;
 
+import cellsociety.model.simulation.cell.Cell;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Abstract class for representing a simulation rules.
@@ -8,13 +10,15 @@ import java.util.Map;
  * <p> Rules take in a map of parameters and apply them when calculating the next step of the
  * simulation
  *
- * @param <S> - the type of state this cell holds defined by the enum in the subclass
- * @param <C> - the type of cell, must be a subclass of Cell<S>
+ * @param <C> - the type of cell, must be a subclass of Cell
  * @author Jessica Chen
  */
-public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
+public abstract class Rule<C extends Cell<C>> {
 
   private Map<String, Double> parameters;
+
+  private final ResourceBundle myResources;
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
 
   /**
    * Constructor for the Rule class
@@ -23,6 +27,8 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
    */
   public Rule(Map<String, Double> parameters) {
     this.parameters = parameters;
+
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
   }
 
   /**
@@ -31,7 +37,7 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
    * @param cell - cell to apply the rules to
    * @return next state of the cell
    */
-  public abstract S apply(C cell);
+  public abstract int apply(C cell);
 
   /**
    * Get the parameters for this rule set
@@ -49,5 +55,15 @@ public abstract class Rule<S extends Enum<S>, C extends Cell<S, C>> {
    */
   public void setParameters(Map<String, Double> parameters) {
     this.parameters = parameters;
+  }
+
+  /**
+   * Returns the int associated with the state from the resource property
+   *
+   * @param key - the String key associated with the state
+   * @return the int associated with the property's key
+   */
+  public int getStateProperty(String key) {
+    return Integer.parseInt(myResources.getString(key));
   }
 }

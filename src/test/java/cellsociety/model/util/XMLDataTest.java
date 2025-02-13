@@ -1,7 +1,6 @@
 package cellsociety.model.util;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,10 +63,10 @@ class XMLDataTest {
 
     @Test
     void testGetAndSetCellStateList() {
-        ArrayList<Enum> expectedCellStateList = new ArrayList<>();
-        expectedCellStateList.add(CellStates.GameOfLifeStates.ALIVE);
-        expectedCellStateList.add(CellStates.GameOfLifeStates.ALIVE);
-        expectedCellStateList.add(CellStates.GameOfLifeStates.DEAD);
+        ArrayList<Integer> expectedCellStateList = new ArrayList<>();
+        expectedCellStateList.add(1);
+        expectedCellStateList.add(1);
+        expectedCellStateList.add(0);
         xmlData.setCellStateList(expectedCellStateList);
         assertEquals(expectedCellStateList, xmlData.getCellStateList(), "Cell state list should be set and retrieved correctly.");
     }

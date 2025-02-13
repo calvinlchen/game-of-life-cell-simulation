@@ -1,15 +1,13 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.WaTorRule;
-import cellsociety.model.util.constants.CellStates.WaTorStates;
 
 /**
  * Class for representing cell for WaTor simulation
  *
  * @author Jessica Chen
  */
-public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
+public class WaTorCell extends Cell<WaTorCell> {
 
   private final WaTorRule myRule;
 
@@ -22,15 +20,21 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   private boolean consumed;
   private WaTorCell movedFrom;
 
+  private final int WATOR_EMPTY;
+  private final int WATOR_SHARK;
+
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
    * @param state - the initial state of the cell (must be a state from WaTorStates)
    * @param rule  - the WaTorRule to calculate the next state
    */
-  public WaTorCell(WaTorStates state, WaTorRule rule) {
+  public WaTorCell(int state, WaTorRule rule) {
     super(state);
     myRule = rule;
+
+    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
+    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
 
     initializeDefaultVariables(state);
   }
@@ -42,18 +46,21 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
    * @param position - the inital position of the cell
    * @param rule     - the WaTorRule to calculate the next state
    */
-  public WaTorCell(WaTorStates state, int[] position, WaTorRule rule) {
+  public WaTorCell(int state, int[] position, WaTorRule rule) {
     super(state, position);
     myRule = rule;
+
+    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
+    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
 
     initializeDefaultVariables(state);
   }
 
-  private void initializeDefaultVariables(WaTorStates state) {
+  private void initializeDefaultVariables(int state) {
+
     myStepsSurvived = 0;
-    myEnergy =
-        state == WaTorStates.SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
-            .intValue() : 0;
+    myEnergy = state == WATOR_SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
+        .intValue() : 0;
 
     myNextStepsSurvived = 0;
     myNextEnergy = 0;
@@ -129,15 +136,13 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
     // only not equal if was empty and then a fish / shark swam there
     // or if there was a fish there and it got eaten
     if (getCurrentState() == getNextState()) {
-      WaTorStates nextState = myRule.apply(this);
-      if (nextState != null) {
+      int nextState = myRule.apply(this);
+      if (nextState != -1) {
         setNextState(nextState);
 
         myNextStepsSurvived = 0;
-        myNextEnergy =
-            nextState == WaTorStates.SHARK ? myRule.getParameters()
-                .getOrDefault("sharkInitialEnergy", 5.0)
-                .intValue() : 0;
+        myNextEnergy = nextState == WATOR_SHARK ? myRule.getParameters()
+            .getOrDefault("sharkInitialEnergy", 5.0).intValue() : 0;
       }
     }
   }
@@ -149,14 +154,14 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
    * @param stepsSurvived - the number of steps the next state of the cell should have
    * @param energy        - the amount of energy the next state of the cell should have
    */
-  public void setNextState(WaTorStates state, int stepsSurvived, int energy) {
+  public void setNextState(int state, int stepsSurvived, int energy) {
     setNextState(state);
 
     myNextStepsSurvived = stepsSurvived;
     myNextEnergy = energy;
   }
 
-  public void setNextState(WaTorStates state, int stepsSurvived, int energy, WaTorCell movedFrom) {
+  public void setNextState(int state, int stepsSurvived, int energy, WaTorCell movedFrom) {
     this.movedFrom = movedFrom;
     setNextState(state, stepsSurvived, energy);
   }
@@ -167,8 +172,8 @@ public class WaTorCell extends Cell<WaTorStates, WaTorCell> {
   @Override
   public void step() {
     if (movedFrom != null && movedFrom.isConsumed()) {
-      setNextState(WaTorStates.EMPTY);
-      setCurrentState(WaTorStates.EMPTY);
+      setNextState(WATOR_EMPTY);
+      setCurrentState(WATOR_EMPTY);
     } else {
       setCurrentState(getNextState());
     }

@@ -1,15 +1,13 @@
 package cellsociety.model.simulation.cell;
 
-import cellsociety.model.interfaces.Cell;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 
 /**
  * Class for representing cell for Game of Life simulation
  *
  * @author Jessica Chen
  */
-public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
+public class GameOfLifeCell extends Cell<GameOfLifeCell> {
 
   private final GameOfLifeRule myRule;
 
@@ -19,7 +17,7 @@ public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
    * @param state - the initial state of the cell (must be a state from GameOfLifeStates)
    * @param rule  - the Game of Life rule to calculate the next state
    */
-  public GameOfLifeCell(GameOfLifeStates state, GameOfLifeRule rule) {
+  public GameOfLifeCell(int state, GameOfLifeRule rule) {
     super(state);
     myRule = rule;
   }
@@ -27,11 +25,11 @@ public class GameOfLifeCell extends Cell<GameOfLifeStates, GameOfLifeCell> {
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
    *
-   * @param state    - the initial state of the cell (must be a state from GameOfLifeStates)
+   * @param state    - the initial state of the cell (must be a state from int)
    * @param position - the initial position of the cell
    * @param rule     - the Game of Life rule to calculate the next state
    */
-  public GameOfLifeCell(GameOfLifeStates state, int[] position, GameOfLifeRule rule) {
+  public GameOfLifeCell(int state, int[] position, GameOfLifeRule rule) {
     super(state, position);
     myRule = rule;
   }
