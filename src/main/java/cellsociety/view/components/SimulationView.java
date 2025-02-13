@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
  * Manages the position and display of the simulation's cells. (Pane suggested by ChatGPT.)
  */
 public class SimulationView {
+
   private Pane myDisplay;
   private double myGridWidth;
   private double myGridHeight;
@@ -33,6 +34,7 @@ public class SimulationView {
 
   /**
    * Returns the grid representing the simulation cells, if mySimulation exists
+   *
    * @return Pane containing the cell grid visual
    */
   public Pane getDisplay() {
@@ -41,6 +43,7 @@ public class SimulationView {
 
   /**
    * Prepares a Simulation model and the grid's cell configuration based on an XMLData object
+   *
    * @param xmlData XMLData object representing the XML file for a simulation
    */
   public void configureFromXML(XMLData xmlData) {
@@ -80,10 +83,13 @@ public class SimulationView {
     CellView cellView = null;
 
     switch (simType) {
-      case GAMEOFLIFE -> cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case GAMEOFLIFE ->
+          cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
       case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case PERCOLATION -> cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case SEGREGATION -> cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case PERCOLATION ->
+          cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case SEGREGATION ->
+          cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
       case WATOR -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
       default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
     }
@@ -96,14 +102,15 @@ public class SimulationView {
 
   /**
    * Returns a coordinate position for a cell based on its row and column
-   * @param row A cell's row in the grid (index starting from 0)
+   *
+   * @param row    A cell's row in the grid (index starting from 0)
    * @param column A cell's column in the grid (index starting from 0)
    * @return double array: [0] = x-coordinate, [1] = y-coordinate
    */
   private double[] getCellPosition(int row, int column) {
     double[] cellPositions = new double[2];
     // x-position
-    cellPositions[0] = myCellWidth  * column;
+    cellPositions[0] = myCellWidth * column;
     // y-position
     cellPositions[1] = myCellHeight * row;
     return cellPositions;
@@ -138,6 +145,7 @@ public class SimulationView {
 
   /**
    * Get the Simulation model object represented by this view
+   *
    * @return null or Simulation object
    */
   public Simulation getSimulation() {

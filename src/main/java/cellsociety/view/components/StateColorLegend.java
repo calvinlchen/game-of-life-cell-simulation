@@ -11,19 +11,23 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * StateColorLegend dynamically displays state names and colors based on the loaded simulation type.
+ * StateColorLegend dynamically displays state names and colors based on the loaded simulation
+ * type.
+ *
  * @author ChatGPT 4o
  */
 public class StateColorLegend {
+
   private final VBox myLegendBox;
 
   public StateColorLegend() {
     myLegendBox = new VBox();
-    myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING/2);
+    myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING / 2);
   }
 
   /**
    * Return view of color-state legend
+   *
    * @return VBox object containing legend view
    */
   public VBox getLegendBox() {

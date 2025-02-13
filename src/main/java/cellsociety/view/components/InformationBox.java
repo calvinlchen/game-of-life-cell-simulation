@@ -6,6 +6,7 @@ import java.util.Map;
 import javafx.scene.control.TextArea;
 
 public class InformationBox {
+
   private final TextArea myTextArea;
 
   /**
@@ -21,6 +22,7 @@ public class InformationBox {
 
   /**
    * Return text/information box view
+   *
    * @return TextArea object
    */
   public TextArea getTextArea() {
@@ -29,6 +31,7 @@ public class InformationBox {
 
   /**
    * Updates the text area with the given XMLData's information.
+   *
    * @param data XMLData containing the simulation's details.
    */
   public void updateInfo(XMLData data) {
@@ -36,7 +39,8 @@ public class InformationBox {
     infoText.append("Simulation Type: ").append(data.getType()).append("\n");
     infoText.append("Title: ").append(data.getTitle()).append("\n");
     infoText.append("Author: ").append(data.getAuthor()).append("\n");
-    infoText.append("Grid Size: ").append(data.getGridRowNum()).append(" x ").append(data.getGridColNum()).append("\n");
+    infoText.append("Grid Size: ").append(data.getGridRowNum()).append(" x ")
+        .append(data.getGridColNum()).append("\n");
     infoText.append("Parameters: ");
     for (Map.Entry<String, Double> entry : data.getParameters().entrySet()) {
       infoText.append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
