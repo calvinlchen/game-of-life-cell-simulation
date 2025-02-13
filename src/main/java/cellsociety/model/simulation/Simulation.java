@@ -28,14 +28,13 @@ import java.util.Map;
  * Simulation class, creates the grid from the given xml data, provides public methods for the
  * view/xml data to step through the simulation and get the current state of the cells
  *
- * @param <S> - the type of state for the cells, must be an Enum
- * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
-public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
+public class Simulation<T extends Cell<T>> {
 
   private final XMLData xmlData;
-  private Grid<S, T> myGrid;
+  private Grid<T> myGrid;
 
   public Simulation(XMLData data) {
     xmlData = data;
@@ -44,19 +43,19 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   }
 
   private void setUpGrid() {
-    List<Cell> cellList = new ArrayList<>();
+    List<T> cellList = new ArrayList<>();
     Map<String, Double> params = xmlData.getParameters();
     for (Enum state : xmlData.getCellStateList()) {
       switch (xmlData.getType()) {
-        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell((GameOfLifeStates) state,
+        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(state,
             new GameOfLifeRule(params)));
-        case SEGREGATION -> cellList.add(new SegregationCell((SegregationStates) state,
+        case SEGREGATION -> cellList.add(new SegregationCell(state,
             new SegregationRule(params)));
-        case FIRE -> cellList.add(new FireCell((FireStates) state,
+        case FIRE -> cellList.add(new FireCell(state,
             new FireRule(params)));
-        case PERCOLATION -> cellList.add(new PercolationCell((PercolationStates) state,
+        case PERCOLATION -> cellList.add(new PercolationCell(state,
             new PercolationRule(params)));
-        case WATOR -> cellList.add(new WaTorCell((WaTorStates) state,
+        case WATOR -> cellList.add(new WaTorCell(state,
             new WaTorRule(params)));
       }
     }
@@ -83,21 +82,21 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
   public void step() {
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<S, T> cell = myGrid.getCell(row, col);
+        Cell<T> cell = myGrid.getCell(row, col);
         cell.calcNextState();
       }
     }
 
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<S, T> cell = myGrid.getCell(row, col);
+        Cell<T> cell = myGrid.getCell(row, col);
         cell.step();
       }
     }
 
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<S, T> cell = myGrid.getCell(row, col);
+        Cell<T> cell = myGrid.getCell(row, col);
         cell.resetParameters();
       }
     }
@@ -109,7 +108,7 @@ public class Simulation<S extends Enum<S>, T extends Cell<S, T>> {
    * @return the state of the cell at the location if valid
    * @throws IllegalArgumentException if the x and y are an invalid position on the grid
    */
-  public S getCurrentState(int row, int col) {
+  public int getCurrentState(int row, int col) {
     return myGrid.getCell(row, col).getCurrentState();
   }
 

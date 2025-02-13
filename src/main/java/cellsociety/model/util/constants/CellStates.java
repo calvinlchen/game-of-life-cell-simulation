@@ -7,6 +7,24 @@ package cellsociety.model.util.constants;
  * @author Jessica Chen
  */
 public class CellStates {
+  public final int GAMEOFLIFE_DEAD = 0;
+  public final int GAMEOFLIFE_ALIVE = 1;
+
+  public final int PERCOLATION_BLOCKED = 0;
+  public final int PERCOLATION_OPEN = 1;
+  public final int PERCOLATION_PERCOLATED = 2;
+
+  public final int FIRE_EMPTY = 0;
+  public final int FIRE_TREE = 1;
+  public final int FIRE_BURNING = 2;
+
+  public final int SEGREGATION_EMPTY = 0;
+  public final int SEGREGATION_A = 1;
+  public final int SEGREGATION_B = 2;
+
+  public final int WATOR_EMPTY = 0;
+  public final int WATOR_FISH = 1;
+  public final int WATOR_SHARK = 2;
 
   /**
    * Enum for represent the types of simulation
@@ -23,8 +41,8 @@ public class CellStates {
    * Enum for representing the states of a cell in Conway's Game of Life
    */
   public enum GameOfLifeStates {
-    ALIVE,
-    DEAD
+    DEAD,
+    ALIVE
   }
 
   /**

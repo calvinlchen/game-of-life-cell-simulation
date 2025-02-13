@@ -9,7 +9,7 @@ import cellsociety.model.util.constants.CellStates.FireStates;
  *
  * @author Jessica Chen
  */
-public class FireCell extends Cell<FireStates, FireCell> {
+public class FireCell extends Cell<FireCell> {
 
   private final FireRule myRule;
 
@@ -19,7 +19,7 @@ public class FireCell extends Cell<FireStates, FireCell> {
    * @param state - the initial state of the cell
    * @param rule  - Spreading of Fire Rule to calculate next state
    */
-  public FireCell(FireStates state, FireRule rule) {
+  public FireCell(int state, FireRule rule) {
     super(state);
     myRule = rule;
   }
@@ -31,7 +31,7 @@ public class FireCell extends Cell<FireStates, FireCell> {
    * @param position - the initial position of the cell
    * @param rule     - Spreading of Fire Rule to calculate next state
    */
-  public FireCell(FireStates state, int[] position, FireRule rule) {
+  public FireCell(int state, int[] position, FireRule rule) {
     super(state, position);
     myRule = rule;
   }

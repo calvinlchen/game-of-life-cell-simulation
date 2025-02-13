@@ -9,11 +9,10 @@ import java.util.List;
  *
  * <p>Default like what you think of when you think of a grid</p>
  *
- * @param <S> - the type of state for the cells, must be an Enum
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public class RectangularGrid<S extends Enum<S>, T extends Cell<S, T>> extends Grid<S, T> {
+public class RectangularGrid<T extends Cell<T>> extends Grid<T> {
 
   /**
    * Constructs a RectangularGrid with specified dimensions.

@@ -10,7 +10,9 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
+public class PercolationRule extends Rule<PercolationCell> {
+  private final int PERCOLATION_PERCOLATED;
+  private final int PERCOLATION_OPEN;
 
   /**
    * Constructor for the Rule class
@@ -19,12 +21,14 @@ public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
    */
   public PercolationRule(Map<String, Double> parameters) {
     super(parameters);
+    PERCOLATION_OPEN = super.getStateProperty("PERCOLATION_OPEN");
+    PERCOLATION_PERCOLATED = super.getStateProperty("PERCOLATION_PERCOLATED");
   }
 
   @Override
-  public PercolationStates apply(PercolationCell cell) {
-    if (cell.getCurrentState() == PercolationStates.OPEN && neighborIsPercolated(cell)) {
-      return PercolationStates.PERCOLATED;
+  public int apply(PercolationCell cell) {
+    if (cell.getCurrentState() == PERCOLATION_OPEN && neighborIsPercolated(cell)) {
+      return PERCOLATION_PERCOLATED;
     }
 
     return cell.getCurrentState();
@@ -32,6 +36,6 @@ public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
 
   private boolean neighborIsPercolated(PercolationCell cell) {
     return cell.getNeighbors().stream()
-        .anyMatch(neighbor -> neighbor.getCurrentState() == PercolationStates.PERCOLATED);
+        .anyMatch(neighbor -> neighbor.getCurrentState() == PERCOLATION_PERCOLATED);
   }
 }

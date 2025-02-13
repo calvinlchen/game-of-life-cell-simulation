@@ -10,7 +10,10 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
+public class GameOfLifeRule extends Rule<GameOfLifeCell> {
+  private final int GAMEOFLIFE_DEAD;
+  private final int GAMEOFLIFE_ALIVE;
+
   /**
    * Constructor for the Rule class
    *
@@ -18,17 +21,20 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
    */
   public GameOfLifeRule(Map<String, Double> parameters) {
     super(parameters);
+
+    GAMEOFLIFE_ALIVE = super.getStateProperty("GAMEOFLIFE_ALIVE");
+    GAMEOFLIFE_DEAD = super.getStateProperty("GAMEOFLIFE_DEAD");
   }
 
   @Override
-  public GameOfLifeStates apply(GameOfLifeCell cell) {
+  public int apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    if (cell.getCurrentState() == GameOfLifeStates.ALIVE &&
+    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE &&
         (aliveNeighbors < 2 || aliveNeighbors > 3)) {
-      return GameOfLifeStates.DEAD;
-    } else if (cell.getCurrentState() == GameOfLifeStates.DEAD && aliveNeighbors == 3) {
-      return GameOfLifeStates.ALIVE;
+      return GAMEOFLIFE_DEAD;
+    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && aliveNeighbors == 3) {
+      return GAMEOFLIFE_ALIVE;
     }
 
     return cell.getCurrentState();
@@ -36,7 +42,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
 
   private long countAliveNeighbors(GameOfLifeCell cell) {
     return cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == GameOfLifeStates.ALIVE)
+        .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE)
         .count();
   }
 }
