@@ -3,6 +3,7 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.GameOfLifeCell;
+import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ class GameOfLifeRuleTest {
 
   @BeforeEach
   void setUp() {
-    rule = new GameOfLifeRule(Map.of());  // game of life doesn't need parameters
+    rule = new GameOfLifeRule(new GameOfLifeParameters());  // game of life doesn't need parameters
   }
 
   @Test

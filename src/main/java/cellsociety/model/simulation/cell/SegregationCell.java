@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.SegregationParameters;
 import cellsociety.model.simulation.rules.SegregationRule;
 
 
@@ -8,7 +9,7 @@ import cellsociety.model.simulation.rules.SegregationRule;
  *
  * @author Jessica Chen
  */
-public class SegregationCell extends Cell<SegregationCell, SegregationRule> {
+public class SegregationCell extends Cell<SegregationCell, SegregationRule, SegregationParameters> {
   private final int SEGREGATION_EMPTY;
 
   /**

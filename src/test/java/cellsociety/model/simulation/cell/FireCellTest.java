@@ -2,26 +2,36 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.parameters.FireParameters;
 import cellsociety.model.simulation.rules.FireRule;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tester for Fire Cell
+ * Tester for FireCell
  */
 class FireCellTest {
 
   private FireRule ruleDefault;
   private FireRule ruleMax;
+  private FireParameters defaultParams;
+  private FireParameters maxParams;
 
   @BeforeEach
   void setUp() {
-    ruleDefault = new FireRule(Map.of("ignitionLikelihood", 0.0, "treeSpawnLikelihood", 0.0));
-    ruleMax = new FireRule(Map.of("ignitionLikelihood", 1.0, "treeSpawnLikelihood", 1.0));
+    // Use FireParameters instead of raw maps
+    defaultParams = new FireParameters();
+    defaultParams.setParameter("ignitionLikelihood", 0.0);
+    defaultParams.setParameter("treeSpawnLikelihood", 0.0);
+    ruleDefault = new FireRule(defaultParams);
+
+    maxParams = new FireParameters();
+    maxParams.setParameter("ignitionLikelihood", 1.0);
+    maxParams.setParameter("treeSpawnLikelihood", 1.0);
+    ruleMax = new FireRule(maxParams);
   }
 
   @Test
@@ -31,8 +41,7 @@ class FireCellTest {
     assertEquals(1, cell.getCurrentState());
   }
 
-  // again just some simple tests to test calc next state and step updates correctly,
-  // validity of the calc next state step is found in rules
+  // Test that fire propagation works as expected
   @Test
   @DisplayName("FireCell correctly updates state based on rule")
   void cell_Updates_State_Correctly() {
@@ -41,7 +50,7 @@ class FireCellTest {
     cell.setNeighbors(neighbors);
     cell.calcNextState();
     cell.step();
-    assertEquals(2, cell.getCurrentState());
+    assertEquals(2, cell.getCurrentState()); // Should ignite
   }
 
   @Test
@@ -61,18 +70,24 @@ class FireCellTest {
     cell.setNeighbors(neighbors);
     cell.calcNextState();
     cell.step();
-    assertEquals(1, cell.getCurrentState());
+    assertEquals(1, cell.getCurrentState()); // Should remain tree
   }
 
+  /**
+   * Creates a list of FireCell neighbors with a given number of burning trees.
+   *
+   * @param burningCount - number of burning neighbors
+   * @param rule - FireRule to be used for neighbors
+   * @return List of FireCell neighbors
+   */
   private List<FireCell> createNeighbors(int burningCount, FireRule rule) {
     List<FireCell> neighbors = new ArrayList<>();
     for (int i = 0; i < burningCount; i++) {
-      neighbors.add(new FireCell(2, rule));
+      neighbors.add(new FireCell(2, rule)); // Burning trees
     }
     for (int i = burningCount; i < 4; i++) {
-      neighbors.add(new FireCell(1, rule));
+      neighbors.add(new FireCell(1, rule)); // Unburned trees
     }
     return neighbors;
   }
 }
-

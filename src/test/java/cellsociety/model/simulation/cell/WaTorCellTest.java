@@ -2,6 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,7 @@ class WaTorCellTest {
 
   @BeforeEach
   void setUp() {
-    rule = new WaTorRule(Map.of(
-        "fishReproductionTime", 3.0,
-        "sharkEnergyGain", 2.0,
-        "sharkReproductionTime", 3.0,
-        "sharkInitialEnergy", 5.0));
+    rule = new WaTorRule(new WaTorParameters());
   }
 
   @Test

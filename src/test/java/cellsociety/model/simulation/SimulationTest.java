@@ -27,35 +27,35 @@ class SimulationTest {
     xmlData.setGridColNum(3);
     xmlData.setParameters(Map.of());
 
-    xmlData.setType(SimType.GAMEOFLIFE);
+    xmlData.setType(SimType.GameOfLife);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         1, 0, 1,
         0, 1, 0,
         1, 0, 1)));
     gameOfLifeSimulation = new Simulation<>(xmlData);
 
-    xmlData.setType(SimType.SEGREGATION);
+    xmlData.setType(SimType.Segregation);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         0, 1, 2,
         2, 2, 2,
         2, 2, 2)));
     segregationSimulation = new Simulation<>(xmlData);
 
-    xmlData.setType(SimType.FIRE);
+    xmlData.setType(SimType.Fire);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         2, 1, 0,
         1, 2, 0,
         1, 1, 0)));
     fireSimulation = new Simulation<>(xmlData);
 
-    xmlData.setType(SimType.PERCOLATION);
+    xmlData.setType(SimType.Percolation);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         1, 2, 2,
         0, 0, 2,
         1, 1, 2)));
     percolationSimulation = new Simulation<>(xmlData);
 
-    xmlData.setType(SimType.WATOR);
+    xmlData.setType(SimType.WaTor);
     xmlData.setCellStateList(new ArrayList<>(List.of(
         1, 2, 0,
         0, 0, 0,
@@ -126,5 +126,24 @@ class SimulationTest {
     assertThrows(IllegalArgumentException.class, () -> fireSimulation.getCurrentState(5, 5));
     assertThrows(IllegalArgumentException.class, () -> percolationSimulation.getCurrentState(5, 5));
     assertThrows(IllegalArgumentException.class, () -> watorSimulation.getCurrentState(5, 5));
+  }
+
+  @Test
+  void testGetAndUpdateParameter() {
+    assertEquals(0.5, segregationSimulation.getParameter("toleranceThreshold"), 0.001);
+    segregationSimulation.updateParameter("toleranceThreshold", 0.7);
+    assertEquals(0.7, segregationSimulation.getParameter("toleranceThreshold"), 0.001);
+  }
+
+  @Test
+  void testGetParameterKeys() {
+    List<String> keys = watorSimulation.getParameterKeys();
+    assertTrue(keys.contains("sharkInitialEnergy"));
+    assertTrue(keys.contains("fishReproductionTime"));
+    assertTrue(keys.contains("sharkEnergyGain"));
+    assertTrue(keys.contains("sharkReproductionTime"));
+    assertTrue(keys.contains("maxHistorySize"));
+    assertFalse(keys.contains("toleranceThreshold"));
+    assertFalse(keys.contains("treeSpawnLikelihood"));
   }
 }

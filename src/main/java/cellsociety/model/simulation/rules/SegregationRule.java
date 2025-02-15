@@ -1,8 +1,8 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.SegregationCell;
+import cellsociety.model.simulation.parameters.SegregationParameters;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -10,7 +10,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class SegregationRule extends Rule<SegregationCell> {
+public class SegregationRule extends Rule<SegregationCell, SegregationParameters> {
 
   private final Random random = new Random();
   private final int SEGREGATION_EMPTY;
@@ -20,7 +20,7 @@ public class SegregationRule extends Rule<SegregationCell> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public SegregationRule(Map<String, Double> parameters) {
+  public SegregationRule(SegregationParameters parameters) {
     super(parameters);
     SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
@@ -37,7 +37,7 @@ public class SegregationRule extends Rule<SegregationCell> {
       return SEGREGATION_EMPTY;
     }
 
-    double satisfactionThreshold = getParameters().getOrDefault("toleranceThreshold", 0.5);
+    double satisfactionThreshold = getParameters().getParameter("toleranceThreshold");
     if (isSatisfied(cell, satisfactionThreshold)) {
       return cell.getCurrentState();
     }

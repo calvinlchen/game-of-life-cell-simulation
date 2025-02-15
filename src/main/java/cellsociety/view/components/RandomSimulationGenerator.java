@@ -16,7 +16,7 @@ public class RandomSimulationGenerator {
     XMLData randomXMLData = new XMLData();
 
     // Set simulation metadata
-    randomXMLData.setType(SimType.GAMEOFLIFE);
+    randomXMLData.setType(SimType.GameOfLife);
     randomXMLData.setTitle("Game of Life Random Simulation");
     randomXMLData.setAuthor("Cell Society");
     randomXMLData.setDescription(

@@ -21,7 +21,7 @@ class XMLDataTest {
 
     @Test
     void testGetAndSetType() {
-        SimType expectedType = SimType.GAMEOFLIFE;
+        SimType expectedType = SimType.GameOfLife;
         xmlData.setType(expectedType);
         assertEquals(expectedType, xmlData.getType(), "Type should be set and retrieved correctly.");
     }

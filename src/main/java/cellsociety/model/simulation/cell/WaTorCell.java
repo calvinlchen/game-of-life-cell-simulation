@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 
 /**
@@ -7,7 +8,8 @@ import cellsociety.model.simulation.rules.WaTorRule;
  *
  * @author Jessica Chen
  */
-public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
+public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
+
   private int myStepsSurvived;
   private int myEnergy;
 
@@ -38,8 +40,9 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
   private void initializeDefaultVariables(int state) {
 
     myStepsSurvived = 0;
-    myEnergy = state == WATOR_SHARK ? getRule().getParameters().getOrDefault("sharkInitialEnergy", 5.0)
-        .intValue() : 0;
+    myEnergy =
+        state == WATOR_SHARK ? (int) getRule().getParameters().getParameter("sharkInitialEnergy")
+            : 0;
 
     myNextStepsSurvived = 0;
     myNextEnergy = 0;
@@ -120,8 +123,8 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
         setNextState(nextState);
 
         myNextStepsSurvived = 0;
-        myNextEnergy = nextState == WATOR_SHARK ? getRule().getParameters()
-            .getOrDefault("sharkInitialEnergy", 5.0).intValue() : 0;
+        myNextEnergy = nextState == WATOR_SHARK ? (int) getRule().getParameters()
+            .getParameter("sharkInitialEnergy") : 0;
       }
     }
   }

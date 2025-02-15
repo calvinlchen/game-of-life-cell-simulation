@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -14,9 +15,10 @@ import java.util.ResourceBundle;
  *
  * @param <C> - the type of cell, must be a subclass of Cell
  * @param <R> - the rule type of the cell, must be a subclass of Rule
+ * @param <P> - the parameter type of the cell, must be a subclass of Parameter
  * @author Jessica Chen
  */
-public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
+public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P extends Parameters> {
 
   private List<C> neighbors;
   private int currentState;
@@ -51,7 +53,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   public void saveCurrentState() {
     stateHistory.addLast(currentState);
-    if (stateHistory.size() > rule.getParameters().getOrDefault("maxHistorySize", 10.0)) {
+    if (stateHistory.size() > rule.getParameters().getParameter("maxHistorySize")) {
       stateHistory.removeFirst();
     }
   }

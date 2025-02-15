@@ -2,8 +2,10 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test cell for testing
  */
-class TestCell extends Cell<TestCell, TestRule> {
+class TestCell extends Cell<TestCell, TestRule, TestParameters> {
   public TestCell(int state, TestRule rule) {
     super(state, rule);
   }
@@ -33,15 +35,33 @@ class TestCell extends Cell<TestCell, TestRule> {
   protected TestCell getSelf() {return this;}
 }
 
-class TestRule extends Rule<TestCell> {
+class TestRule extends Rule<TestCell, TestParameters> {
 
-  public TestRule(Map<String, Double> parameters) {
+  public TestRule(TestParameters parameters) {
     super(parameters);
   }
 
   @Override
   public int apply(TestCell cell) {
     return 0;
+  }
+}
+
+/**
+ * A minimal test parameters class for unit testing.
+ *
+ * @author chatgpt
+ * @author Jessica Chen, modified constructor
+ */
+class TestParameters extends Parameters {
+
+  public TestParameters() {
+    super();
+
+    Map<String, Double> parameters = new HashMap<>();
+    parameters.put("maxHistorySize", 3.);
+    setParameters(parameters);
+
   }
 }
 
@@ -55,7 +75,7 @@ class CellTest {
 
   @BeforeEach
   void setUp() {
-    Map<String, Double> parameters = Map.of("maxHistorySize", 3.0);
+    TestParameters parameters = new TestParameters();
     rule = new TestRule(parameters);
     cell = new TestCell(0, rule);
     neighbor = new TestCell(0, rule);

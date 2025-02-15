@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.WaTorCell;
+import cellsociety.model.simulation.parameters.WaTorParameters;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -10,7 +11,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class WaTorRule extends Rule<WaTorCell> {
+public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
 
   private final Random random = new Random();
   private int fishReproductionTime;
@@ -27,13 +28,12 @@ public class WaTorRule extends Rule<WaTorCell> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public WaTorRule(Map<String, Double> parameters) {
+  public WaTorRule(WaTorParameters parameters) {
     super(parameters);
 
-    fishReproductionTime = getParameters().getOrDefault("fishReproductionTime", 3.0).intValue();
-    sharkEnergyGain = getParameters().getOrDefault("sharkEnergyGain", 2.0).intValue();
-    sharkReproductionTime = getParameters().getOrDefault("sharkReproductionTime", 3.0)
-        .intValue();
+    fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
+    sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
+    sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
 
     WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
     WATOR_FISH = super.getStateProperty("WATOR_FISH");

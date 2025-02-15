@@ -3,6 +3,7 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.PercolationCell;
+import cellsociety.model.simulation.parameters.PercolationParameters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ class PercolationRuleTest {
 
   @BeforeEach
   void setUp() {
-    rule = new PercolationRule(Map.of()); // no parameters either
+    rule = new PercolationRule(new PercolationParameters()); // no parameters either
   }
 
   @Test

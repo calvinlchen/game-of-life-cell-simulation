@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.FireCell;
+import cellsociety.model.simulation.parameters.FireParameters;
 import java.util.Map;
 
 
@@ -9,17 +10,16 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class FireRule extends Rule<FireCell> {
+public class FireRule extends Rule<FireCell, FireParameters> {
   private final int FIRE_EMPTY;
   private final int FIRE_TREE;
   private final int FIRE_BURNING;
-
   /**
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public FireRule(Map<String, Double> parameters) {
+  public FireRule(FireParameters parameters) {
     super(parameters);
 
     FIRE_EMPTY = super.getStateProperty("FIRE_EMPTY");
@@ -45,7 +45,7 @@ public class FireRule extends Rule<FireCell> {
       return FIRE_BURNING;
     }
 
-    double f = getParameters().getOrDefault("ignitionLikelihood", 0.0);
+    double f = getParameters().getParameter("ignitionLikelihood");
     if (Math.random() < f) {
       return FIRE_BURNING;
     }
@@ -54,7 +54,7 @@ public class FireRule extends Rule<FireCell> {
   }
 
   private int handleEmpty(FireCell cell) {
-    double p = getParameters().getOrDefault("treeSpawnLikelihood", 0.0);
+    double p = getParameters().getParameter("treeSpawnLikelihood");
     if (Math.random() < p) {
       return FIRE_TREE;
     }

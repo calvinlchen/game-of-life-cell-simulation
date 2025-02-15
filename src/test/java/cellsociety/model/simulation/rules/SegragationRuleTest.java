@@ -3,9 +3,9 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.SegregationCell;
+import cellsociety.model.simulation.parameters.SegregationParameters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class SegregationRuleTest {
 
   @BeforeEach
   void setUp() {
-    rule = new SegregationRule(Map.of("toleranceThreshold", 0.5)); // need to have more than half to be satisfied
+    rule = new SegregationRule(new SegregationParameters()); // need to have more than half to be satisfied
   }
 
   @Test
