@@ -7,10 +7,7 @@ import cellsociety.model.simulation.rules.GameOfLifeRule;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeCell extends Cell<GameOfLifeCell> {
-
-  private final GameOfLifeRule myRule;
-
+public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule> {
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
    *
@@ -18,19 +15,11 @@ public class GameOfLifeCell extends Cell<GameOfLifeCell> {
    * @param rule  - the Game of Life rule to calculate the next state
    */
   public GameOfLifeCell(int state, GameOfLifeRule rule) {
-    super(state);
-    myRule = rule;
-  }
-
-  // NOTE: I thought about making these non abstract, but with the generics it becomes hard to pass
-  // the correct cell into, also segragation and wator world become interesting
-  @Override
-  public void calcNextState() {
-    setNextState(myRule.apply(this));
+    super(state, rule);
   }
 
   @Override
-  public void step() {
-    setCurrentState(getNextState());
+  protected GameOfLifeCell getSelf() {
+    return this;
   }
 }

@@ -7,10 +7,7 @@ import cellsociety.model.simulation.rules.PercolationRule;
  *
  * @author Jessica Chen
  */
-public class PercolationCell extends Cell<PercolationCell> {
-
-  private final PercolationRule myRule;
-
+public class PercolationCell extends Cell<PercolationCell, PercolationRule> {
   /**
    * Constructs a cell with specified initial state.
    *
@@ -18,17 +15,11 @@ public class PercolationCell extends Cell<PercolationCell> {
    * @param rule  - the Percolation rule to calculate the next state
    */
   public PercolationCell(int state, PercolationRule rule) {
-    super(state);
-    myRule = rule;
+    super(state, rule);
   }
 
   @Override
-  public void calcNextState() {
-    setNextState(myRule.apply(this));
-  }
-
-  @Override
-  public void step() {
-    setCurrentState(getNextState());
+  protected PercolationCell getSelf() {
+    return this;
   }
 }

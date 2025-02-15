@@ -3,8 +3,10 @@ package cellsociety.model.simulation.grid;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +16,9 @@ enum AdjacentGridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing AdjacentGrid
  */
-class TestAdjacentGridCell extends Cell<TestAdjacentGridCell> {
-  public TestAdjacentGridCell(int state) {
-    super(state);
+class TestAdjacentGridCell extends Cell<TestAdjacentGridCell, TestAdjacentGridRule> {
+  public TestAdjacentGridCell(int state, TestAdjacentGridRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -28,6 +30,23 @@ class TestAdjacentGridCell extends Cell<TestAdjacentGridCell> {
   public void step() {
     return;
   }
+
+  @Override
+  protected TestAdjacentGridCell getSelf() {
+    return this;
+  }
+}
+
+class TestAdjacentGridRule extends Rule<TestAdjacentGridCell> {
+
+  public TestAdjacentGridRule(Map<String, Double> parameters) {
+    super(parameters);
+  }
+
+  @Override
+  public int apply(TestAdjacentGridCell cell) {
+    return 0;
+  }
 }
 
 /**
@@ -37,11 +56,14 @@ class AdjacentGridTest {
   private AdjacentGrid<TestAdjacentGridCell> grid;
   private List<TestAdjacentGridCell> cells;
 
+  private TestAdjacentGridRule rule;
+
   @BeforeEach
   void setUp() {
+    rule = new TestAdjacentGridRule(null);
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestAdjacentGridCell(1));
+      cells.add(new TestAdjacentGridCell(1, rule));
     }
     grid = new AdjacentGrid<>(cells, 3, 3);
   }

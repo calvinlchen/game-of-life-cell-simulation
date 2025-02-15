@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  * @param <C> - the type of cell, must be a subclass of Cell
  * @author Jessica Chen
  */
-public abstract class Rule<C extends Cell<C>> {
+public abstract class Rule<C extends Cell<C, ?>> {
 
   private Map<String, Double> parameters;
 

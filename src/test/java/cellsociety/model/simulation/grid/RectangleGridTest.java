@@ -3,8 +3,10 @@ package cellsociety.model.simulation.grid;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +16,9 @@ enum GridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing RectangularGrid
  */
-class TestRectangularGridCell extends Cell<TestRectangularGridCell> {
-  public TestRectangularGridCell(int state) {
-    super(state);
+class TestRectangularGridCell extends Cell<TestRectangularGridCell, TestRectangularGridRule> {
+  public TestRectangularGridCell(int state, TestRectangularGridRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -28,6 +30,23 @@ class TestRectangularGridCell extends Cell<TestRectangularGridCell> {
   public void step() {
     return;
   }
+
+  @Override
+  protected TestRectangularGridCell getSelf() {
+    return this;
+  }
+}
+
+class TestRectangularGridRule extends Rule<TestRectangularGridCell> {
+
+  public TestRectangularGridRule(Map<String, Double> parameters) {
+    super(parameters);
+  }
+
+  @Override
+  public int apply(TestRectangularGridCell cell) {
+    return 0;
+  }
 }
 
 /**
@@ -37,11 +56,14 @@ class RectangularGridTest {
   private RectangularGrid<TestRectangularGridCell> grid;
   private List<TestRectangularGridCell> cells;
 
+  private TestRectangularGridRule rule;
+
   @BeforeEach
   void setUp() {
+    rule = new TestRectangularGridRule(null);
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestRectangularGridCell(1));
+      cells.add(new TestRectangularGridCell(1, rule));
     }
     grid = new RectangularGrid<>(cells, 3, 3);
   }

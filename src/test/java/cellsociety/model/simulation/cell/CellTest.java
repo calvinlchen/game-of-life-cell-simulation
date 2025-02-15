@@ -2,8 +2,10 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +14,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Test cell for testing
  */
-class TestCell extends Cell<TestCell> {
-  public TestCell(int state) {
-    super(state);
+class TestCell extends Cell<TestCell, TestRule> {
+  public TestCell(int state, TestRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -26,6 +28,21 @@ class TestCell extends Cell<TestCell> {
   public void step() {
     return;
   }
+
+  @Override
+  protected TestCell getSelf() {return this;}
+}
+
+class TestRule extends Rule<TestCell> {
+
+  public TestRule(Map<String, Double> parameters) {
+    super(parameters);
+  }
+
+  @Override
+  public int apply(TestCell cell) {
+    return 0;
+  }
 }
 
 /**
@@ -34,11 +51,13 @@ class TestCell extends Cell<TestCell> {
 class CellTest {
   private TestCell cell;
   private TestCell neighbor;
+  private TestRule rule;
 
   @BeforeEach
   void setUp() {
-    cell = new TestCell(0);
-    neighbor = new TestCell(0);
+    rule = new TestRule(null);
+    cell = new TestCell(0, rule);
+    neighbor = new TestCell(0, rule);
   }
 
   // Positive Checks

@@ -15,7 +15,7 @@ import java.util.List;
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public abstract class Grid<T extends Cell<T>> {
+public abstract class Grid<T extends Cell<T, ?>> {
 
   private final List<List<T>> myGrid;
   private final int myRows;

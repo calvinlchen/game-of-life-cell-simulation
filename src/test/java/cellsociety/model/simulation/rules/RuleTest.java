@@ -3,6 +3,7 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.cell.PercolationCell;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +15,10 @@ enum RuleTestState {ALIVE, DEAD;}   // testing enum for states
 /**
  * Test cell for testing
  */
-class TestRuleCell extends Cell<TestRuleCell> {
+class TestRuleCell extends Cell<TestRuleCell, TestRule> {
 
-  public TestRuleCell(int state) {
-    super(state);
+  public TestRuleCell(int state, TestRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -28,6 +29,11 @@ class TestRuleCell extends Cell<TestRuleCell> {
   @Override
   public void step() {
     return;
+  }
+
+  @Override
+  protected TestRuleCell getSelf() {
+    return null;
   }
 }
 
@@ -79,7 +85,7 @@ class RuleTest {
   @Test
   @DisplayName("Apply method returns expected state")
   void apply_Method_ReturnsExpectedState() {
-    TestRuleCell cell = new TestRuleCell(1);
+    TestRuleCell cell = new TestRuleCell(1, rule);
     assertEquals(0, rule.apply(cell));
   }
 }
