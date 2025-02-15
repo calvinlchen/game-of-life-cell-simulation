@@ -16,6 +16,7 @@ import cellsociety.model.simulation.rules.SegregationRule;
 import cellsociety.model.simulation.rules.WaTorRule;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,22 @@ public class Simulation<T extends Cell<T, ?>> {
   private final XMLData xmlData;
   private Grid<T> myGrid;
 
+  private static final Map<SimType, String> CELL_CLASSES = Map.of(
+      SimType.GAMEOFLIFE, "cellsociety.model.simulation.cell.GameOfLifeCell",
+      SimType.SEGREGATION, "cellsociety.model.simulation.cell.SegregationCell",
+      SimType.FIRE, "cellsociety.model.simulation.cell.FireCell",
+      SimType.PERCOLATION, "cellsociety.model.simulation.cell.PercolationCell",
+      SimType.WATOR, "cellsociety.model.simulation.cell.WaTorCell"
+  );
+
+  private static final Map<SimType, String> RULE_CLASSES = Map.of(
+      SimType.GAMEOFLIFE, "cellsociety.model.simulation.rules.GameOfLifeRule",
+      SimType.SEGREGATION, "cellsociety.model.simulation.rules.SegregationRule",
+      SimType.FIRE, "cellsociety.model.simulation.rules.FireRule",
+      SimType.PERCOLATION, "cellsociety.model.simulation.rules.PercolationRule",
+      SimType.WATOR, "cellsociety.model.simulation.rules.WaTorRule"
+  );
+
   public Simulation(XMLData data) {
     xmlData = data;
 
@@ -40,36 +57,35 @@ public class Simulation<T extends Cell<T, ?>> {
 
   private void setUpGrid() {
     List<Cell> cellList = new ArrayList<>();
+    SimType simType = xmlData.getType();
     Map<String, Double> params = xmlData.getParameters();
-    for (Integer state : xmlData.getCellStateList()) {
-      switch (xmlData.getType()) {
-        case GAMEOFLIFE -> cellList.add(new GameOfLifeCell(state,
-            new GameOfLifeRule(params)));
-        case SEGREGATION -> cellList.add(new SegregationCell(state,
-            new SegregationRule(params)));
-        case FIRE -> cellList.add(new FireCell(state,
-            new FireRule(params)));
-        case PERCOLATION -> cellList.add(new PercolationCell(state,
-            new PercolationRule(params)));
-        case WATOR -> cellList.add(new WaTorCell(state,
-            new WaTorRule(params)));
+
+    try {
+      Class<?> ruleClass = Class.forName(RULE_CLASSES.get(simType));
+      Constructor<?> ruleConstructor = ruleClass.getConstructor(Map.class);
+      Object ruleInstance = ruleConstructor.newInstance(params);
+
+      Class<?> cellClass = Class.forName(CELL_CLASSES.get(simType));
+      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, ruleClass);
+
+      for (Integer state : xmlData.getCellStateList()) {
+        cellList.add((Cell) cellConstructor.newInstance(state, ruleInstance));
       }
-    }
 
-    switch (xmlData.getType()) {
-      case GAMEOFLIFE, SEGREGATION -> setUpRectangularGrid(cellList);
-      case FIRE, PERCOLATION, WATOR -> setUpAdjacentGrid(cellList);
+      setUpGridStructure(cellList, simType);
+
+    } catch (Exception e) {
+      // TODO: make this error better
+      throw new RuntimeException("Error initializing simulation: " + e.getMessage(), e);
     }
   }
 
-  private void setUpAdjacentGrid(List<Cell> cellList) {
-    myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(),
-        xmlData.getGridColNum());
-  }
-
-  private void setUpRectangularGrid(List<Cell> cellList) {
-    myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(),
-        xmlData.getGridColNum());
+  private void setUpGridStructure(List<Cell> cellList, SimType simType) {
+    if (simType == SimType.GAMEOFLIFE || simType == SimType.SEGREGATION) {
+      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
+    } else {
+      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
+    }
   }
 
   /**
