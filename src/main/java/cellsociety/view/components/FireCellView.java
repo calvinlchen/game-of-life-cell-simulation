@@ -13,7 +13,7 @@ public class FireCellView extends CellView {
    * Maps a Spreading of Fire state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(int state) {
+  public Color getColorForState(int state) {
     return switch (state) {
       case 1 -> Color.GREEN;
       case 2 -> Color.RED;

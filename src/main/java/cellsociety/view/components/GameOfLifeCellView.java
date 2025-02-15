@@ -13,7 +13,7 @@ public class GameOfLifeCellView extends CellView {
    * Maps a Game of Life state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(int state) {
+  public Color getColorForState(int state) {
     return switch (state) {
       case 1 -> Color.GREEN;
       default -> DEFAULT_FILL;
