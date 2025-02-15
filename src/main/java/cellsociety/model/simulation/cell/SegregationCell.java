@@ -8,9 +8,7 @@ import cellsociety.model.simulation.rules.SegregationRule;
  *
  * @author Jessica Chen
  */
-public class SegregationCell extends Cell<SegregationCell> {
-
-  private final SegregationRule myRule;
+public class SegregationCell extends Cell<SegregationCell, SegregationRule> {
   private final int SEGREGATION_EMPTY;
 
   /**
@@ -20,22 +18,7 @@ public class SegregationCell extends Cell<SegregationCell> {
    * @param rule  - Schelling's Model of Segregation Rule to calculate next state
    */
   public SegregationCell(int state, SegregationRule rule) {
-    super(state);
-    myRule = rule;
-
-    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
-  }
-
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the initial position of the cell
-   * @param rule     - Schelling's Model of Segregation Rule to calculate next state
-   */
-  public SegregationCell(int state, int[] position, SegregationRule rule) {
-    super(state, position);
-    myRule = rule;
+    super(state, rule);
 
     SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
@@ -46,12 +29,12 @@ public class SegregationCell extends Cell<SegregationCell> {
     // namely in a prior thing you were empty and then someone moved into you because
     // they weren't satisfied
     if (!(getCurrentState() == SEGREGATION_EMPTY && getNextState() != SEGREGATION_EMPTY)) {
-      setNextState(myRule.apply(this));
+      super.calcNextState();
     }
   }
 
   @Override
-  public void step() {
-    setCurrentState(getNextState());
+  protected SegregationCell getSelf() {
+    return this;
   }
 }

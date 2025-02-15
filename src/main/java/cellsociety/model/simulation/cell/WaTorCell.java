@@ -7,10 +7,7 @@ import cellsociety.model.simulation.rules.WaTorRule;
  *
  * @author Jessica Chen
  */
-public class WaTorCell extends Cell<WaTorCell> {
-
-  private final WaTorRule myRule;
-
+public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
   private int myStepsSurvived;
   private int myEnergy;
 
@@ -30,25 +27,7 @@ public class WaTorCell extends Cell<WaTorCell> {
    * @param rule  - the WaTorRule to calculate the next state
    */
   public WaTorCell(int state, WaTorRule rule) {
-    super(state);
-    myRule = rule;
-
-    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
-    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
-
-    initializeDefaultVariables(state);
-  }
-
-  /**
-   * Constructs a WaTorCell with a specified initial state and rule.
-   *
-   * @param state    - the initial state of the cell (must be a state from WaTorStates)
-   * @param position - the inital position of the cell
-   * @param rule     - the WaTorRule to calculate the next state
-   */
-  public WaTorCell(int state, int[] position, WaTorRule rule) {
-    super(state, position);
-    myRule = rule;
+    super(state, rule);
 
     WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
     WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
@@ -59,7 +38,7 @@ public class WaTorCell extends Cell<WaTorCell> {
   private void initializeDefaultVariables(int state) {
 
     myStepsSurvived = 0;
-    myEnergy = state == WATOR_SHARK ? myRule.getParameters().getOrDefault("sharkInitialEnergy", 5.0)
+    myEnergy = state == WATOR_SHARK ? getRule().getParameters().getOrDefault("sharkInitialEnergy", 5.0)
         .intValue() : 0;
 
     myNextStepsSurvived = 0;
@@ -136,12 +115,12 @@ public class WaTorCell extends Cell<WaTorCell> {
     // only not equal if was empty and then a fish / shark swam there
     // or if there was a fish there and it got eaten
     if (getCurrentState() == getNextState()) {
-      int nextState = myRule.apply(this);
+      int nextState = getRule().apply(this);
       if (nextState != -1) {
         setNextState(nextState);
 
         myNextStepsSurvived = 0;
-        myNextEnergy = nextState == WATOR_SHARK ? myRule.getParameters()
+        myNextEnergy = nextState == WATOR_SHARK ? getRule().getParameters()
             .getOrDefault("sharkInitialEnergy", 5.0).intValue() : 0;
       }
     }
@@ -177,6 +156,11 @@ public class WaTorCell extends Cell<WaTorCell> {
     } else {
       setCurrentState(getNextState());
     }
+  }
+
+  @Override
+  protected WaTorCell getSelf() {
+    return this;
   }
 
   @Override

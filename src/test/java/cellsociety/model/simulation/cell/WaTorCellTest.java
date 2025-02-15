@@ -151,23 +151,5 @@ class WaTorCellTest {
     assertEquals(3, cell.getStepsSurvived());
     assertEquals(2, cell.getEnergy());
   }
-
-  @Test
-  @DisplayName("Initialize default variables correctly")
-  void initializeDefaultVariables_Verified() {
-    WaTorCell cell = new WaTorCell(1, new int[]{2, 3}, rule);
-    assertEquals(0, cell.getStepsSurvived());
-    assertEquals(0, cell.getEnergy());
-    assertFalse(cell.isConsumed());
-  }
-
-  @Test
-  @DisplayName("Constructor with position initializes correctly")
-  void constructor_WithPosition_Verified() {
-    int[] position = {2, 3};
-    WaTorCell cell = new WaTorCell(2, position, rule);
-    assertArrayEquals(position, cell.getPosition());
-    assertEquals(5, cell.getEnergy());
-  }
 }
 

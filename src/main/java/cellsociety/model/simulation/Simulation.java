@@ -27,7 +27,7 @@ import java.util.Map;
  * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
-public class Simulation<T extends Cell<T>> {
+public class Simulation<T extends Cell<T, ?>> {
 
   private final XMLData xmlData;
   private Grid<T> myGrid;
@@ -73,26 +73,39 @@ public class Simulation<T extends Cell<T>> {
   }
 
   /**
+   * Moves all cells in the simulation backward by one step
+   */
+  public void stepBack() {
+    for (int row = 0; row < xmlData.getGridRowNum(); row++) {
+      for (int col = 0; col < xmlData.getGridColNum(); col++) {
+        Cell<T, ?> cell = myGrid.getCell(row, col);
+        cell.stepBack();
+      }
+    }
+  }
+
+  /**
    * Moves all cells in the simulation up by one step
    */
   public void step() {
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<T> cell = myGrid.getCell(row, col);
+        Cell<T, ?> cell = myGrid.getCell(row, col);
+        cell.saveCurrentState();
         cell.calcNextState();
       }
     }
 
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<T> cell = myGrid.getCell(row, col);
+        Cell<T, ?> cell = myGrid.getCell(row, col);
         cell.step();
       }
     }
 
     for (int row = 0; row < xmlData.getGridRowNum(); row++) {
       for (int col = 0; col < xmlData.getGridColNum(); col++) {
-        Cell<T> cell = myGrid.getCell(row, col);
+        Cell<T, ?> cell = myGrid.getCell(row, col);
         cell.resetParameters();
       }
     }

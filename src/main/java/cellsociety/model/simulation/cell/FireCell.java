@@ -7,9 +7,7 @@ import cellsociety.model.simulation.rules.FireRule;
  *
  * @author Jessica Chen
  */
-public class FireCell extends Cell<FireCell> {
-
-  private final FireRule myRule;
+public class FireCell extends Cell<FireCell, FireRule> {
 
   /**
    * Constructs a cell with specified initial state.
@@ -18,29 +16,11 @@ public class FireCell extends Cell<FireCell> {
    * @param rule  - Spreading of Fire Rule to calculate next state
    */
   public FireCell(int state, FireRule rule) {
-    super(state);
-    myRule = rule;
-  }
-
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the initial position of the cell
-   * @param rule     - Spreading of Fire Rule to calculate next state
-   */
-  public FireCell(int state, int[] position, FireRule rule) {
-    super(state, position);
-    myRule = rule;
+    super(state, rule);
   }
 
   @Override
-  public void calcNextState() {
-    setNextState(myRule.apply(this));
-  }
-
-  @Override
-  public void step() {
-    setCurrentState(getNextState());
+  protected FireCell getSelf() {
+    return this;
   }
 }

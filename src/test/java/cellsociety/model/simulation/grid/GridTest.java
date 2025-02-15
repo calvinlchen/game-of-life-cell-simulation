@@ -3,8 +3,11 @@ package cellsociety.model.simulation.grid;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,13 +16,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Test cell for testing Grid
  */
-class TestGridCell extends Cell<TestGridCell> {
-  public TestGridCell(int state) {
-    super(state);
-  }
-
-  public TestGridCell(int state, int[] position) {
-    super(state, position);
+class TestGridCell extends Cell<TestGridCell, TestRule> {
+  public TestGridCell(int state, TestRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -31,6 +30,23 @@ class TestGridCell extends Cell<TestGridCell> {
   public void step() {
     return;
   }
+
+  @Override
+  protected TestGridCell getSelf() {
+    return this;
+  }
+}
+
+class TestRule extends Rule<TestGridCell> {
+
+  public TestRule(Map<String, Double> parameters) {
+    super(parameters);
+  }
+
+  @Override
+  public int apply(TestGridCell cell) {
+    return 0;
+  }
 }
 
 /**
@@ -39,14 +55,16 @@ class TestGridCell extends Cell<TestGridCell> {
 class GridTest {
   private Grid<TestGridCell> grid;
   private List<TestGridCell> cells;
+  private TestRule rule;
 
   // Positive Tests
 
   @BeforeEach
   void setUp() {
+    rule = new TestRule(new HashMap<>());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestGridCell(1));
+      cells.add(new TestGridCell(1, rule));
     }
     grid = new Grid<>(cells, 3, 3) {
       @Override
@@ -74,7 +92,7 @@ class GridTest {
   @Test
   @DisplayName("Set cell at valid position")
   void setCell_ValidPosition_Verified() {
-    TestGridCell newCell = new TestGridCell(0);
+    TestGridCell newCell = new TestGridCell(0, rule);
     grid.setCell(1, 1, newCell);
     assertEquals(newCell, grid.getCell(1, 1));
   }
@@ -123,13 +141,13 @@ class GridTest {
   @Test
   @DisplayName("Set cell at invalid negative position throws exception")
   void setCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(-1, 1, new TestGridCell(1)));
+    assertThrows(IllegalArgumentException.class, () -> grid.setCell(-1, 1, new TestGridCell(1, rule)));
   }
 
   @Test
   @DisplayName("Set cell at invalid position position throws exception")
   void setCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 4, new TestGridCell(1)));
+    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 4, new TestGridCell(1, rule)));
   }
 
   @Test
