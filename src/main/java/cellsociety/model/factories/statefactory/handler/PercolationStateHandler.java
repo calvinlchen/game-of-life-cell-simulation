@@ -7,9 +7,9 @@ public class PercolationStateHandler extends CellStateHandlerStatic {
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
-    cellStates.put(0, "EMPTY");
-    cellStates.put(1, "TREE");
-    cellStates.put(2, "BURNING");
+    cellStates.put(0, "blocked");
+    cellStates.put(1, "open");
+    cellStates.put(2, "percolated");
   }
 
   public PercolationStateHandler() {

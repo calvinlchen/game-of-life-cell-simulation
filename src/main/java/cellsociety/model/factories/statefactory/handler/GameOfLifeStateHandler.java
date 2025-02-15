@@ -7,8 +7,8 @@ public class GameOfLifeStateHandler extends CellStateHandlerStatic {
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
-    cellStates.put(0, "DEAD");
-    cellStates.put(1, "ALIVE");
+    cellStates.put(0, "dead");
+    cellStates.put(1, "alive");
   }
 
   public GameOfLifeStateHandler() {
