@@ -13,7 +13,7 @@ public class PercolationCellView extends CellView {
    * Maps a Percolation state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(int state) {
+  public Color getColorForState(int state) {
     return switch (state) {
       case 1 -> DEFAULT_FILL.invert();
       case 2 -> Color.BLUE;

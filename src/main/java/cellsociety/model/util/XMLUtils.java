@@ -1,5 +1,7 @@
 package cellsociety.model.util;
 
+import cellsociety.model.factories.statefactory.CellStateFactory;
+import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.XMLException;
@@ -212,60 +214,21 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
 
         ArrayList<String> cellStateList = new ArrayList<>();
 
-        for (int i=0; i<rowNum; i++){ //for loop to build array list of cellstates
-            for (int j=0; j<colNum; j++){
+        CellStateHandlerStatic handler = CellStateFactory.getHandler(simulation.getSimulationType());
+        // TODO: make better exceptions
+        if (handler == null) {
+            throw new IllegalArgumentException("Unknown simulation type: " + simulation.getSimulationType());
+        }
 
-                int currentCellState = simulation.getCurrentState(i, j); //returns the current state of a specific cell
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
+                int currentCellState = simulation.getCurrentState(i, j);
 
-                switch (simulation.getSimulationType()) {
-
-                    case SimType.GAMEOFLIFE -> {
-                        switch (currentCellState){
-                            case 1 -> cellStateList.add("alive");
-                            case 0 -> cellStateList.add("dead");
-                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                        }
-                    }
-
-                    case SimType.PERCOLATION -> {
-                        switch (currentCellState){
-                            case 0 -> cellStateList.add("blocked");
-                            case 1 -> cellStateList.add("open");
-                            case 2-> cellStateList.add("percolated");
-                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                        }
-                    }
-
-                    case SimType.FIRE -> {
-                        switch (currentCellState){
-                            case 1 -> cellStateList.add("tree");
-                            case 0 -> cellStateList.add("empty");
-                            case 2 -> cellStateList.add("burning");
-                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                        }
-                    }
-
-                    case SimType.SEGREGATION -> {
-                        switch (currentCellState){
-                            case 0 -> cellStateList.add("empty");
-                            case 1 -> cellStateList.add("agentA");
-                            case 2 -> cellStateList.add("agentB");
-                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                        }
-                    }
-
-                    case SimType.WATOR -> {
-                        switch (currentCellState) {
-                            case 0 -> cellStateList.add("empty");
-                            case 1 -> cellStateList.add("fish");
-                            case 2 -> cellStateList.add("shark");
-                            default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                        }
-                    }
-
-                    default -> throw new IllegalArgumentException("Unknown simulation type: " + simulation.getSimulationType());
-
+                if (!handler.isValidState(currentCellState)) {
+                    throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
                 }
+
+                cellStateList.add(handler.statetoString(currentCellState));
             }
         }
 
@@ -276,65 +239,26 @@ up     * A method that writes a simulation data to both pre-existing and non-exi
      * A method that extracts the cellstates from the simulation xml and turns them into a string list
      *
      * @param cellList an NodeList variable that holds the xml data's cell data
-     * @param SimulationType an Enum representing the intended simulation type
+     * @param simulationType an Enum representing the intended simulation type
      */
-    private ArrayList<Integer> cellStatesToEnum (NodeList cellList, Enum SimulationType){
+    private ArrayList<Integer> cellStatesToEnum (NodeList cellList, SimType simulationType){
 
         ArrayList<Integer> cellStateEnums = new ArrayList<>();
 
+        CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+        if (handler == null) {
+            throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
+        }
+
         for (int j = 0; j < cellList.getLength(); j++) {
             Element cellElement = (Element) cellList.item(j);
-
             String currentCellState = cellElement.getAttribute("state");
 
-            switch (SimulationType) {
-
-                case SimType.GAMEOFLIFE -> {
-                    switch (currentCellState){
-                        case ("alive") -> cellStateEnums.add(getStateProperty("GAMEOFLIFE_ALIVE"));
-                        case ("dead") -> cellStateEnums.add(getStateProperty("GAMEOFLIFE_DEAD"));
-                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                    }
-                }
-
-                case SimType.PERCOLATION -> {
-                    switch (currentCellState){
-                        case ("blocked") -> cellStateEnums.add(getStateProperty("PERCOLATION_BLOCKED"));
-                        case ("open") -> cellStateEnums.add(getStateProperty("PERCOLATION_OPEN"));
-                        case ("percolated") -> cellStateEnums.add(getStateProperty("PERCOLATION_PERCOLATED"));
-                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                    }
-                }
-
-                case SimType.FIRE -> {
-                    switch (currentCellState){
-                        case ("tree") -> cellStateEnums.add(getStateProperty("FIRE_TREE"));
-                        case ("empty") -> cellStateEnums.add(getStateProperty("FIRE_EMPTY"));
-                        case ("burning") -> cellStateEnums.add(getStateProperty("FIRE_BURNING"));
-                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                    }
-                }
-
-                case SimType.SEGREGATION -> {
-                    switch (currentCellState){
-                        case ("agentA") -> cellStateEnums.add(getStateProperty("SEGREGATION_A"));
-                        case ("empty") -> cellStateEnums.add(getStateProperty("SEGREGATION_EMPTY"));
-                        case ("agentB") -> cellStateEnums.add(getStateProperty("SEGREGATION_B"));
-                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                    }
-                }
-
-                case SimType.WATOR -> {
-                    switch (currentCellState) {
-                        case ("fish") -> cellStateEnums.add(getStateProperty("WATOR_FISH"));
-                        case ("empty") -> cellStateEnums.add(getStateProperty("WATOR_EMPTY"));
-                        case ("shark") -> cellStateEnums.add(getStateProperty("WATOR_SHARK"));
-                        default -> throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
-                    }
-                }
-
-                default -> throw new IllegalArgumentException("Unknown simulation type: " + SimulationType);
-
+            try {
+                int stateEnum = handler.stateFromString(currentCellState);
+                cellStateEnums.add(stateEnum);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Unknown cell state: " + currentCellState, e);
             }
         }
 

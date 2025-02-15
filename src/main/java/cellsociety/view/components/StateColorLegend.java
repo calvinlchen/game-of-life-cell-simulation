@@ -1,5 +1,7 @@
 package cellsociety.view.components;
 
+import cellsociety.model.factories.statefactory.CellStateFactory;
+import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.util.SimulationTypes.SimType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -68,35 +70,17 @@ public class StateColorLegend {
    * Retrieves the appropriate `getColorForState()` method based on simulation type.
    */
   private Map<Integer, Color> getStateColorMap(SimType simulationType) {
-    Map<Integer, Color> stateColorMap = new HashMap<>();
-
-    switch (simulationType) {
-      case GAMEOFLIFE -> {
-        stateColorMap.put(0, new GameOfLifeCellView(0, 0, 0, 0, 0).getColorForState(0));
-        stateColorMap.put(1, new GameOfLifeCellView(0, 0, 0, 0, 1).getColorForState(1));
-      }
-      case FIRE -> {
-        stateColorMap.put(0, new FireCellView(0, 0, 0, 0, 0).getColorForState(0));
-        stateColorMap.put(1, new FireCellView(0, 0, 0, 0, 1).getColorForState(1));
-        stateColorMap.put(2, new FireCellView(0, 0, 0, 0, 2).getColorForState(2));
-      }
-      case PERCOLATION -> {
-        stateColorMap.put(0, new PercolationCellView(0, 0, 0, 0, 0).getColorForState(0));
-        stateColorMap.put(1, new PercolationCellView(0, 0, 0, 0, 1).getColorForState(1));
-        stateColorMap.put(2, new PercolationCellView(0, 0, 0, 0, 2).getColorForState(2));
-      }
-      case SEGREGATION -> {
-        stateColorMap.put(0, new SegregationCellView(0, 0, 0, 0, 0).getColorForState(0));
-        stateColorMap.put(1, new SegregationCellView(0, 0, 0, 0, 1).getColorForState(1));
-        stateColorMap.put(2, new SegregationCellView(0, 0, 0, 0, 2).getColorForState(2));
-      }
-      case WATOR -> {
-        stateColorMap.put(0, new WaTorCellView(0, 0, 0, 0, 0).getColorForState(0));
-        stateColorMap.put(1, new WaTorCellView(0, 0, 0, 0, 1).getColorForState(1));
-        stateColorMap.put(2, new WaTorCellView(0, 0, 0, 0, 2).getColorForState(2));
-      }
+    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+    if (handler == null) {
+      throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
     }
 
+    Map<Integer, Color> stateColorMap = new HashMap<>();
+    for (int state : handler.getStateInt()) {
+      stateColorMap.put(state,
+          CellViewFactory.createCellView(simulationType, new double[]{0, 0}, 0, 0, state)
+              .getColorForState(state));
+    }
     return stateColorMap;
   }
 
@@ -104,12 +88,15 @@ public class StateColorLegend {
    * Maps each state value to its corresponding name.
    */
   private Map<Integer, String> getStateNameMap(SimType simulationType) {
-    return switch (simulationType) {
-      case GAMEOFLIFE -> Map.of(0, "Dead", 1, "Alive");
-      case FIRE -> Map.of(0, "Empty", 1, "Tree", 2, "Burning");
-      case PERCOLATION -> Map.of(0, "Blocked", 1, "Open", 2, "Percolated");
-      case SEGREGATION -> Map.of(0, "Empty", 1, "Group A", 2, "Group B");
-      case WATOR -> Map.of(0, "Empty", 1, "Fish", 2, "Shark");
-    };
+    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+    if (handler == null) {
+      throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
+    }
+
+    Map<Integer, String> stateNameMap = new HashMap<>();
+    for (int state : handler.getStateInt()) {
+      stateNameMap.put(state, handler.statetoString(state));
+    }
+    return stateNameMap;
   }
 }

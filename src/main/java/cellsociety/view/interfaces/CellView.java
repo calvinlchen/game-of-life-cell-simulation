@@ -84,5 +84,5 @@ public abstract class CellView {
   /**
    * Abstract method to be implemented by subclasses to provide state-to-color mapping. (ChatGPT)
    */
-  protected abstract Color getColorForState(int state);
+  public abstract Color getColorForState(int state);
 }

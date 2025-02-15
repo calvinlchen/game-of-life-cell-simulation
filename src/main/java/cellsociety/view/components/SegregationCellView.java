@@ -13,7 +13,7 @@ public class SegregationCellView extends CellView {
    * Maps a Percolation state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(int state) {
+  public Color getColorForState(int state) {
     return switch (state) {
       case 1 -> Color.RED;
       case 2 -> Color.LIGHTBLUE;
