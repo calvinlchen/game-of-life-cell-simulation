@@ -55,7 +55,8 @@ class CellTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestRule(null);
+    Map<String, Double> parameters = Map.of("maxHistorySize", 3.0);
+    rule = new TestRule(parameters);
     cell = new TestCell(0, rule);
     neighbor = new TestCell(0, rule);
   }
@@ -122,6 +123,77 @@ class CellTest {
     assertTrue(cell.addNeighbor(neighbor));
     assertTrue(cell.removeNeighbor(neighbor));
   }
+
+  @Test
+  @DisplayName("Step back restores previous state")
+  void stepBack_RestoresPreviousState_Verified() {
+    cell.setCurrentState(1);
+
+    cell.saveCurrentState();
+    cell.setCurrentState(2);
+
+
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
+    assertEquals(1, cell.getNextState());
+  }
+
+  @Test
+  @DisplayName("Step back does not go beyond initial state")
+  void stepBack_DoesNotExceedInitialState_Verified() {
+    cell.setCurrentState(1);
+    cell.stepBack();
+
+    assertEquals(0, cell.getCurrentState());
+    assertEquals(0, cell.getNextState());
+  }
+
+  @Test
+  @DisplayName("Step back after multiple steps restores last saved state")
+  void stepBack_AfterMultipleSteps_Verified() {
+    cell.setCurrentState(1);
+    cell.saveCurrentState();
+    cell.setCurrentState(2);
+
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
+    assertEquals(1, cell.getNextState());
+
+    cell.stepBack();
+    assertEquals(0, cell.getCurrentState());
+    assertEquals(0, cell.getNextState());
+  }
+
+  @Test
+  @DisplayName("Step back only restores up to the maxSavedStates limit")
+  void stepBack_RespectsMaxSavedStatesLimit_Verified() {
+    // 0
+    cell.setCurrentState(1);
+    cell.saveCurrentState();  // 1-> 0
+    cell.setCurrentState(2);
+    cell.saveCurrentState();  // 2-> 1 -> 0
+    cell.setCurrentState(3);
+    cell.saveCurrentState();  // 3-> 2 -> 1
+    cell.setCurrentState(4);
+
+    cell.stepBack();
+    assertEquals(3, cell.getCurrentState());
+    assertEquals(3, cell.getNextState());
+
+    cell.stepBack();
+    assertEquals(2, cell.getCurrentState());
+    assertEquals(2, cell.getNextState());
+
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
+    assertEquals(1, cell.getNextState());
+
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
+    assertEquals(1, cell.getNextState());
+  }
+
+
 
   // Negative Tests
 

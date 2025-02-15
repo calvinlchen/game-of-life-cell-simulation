@@ -87,6 +87,30 @@ class SimulationTest {
   }
 
   @Test
+  void testStepBack() {
+    gameOfLifeSimulation.step();
+    segregationSimulation.step();
+    fireSimulation.step();
+    percolationSimulation.step();
+    watorSimulation.step();
+    assertEquals(0, gameOfLifeSimulation.getCurrentState(0, 0));
+    assertEquals(1, segregationSimulation.getCurrentState(0, 0));
+    assertEquals(0, fireSimulation.getCurrentState(0, 0));
+    assertEquals(2, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(2, watorSimulation.getCurrentState(0, 0));
+    gameOfLifeSimulation.stepBack();
+    segregationSimulation.stepBack();
+    fireSimulation.stepBack();
+    percolationSimulation.stepBack();
+    watorSimulation.stepBack();
+    assertEquals(1, gameOfLifeSimulation.getCurrentState(0, 0));
+    assertEquals(0, segregationSimulation.getCurrentState(0, 0));
+    assertEquals(2, fireSimulation.getCurrentState(0, 0));
+    assertEquals(1, percolationSimulation.getCurrentState(0, 0));
+    assertEquals(1, watorSimulation.getCurrentState(0, 0));
+  }
+
+  @Test
   void testGetXMLData() {
     assertEquals(xmlData, gameOfLifeSimulation.getXMLData());
     assertEquals(xmlData, segregationSimulation.getXMLData());

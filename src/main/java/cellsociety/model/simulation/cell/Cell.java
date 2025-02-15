@@ -2,6 +2,8 @@ package cellsociety.model.simulation.cell;
 
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -22,6 +24,8 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   private int[] position;
   private R rule;
 
+  private LinkedList<Integer> stateHistory;
+
   private ResourceBundle myResources;
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
 
@@ -36,8 +40,34 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
     this.nextState = state;
     this.rule = rule;
     neighbors = new ArrayList<>();
+    stateHistory = new LinkedList<>();
+    saveCurrentState();
 
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
+  }
+
+  /**
+   * Save current state
+   */
+  public void saveCurrentState() {
+    stateHistory.addLast(currentState);
+    if (stateHistory.size() > rule.getParameters().getOrDefault("maxHistorySize", 10.0)) {
+      stateHistory.removeFirst();
+    }
+  }
+
+  /**
+   * Step one step backbward
+   */
+  public void stepBack() {
+
+    int lastState = stateHistory.getLast();
+    if (stateHistory.size() > 1) {
+      stateHistory.removeLast();
+    }
+
+    setCurrentState(lastState);
+    setNextState(lastState);
   }
 
   /**

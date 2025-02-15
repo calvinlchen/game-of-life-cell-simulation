@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +61,7 @@ class RectangularGridTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestRectangularGridRule(null);
+    rule = new TestRectangularGridRule(new HashMap<>());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
       cells.add(new TestRectangularGridCell(1, rule));

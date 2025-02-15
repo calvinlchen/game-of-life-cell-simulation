@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +61,7 @@ class AdjacentGridTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestAdjacentGridRule(null);
+    rule = new TestAdjacentGridRule(new HashMap<>());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
       cells.add(new TestAdjacentGridCell(1, rule));
