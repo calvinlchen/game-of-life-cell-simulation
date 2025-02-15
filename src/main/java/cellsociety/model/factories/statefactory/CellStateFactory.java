@@ -1,4 +1,4 @@
-package cellsociety.model.factories;
+package cellsociety.model.factories.statefactory;
 
 import cellsociety.model.factories.statefactory.handler.*;
 import cellsociety.model.util.SimulationTypes.SimType;

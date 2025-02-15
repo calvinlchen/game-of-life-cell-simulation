@@ -1,6 +1,6 @@
 package cellsociety.model.util;
 
-import cellsociety.model.factories.CellStateFactory;
+import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;

@@ -65,9 +65,9 @@ public abstract class Cell<C extends Cell<C>> {
    * Resets parameters per step
    *
    * <p> Assumption: assumes already called calcNextState
+   * <p> Override if needed
    */
   public void resetParameters() {
-    return;
   }
 
   // ==== Setters and Getters ====
