@@ -26,20 +26,6 @@ public class SegregationCell extends Cell<SegregationCell> {
     SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the initial position of the cell
-   * @param rule     - Schelling's Model of Segregation Rule to calculate next state
-   */
-  public SegregationCell(int state, int[] position, SegregationRule rule) {
-    super(state, position);
-    myRule = rule;
-
-    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
-  }
-
   @Override
   public void calcNextState() {
     // check to make sure you aren't overriding already calculated stuff

@@ -19,10 +19,6 @@ class TestAdjacentGridCell extends Cell<TestAdjacentGridCell> {
     super(state);
   }
 
-  public TestAdjacentGridCell(int state, int[] position) {
-    super(state, position);
-  }
-
   @Override
   public void calcNextState() {
     return;

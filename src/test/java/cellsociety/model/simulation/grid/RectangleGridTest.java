@@ -19,10 +19,6 @@ class TestRectangularGridCell extends Cell<TestRectangularGridCell> {
     super(state);
   }
 
-  public TestRectangularGridCell(int state, int[] position) {
-    super(state, position);
-  }
-
   @Override
   public void calcNextState() {
     return;

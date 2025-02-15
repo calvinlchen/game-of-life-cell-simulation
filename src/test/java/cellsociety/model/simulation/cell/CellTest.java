@@ -17,10 +17,6 @@ class TestCell extends Cell<TestCell> {
     super(state);
   }
 
-  public TestCell(int state, int[] position) {
-    super(state, position);
-  }
-
   @Override
   public void calcNextState() {
     return;
@@ -70,13 +66,6 @@ class CellTest {
     assertEquals(1, cell.getNextState());
   }
 
-  @Test
-  @DisplayName("Set position constructor correctly")
-  void positionConstructor_Verified() {
-    int[] position = {2, 3};
-    Cell<TestCell> cellWithPosition = new TestCell(0, position);
-    assertArrayEquals(position, cellWithPosition.getPosition());
-  }
 
   @Test
   @DisplayName("Set and get position correctly")
@@ -116,18 +105,6 @@ class CellTest {
   }
 
   // Negative Tests
-
-  @Test
-  @DisplayName("Set invalid number of position arguments in position constructor")
-  void positionConstructor_InvalidPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(0, new int[]{0}));
-  }
-
-  @Test
-  @DisplayName("Set position to null in position constructor")
-  void positionConstructor_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new TestCell(0, null));
-  }
 
   @Test
   @DisplayName("Set invalid number of position arguments in position constructor")

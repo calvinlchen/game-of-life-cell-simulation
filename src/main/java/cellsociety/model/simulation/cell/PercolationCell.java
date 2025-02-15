@@ -22,18 +22,6 @@ public class PercolationCell extends Cell<PercolationCell> {
     myRule = rule;
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the initial position of the cell
-   * @param rule     - the Percolation rule to calculate the next state
-   */
-  public PercolationCell(int state, int[] position, PercolationRule rule) {
-    super(state, position);
-    myRule = rule;
-  }
-
   @Override
   public void calcNextState() {
     setNextState(myRule.apply(this));

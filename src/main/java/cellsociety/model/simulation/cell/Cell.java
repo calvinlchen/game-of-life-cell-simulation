@@ -36,19 +36,6 @@ public abstract class Cell<C extends Cell<C>> {
   }
 
   /**
-   * Constructs a cell with specified initial state with a position.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the position of a the cell
-   */
-  public Cell(int state, int[] position) {
-    this(state);
-    setPosition(position);
-
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
-  }
-
-  /**
    * Based on the rules of the simulation, calculate the next state of the cell and set next state
    * to the calculated value
    */

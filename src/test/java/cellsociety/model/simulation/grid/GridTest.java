@@ -18,10 +18,6 @@ class TestGridCell extends Cell<TestGridCell> {
     super(state);
   }
 
-  public TestGridCell(int state, int[] position) {
-    super(state, position);
-  }
-
   @Override
   public void calcNextState() {
     return;

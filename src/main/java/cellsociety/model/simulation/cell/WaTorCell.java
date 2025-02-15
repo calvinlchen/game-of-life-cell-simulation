@@ -39,23 +39,6 @@ public class WaTorCell extends Cell<WaTorCell> {
     initializeDefaultVariables(state);
   }
 
-  /**
-   * Constructs a WaTorCell with a specified initial state and rule.
-   *
-   * @param state    - the initial state of the cell (must be a state from WaTorStates)
-   * @param position - the inital position of the cell
-   * @param rule     - the WaTorRule to calculate the next state
-   */
-  public WaTorCell(int state, int[] position, WaTorRule rule) {
-    super(state, position);
-    myRule = rule;
-
-    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
-    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
-
-    initializeDefaultVariables(state);
-  }
-
   private void initializeDefaultVariables(int state) {
 
     myStepsSurvived = 0;

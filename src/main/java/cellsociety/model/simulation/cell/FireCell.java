@@ -22,18 +22,6 @@ public class FireCell extends Cell<FireCell> {
     myRule = rule;
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param position - the initial position of the cell
-   * @param rule     - Spreading of Fire Rule to calculate next state
-   */
-  public FireCell(int state, int[] position, FireRule rule) {
-    super(state, position);
-    myRule = rule;
-  }
-
   @Override
   public void calcNextState() {
     setNextState(myRule.apply(this));
