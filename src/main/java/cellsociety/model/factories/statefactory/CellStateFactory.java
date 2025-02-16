@@ -10,6 +10,7 @@ import java.util.Map;
 // of states
 public class CellStateFactory {
   private static final Map<SimType, CellStateHandlerStatic> handlerMap = new HashMap<>();
+  private static final Map<Integer, CellStateHandlerDynamic> dynamicHandlerMap = new HashMap<>();
 
   static {
     handlerMap.put(SimType.GameOfLife, new GameOfLifeStateHandler());
@@ -22,6 +23,25 @@ public class CellStateFactory {
   // TODO: catch error if simulation type is not valid
   public static CellStateHandlerStatic getHandler(SimType simulationType) {
     return handlerMap.get(simulationType);
+  }
+
+  // Dynamic simulations like RPS need unique handlers
+  public static CellStateHandler getHandler(int simulationID, SimType simulationType, int numStates) {
+    if (simulationType.isDynamic()) {
+      return dynamicHandlerMap.computeIfAbsent(simulationID, k -> createNewDynamicStateHandler(numStates));
+    }
+
+    return getHandler(simulationType); // Use static handler if not RPS
+  }
+
+  private static CellStateHandlerDynamic createNewDynamicStateHandler(int numStates) {
+    CellStateHandlerDynamic dynamicHandler = new CellStateHandlerDynamic();
+
+    for (int i = 0; i < numStates; i++) {
+      dynamicHandler.addState(i, "State" + i);  // State0, State1....
+    }
+
+    return dynamicHandler;
   }
 
 }

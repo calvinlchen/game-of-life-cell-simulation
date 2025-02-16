@@ -23,7 +23,6 @@ import java.util.Map;
  * @author Jessica Chen
  */
 public class Simulation<T extends Cell<T, ?, ?>> {
-
   private final XMLData xmlData;
   private Grid<T> myGrid;
   private Parameters parameters; // Holds the parameters for the rule
@@ -32,6 +31,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   public Simulation(XMLData data) {
     xmlData = data;
+
     setUpSimulation();
   }
 
@@ -153,5 +153,13 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   public SimType getSimulationType() {
     return xmlData.getType();
+  }
+
+  public int getSimulationID() {
+    return xmlData.getId();
+  }
+
+  public int getNumStates() {
+    return xmlData.getNumStates();
   }
 }

@@ -1,8 +1,10 @@
 package cellsociety.view.components;
 
 import cellsociety.model.factories.statefactory.CellStateFactory;
+import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.XMLData;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -39,11 +41,11 @@ public class StateColorLegend {
   /**
    * Updates the legend based on the current simulation type.
    */
-  public void updateLegend(SimType simulationType) {
+  public void updateLegend(XMLData xmlData) {
     myLegendBox.getChildren().clear();
 
-    Map<Integer, String> stateNameMap = getStateNameMap(simulationType);
-    Map<Integer, Color> stateColorMap = getStateColorMap(simulationType);
+    Map<Integer, String> stateNameMap = getStateNameMap(xmlData);
+    Map<Integer, Color> stateColorMap = getStateColorMap(xmlData);
 
     for (Map.Entry<Integer, String> entry : stateNameMap.entrySet()) {
       int stateValue = entry.getKey();
@@ -69,8 +71,11 @@ public class StateColorLegend {
   /**
    * Retrieves the appropriate `getColorForState()` method based on simulation type.
    */
-  private Map<Integer, Color> getStateColorMap(SimType simulationType) {
-    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+  private Map<Integer, Color> getStateColorMap(XMLData xmlData) {
+    SimType simulationType= xmlData.getType();
+
+    CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
+        xmlData.getNumStates());
     if (handler == null) {
       throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
     }
@@ -87,8 +92,11 @@ public class StateColorLegend {
   /**
    * Maps each state value to its corresponding name.
    */
-  private Map<Integer, String> getStateNameMap(SimType simulationType) {
-    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+  private Map<Integer, String> getStateNameMap(XMLData xmlData) {
+    SimType simulationType= xmlData.getType();
+    
+    CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
+        xmlData.getNumStates());
     if (handler == null) {
       throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
     }
