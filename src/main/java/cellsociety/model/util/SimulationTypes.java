@@ -12,7 +12,8 @@ public class SimulationTypes {
         Segregation(false),
         WaTor(false),
         FallingSand(false),
-        RPS(true);
+        RPS(true),
+        Langton(false);
 
         private final boolean isDynamic;
 

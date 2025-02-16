@@ -16,6 +16,7 @@ public class CellStateFactory {
     handlerMap.put(SimType.Segregation, new SegregationStateHandler());
     handlerMap.put(SimType.WaTor, new WaTorStateHandler());
     handlerMap.put(SimType.FallingSand, new FallingSandStateHandler());
+    handlerMap.put(SimType.Langton, new LangtonStateHandler());
   }
 
   // TODO: catch error if simulation type is not valid
