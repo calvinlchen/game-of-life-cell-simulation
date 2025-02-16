@@ -14,6 +14,7 @@ public class FireRule extends Rule<FireCell, FireParameters> {
   private final int FIRE_EMPTY;
   private final int FIRE_TREE;
   private final int FIRE_BURNING;
+
   /**
    * Constructor for the Rule class
    *

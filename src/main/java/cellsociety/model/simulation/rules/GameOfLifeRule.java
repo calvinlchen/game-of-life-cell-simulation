@@ -10,6 +10,7 @@ import java.util.Map;
  * @author Jessica Chen
  */
 public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
+
   private final int GAMEOFLIFE_DEAD;
   private final int GAMEOFLIFE_ALIVE;
 
@@ -29,10 +30,11 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
   public int apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE &&
-        (aliveNeighbors < 2 || aliveNeighbors > 3)) {
+    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE && !getParameters().getSurviveRules()
+        .contains((int) aliveNeighbors)) {
       return GAMEOFLIFE_DEAD;
-    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && aliveNeighbors == 3) {
+    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && getParameters().getBornRules()
+        .contains((int) aliveNeighbors)) {
       return GAMEOFLIFE_ALIVE;
     }
 

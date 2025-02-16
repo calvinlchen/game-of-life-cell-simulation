@@ -5,9 +5,6 @@ import cellsociety.model.util.SimulationTypes.SimType;
 import java.util.HashMap;
 import java.util.Map;
 
-// NOTE: I actually don't think this works for RPS, so I think we just make a catch just for RPS
-// its because RPS needs to be able to support multiple simulations so its not a final number
-// of states
 public class CellStateFactory {
   private static final Map<SimType, CellStateHandlerStatic> handlerMap = new HashMap<>();
   private static final Map<Integer, CellStateHandlerDynamic> dynamicHandlerMap = new HashMap<>();
@@ -18,20 +15,23 @@ public class CellStateFactory {
     handlerMap.put(SimType.Percolation, new PercolationStateHandler());
     handlerMap.put(SimType.Segregation, new SegregationStateHandler());
     handlerMap.put(SimType.WaTor, new WaTorStateHandler());
+    handlerMap.put(SimType.FallingSand, new FallingSandStateHandler());
+    handlerMap.put(SimType.Langton, new LangtonStateHandler());
+    handlerMap.put(SimType.ChouReg2, new LangtonStateHandler());
+    handlerMap.put(SimType.Petelka, new PetelkaStateHandler());
   }
 
   // TODO: catch error if simulation type is not valid
-  public static CellStateHandlerStatic getHandler(SimType simulationType) {
+  private static CellStateHandlerStatic getHandler(SimType simulationType) {
     return handlerMap.get(simulationType);
   }
 
-  // Dynamic simulations like RPS need unique handlers
   public static CellStateHandler getHandler(int simulationID, SimType simulationType, int numStates) {
     if (simulationType.isDynamic()) {
       return dynamicHandlerMap.computeIfAbsent(simulationID, k -> createNewDynamicStateHandler(numStates));
     }
 
-    return getHandler(simulationType); // Use static handler if not RPS
+    return getHandler(simulationType);
   }
 
   private static CellStateHandlerDynamic createNewDynamicStateHandler(int numStates) {
