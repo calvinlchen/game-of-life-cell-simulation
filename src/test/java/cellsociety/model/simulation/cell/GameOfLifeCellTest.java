@@ -2,6 +2,7 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class GameOfLifeCellTest {
 
   @BeforeEach
   void setUp() {
-    rule = new GameOfLifeRule(Map.of());
+    rule = new GameOfLifeRule(new GameOfLifeParameters());
   }
 
   @Test

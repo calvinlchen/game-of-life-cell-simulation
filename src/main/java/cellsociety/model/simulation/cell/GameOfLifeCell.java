@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 
 /**
@@ -7,7 +8,7 @@ import cellsociety.model.simulation.rules.GameOfLifeRule;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule> {
+public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfLifeParameters> {
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
    *

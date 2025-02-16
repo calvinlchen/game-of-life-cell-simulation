@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.PercolationParameters;
 import cellsociety.model.simulation.rules.PercolationRule;
 
 /**
@@ -7,7 +8,7 @@ import cellsociety.model.simulation.rules.PercolationRule;
  *
  * @author Jessica Chen
  */
-public class PercolationCell extends Cell<PercolationCell, PercolationRule> {
+public class PercolationCell extends Cell<PercolationCell, PercolationRule, PercolationParameters> {
   /**
    * Constructs a cell with specified initial state.
    *

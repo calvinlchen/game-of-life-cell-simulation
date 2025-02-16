@@ -17,7 +17,7 @@ enum GridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing RectangularGrid
  */
-class TestRectangularGridCell extends Cell<TestRectangularGridCell, TestRectangularGridRule> {
+class TestRectangularGridCell extends Cell<TestRectangularGridCell, TestRectangularGridRule, TestParameters> {
   public TestRectangularGridCell(int state, TestRectangularGridRule rule) {
     super(state, rule);
   }
@@ -38,9 +38,9 @@ class TestRectangularGridCell extends Cell<TestRectangularGridCell, TestRectangu
   }
 }
 
-class TestRectangularGridRule extends Rule<TestRectangularGridCell> {
+class TestRectangularGridRule extends Rule<TestRectangularGridCell, TestParameters> {
 
-  public TestRectangularGridRule(Map<String, Double> parameters) {
+  public TestRectangularGridRule(TestParameters parameters) {
     super(parameters);
   }
 
@@ -61,7 +61,7 @@ class RectangularGridTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestRectangularGridRule(new HashMap<>());
+    rule = new TestRectangularGridRule(new TestParameters());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
       cells.add(new TestRectangularGridCell(1, rule));

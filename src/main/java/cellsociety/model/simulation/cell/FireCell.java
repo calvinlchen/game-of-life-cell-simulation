@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import cellsociety.model.simulation.parameters.FireParameters;
 import cellsociety.model.simulation.rules.FireRule;
 
 /**
@@ -7,7 +8,7 @@ import cellsociety.model.simulation.rules.FireRule;
  *
  * @author Jessica Chen
  */
-public class FireCell extends Cell<FireCell, FireRule> {
+public class FireCell extends Cell<FireCell, FireRule, FireParameters> {
 
   /**
    * Constructs a cell with specified initial state.

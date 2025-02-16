@@ -83,14 +83,14 @@ public class SimulationView {
     CellView cellView = null;
 
     switch (simType) {
-      case GAMEOFLIFE ->
+      case GameOfLife ->
           cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case FIRE -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case PERCOLATION ->
+      case Fire -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case Percolation ->
           cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case SEGREGATION ->
+      case Segregation ->
           cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case WATOR -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
+      case WaTor -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
       default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
     }
 

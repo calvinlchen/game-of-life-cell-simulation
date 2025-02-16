@@ -3,6 +3,7 @@ package cellsociety.model.simulation.grid;
 import cellsociety.model.simulation.cell.Cell;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class for general grid.
@@ -15,7 +16,7 @@ import java.util.List;
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public abstract class Grid<T extends Cell<T, ?>> {
+public abstract class Grid<T extends Cell<T, ?, ?>> {
 
   private final List<List<T>> myGrid;
   private final int myRows;
@@ -172,6 +173,17 @@ public abstract class Grid<T extends Cell<T, ?>> {
    */
   public List<List<T>> getGrid() {
     return myGrid;
+  }
+
+  /**
+   * Get all cells in the grid as a flattened list
+   *
+   * @return A list of all cells in the grid as a flattened grid
+   */
+  public List<T> getCells() {
+    return myGrid.stream()
+        .flatMap(List::stream)
+        .toList();
   }
 
 }

@@ -12,11 +12,11 @@ public class CellStateFactory {
   private static final Map<SimType, CellStateHandlerStatic> handlerMap = new HashMap<>();
 
   static {
-    handlerMap.put(SimType.GAMEOFLIFE, new GameOfLifeStateHandler());
-    handlerMap.put(SimType.FIRE, new FireStateHandler());
-    handlerMap.put(SimType.PERCOLATION, new PercolationStateHandler());
-    handlerMap.put(SimType.SEGREGATION, new SegregationStateHandler());
-    handlerMap.put(SimType.WATOR, new WaTorStateHandler());
+    handlerMap.put(SimType.GameOfLife, new GameOfLifeStateHandler());
+    handlerMap.put(SimType.Fire, new FireStateHandler());
+    handlerMap.put(SimType.Percolation, new PercolationStateHandler());
+    handlerMap.put(SimType.Segregation, new SegregationStateHandler());
+    handlerMap.put(SimType.WaTor, new WaTorStateHandler());
   }
 
   // TODO: catch error if simulation type is not valid

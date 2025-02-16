@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.parameters.Parameters;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -11,11 +12,12 @@ import java.util.ResourceBundle;
  * simulation
  *
  * @param <C> - the type of cell, must be a subclass of Cell
+ * @param <P> - the type of the parameter, must be a subclass of Rules
  * @author Jessica Chen
  */
-public abstract class Rule<C extends Cell<C, ?>> {
+public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
-  private Map<String, Double> parameters;
+  private P parameters;
 
   private final ResourceBundle myResources;
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
@@ -25,7 +27,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public Rule(Map<String, Double> parameters) {
+  public Rule(P parameters) {
     this.parameters = parameters;
 
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
@@ -42,19 +44,10 @@ public abstract class Rule<C extends Cell<C, ?>> {
   /**
    * Get the parameters for this rule set
    *
-   * @return map of current parameters
+   * @return parameters
    */
-  public Map<String, Double> getParameters() {
+  public P getParameters() {
     return parameters;
-  }
-
-  /**
-   * Set new parameters for this rule set.
-   *
-   * @param parameters - new parameters to set..
-   */
-  public void setParameters(Map<String, Double> parameters) {
-    this.parameters = parameters;
   }
 
   /**

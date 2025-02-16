@@ -17,7 +17,7 @@ enum AdjacentGridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing AdjacentGrid
  */
-class TestAdjacentGridCell extends Cell<TestAdjacentGridCell, TestAdjacentGridRule> {
+class TestAdjacentGridCell extends Cell<TestAdjacentGridCell, TestAdjacentGridRule, TestParameters> {
   public TestAdjacentGridCell(int state, TestAdjacentGridRule rule) {
     super(state, rule);
   }
@@ -38,9 +38,9 @@ class TestAdjacentGridCell extends Cell<TestAdjacentGridCell, TestAdjacentGridRu
   }
 }
 
-class TestAdjacentGridRule extends Rule<TestAdjacentGridCell> {
+class TestAdjacentGridRule extends Rule<TestAdjacentGridCell, TestParameters> {
 
-  public TestAdjacentGridRule(Map<String, Double> parameters) {
+  public TestAdjacentGridRule(TestParameters parameters) {
     super(parameters);
   }
 
@@ -61,7 +61,7 @@ class AdjacentGridTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestAdjacentGridRule(new HashMap<>());
+    rule = new TestAdjacentGridRule(new TestParameters());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
       cells.add(new TestAdjacentGridCell(1, rule));

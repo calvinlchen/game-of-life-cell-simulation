@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.GameOfLifeCell;
+import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import java.util.Map;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeRule extends Rule<GameOfLifeCell> {
+public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
   private final int GAMEOFLIFE_DEAD;
   private final int GAMEOFLIFE_ALIVE;
 
@@ -17,7 +18,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public GameOfLifeRule(Map<String, Double> parameters) {
+  public GameOfLifeRule(GameOfLifeParameters parameters) {
     super(parameters);
 
     GAMEOFLIFE_ALIVE = super.getStateProperty("GAMEOFLIFE_ALIVE");

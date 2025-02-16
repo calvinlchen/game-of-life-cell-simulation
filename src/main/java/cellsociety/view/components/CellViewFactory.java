@@ -9,19 +9,19 @@ public class CellViewFactory {
   private static final Map<SimType, BiFunction<Double[], Integer, CellView>> factoryMap = new HashMap<>();
 
   static {
-    factoryMap.put(SimType.GAMEOFLIFE, (params, state) ->
+    factoryMap.put(SimType.GameOfLife, (params, state) ->
         new GameOfLifeCellView(params[0], params[1], params[2], params[3], state));
 
-    factoryMap.put(SimType.FIRE, (params, state) ->
+    factoryMap.put(SimType.Fire, (params, state) ->
         new FireCellView(params[0], params[1], params[2], params[3], state));
 
-    factoryMap.put(SimType.PERCOLATION, (params, state) ->
+    factoryMap.put(SimType.Percolation, (params, state) ->
         new PercolationCellView(params[0], params[1], params[2], params[3], state));
 
-    factoryMap.put(SimType.SEGREGATION, (params, state) ->
+    factoryMap.put(SimType.Segregation, (params, state) ->
         new SegregationCellView(params[0], params[1], params[2], params[3], state));
 
-    factoryMap.put(SimType.WATOR, (params, state) ->
+    factoryMap.put(SimType.WaTor, (params, state) ->
         new WaTorCellView(params[0], params[1], params[2], params[3], state));
   }
 

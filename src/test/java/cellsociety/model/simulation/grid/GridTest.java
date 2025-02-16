@@ -3,6 +3,7 @@ package cellsociety.model.simulation.grid;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test cell for testing Grid
  */
-class TestGridCell extends Cell<TestGridCell, TestRule> {
+class TestGridCell extends Cell<TestGridCell, TestRule, TestParameters> {
   public TestGridCell(int state, TestRule rule) {
     super(state, rule);
   }
@@ -37,15 +38,52 @@ class TestGridCell extends Cell<TestGridCell, TestRule> {
   }
 }
 
-class TestRule extends Rule<TestGridCell> {
+class TestRule extends Rule<TestGridCell, TestParameters> {
 
-  public TestRule(Map<String, Double> parameters) {
+  public TestRule(TestParameters parameters) {
     super(parameters);
   }
 
   @Override
   public int apply(TestGridCell cell) {
     return 0;
+  }
+}
+
+/**
+ * A minimal test parameters class for unit testing.
+ *
+ * @author chatgpt
+ */
+class TestParameters extends Parameters {
+
+  public TestParameters() {
+    super();
+  }
+
+  @Override
+  public Map<String, Double> getParameters() {
+    return new HashMap<>(); // Empty map, since this is for testing
+  }
+
+  @Override
+  public void setParameters(Map<String, Double> parameters) {
+    // Do nothing (for testing purposes)
+  }
+
+  @Override
+  public double getParameter(String key) {
+    return 0.0; // Return a default value
+  }
+
+  @Override
+  public void setParameter(String key, double value) {
+    // Do nothing (for testing purposes)
+  }
+
+  @Override
+  public List<String> getParameterKeys() {
+    return List.of(); // Return an empty list
   }
 }
 
@@ -61,7 +99,7 @@ class GridTest {
 
   @BeforeEach
   void setUp() {
-    rule = new TestRule(new HashMap<>());
+    rule = new TestRule(new TestParameters());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
       cells.add(new TestGridCell(1, rule));

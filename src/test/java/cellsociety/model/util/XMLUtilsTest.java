@@ -37,7 +37,7 @@ class XMLUtilsTest {
         XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
-        assertEquals(SimType.FIRE, xmlData.getType());
+        assertEquals(SimType.Fire, xmlData.getType());
         assertEquals("Fire Sim", xmlData.getTitle());
         assertEquals("Vincent Price", xmlData.getAuthor());
         assertEquals("This simulation is fire", xmlData.getDescription());
@@ -77,7 +77,7 @@ class XMLUtilsTest {
         XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
-        assertEquals(SimType.FIRE, xmlData.getType());
+        assertEquals(SimType.Fire, xmlData.getType());
         assertEquals("Fire Sim", xmlData.getTitle());
         assertEquals("Vincent Price", xmlData.getAuthor());
         assertEquals("This simulation is fire", xmlData.getDescription());
@@ -357,7 +357,7 @@ class XMLUtilsTest {
     private Simulation<?> createTestSimulation() {
         //create XMLData with test data
         XMLData xmlData = new XMLData();
-        xmlData.setType(SimType.FIRE);
+        xmlData.setType(SimType.Fire);
         xmlData.setTitle("Fire Sim");
         xmlData.setAuthor("Vincent Price");
         xmlData.setDescription("This simulation is fire");
