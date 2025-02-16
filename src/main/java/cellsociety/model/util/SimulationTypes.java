@@ -11,6 +11,7 @@ public class SimulationTypes {
         Fire(false),
         Segregation(false),
         WaTor(false),
+        FallingSand(false),
         RockPaperScissors(true);
 
         private final boolean isDynamic;

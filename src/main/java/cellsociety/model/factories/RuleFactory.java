@@ -14,6 +14,8 @@ public class RuleFactory {
   /**
    * Create a Rule and its corresponding Parameters instance dynamically
    *
+   * <p> Assumption: for this to work, all the rules and parameters need to be called SimTypeRule, SimTypeParameter
+   *
    * @param ruleType   - The name of the simulation type
    * @param parameters - Map of parameters to initialize the rule
    * @return an instance of the Rule with its parameters initialized
