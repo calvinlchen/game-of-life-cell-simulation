@@ -65,4 +65,14 @@ public abstract class Parameters {
     return List.copyOf(parameters.keySet());
   }
 
+  /**
+   * returns whether key is a valid key in the state
+   *
+   * @param key - key to check if it is in rules
+   * @return true if it is valid, false otherwise
+   */
+  public boolean isValidKey(String key) {
+    return parameters.containsKey(key);
+  }
+
 }

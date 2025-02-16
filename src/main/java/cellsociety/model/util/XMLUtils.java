@@ -1,6 +1,7 @@
 package cellsociety.model.util;
 
 import cellsociety.model.factories.statefactory.CellStateFactory;
+import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -113,15 +114,6 @@ public class XMLUtils {
           xmlObject.setGridRowNum(rows);
           xmlObject.setGridColNum(columns);
 
-          //extract cell info
-          NodeList cellList = gridElement.getElementsByTagName("cell");
-          if (cellList.getLength() != rows * columns) {
-            throw new XMLException(
-                "Error: Expected " + (rows * columns) + " <cell> elements, but found "
-                    + cellList.getLength());
-          }
-          xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType()));
-
           //extract parameter info
           NodeList paramList;
           Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters")
@@ -131,6 +123,15 @@ public class XMLUtils {
           paramList = Objects.requireNonNullElse(parametersElement, gridElement)
               .getElementsByTagName("parameter");
           xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
+
+          //extract cell info
+          NodeList cellList = gridElement.getElementsByTagName("cell");
+          if (cellList.getLength() != rows * columns) {
+            throw new XMLException(
+                "Error: Expected " + (rows * columns) + " <cell> elements, but found "
+                    + cellList.getLength());
+          }
+          xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType(), xmlObject.getId(), xmlObject.getNumStates()));
 
         }
       }
@@ -232,7 +233,9 @@ public class XMLUtils {
 
     ArrayList<String> cellStateList = new ArrayList<>();
 
-    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulation.getSimulationType());
+    // TODO: if it dynamic the last thing should be number of states to make it with
+    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(), simulation.getSimulationType(),
+        simulation.getNumStates());
     // TODO: make better exceptions
     if (handler == null) {
       throw new IllegalArgumentException(
@@ -261,11 +264,11 @@ public class XMLUtils {
    * @param cellList       an NodeList variable that holds the xml data's cell data
    * @param simulationType an Enum representing the intended simulation type
    */
-  private ArrayList<Integer> cellStatesToEnum(NodeList cellList, SimType simulationType) {
+  private ArrayList<Integer> cellStatesToEnum(NodeList cellList, SimType simulationType, int id, int numStates) {
 
     ArrayList<Integer> cellStateEnums = new ArrayList<>();
 
-    CellStateHandlerStatic handler = CellStateFactory.getHandler(simulationType);
+    CellStateHandler handler = CellStateFactory.getHandler(id, simulationType, numStates);
     if (handler == null) {
       throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
     }

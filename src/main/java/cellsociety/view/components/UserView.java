@@ -188,7 +188,7 @@ public class UserView {
     myInformationBox.updateInfo(xmlData);
 
     // Update legend based on simulation type
-    myStateColorLegend.updateLegend(xmlData.getType());
+    myStateColorLegend.updateLegend(xmlData);
   }
 
   // display given message to user using the given type of Alert dialog box
