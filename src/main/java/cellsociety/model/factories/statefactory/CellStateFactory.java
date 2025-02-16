@@ -5,9 +5,6 @@ import cellsociety.model.util.SimulationTypes.SimType;
 import java.util.HashMap;
 import java.util.Map;
 
-// NOTE: I actually don't think this works for RPS, so I think we just make a catch just for RPS
-// its because RPS needs to be able to support multiple simulations so its not a final number
-// of states
 public class CellStateFactory {
   private static final Map<SimType, CellStateHandlerStatic> handlerMap = new HashMap<>();
   private static final Map<Integer, CellStateHandlerDynamic> dynamicHandlerMap = new HashMap<>();
@@ -18,6 +15,7 @@ public class CellStateFactory {
     handlerMap.put(SimType.Percolation, new PercolationStateHandler());
     handlerMap.put(SimType.Segregation, new SegregationStateHandler());
     handlerMap.put(SimType.WaTor, new WaTorStateHandler());
+    handlerMap.put(SimType.FallingSand, new FallingSandStateHandler());
   }
 
   // TODO: catch error if simulation type is not valid
