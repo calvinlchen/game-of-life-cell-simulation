@@ -12,7 +12,7 @@ public class SimulationTypes {
         Segregation(false),
         WaTor(false),
         FallingSand(false),
-        RockPaperScissors(true);
+        RPS(true);
 
         private final boolean isDynamic;
 

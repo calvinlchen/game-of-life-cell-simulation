@@ -25,13 +25,12 @@ public class CellStateFactory {
     return handlerMap.get(simulationType);
   }
 
-  // Dynamic simulations like RPS need unique handlers
   public static CellStateHandler getHandler(int simulationID, SimType simulationType, int numStates) {
     if (simulationType.isDynamic()) {
       return dynamicHandlerMap.computeIfAbsent(simulationID, k -> createNewDynamicStateHandler(numStates));
     }
 
-    return getHandler(simulationType); // Use static handler if not RPS
+    return getHandler(simulationType);
   }
 
   private static CellStateHandlerDynamic createNewDynamicStateHandler(int numStates) {
