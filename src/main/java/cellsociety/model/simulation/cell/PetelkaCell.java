@@ -1,5 +1,7 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.PETELKA_MAXSTATE;
+
 import cellsociety.model.simulation.parameters.PetelkaParameters;
 import cellsociety.model.simulation.rules.PetelkaRule;
 
@@ -17,10 +19,23 @@ public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule, PetelkaParameter
    */
   public PetelkaCell(int state, PetelkaRule rule) {
     super(state, rule);
+    validateState(state, PETELKA_MAXSTATE);
   }
 
   @Override
   protected PetelkaCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, PETELKA_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, PETELKA_MAXSTATE);
+    super.setNextState(state);
   }
 }

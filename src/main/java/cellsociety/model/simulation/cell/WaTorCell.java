@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.WATOR_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
@@ -35,6 +36,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   private void initializeDefaultVariables(int state) {
+    validateState(state, WATOR_MAXSTATE);
 
     myStepsSurvived = 0;
     myEnergy =
@@ -169,5 +171,17 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
     myEnergy = myNextEnergy;
     consumed = false;
     movedFrom = null;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, WATOR_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, WATOR_MAXSTATE);
+    super.setNextState(state);
   }
 }
