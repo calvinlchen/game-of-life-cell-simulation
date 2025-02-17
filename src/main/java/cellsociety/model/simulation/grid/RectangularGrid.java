@@ -23,15 +23,6 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   public RectangularGrid(List<T> cells, int rows, int cols) {
     super(cells, rows, cols);
-    if (cells == null) {
-      throw new SimulationException(getResources().getString("NullCellsList"));
-    }
-
-    if (cells.size() != rows * cols) {
-      throw new SimulationException(
-          String.format(getResources().getString("MismatchedCellCount"), cells.size(),
-              rows * cols));
-    }
     setNeighbors();
   }
 
@@ -42,11 +33,7 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-    try {
-      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
-      setNeighbors(directions);
-    } catch (Exception e) {
-      throw new SimulationException(getResources().getString("NeighborSettingFailed"), e);
-    }
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    setNeighbors(directions);
   }
 }

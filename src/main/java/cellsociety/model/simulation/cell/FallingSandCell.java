@@ -26,8 +26,7 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
 
   @Override
   public void calcNextState() {
-    // don't need to calculate next state if empty
-    if (getCurrentState() != FALLINGSAND_EMPTY) {
+    if (getCurrentState() == getNextState()) {
       super.calcNextState();
     }
   }

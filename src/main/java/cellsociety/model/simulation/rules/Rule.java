@@ -31,12 +31,13 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
   public Rule(P parameters) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+
     if (parameters == null) {
       throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
     }
 
     this.parameters = parameters;
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
   }
 
   /**
@@ -45,12 +46,13 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
   public Rule(P parameters, String language) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+
     if (parameters == null) {
       throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
     }
 
     this.parameters = parameters;
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
   }
 
   /**
@@ -82,6 +84,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
     if (cell == null || neighbor == null) {
       throw new SimulationException(String.format(myResources.getString("NullCellOrNeighbor")));
     }
+    // this should not happen but in case
     if (cell.getPosition() == null || neighbor.getPosition() == null) {
       throw new SimulationException(String.format(myResources.getString("NullPosition")));
     }
@@ -118,8 +121,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
           .findFirst()
           .ifPresentOrElse(
               neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append("0")
-              // TODO: if no neighbor on a side add 0? not sure how it supposed to behave actually
+              () -> stateBuilder.append("")
           );
     }
 

@@ -15,11 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-// given adjacent grid test, asked chatgpt to generate similar test set for
-// rectangular grid
-class RectangularGridTest {
+class AdjacentGridTest {
 
-  private RectangularGrid<TestCell> grid;
+  private AdjacentGrid<TestCell> grid;
   private List<TestCell> mockCells;
   private TestRule mockRule;
   private Parameters mockParameters;
@@ -60,12 +58,12 @@ class RectangularGridTest {
       when(cell.getPosition()).thenReturn(new int[]{i / 3, i % 3});
       mockCells.add(cell);
     }
-    grid = new RectangularGrid<>(mockCells, 3, 3);
+    grid = new AdjacentGrid<>(mockCells, 3, 3);
   }
 
   @Test
-  @DisplayName("RectangularGrid initializes correctly with valid dimensions")
-  void rectangularGrid_ValidDimensions_InitializesCorrectly() {
+  @DisplayName("AdjacentGrid initializes correctly with valid dimensions")
+  void adjacentGrid_ValidDimensions_InitializesCorrectly() {
     assertEquals(3, grid.getRows());
     assertEquals(3, grid.getCols());
     assertEquals(9, grid.getCells().size());
@@ -73,27 +71,30 @@ class RectangularGridTest {
 
   @Test
   @DisplayName("Throws exception for invalid grid dimensions")
-  void rectangularGrid_InvalidDimensions_ThrowsSimulationException() {
-    assertThrows(SimulationException.class, () -> new RectangularGrid<>(mockCells, 0, 3));
+  void adjacentGrid_InvalidDimensions_ThrowsSimulationException() {
+    assertThrows(SimulationException.class, () -> new AdjacentGrid<>(mockCells, 0, 3));
   }
 
   @Test
   @DisplayName("Throws exception for mismatched cell count")
-  void rectangularGrid_MismatchedCellCount_ThrowsSimulationException() {
+  void adjacentGrid_MismatchedCellCount_ThrowsSimulationException() {
     List<TestCell> smallCellList = new ArrayList<>(mockCells.subList(0, 5));
-    assertThrows(SimulationException.class, () -> new RectangularGrid<>(smallCellList, 3, 3));
+    assertThrows(SimulationException.class, () -> new AdjacentGrid<>(smallCellList, 3, 3));
   }
 
+  // generated with chatGPT to help check neighbors set correctly
   @Test
   @DisplayName("Set neighbors correctly updates cells")
   void setNeighbors_CheckForCorrectness_CorrectlySetsNeighbors() {
     grid.setNeighbors();
+
+    // Capture the neighbors list set on each cell
     ArgumentCaptor<List<TestCell>> captor = ArgumentCaptor.forClass(List.class);
 
     for (TestCell cell : mockCells) {
       int[] pos = cell.getPosition();
       List<TestCell> expectedNeighbors = new ArrayList<>();
-      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
       for (int[] dir : directions) {
         int newRow = pos[0] + dir[0];
@@ -103,23 +104,27 @@ class RectangularGridTest {
         }
       }
 
+      // Capture the neighbors set on the cell
       verify(cell, atLeastOnce()).setNeighbors(captor.capture());
+
+      // Compare captured neighbors with expected neighbors
       assertEquals(expectedNeighbors.size(), captor.getValue().size());
       assertTrue(captor.getValue().containsAll(expectedNeighbors));
     }
   }
 
+
   @Test
   @DisplayName("Throws exception when initializing with null cell list")
-  void rectangularGrid_NullCellsList_ThrowsSimulationException() {
-    assertThrows(SimulationException.class, () -> new RectangularGrid<>(null, 3, 3));
+  void adjacentGrid_NullCellsList_ThrowsSimulationException() {
+    assertThrows(SimulationException.class, () -> new AdjacentGrid<>(null, 3, 3));
   }
 
   @Test
   @DisplayName("Get neighbors returns valid neighbors")
   void getNeighbors_ValidPosition_ReturnsNeighbors() {
     int[] position = {1, 1};
-    List<TestCell> expectedNeighbors = List.of(mockCells.get(0), mockCells.get(1), mockCells.get(2), mockCells.get(3), mockCells.get(5), mockCells.get(6), mockCells.get(7), mockCells.get(8));
+    List<TestCell> expectedNeighbors = List.of(mockCells.get(0), mockCells.get(2), mockCells.get(3), mockCells.get(5));
     when(mockCells.get(4).getNeighbors()).thenReturn(expectedNeighbors);
     assertEquals(expectedNeighbors, grid.getNeighbors(position));
   }
