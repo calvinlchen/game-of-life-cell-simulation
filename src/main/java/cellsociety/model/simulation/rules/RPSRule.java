@@ -42,4 +42,13 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
     return cell.getCurrentState();
   }
 
+  /**
+   * return max state for this RPS rule
+   *
+   * @return max state for this RPS rule
+   */
+  public int getMaxState() {
+    return totalNumStates;
+  }
+
 }

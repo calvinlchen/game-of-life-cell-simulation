@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.cell;
 
+
 import cellsociety.model.simulation.parameters.RPSParameters;
 import cellsociety.model.simulation.rules.RPSRule;
 
@@ -17,10 +18,23 @@ public class RPSCell extends Cell<RPSCell, RPSRule, RPSParameters> {
    */
   public RPSCell(int state, RPSRule rule) {
     super(state, rule);
+    validateState(state, rule.getMaxState());
   }
 
   @Override
   protected RPSCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, getRule().getMaxState());
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, getRule().getMaxState());
+    super.setNextState(state);
   }
 }

@@ -28,12 +28,9 @@ public class FireRule extends Rule<FireCell, FireParameters> {
   @Override
   public int apply(FireCell cell) {
     return switch (cell.getCurrentState()) {
-      case FIRE_BURNING ->                     // burning
-          FIRE_EMPTY;
-      case FIRE_TREE ->                     // tree
-          handleTree(cell);
-      case FIRE_EMPTY ->                     // empty
-          handleEmpty(cell);
+      case FIRE_BURNING -> FIRE_EMPTY;
+      case FIRE_TREE -> handleTree(cell);
+      case FIRE_EMPTY -> handleEmpty(cell);
       default -> cell.getCurrentState();
     };
   }

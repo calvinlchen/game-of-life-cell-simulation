@@ -5,6 +5,7 @@ import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.simulation.parameters.SegregationParameters;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -42,10 +43,10 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
       return cell.getCurrentState();
     }
 
-    SegregationCell emptyCell = findEmptyCell(cell);
+    Optional<SegregationCell> emptyCell = findEmptyCell(cell);
 
-    if (emptyCell != null) {
-      emptyCell.setNextState(cell.getCurrentState());
+    if (emptyCell.isPresent()) {
+      emptyCell.get().setNextState(cell.getCurrentState());
       return SEGREGATION_EMPTY;
     }
 
@@ -68,13 +69,16 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
     return similarityRatio >= threshold;
   }
 
-  private SegregationCell findEmptyCell(SegregationCell cell) {
+  private Optional<SegregationCell> findEmptyCell(SegregationCell cell) {
     List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream()
         .filter(neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
             && neighbor.getNextState() == SEGREGATION_EMPTY)
         .toList();
 
-    if (emptyNeighbors.isEmpty()) return null;
-    return emptyNeighbors.get(random.nextInt(emptyNeighbors.size()));
+    if (emptyNeighbors.isEmpty()) {
+      return Optional.empty();
+    }
+
+    return Optional.of(emptyNeighbors.get(random.nextInt(emptyNeighbors.size())));
   }
 }

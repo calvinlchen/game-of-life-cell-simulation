@@ -1,5 +1,6 @@
 package cellsociety.model.simulation.parameters;
 
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,9 @@ public class GameOfLifeParameters extends Parameters {
   public GameOfLifeParameters(List<Integer> survive, List<Integer> born) {
     super();
 
+    validateRules(survive, "InvalidSurviveRules");
+    validateRules(born, "InvalidBornRules");
+
     this.survive = survive;
     this.born = born;
   }
@@ -26,6 +30,8 @@ public class GameOfLifeParameters extends Parameters {
   }
 
   public void setSurviveRules(List<Integer> survive) {
+    validateRules(survive, "InvalidSurviveRules");
+
     this.survive = new ArrayList<>(survive);
   }
 
@@ -34,6 +40,20 @@ public class GameOfLifeParameters extends Parameters {
   }
 
   public void setBornRules(List<Integer> born) {
+    validateRules(born, "InvalidBornRules");
+
     this.born = new ArrayList<>(born);
+  }
+
+  /**
+   * Validates the rules list.
+   *
+   * @param rules - list to validate
+   * @param errorKey - key for the error message in exceptions.properties
+   */
+  private void validateRules(List<Integer> rules, String errorKey) {
+    if (rules == null) {
+      throw new SimulationException(String.format(getResources().getString("NullRuleList"), errorKey));
+    }
   }
 }
