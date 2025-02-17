@@ -92,9 +92,6 @@ public abstract class Parameters {
     if (key == null || key.isEmpty()) {
       throw new SimulationException(String.format(myResources.getString("EmptyParameterKey")));
     }
-    if (!parameters.containsKey(key)) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
-    }
 
     parameters.put(key, value);
   }
