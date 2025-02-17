@@ -98,22 +98,4 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
 
   }
 
-  private String getStateKey(ChouReg2Cell cell, String[] directions) {
-    StringBuilder stateBuilder = new StringBuilder();
-
-    stateBuilder.append(cell.getCurrentState());
-    for (String dir : directions) {
-      cell.getNeighbors().stream()
-          .filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst()
-          .ifPresentOrElse(
-              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append("0")
-              // TODO: if no neighbor on a side add 0? not sure how it supposed to behave actually
-          );
-    }
-
-    return stateBuilder.toString();
-  }
-
 }
