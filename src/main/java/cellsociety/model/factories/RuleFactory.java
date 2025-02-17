@@ -6,6 +6,11 @@ import cellsociety.model.simulation.parameters.Parameters;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
+/**
+ * Creates rule and parameters for a simulation
+ *
+ * @author Jessica Chen
+ */
 public class RuleFactory {
 
   private static final String RULE_PACKAGE = "cellsociety.model.simulation.rules.";
@@ -33,6 +38,7 @@ public class RuleFactory {
       Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass);
       return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance);
     } catch (Exception e) {
+      // TODO: fix the exception for this
       throw new RuntimeException("Error creating rule: " + ruleType, e);
     }
   }

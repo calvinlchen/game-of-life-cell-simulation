@@ -222,6 +222,11 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     return Integer.parseInt(myResources.getString(key));
   }
 
+  /**
+   * Get rule for cell
+   *
+   * @return the rule for the cell
+   */
   R getRule() {
     return rule;
   }

@@ -4,7 +4,7 @@ import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import cellsociety.model.simulation.rules.ChouReg2Rule;
 
 /**
- * Class for representing cell for Percolation simulation
+ * Class for representing cell for ChouReg2 Langton's Loop simulation
  *
  * @author Jessica Chen
  */
@@ -13,7 +13,7 @@ public class ChouReg2Cell extends Cell<ChouReg2Cell, ChouReg2Rule, ChouReg2Param
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
-   * @param rule  - the Percolation rule to calculate the next state
+   * @param rule  - the ChouReg2 Langton's Loop rule to calculate the next state
    */
   public ChouReg2Cell(int state, ChouReg2Rule rule) {
     super(state, rule);
