@@ -34,8 +34,8 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case 2 -> handleSand(cell);
-      case 3 -> handleWater(cell);
+      case FALLINGSAND_SAND -> handleSand(cell);
+      case FALLINGSAND_WATER -> handleWater(cell);
       default -> cell.getCurrentState();  // steel
     };
   }

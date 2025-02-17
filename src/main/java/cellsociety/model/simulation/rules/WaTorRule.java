@@ -39,8 +39,8 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
   public int apply(WaTorCell cell) {
     int currentState = cell.getCurrentState();
     return switch (currentState) {
-      case 1 -> handleFish(cell);
-      case 2 -> handleShark(cell);
+      case WATOR_FISH -> handleFish(cell);
+      case WATOR_SHARK -> handleShark(cell);
       default -> WATOR_EMPTY;
     };
   }
