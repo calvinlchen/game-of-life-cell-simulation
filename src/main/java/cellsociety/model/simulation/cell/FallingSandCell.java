@@ -15,7 +15,7 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
-   * @param rule  - Spreading of Fire Rule to calculate next state
+   * @param rule  - Falling Sand Rule to calculate next state
    */
   public FallingSandCell(int state, FallingSandRule rule) {
     super(state, rule);
