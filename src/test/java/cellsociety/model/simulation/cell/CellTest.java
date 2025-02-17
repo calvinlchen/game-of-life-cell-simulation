@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -220,40 +221,40 @@ class CellTest {
   @Test
   @DisplayName("Set invalid number of position arguments in position constructor")
   void position_InvalidPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setPosition(new int[]{0}));
+    assertThrows(SimulationException.class, () -> cell.setPosition(new int[]{0}));
   }
 
   @Test
   @DisplayName("Set position to null")
   void position_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setPosition(null));
+    assertThrows(SimulationException.class, () -> cell.setPosition(null));
   }
 
   @Test
   @DisplayName("Add the same neighbor")
   void neighbors_AddSameNeighbor_IllegalArgumentException() {
     assertTrue(cell.addNeighbor(neighbor));
-    assertThrows(IllegalArgumentException.class, () -> cell.addNeighbor(neighbor));
+    assertThrows(SimulationException.class, () -> cell.addNeighbor(neighbor));
   }
 
 
   @Test
   @DisplayName("Add neighbor that is null")
   void neighbors_AddNull_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.addNeighbor(null));
+    assertThrows(SimulationException.class, () -> cell.addNeighbor(null));
   }
 
 
   @Test
   @DisplayName("Fail to remove neighbor when not in list")
   void neighbors_RemoveNonExistentNeighbor_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.removeNeighbor(neighbor));
+    assertThrows(SimulationException.class, () -> cell.removeNeighbor(neighbor));
   }
 
   @Test
   @DisplayName("Remove null neighbor")
   void neighbors_RemoveNull_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.removeNeighbor(null));
+    assertThrows(SimulationException.class, () -> cell.removeNeighbor(null));
   }
 
 

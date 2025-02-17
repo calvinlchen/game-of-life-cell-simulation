@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.*;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -121,11 +122,11 @@ class SimulationTest {
 
   @Test
   void testInvalidCellAccess() {
-    assertThrows(IllegalArgumentException.class, () -> gameOfLifeSimulation.getCurrentState(5, 5));
-    assertThrows(IllegalArgumentException.class, () -> segregationSimulation.getCurrentState(5, 5));
-    assertThrows(IllegalArgumentException.class, () -> fireSimulation.getCurrentState(5, 5));
-    assertThrows(IllegalArgumentException.class, () -> percolationSimulation.getCurrentState(5, 5));
-    assertThrows(IllegalArgumentException.class, () -> watorSimulation.getCurrentState(5, 5));
+    assertThrows(SimulationException.class, () -> gameOfLifeSimulation.getCurrentState(5, 5));
+    assertThrows(SimulationException.class, () -> segregationSimulation.getCurrentState(5, 5));
+    assertThrows(SimulationException.class, () -> fireSimulation.getCurrentState(5, 5));
+    assertThrows(SimulationException.class, () -> percolationSimulation.getCurrentState(5, 5));
+    assertThrows(SimulationException.class, () -> watorSimulation.getCurrentState(5, 5));
   }
 
   @Test

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,41 +169,41 @@ class GridTest {
   @Test
   @DisplayName("Get cell from invalid negative position throws exception")
   void getCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.getCell(-1, 1));
+    assertThrows(SimulationException.class, () -> grid.getCell(-1, 1));
   }
   @Test
   @DisplayName("Get cell from invalid positive position throws exception")
   void getCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.getCell(1, 4));
+    assertThrows(SimulationException.class, () -> grid.getCell(1, 4));
   }
 
   @Test
   @DisplayName("Set cell at invalid negative position throws exception")
   void setCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(-1, 1, new TestGridCell(1, rule)));
+    assertThrows(SimulationException.class, () -> grid.setCell(-1, 1, new TestGridCell(1, rule)));
   }
 
   @Test
   @DisplayName("Set cell at invalid position position throws exception")
   void setCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 4, new TestGridCell(1, rule)));
+    assertThrows(SimulationException.class, () -> grid.setCell(1, 4, new TestGridCell(1, rule)));
   }
 
   @Test
   @DisplayName("Set cell to null throws exception")
   void setCell_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.setCell(1, 1, null));
+    assertThrows(SimulationException.class, () -> grid.setCell(1, 1, null));
   }
 
   @Test
   @DisplayName("Retrieve neighbors from invalid negative position throws exception")
   void getNeighbors_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.getNeighbors(new int[]{-1, 1}));
+    assertThrows(SimulationException.class, () -> grid.getNeighbors(new int[]{-1, 1}));
   }
 
   @Test
   @DisplayName("Retrive neighbors from invalid positive position throws exception")
   void getNeighbors_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> grid.getNeighbors(new int[]{1, 4}));
+    assertThrows(SimulationException.class, () -> grid.getNeighbors(new int[]{1, 4}));
   }
 }
