@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.ChouReg2Cell;
 import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

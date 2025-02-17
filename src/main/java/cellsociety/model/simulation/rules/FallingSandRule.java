@@ -31,63 +31,45 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
     super(parameters);
   }
 
+  /**
+   * ASSUMPTION: traverse calc from left to right and top to bottom
+   * <p> this is because of sand and water gravity rules
+   *
+   * @param cell - cell to apply the rules to
+   * @return
+   */
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case FALLINGSAND_SAND -> handleSand(cell);
-      case FALLINGSAND_WATER -> handleWater(cell);
+      case FALLINGSAND_SAND -> moveDown(cell, "S", List.of("SW", "SE"), FALLINGSAND_SAND,
+          List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
+      case FALLINGSAND_WATER ->
+          moveDown(cell, "S", List.of("W", "E"), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
       default -> cell.getCurrentState();  // steel and empty
     };
   }
 
-  /**
-   * ASSUMPTION: traverse calc from left to right and top to bottom
-   *
-   *
-   * @param cell
-   * @return
-   */
-  private int handleSand(FallingSandCell cell) {
-    // always try going down first
-    Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_EMPTY);
-    if (neighbor.isPresent()) {
-      neighbor.get().setNextState(FALLINGSAND_SAND);
-      return FALLINGSAND_EMPTY;
+  private int moveDown(FallingSandCell cell, String primaryDirections,
+      List<String> secondaryDirections, int newState, List<Integer> replaceableNeighbors) {
+
+    for (int replaceableNeighbor : replaceableNeighbors) {
+      Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", replaceableNeighbor);
+      if (neighbor.isPresent()) {
+        neighbor.get().setNextState(newState);
+        return replaceableNeighbor;
+      }
+
+      List<FallingSandCell> possibleMoves = secondaryDirections.stream()
+          .map(dir -> findNeighborInDirection(cell, dir, replaceableNeighbor))
+          .flatMap(Optional::stream)
+          .toList();
+      // chose random secondary
+      if (!possibleMoves.isEmpty()) {
+        FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+        chosenMove.setNextState(newState);
+        return replaceableNeighbor;
+      }
     }
-    // sand is denser than water, so check water below it, if so swap
-    neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_WATER);
-    if (neighbor.isPresent()) {
-      neighbor.get().setNextState(FALLINGSAND_SAND);
-      return FALLINGSAND_WATER;
-    }
-
-    return moveToEmptyNeighbor(cell, List.of("SW", "SE"), FALLINGSAND_SAND);
-  }
-
-  private int handleWater(FallingSandCell cell) {
-    Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_EMPTY);
-    if (neighbor.isPresent()) {
-      neighbor.get().setNextState(FALLINGSAND_WATER);
-      return FALLINGSAND_EMPTY;
-    }
-
-    return moveToEmptyNeighbor(cell, List.of("W", "E"), FALLINGSAND_WATER);
-  }
-
-  private int moveToEmptyNeighbor(FallingSandCell cell,
-      List<String> secondaryDirections, int newState) {
-    List<FallingSandCell> possibleMoves = secondaryDirections.stream()
-        .map(dir -> findNeighborInDirection(cell, dir, FALLINGSAND_EMPTY))
-        .flatMap(Optional::stream)
-        .toList();
-    // chose random secondary
-    if (!possibleMoves.isEmpty()) {
-      FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
-      chosenMove.setNextState(newState);
-      return FALLINGSAND_EMPTY;
-    }
-
-    // if no moves its the current state
     return cell.getCurrentState();
   }
 
@@ -100,9 +82,6 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
             && neighbor.getNextState() == state)
         .findFirst();
   }
-
-
-
 
 
 }

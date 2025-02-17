@@ -36,11 +36,21 @@ class FallingSandRuleTest {
   @Test
   @DisplayName("Sand in middle moves down when water below")
   void sandMiddleCell_MovesDown_WaterBelow() {
-    var result = createCellWithNeighbors(FALLINGSAND_SAND, FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY, FALLINGSAND_EMPTY, FALLINGSAND_EMPTY, FALLINGSAND_EMPTY));
+    var result = createCellWithNeighbors(FALLINGSAND_SAND, FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY, FALLINGSAND_SAND, FALLINGSAND_EMPTY, FALLINGSAND_SAND));
     FallingSandCell cell = result.cell;
     List<FallingSandCell> neighbors = result.neighbors;
     assertEquals(FALLINGSAND_WATER, rule.apply(cell));
     assertEquals(FALLINGSAND_SAND, neighbors.getFirst().getNextState());
+  }
+
+  @Test
+  @DisplayName("Sand in middle moves diaganol when water below")
+  void sandMiddleCell_MovesDiaganol_WaterBelow() {
+    var result = createCellWithNeighbors(FALLINGSAND_SAND, FALLINGSAND_SAND, List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER, FALLINGSAND_EMPTY, FALLINGSAND_SAND));
+    FallingSandCell cell = result.cell;
+    List<FallingSandCell> neighbors = result.neighbors;
+    assertEquals(FALLINGSAND_WATER, rule.apply(cell));
+    assertEquals(FALLINGSAND_SAND, neighbors.get(2).getNextState());
   }
 
   @Test
