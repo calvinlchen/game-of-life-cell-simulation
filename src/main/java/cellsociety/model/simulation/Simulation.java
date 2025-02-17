@@ -37,6 +37,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private ResourceBundle myResources;
 
   public Simulation(XMLData data) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
@@ -44,19 +46,18 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     xmlData = data;
 
     setUpSimulation();
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
   }
 
   public Simulation(XMLData data, String language) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
 
     xmlData = data;
 
-    setUpSimulation();
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
-  }
+    setUpSimulation();}
 
   /**
    * Sets up the simulation, initializing the rule, parameters, and grid dynamically.
@@ -205,6 +206,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   /**
    * Return the simtype of the simulation
+   * <p> Assumptio: this only works if for each dynamic type, they are initialized with a different
+   * XMLData
    *
    * @return simtype of the simulation
    */
@@ -214,6 +217,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   /**
    * return the simulation id from the xmlData
+   * <p> Assumptio: this only works if for each dynamic type, they are initialized with a different
+   * XMLData
    *
    * @return simulation id from the xmlData
    */
