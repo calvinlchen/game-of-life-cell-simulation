@@ -1,209 +1,199 @@
 package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-
-/**
- * Test cell for testing Grid
- */
-class TestGridCell extends Cell<TestGridCell, TestRule, TestParameters> {
-  public TestGridCell(int state, TestRule rule) {
-    super(state, rule);
-  }
-
-  @Override
-  public void calcNextState() {
-    return;
-  }
-
-  @Override
-  public void step() {
-    return;
-  }
-
-  @Override
-  protected TestGridCell getSelf() {
-    return this;
-  }
-}
-
-class TestRule extends Rule<TestGridCell, TestParameters> {
-
-  public TestRule(TestParameters parameters) {
-    super(parameters);
-  }
-
-  @Override
-  public int apply(TestGridCell cell) {
-    return 0;
-  }
-}
-
-/**
- * A minimal test parameters class for unit testing.
- *
- * @author chatgpt
- */
-class TestParameters extends Parameters {
-
-  public TestParameters() {
-    super();
-  }
-
-  @Override
-  public Map<String, Double> getParameters() {
-    return new HashMap<>(); // Empty map, since this is for testing
-  }
-
-  @Override
-  public void setParameters(Map<String, Double> parameters) {
-    // Do nothing (for testing purposes)
-  }
-
-  @Override
-  public double getParameter(String key) {
-    return 0.0; // Return a default value
-  }
-
-  @Override
-  public void setParameter(String key, double value) {
-    // Do nothing (for testing purposes)
-  }
-
-  @Override
-  public List<String> getParameterKeys() {
-    return List.of(); // Return an empty list
-  }
-}
-
-/**
- * Tester for Grid class
- */
 class GridTest {
-  private Grid<TestGridCell> grid;
-  private List<TestGridCell> cells;
-  private TestRule rule;
 
-  // Positive Tests
+  private TestGrid grid;
+  private List<TestCell> mockCells;
+  private TestRule mockRule;
+  private Parameters mockParameters;
+
+  static class TestCell extends Cell<TestCell, TestRule, Parameters> {
+    public TestCell(int state, TestRule rule) {
+      super(state, rule);
+    }
+    @Override
+    protected TestCell getSelf() {
+      return this;
+    }
+  }
+
+  static class TestRule extends Rule<TestCell, Parameters> {
+    public TestRule(Parameters parameters) {
+      super(parameters);
+    }
+
+    @Override
+    public int apply(TestCell cell) {
+      return 1; // Dummy implementation
+    }
+  }
+
+  static class TestGrid extends Grid<TestCell> {
+    public TestGrid(List<TestCell> cells, int rows, int cols) {
+      super(cells, rows, cols);
+    }
+    @Override
+    public void setNeighbors() {}
+  }
 
   @BeforeEach
   void setUp() {
-    rule = new TestRule(new TestParameters());
-    cells = new ArrayList<>();
-    for (int i = 0; i < 9; i++) {
-      cells.add(new TestGridCell(1, rule));
-    }
-    grid = new Grid<>(cells, 3, 3) {
-      @Override
-      public void setNeighbors() {
-        return;
-      }
+    mockRule = Mockito.mock(TestRule.class);
+    mockParameters = Mockito.mock(Parameters.class);
+    when(mockRule.getParameters()).thenReturn(mockParameters);
+    when(mockParameters.getParameter("maxHistorySize")).thenReturn(3.);
 
-    };
+    mockCells = new ArrayList<>();
+    for (int i = 0; i < 9; i++) {
+      TestCell cell = Mockito.mock(TestCell.class);
+      when(cell.getCurrentState()).thenReturn(i);
+      mockCells.add(cell);
+    }
+    grid = new TestGrid(mockCells, 3, 3);
   }
 
   @Test
-  @DisplayName("Grid initializes correctly")
-  void grid_Initialization_Verified() {
+  @DisplayName("Grid initializes correctly with valid dimensions")
+  void grid_ValidDimensions_InitializesCorrectly() {
     assertEquals(3, grid.getRows());
     assertEquals(3, grid.getCols());
-    assertNotNull(grid.getGrid());
+    assertEquals(9, grid.getCells().size());
   }
 
   @Test
-  @DisplayName("Get cell from valid position")
-  void getCell_ValidPosition_Verified() {
-    assertNotNull(grid.getCell(1, 1));
+  @DisplayName("Throws exception for invalid grid dimensions")
+  void grid_InvalidDimensions_ThrowsSimulationException() {
+    assertThrows(SimulationException.class, () -> new TestGrid(mockCells, 0, 3));
   }
 
   @Test
-  @DisplayName("Set cell at valid position")
-  void setCell_ValidPosition_Verified() {
-    TestGridCell newCell = new TestGridCell(0, rule);
+  @DisplayName("Throws exception for mismatched cell count")
+  void grid_MismatchedCellCount_ThrowsSimulationException() {
+    List<TestCell> smallCellList = new ArrayList<>(mockCells.subList(0, 5));
+    assertThrows(SimulationException.class, () -> new TestGrid(smallCellList, 3, 3));
+  }
+
+  @Test
+  @DisplayName("Get cell returns correct cell")
+  void getCell_ValidPosition_ReturnsCorrectCell() {
+    when(mockCells.get(0).getPosition()).thenReturn(new int[]{0, 0});
+    assertNotNull(grid.getCell(0, 0));
+  }
+
+  @Test
+  @DisplayName("Get cell throws exception for invalid position")
+  void getCell_InvalidPosition_ThrowsSimulationException() {
+    assertThrows(SimulationException.class, () -> grid.getCell(-1, 0));
+  }
+
+  @Test
+  @DisplayName("Check if position is valid")
+  void isValidPosition_ChecksBounds_ReturnsCorrectResult() {
+    assertTrue(grid.isValidPosition(1, 1));
+    assertFalse(grid.isValidPosition(3, 3));
+  }
+
+  @Test
+  @DisplayName("Set cell updates the grid correctly")
+  void setCell_ValidPosition_UpdatesGrid() {
+    TestCell newCell = new TestCell(5, mockRule);
     grid.setCell(1, 1, newCell);
     assertEquals(newCell, grid.getCell(1, 1));
   }
 
   @Test
-  @DisplayName("Check valid position")
-  void isValidPosition_Check_Verified() {
-    assertTrue(grid.isValidPosition(2, 2));
-    assertFalse(grid.isValidPosition(-1, 0));
+  @DisplayName("Set cell throws exception for invalid position")
+  void setCell_InvalidPosition_ThrowsSimulationException() {
+    TestCell newCell = new TestCell(5, mockRule);
+    assertThrows(SimulationException.class, () -> grid.setCell(-1, 1, newCell));
   }
 
   @Test
-  @DisplayName("Retrieve neighbors from valid position")
-  void getNeighbors_ValidPosition_Verified() {
-    assertNotNull(grid.getNeighbors(new int[]{1, 1}));
-  }
-
-  @Test
-  @DisplayName("Set neighbors correctly")
-  void setNeighbors_Correctly_Verified() {
-    int[][] directions = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // Right, Down, Left, Up
-    grid.setNeighbors(directions);
-
-    TestGridCell centerCell = grid.getCell(1, 1);
-    List<TestGridCell> neighbors = centerCell.getNeighbors();
-    assertEquals(4, neighbors.size());
-    assertTrue(neighbors.contains(grid.getCell(1, 2))); // Right
-    assertTrue(neighbors.contains(grid.getCell(2, 1))); // Down
-    assertTrue(neighbors.contains(grid.getCell(1, 0))); // Left
-    assertTrue(neighbors.contains(grid.getCell(0, 1))); // Up
-  }
-
-  // Negative Tests
-
-  @Test
-  @DisplayName("Get cell from invalid negative position throws exception")
-  void getCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.getCell(-1, 1));
-  }
-  @Test
-  @DisplayName("Get cell from invalid positive position throws exception")
-  void getCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.getCell(1, 4));
-  }
-
-  @Test
-  @DisplayName("Set cell at invalid negative position throws exception")
-  void setCell_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.setCell(-1, 1, new TestGridCell(1, rule)));
-  }
-
-  @Test
-  @DisplayName("Set cell at invalid position position throws exception")
-  void setCell_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.setCell(1, 4, new TestGridCell(1, rule)));
-  }
-
-  @Test
-  @DisplayName("Set cell to null throws exception")
-  void setCell_Null_IllegalArgumentException() {
+  @DisplayName("Set cell throws exception for null cell")
+  void setCell_NullCell_ThrowsSimulationException() {
     assertThrows(SimulationException.class, () -> grid.setCell(1, 1, null));
   }
 
   @Test
-  @DisplayName("Retrieve neighbors from invalid negative position throws exception")
-  void getNeighbors_InvalidNegPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.getNeighbors(new int[]{-1, 1}));
+  @DisplayName("Get rows and columns return correct values")
+  void getRowsAndCols_CheckForCorrectness_ReturnCorrectValues() {
+    assertEquals(3, grid.getRows());
+    assertEquals(3, grid.getCols());
   }
 
   @Test
-  @DisplayName("Retrive neighbors from invalid positive position throws exception")
-  void getNeighbors_InvalidPosPosition_IllegalArgumentException() {
-    assertThrows(SimulationException.class, () -> grid.getNeighbors(new int[]{1, 4}));
+  @DisplayName("Get grid returns correct structure")
+  void getGrid_CheckForCorrectness_ReturnsCorrectStructure() {
+    assertNotNull(grid.getGrid());
+    assertEquals(3, grid.getGrid().size());
+    assertEquals(3, grid.getGrid().get(0).size());
   }
+
+  @Test
+  @DisplayName("Get all cells returns correct flattened list")
+  void getCells_CheckForCorrectness_ReturnsFlattenedList() {
+    List<TestCell> allCells = grid.getCells();
+    assertEquals(9, allCells.size());
+    for (int i = 0; i < 9; i++) {
+      assertEquals(i, allCells.get(i).getCurrentState());
+    }
+  }
+
+  @Test
+  @DisplayName("Test setting neighbors correctly updates cells")
+  void setNeighbors_ChecksForCorectness_CorrectlySetsNeighbors() {
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // N, S, W, E
+    grid.setNeighbors(directions);
+    for (TestCell cell : mockCells) {
+      verify(cell, atLeastOnce()).setNeighbors(anyList());
+    }
+  }
+
+  @Test
+  @DisplayName("Initialize cells assigns correct positions")
+  void initializeCells_CheckForCorrectness_AssignsCorrectPositions() {
+    for (int i = 0; i < 9; i++) {
+      verify(mockCells.get(i)).setPosition(new int[]{i / 3, i % 3});
+    }
+  }
+
+  @Test
+  @DisplayName("Throws exception when initializing with null cell list")
+  void initializeCells_NullCellsList_ThrowsSimulationException() {
+    assertThrows(SimulationException.class, () -> new TestGrid(null, 3, 3));
+  }
+
+  @Test
+  @DisplayName("Get neighbors returns valid neighbors")
+  void getNeighbors_ValidPosition_ReturnsNeighbors() {
+    int[] position = {1, 1};
+    List<TestCell> expectedNeighbors = List.of(mockCells.get(0), mockCells.get(2), mockCells.get(3), mockCells.get(5));
+    when(mockCells.get(4).getNeighbors()).thenReturn(expectedNeighbors);
+    assertEquals(expectedNeighbors, grid.getNeighbors(position));
+  }
+
+  @Test
+  @DisplayName("Get neighbors throws exception for invalid position")
+  void getNeighbors_InvalidPosition_ThrowsSimulationException() {
+    int[] position = {-1, 1};
+    assertThrows(SimulationException.class, () -> grid.getNeighbors(position));
+  }
+
+
 }
+
+

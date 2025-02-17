@@ -19,6 +19,8 @@ class CellTest {
   private TestRule mockRule;
   private Parameters mockParameters;
 
+  // Mockito set up done with the help of chatGPT,
+  // although edited to fit the actual generic structure
   static class TestCell extends Cell<TestCell, TestRule, Parameters> {
 
     public TestCell(int state, TestRule rule) {
