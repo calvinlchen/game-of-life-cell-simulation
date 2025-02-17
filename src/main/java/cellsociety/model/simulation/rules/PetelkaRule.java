@@ -51,6 +51,9 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
   public int apply(PetelkaCell cell) {
     String stateKey = getStateKey(cell, new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"});
     // if not in map the default is 0
+    if (stateKey.length() != 9) {
+      return cell.getCurrentState();
+    }
     return RULES_MAP_PETELKA.getOrDefault(stateKey, 0);
 
 

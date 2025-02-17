@@ -36,31 +36,48 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
     return switch (cell.getCurrentState()) {
       case FALLINGSAND_SAND -> handleSand(cell);
       case FALLINGSAND_WATER -> handleWater(cell);
-      default -> cell.getCurrentState();  // steel
+      default -> cell.getCurrentState();  // steel and empty
     };
   }
 
+  /**
+   * ASSUMPTION: traverse calc from left to right and top to bottom
+   *
+   *
+   * @param cell
+   * @return
+   */
   private int handleSand(FallingSandCell cell) {
-    return moveToEmptyNeighbor(cell, "S", List.of("SW", "SE"), FALLINGSAND_SAND);
+    // always try going down first
+    Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_EMPTY);
+    if (neighbor.isPresent()) {
+      neighbor.get().setNextState(FALLINGSAND_SAND);
+      return FALLINGSAND_EMPTY;
+    }
+    // sand is denser than water, so check water below it, if so swap
+    neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_WATER);
+    if (neighbor.isPresent()) {
+      neighbor.get().setNextState(FALLINGSAND_SAND);
+      return FALLINGSAND_WATER;
+    }
+
+    return moveToEmptyNeighbor(cell, List.of("SW", "SE"), FALLINGSAND_SAND);
   }
 
   private int handleWater(FallingSandCell cell) {
-    return moveToEmptyNeighbor(cell, "S", List.of("W", "E"), FALLINGSAND_WATER);
-  }
-
-  private int moveToEmptyNeighbor(FallingSandCell cell, String primaryDirection,
-      List<String> secondaryDirections, int newState) {
-
-    // first try primary direction
-    Optional<FallingSandCell> neighbor = findEmptyNeighborInDirection(cell, primaryDirection);
+    Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", FALLINGSAND_EMPTY);
     if (neighbor.isPresent()) {
-      neighbor.get().setNextState(newState);
+      neighbor.get().setNextState(FALLINGSAND_WATER);
       return FALLINGSAND_EMPTY;
     }
 
-    // otherwise try secondary
+    return moveToEmptyNeighbor(cell, List.of("W", "E"), FALLINGSAND_WATER);
+  }
+
+  private int moveToEmptyNeighbor(FallingSandCell cell,
+      List<String> secondaryDirections, int newState) {
     List<FallingSandCell> possibleMoves = secondaryDirections.stream()
-        .map(dir -> findEmptyNeighborInDirection(cell, dir))
+        .map(dir -> findNeighborInDirection(cell, dir, FALLINGSAND_EMPTY))
         .flatMap(Optional::stream)
         .toList();
     // chose random secondary
@@ -75,14 +92,16 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
 
-  public Optional<FallingSandCell> findEmptyNeighborInDirection(FallingSandCell cell,
-      String direction) {
+  public Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell,
+      String direction, int state) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> matchesDirection(cell, neighbor, direction))
-        .filter(neighbor -> neighbor.getCurrentState() == FALLINGSAND_EMPTY
-            && neighbor.getNextState() == FALLINGSAND_EMPTY)
+        .filter(neighbor -> neighbor.getCurrentState() == state
+            && neighbor.getNextState() == state)
         .findFirst();
   }
+
+
 
 
 
