@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class for representing rules for Percolation simulation
+ * Class for representing rules for Petelka Loop simulation
  *
  * @author Jessica Chen
  */
@@ -72,26 +72,6 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
     }
 
     return stateBuilder.toString();
-  }
-
-  private boolean matchesDirection(PetelkaCell cell, PetelkaCell neighbor, String direction) {
-    int[] pos = neighbor.getPosition();
-    int[] posCell = cell.getPosition();
-
-    int dx = pos[0] - posCell[0];
-    int dy = pos[1] - posCell[1];
-
-    return switch (direction) {
-      case "S" -> dx == 0 && dy == 1;
-      case "N" -> dx == 0 && dy == -1;
-      case "W" -> dx == -1 && dy == 0;
-      case "E" -> dx == 1 && dy == 0;
-      case "NE" -> dx == 1 && dy == -1;
-      case "NW" -> dx == -1 && dy == -1;
-      case "SE" -> dx == 1 && dy == 1;
-      case "SW" -> dx == -1 && dy == 1;
-      default -> false;
-    };
   }
 
 }

@@ -31,13 +31,6 @@ import java.util.Objects;
  */
 public class XMLUtils {
 
-  private ResourceBundle myResources;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
-
-  public XMLUtils() {
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
-  }
-
   /**
    * A method that reads a pre-existing xml file.
    *
@@ -309,17 +302,5 @@ public class XMLUtils {
 
     return parameters;
 
-  }
-
-  /**
-   * Returns the int associated with the state from the resource property
-   * <p>
-   * TODO: refactor this to be a single utils files
-   *
-   * @param key - the String key associated with the state
-   * @return the int associated with the property's key
-   */
-  private int getStateProperty(String key) {
-    return Integer.parseInt(myResources.getString(key));
   }
 }

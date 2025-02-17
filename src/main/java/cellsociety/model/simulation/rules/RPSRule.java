@@ -4,7 +4,7 @@ import cellsociety.model.simulation.cell.RPSCell;
 import cellsociety.model.simulation.parameters.RPSParameters;
 
 /**
- * Class for representing rules for Percolation simulation
+ * Class for representing rules for Rock Paper Scissor simulation
  *
  * @author Jessica Chen
  */
