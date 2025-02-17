@@ -61,7 +61,7 @@ public class CellStateFactory {
   }
 
   // TODO: catch error if simulation type is not valid
-  private static CellStateHandlerStatic getHandler(SimType simulationType) {
+  protected static CellStateHandlerStatic getHandler(SimType simulationType) {
     return handlerMap.get(simulationType);
   }
 
