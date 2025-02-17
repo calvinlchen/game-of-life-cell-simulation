@@ -116,7 +116,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @param simType  - The type of simulation
    */
   private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
-    if (simType == SimType.GameOfLife || simType == SimType.Segregation) {
+    if (simType.isDefaultRectangularGrid()) {
       myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
     } else {
       myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
