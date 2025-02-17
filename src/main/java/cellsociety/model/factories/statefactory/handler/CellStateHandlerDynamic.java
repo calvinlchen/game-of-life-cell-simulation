@@ -4,13 +4,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A dynamic implementation of {@link CellStateHandler} that allows flexible state management
+ *
+ * <p> Assumption: States are added dynamically and must have unique integer values
+ *
+ * @author Jessica Chen
+ */
 public class CellStateHandlerDynamic implements CellStateHandler {
+
   private Map<Integer, String> cellStates;
 
   public CellStateHandlerDynamic() {
     this.cellStates = new HashMap<>();
   }
 
+  /**
+   * Adds a new state to the handler.
+   *
+   * @param state - integer representation of the state.
+   * @param name  - string representation of the state.
+   */
   public void addState(int state, String name) {
     cellStates.put(state, name);
   }
