@@ -1,6 +1,5 @@
 package cellsociety.model.simulation.cell;
 
-import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.FIRE_MAXSTATE;
 
 import cellsociety.model.simulation.parameters.FireParameters;

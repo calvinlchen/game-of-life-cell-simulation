@@ -1,6 +1,5 @@
 package cellsociety.model.simulation.cell;
 
-import static cellsociety.model.util.constants.CellStates.CHOUREG2_MAXSTATE;
 import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
 
 import cellsociety.model.simulation.parameters.Parameters;
@@ -8,7 +7,6 @@ import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,14 +40,14 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;
     neighbors = new ArrayList<>();
     stateHistory = new LinkedList<>();
     saveCurrentState();
-
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
   }
 
   /**
@@ -59,14 +57,14 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule, String language) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;
     neighbors = new ArrayList<>();
     stateHistory = new LinkedList<>();
     saveCurrentState();
-
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
   }
 
   /**
@@ -74,9 +72,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public void saveCurrentState() {
     int maxHistorySize;
-    try {
-      maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
-    } catch (Exception e) {
+
+    maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
+    if (maxHistorySize < 1) {
       throw new SimulationException(String.format(myResources.getString("InvalidHistorySize")));
     }
 
@@ -91,6 +89,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * Step one step backbward
    */
   public void stepBack() {
+    // this error should never reach with how stateHistory is set up in initialization
     if (stateHistory.isEmpty()) {
       throw new SimulationException(String.format(myResources.getString("NoHistory")));
     }
@@ -208,6 +207,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return a list of neighboring cells
    */
   public List<C> getNeighbors() {
+    // should never be null because can't set to null
     if (neighbors == null) {
       throw new SimulationException(
           String.format(myResources.getString("NeighborsNotInitialized")));
@@ -251,9 +251,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return true if the neighbor was successfully removed; false otherwise
    */
   public boolean removeNeighbor(C neighbor) {
-    if (neighbor == null) {
-      throw new SimulationException(String.format(myResources.getString("NullNeighbor")));
-    } else if (!neighbors.contains(neighbor)) {
+    if (!neighbors.contains(neighbor)) {
       throw new SimulationException(String.format(myResources.getString("NeighborNotFound")));
     }
     return neighbors.remove(neighbor);
@@ -284,7 +282,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param maxState - max state for a simulation
    */
   public void validateState(int state, int maxState) {
-    if (state < 0 || state > maxState) {
+    if (state < 0 || state >= maxState) {
       throw new SimulationException(
           String.format(getMyResources().getString("InvalidState"), state, maxState));
     }

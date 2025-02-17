@@ -1,7 +1,6 @@
 package cellsociety.model.util;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.StateEnum;
 
 import java.util.ArrayList;
 import java.util.List;
