@@ -1,12 +1,11 @@
 package cellsociety.view.components;
 
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class GameOfLifeCellView extends CellView<GameOfLifeStates> {
+public class GameOfLifeCellView extends CellView {
 
-  public GameOfLifeCellView(double x, double y, double width, double height, GameOfLifeStates cellState) {
+  public GameOfLifeCellView(double x, double y, double width, double height, int cellState) {
     super(x, y, width, height, cellState);
   }
 
@@ -14,10 +13,10 @@ public class GameOfLifeCellView extends CellView<GameOfLifeStates> {
    * Maps a Game of Life state to its corresponding color.
    */
   @Override
-  protected Color getColorForState(GameOfLifeStates state) {
+  public Color getColorForState(int state) {
     return switch (state) {
-      case ALIVE -> Color.GREEN;
-      case DEAD -> DEFAULT_FILL;
+      case 1 -> Color.GREEN;
+      default -> DEFAULT_FILL;
     };
   }
 }

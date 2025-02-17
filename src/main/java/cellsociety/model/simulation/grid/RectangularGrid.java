@@ -1,10 +1,6 @@
 package cellsociety.model.simulation.grid;
 
-import cellsociety.model.interfaces.Grid;
-import cellsociety.model.interfaces.Cell;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
-import cellsociety.model.util.constants.CellStates.SimulationTypes;
-import java.util.ArrayList;
+import cellsociety.model.simulation.cell.Cell;
 import java.util.List;
 
 /**
@@ -12,11 +8,10 @@ import java.util.List;
  *
  * <p>Default like what you think of when you think of a grid</p>
  *
- * @param <S> - the type of state for the cells, must be an Enum
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public class RectangularGrid<S extends Enum<S>, T extends Cell<S, T>> extends Grid<S, T> {
+public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
 
   /**
    * Constructs a RectangularGrid with specified dimensions.

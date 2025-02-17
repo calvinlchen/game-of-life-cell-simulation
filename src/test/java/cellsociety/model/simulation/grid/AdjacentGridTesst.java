@@ -2,9 +2,12 @@ package cellsociety.model.simulation.grid;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.interfaces.Cell;
+import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.rules.Rule;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,13 +17,9 @@ enum AdjacentGridTestState { ALIVE, DEAD; }   // Testing enum for states
 /**
  * Test cell for testing AdjacentGrid
  */
-class TestAdjacentGridCell extends Cell<AdjacentGridTestState, TestAdjacentGridCell> {
-  public TestAdjacentGridCell(AdjacentGridTestState state) {
-    super(state);
-  }
-
-  public TestAdjacentGridCell(AdjacentGridTestState state, int[] position) {
-    super(state, position);
+class TestAdjacentGridCell extends Cell<TestAdjacentGridCell, TestAdjacentGridRule, TestParameters> {
+  public TestAdjacentGridCell(int state, TestAdjacentGridRule rule) {
+    super(state, rule);
   }
 
   @Override
@@ -32,20 +31,40 @@ class TestAdjacentGridCell extends Cell<AdjacentGridTestState, TestAdjacentGridC
   public void step() {
     return;
   }
+
+  @Override
+  protected TestAdjacentGridCell getSelf() {
+    return this;
+  }
+}
+
+class TestAdjacentGridRule extends Rule<TestAdjacentGridCell, TestParameters> {
+
+  public TestAdjacentGridRule(TestParameters parameters) {
+    super(parameters);
+  }
+
+  @Override
+  public int apply(TestAdjacentGridCell cell) {
+    return 0;
+  }
 }
 
 /**
  * Tester for AdjacentGrid class
  */
 class AdjacentGridTest {
-  private AdjacentGrid<AdjacentGridTestState, TestAdjacentGridCell> grid;
+  private AdjacentGrid<TestAdjacentGridCell> grid;
   private List<TestAdjacentGridCell> cells;
+
+  private TestAdjacentGridRule rule;
 
   @BeforeEach
   void setUp() {
+    rule = new TestAdjacentGridRule(new TestParameters());
     cells = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      cells.add(new TestAdjacentGridCell(AdjacentGridTestState.ALIVE));
+      cells.add(new TestAdjacentGridCell(1, rule));
     }
     grid = new AdjacentGrid<>(cells, 3, 3);
   }

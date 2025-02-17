@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -46,6 +47,7 @@ public class UserView {
   private SimulationView mySimulationView;
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
+  private StateColorLegend myStateColorLegend;
   private final XMLUtils xmlUtils = new XMLUtils();
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage) {
@@ -70,10 +72,15 @@ public class UserView {
         mySceneHeight*GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox();
+    myStateColorLegend = new StateColorLegend();  // Add Color-State legend
 
     // Set components in BorderPane
     myRoot.setLeft(mySimulationView.getDisplay());
-    myRoot.setRight(myControlPanel.getPanel());
+
+    VBox rightPanel = new VBox(ControlPanel.VBOX_SPACING);
+    rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getLegendBox());
+    myRoot.setRight(rightPanel);
+
     myRoot.setBottom(myInformationBox.getTextArea());
 
     // Set simulation speed to default
@@ -156,8 +163,8 @@ public class UserView {
     File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
+      stopAndResetSimulation();
       try {
-        stopAndResetSimulation();
         configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile));
       }
       catch (XMLException e) {
@@ -170,11 +177,18 @@ public class UserView {
   private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
     // Set program state
     myState = ViewState.LOAD;
+
     // Upload simulation to mySimulationView
     mySimulationView.configureFromXML(xmlUtils);
     mySimulationView.initializeGridView();
+
+    XMLData xmlData = mySimulationView.getSimulation().getXMLData();
+
     // Update text box with simulation information
-    myInformationBox.updateInfo(mySimulationView.getSimulation().getXMLData());
+    myInformationBox.updateInfo(xmlData);
+
+    // Update legend based on simulation type
+    myStateColorLegend.updateLegend(xmlData);
   }
 
   // display given message to user using the given type of Alert dialog box
@@ -207,7 +221,8 @@ public class UserView {
             mySimulationView.getSimulation().getXMLData().getDescription(),
             mySimulationView.getSimulation());
         showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
-      } catch (Exception e) {
+      } catch (XMLException e) {
+        myState = ViewState.ERROR;
         showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
       }
     }

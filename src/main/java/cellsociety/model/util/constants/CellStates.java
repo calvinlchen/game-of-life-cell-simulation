@@ -1,66 +1,35 @@
 package cellsociety.model.util.constants;
 
 /**
- * Defines enums for representing the states of cells in various simulations, this should be where
- * the enums for cells are from.
+ * State constants to use for rules to keep them central
+ *
+ * <p> I tried doing them in resource properties originally, but you can't use them in switch statements
  *
  * @author Jessica Chen
  */
 public class CellStates {
+  public static final int GAMEOFLIFE_DEAD = 0;
+  public static final int GAMEOFLIFE_ALIVE = 1;
 
-  /**
-   * Enum for represent the types of simulation
-   */
-  public enum SimulationTypes {
-    GameOfLife,
-    Percolation,
-    Fire,
-    Segregation,
-    WaTor
-  }
+  public static final int PERCOLATION_BLOCKED = 0;
+  public static final int PERCOLATION_OPEN = 1;
+  public static final int PERCOLATION_PERCOLATED = 2;
 
-  /**
-   * Enum for representing the states of a cell in Conway's Game of Life
-   */
-  public enum GameOfLifeStates {
-    ALIVE,
-    DEAD
-  }
+  public static final int FIRE_EMPTY = 0;
+  public static final int FIRE_TREE = 1;
+  public static final int FIRE_BURNING = 2;
 
-  /**
-   * Enum for representing the states of a cell in Percolation
-   */
-  public enum PercolationStates {
-    BLOCKED,
-    OPEN,
-    PERCOLATED
-  }
+  public static final int SEGREGATION_EMPTY = 0;
+  public static final int SEGREGATION_A = 1;
+  public static final int SEGREGATION_B = 2;
 
-  /**
-   * Enum for representing the states of a cell in SpreadingOfFire
-   */
-  public enum FireStates {
-    EMPTY,
-    TREE,
-    BURNING
-  }
+  public static final int WATOR_EMPTY = 0;
+  public static final int WATOR_FISH = 1;
+  public static final int WATOR_SHARK = 2;
 
-  /**
-   * Enum for representing the states of a cell in Schelling's Model of Segregation
-   */
-  public enum SegregationStates {
-    EMPTY,
-    AGENT_A,
-    AGENT_B
-  }
-
-  /**
-   * Enum for representing the states of a cell in WaTor World
-   */
-  public enum WaTorStates {
-    EMPTY,
-    FISH,
-    SHARK
-  }
+  public static final int FALLINGSAND_EMPTY = 0;
+  public static final int FALLINGSAND_STEEL = 1;
+  public static final int FALLINGSAND_SAND = 2;
+  public static final int FALLINGSAND_WATER = 3;
 
 }

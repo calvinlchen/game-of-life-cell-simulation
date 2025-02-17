@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Rule;
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_ALIVE;
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
+
 import cellsociety.model.simulation.cell.GameOfLifeCell;
-import cellsociety.model.util.constants.CellStates.GameOfLifeStates;
+import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import java.util.Map;
 
 /**
@@ -10,26 +12,27 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
+public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
+
   /**
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public GameOfLifeRule(Map<String, Double> parameters) {
+  public GameOfLifeRule(GameOfLifeParameters parameters) {
     super(parameters);
   }
 
   @Override
-  public GameOfLifeStates apply(GameOfLifeCell cell) {
+  public int apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    // TODO: for now there are no parameters
-    if (cell.getCurrentState() == GameOfLifeStates.ALIVE &&
-        (aliveNeighbors < 2 || aliveNeighbors > 3)) {
-      return GameOfLifeStates.DEAD;
-    } else if (cell.getCurrentState() == GameOfLifeStates.DEAD && aliveNeighbors == 3) {
-      return GameOfLifeStates.ALIVE;
+    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE && !getParameters().getSurviveRules()
+        .contains((int) aliveNeighbors)) {
+      return GAMEOFLIFE_DEAD;
+    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && getParameters().getBornRules()
+        .contains((int) aliveNeighbors)) {
+      return GAMEOFLIFE_ALIVE;
     }
 
     return cell.getCurrentState();
@@ -37,7 +40,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeStates, GameOfLifeCell> {
 
   private long countAliveNeighbors(GameOfLifeCell cell) {
     return cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == GameOfLifeStates.ALIVE)
+        .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE)
         .count();
   }
 }

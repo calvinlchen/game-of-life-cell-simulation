@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Rule;
+import static cellsociety.model.util.constants.CellStates.PERCOLATION_OPEN;
+import static cellsociety.model.util.constants.CellStates.PERCOLATION_PERCOLATED;
+
 import cellsociety.model.simulation.cell.PercolationCell;
-import cellsociety.model.util.constants.CellStates.PercolationStates;
+import cellsociety.model.simulation.parameters.PercolationParameters;
 import java.util.Map;
 
 /**
@@ -10,21 +12,21 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
+public class PercolationRule extends Rule<PercolationCell, PercolationParameters> {
 
   /**
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public PercolationRule(Map<String, Double> parameters) {
+  public PercolationRule(PercolationParameters parameters) {
     super(parameters);
   }
 
   @Override
-  public PercolationStates apply(PercolationCell cell) {
-    if (cell.getCurrentState() == PercolationStates.OPEN && neighborIsPercolated(cell)) {
-      return PercolationStates.PERCOLATED;
+  public int apply(PercolationCell cell) {
+    if (cell.getCurrentState() == PERCOLATION_OPEN && neighborIsPercolated(cell)) {
+      return PERCOLATION_PERCOLATED;
     }
 
     return cell.getCurrentState();
@@ -32,6 +34,6 @@ public class PercolationRule extends Rule<PercolationStates, PercolationCell> {
 
   private boolean neighborIsPercolated(PercolationCell cell) {
     return cell.getNeighbors().stream()
-        .anyMatch(neighbor -> neighbor.getCurrentState() == PercolationStates.PERCOLATED);
+        .anyMatch(neighbor -> neighbor.getCurrentState() == PERCOLATION_PERCOLATED);
   }
 }

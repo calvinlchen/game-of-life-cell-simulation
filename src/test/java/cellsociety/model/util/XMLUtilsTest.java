@@ -2,8 +2,8 @@ package cellsociety.model.util;
 
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,10 +33,11 @@ class XMLUtilsTest {
         createTestXMLFile();
 
         //read XML file
-        XMLData xmlData = xmlUtils.readXML(TEST_FILE_NAME);
+        File fXmlFile = new File(TEST_FILE_PATH);
+        XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
-        assertEquals(SimType.FIRE, xmlData.getType());
+        assertEquals(SimType.Fire, xmlData.getType());
         assertEquals("Fire Sim", xmlData.getTitle());
         assertEquals("Vincent Price", xmlData.getAuthor());
         assertEquals("This simulation is fire", xmlData.getDescription());
@@ -46,12 +47,12 @@ class XMLUtilsTest {
         assertEquals(2, xmlData.getGridColNum());
 
         //verify cell states
-        ArrayList<Enum> cellStates = xmlData.getCellStateList();
+        List<Integer> cellStates = xmlData.getCellStateList();
         assertEquals(4, cellStates.size());
-        assertEquals(CellStates.FireStates.BURNING, cellStates.get(0));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(1));
-        assertEquals(CellStates.FireStates.EMPTY, cellStates.get(2));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(3));
+        assertEquals(2, cellStates.get(0));
+        assertEquals(1, cellStates.get(1));
+        assertEquals(0, cellStates.get(2));
+        assertEquals(1, cellStates.get(3));
 
         //verify parameters
         Map<String, Double> parameters = xmlData.getParameters();
@@ -65,16 +66,18 @@ class XMLUtilsTest {
     @Test
     void testWriteToXML() {
         //create simulation object with test data
-        Simulation<?, ?> simulation = createTestSimulation();
+        Simulation<?> simulation = createTestSimulation();
 
         //write simulation data to an XML file
-        xmlUtils.writeToXML(TEST_FILE_NAME, "Fire Sim", "Vincent Price", "This simulation is fire", simulation);
+        File fXmlFile = new File(TEST_FILE_PATH);
+        xmlUtils.writeToXML(fXmlFile, "Fire Sim", "Vincent Price", "This simulation is fire", simulation);
 
         //read XML file back to verify contents
-        XMLData xmlData = xmlUtils.readXML(TEST_FILE_NAME);
+
+        XMLData xmlData = xmlUtils.readXML(fXmlFile);
 
         //verify metadata
-        assertEquals(SimType.FIRE, xmlData.getType());
+        assertEquals(SimType.Fire, xmlData.getType());
         assertEquals("Fire Sim", xmlData.getTitle());
         assertEquals("Vincent Price", xmlData.getAuthor());
         assertEquals("This simulation is fire", xmlData.getDescription());
@@ -84,12 +87,12 @@ class XMLUtilsTest {
         assertEquals(2, xmlData.getGridColNum());
 
         //verify cell states
-        ArrayList<Enum> cellStates = xmlData.getCellStateList();
+        List<Integer> cellStates = xmlData.getCellStateList();
         assertEquals(4, cellStates.size());
-        assertEquals(CellStates.FireStates.BURNING, cellStates.get(0));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(1));
-        assertEquals(CellStates.FireStates.EMPTY, cellStates.get(2));
-        assertEquals(CellStates.FireStates.TREE, cellStates.get(3));
+        assertEquals(2, cellStates.get(0));
+        assertEquals(1, cellStates.get(1));
+        assertEquals(0, cellStates.get(2));
+        assertEquals(1, cellStates.get(3));
 
         //verify parameters
         Map<String, Double> parameters = xmlData.getParameters(); //param is null for some reason
@@ -106,7 +109,8 @@ class XMLUtilsTest {
         createInvalidXMLFile();
 
         //verify reading invalid XML file throws exception
-        assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME)); //will throw "end tag" error before parsing error
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile)); //will throw "end tag" error before parsing error
 
         //clean up invalid file
         new File(INVALID_FILE_PATH).delete();
@@ -118,7 +122,8 @@ class XMLUtilsTest {
         createInvalidSimulationTypeXMLFile();
 
         //verify reading XML file with invalid simulation type throws exception
-        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
         assertTrue(exception.getMessage().contains("Unknown simulation type"));
 
         //clean up invalid file
@@ -131,8 +136,37 @@ class XMLUtilsTest {
         createInvalidCellStateXMLFile();
 
         //verify reading XML file with invalid cell state throws exception
-        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(INVALID_FILE_NAME));
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
         assertTrue(exception.getMessage().contains("Unknown cell state"));
+
+        //clean up invalid file
+        new File(INVALID_FILE_PATH).delete();
+    }
+
+    @Test
+    void testTooFewCellsInXML() {
+        //create XML file where total number of cells < rows*columns
+        createFewerCellsThanCapacityXML();
+
+        //verify reading XML file with invalid cell state throws exception
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
+        assertTrue(exception.getMessage().contains("Error: Expected 4 <cell> elements, but found 3"));
+
+        //clean up invalid file
+        new File(INVALID_FILE_PATH).delete();
+    }
+
+    @Test
+    void testTooManyCellsInXML() {
+        //create XML file where total number of cells > rows*columns
+        createMoreCellsThanCapacityXML();
+
+        //verify reading XML file with invalid cell state throws exception
+        File fXmlFile = new File(INVALID_FILE_PATH);
+        Exception exception = assertThrows(XMLException.class, () -> xmlUtils.readXML(fXmlFile));
+        assertTrue(exception.getMessage().contains("Error: Expected 4 <cell> elements, but found 5"));
 
         //clean up invalid file
         new File(INVALID_FILE_PATH).delete();
@@ -226,6 +260,70 @@ class XMLUtilsTest {
         }
     }
 
+    private void createFewerCellsThanCapacityXML() {
+        String invalidSimulationTypeXmlContent = """
+                <simulation>
+                    <metadata>
+                        <type>Game of Life</type>
+                        <title>Life Simulation 1</title>
+                        <author>Robert C. Duvall</author>
+                        <description>This is my first Game of Life simulation!</description>
+                    </metadata>
+                
+                    <grid rows="2" columns="2">
+                        <cell row="0" col="0" state="alive"/>
+                        <cell row="0" col="1" state="dead"/>
+                        <cell row="1" col="0" state="alive"/>
+                    </grid>
+                
+                    <parameters>
+                        <!-- This is the parameter values -->
+                    </parameters>
+                </simulation>
+                """;
+
+        try {
+            File file = new File(INVALID_FILE_PATH);
+            file.createNewFile();
+            java.nio.file.Files.write(file.toPath(), invalidSimulationTypeXmlContent.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createMoreCellsThanCapacityXML() {
+        String invalidSimulationTypeXmlContent = """
+                <simulation>
+                    <metadata>
+                        <type>Game of Life</type>
+                        <title>Life Simulation 1</title>
+                        <author>Robert C. Duvall</author>
+                        <description>This is my first Game of Life simulation!</description>
+                    </metadata>
+                
+                    <grid rows="2" columns="2">
+                        <cell row="0" col="0" state="alive"/>
+                        <cell row="0" col="1" state="dead"/>
+                        <cell row="1" col="0" state="alive"/>
+                        <cell row="1" col="1" state="alive"/>
+                        <cell row="1" col="1" state="alive"/>
+                    </grid>
+                
+                    <parameters>
+                        <!-- This is the parameter values -->
+                    </parameters>
+                </simulation>
+                """;
+
+        try {
+            File file = new File(INVALID_FILE_PATH);
+            file.createNewFile();
+            java.nio.file.Files.write(file.toPath(), invalidSimulationTypeXmlContent.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createInvalidCellStateXMLFile() {
         String invalidCellStateXmlContent = """
                 <simulation>
@@ -256,10 +354,10 @@ class XMLUtilsTest {
         }
     }
 
-    private Simulation<?, ?> createTestSimulation() {
+    private Simulation<?> createTestSimulation() {
         //create XMLData with test data
         XMLData xmlData = new XMLData();
-        xmlData.setType(SimType.FIRE);
+        xmlData.setType(SimType.Fire);
         xmlData.setTitle("Fire Sim");
         xmlData.setAuthor("Vincent Price");
         xmlData.setDescription("This simulation is fire");
@@ -267,11 +365,11 @@ class XMLUtilsTest {
         xmlData.setGridColNum(2);
 
         //set cell states
-        ArrayList<Enum> cellStates = new ArrayList<>();
-        cellStates.add(CellStates.FireStates.BURNING);
-        cellStates.add(CellStates.FireStates.TREE);
-        cellStates.add(CellStates.FireStates.EMPTY);
-        cellStates.add(CellStates.FireStates.TREE);
+        ArrayList<Integer> cellStates = new ArrayList<>();
+        cellStates.add(2);
+        cellStates.add(1);
+        cellStates.add(0);
+        cellStates.add(1);
         xmlData.setCellStateList(cellStates);
 
         //set parameters
@@ -282,12 +380,12 @@ class XMLUtilsTest {
         //create mock Simulation object
         return new Simulation(xmlData) {
             @Override
-            public Enum<?> getCurrentState(int row, int col) {
+            public int getCurrentState(int row, int col) {
                 //mock cell states for 2x2 grid
-                if (row == 0 && col == 0) return CellStates.FireStates.BURNING;
-                if (row == 0 && col == 1) return CellStates.FireStates.TREE;
-                if (row == 1 && col == 0) return CellStates.FireStates.EMPTY;
-                if (row == 1 && col == 1) return CellStates.FireStates.TREE;
+                if (row == 0 && col == 0) return 2;
+                if (row == 0 && col == 1) return 1;
+                if (row == 1 && col == 0) return 0;
+                if (row == 1 && col == 1) return 1;
                 throw new IllegalArgumentException("Invalid row or column");
             }
         };

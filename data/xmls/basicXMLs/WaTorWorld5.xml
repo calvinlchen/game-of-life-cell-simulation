@@ -1,0 +1,121 @@
+<simulation>
+    <metadata>
+        <type>Wa-Tor World</type>
+        <title>Birth Control</title>
+        <author>Nexplanon</author>
+        <description>Low birth rate, eh?</description>
+    </metadata>
+
+    <grid rows="8" columns="12">
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="fish"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="fish"/>
+
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="empty"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+        <cell state="fish"/>
+        <cell state="fish"/>
+        <cell state="shark"/>
+        <cell state="empty"/>
+    </grid>
+
+    <parameters>
+        <parameter name="fishReproductionTime" value="10"/>
+        <parameter name="sharkEnergyGain" value="3"/>
+        <parameter name="sharkReproductionTime" value="20"/>
+        <parameter name="sharkInitialEnergy" value="6"/>
+    </parameters>
+</simulation>

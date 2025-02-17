@@ -1,18 +1,15 @@
 package cellsociety.model.simulation.grid;
 
-import cellsociety.model.interfaces.Grid;
-import cellsociety.model.interfaces.Cell;
-import java.util.ArrayList;
+import cellsociety.model.simulation.cell.Cell;
 import java.util.List;
 
 /**
  * AdjacentGrid represents a 2D grid where each cell only considers its four direct neighbors.
  *
- * @param <S> - the type of state for the cells, must be an Enum
  * @param <T> - the type of cell in the grid, must extend Cell<S>
  * @author Jessica Chen
  */
-public class AdjacentGrid<S extends Enum<S>, T extends Cell<S, T>> extends Grid<S, T> {
+public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
 
   /**
    * Constructs an AdjacentGrid with specified dimensions.

@@ -1,10 +1,10 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.interfaces.Rule;
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
+
 import cellsociety.model.simulation.cell.SegregationCell;
-import cellsociety.model.util.constants.CellStates.SegregationStates;
+import cellsociety.model.simulation.parameters.SegregationParameters;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
+public class SegregationRule extends Rule<SegregationCell, SegregationParameters> {
 
   private final Random random = new Random();
 
@@ -21,7 +21,7 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public SegregationRule(Map<String, Double> parameters) {
+  public SegregationRule(SegregationParameters parameters) {
     super(parameters);
   }
 
@@ -32,13 +32,12 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
    * @return next state for cell to go to on step
    */
   @Override
-  public SegregationStates apply(SegregationCell cell) {
-    if (cell.getCurrentState() == SegregationStates.EMPTY) {
-      return SegregationStates.EMPTY;
+  public int apply(SegregationCell cell) {
+    if (cell.getCurrentState() == SEGREGATION_EMPTY) {
+      return SEGREGATION_EMPTY;
     }
 
-    // TODO: fix the default satisfaction threshold
-    double satisfactionThreshold = getParameters().getOrDefault("toleranceThreshold", 0.5);
+    double satisfactionThreshold = getParameters().getParameter("toleranceThreshold");
     if (isSatisfied(cell, satisfactionThreshold)) {
       return cell.getCurrentState();
     }
@@ -47,7 +46,7 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
 
     if (emptyCell != null) {
       emptyCell.setNextState(cell.getCurrentState());
-      return SegregationStates.EMPTY;
+      return SEGREGATION_EMPTY;
     }
 
     return cell.getCurrentState();
@@ -71,8 +70,8 @@ public class SegregationRule extends Rule<SegregationStates, SegregationCell> {
 
   private SegregationCell findEmptyCell(SegregationCell cell) {
     List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == SegregationStates.EMPTY
-            && neighbor.getNextState() == SegregationStates.EMPTY)
+        .filter(neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
+            && neighbor.getNextState() == SEGREGATION_EMPTY)
         .toList();
 
     if (emptyNeighbors.isEmpty()) return null;

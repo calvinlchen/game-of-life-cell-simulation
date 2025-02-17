@@ -1,0 +1,28 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Cloverleaf</title>
+        <author>Verde Automata</author>
+        <description>my favorite form of highway exit/on ramp, also known as the butterfly.</description>
+    </metadata>
+
+    <grid rows="13" columns="13">
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="alive"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="alive"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+        <cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/><cell state="dead"/>
+    </grid>
+
+    <parameters>
+        <!-- This form is expected to oscillate -->
+    </parameters>
+</simulation>
