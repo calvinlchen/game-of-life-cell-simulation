@@ -4,10 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract class for representing a rules for a simulation
+ *
+ * @author Jessica Chen
+ */
 public abstract class Parameters {
 
   private Map<String, Double> parameters;
 
+  /**
+   * Constructor for simulations
+   *
+   * <p> starts all simulations with a max history size with default of size 10
+   */
   public Parameters() {
     parameters = new HashMap<>();
     parameters.put("maxHistorySize", 10.0);

@@ -1,5 +1,9 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_EMPTY;
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_SAND;
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_WATER;
+
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.FallingSandParameters;
@@ -10,15 +14,11 @@ import java.util.Random;
 
 
 /**
- * Class for representing rules for Spreading of Fire simulation
+ * Class for representing rules for Falling Sand simulation
  *
  * @author Jessica Chen
  */
 public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters> {
-
-  private final int FALLINGSAND_EMPTY;
-  private final int FALLINGSAND_SAND;
-  private final int FALLINGSAND_WATER;
 
   private final Random random = new Random();
 
@@ -29,27 +29,23 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
    */
   public FallingSandRule(FallingSandParameters parameters) {
     super(parameters);
-
-    FALLINGSAND_EMPTY = super.getStateProperty("FALLINGSAND_EMPTY");
-    FALLINGSAND_SAND = super.getStateProperty("FALLINGSAND_SAND");
-    FALLINGSAND_WATER = super.getStateProperty("FALLINGSAND_WATER");
   }
 
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case 2 -> handleSand(cell);
-      case 3 -> handleWater(cell);
+      case FALLINGSAND_SAND -> handleSand(cell);
+      case FALLINGSAND_WATER -> handleWater(cell);
       default -> cell.getCurrentState();  // steel
     };
   }
 
   private int handleSand(FallingSandCell cell) {
-    return moveToEmptyNeighbor(cell, "Down", List.of("DOWN_LEFT", "DOWN_RIGHT"), FALLINGSAND_SAND);
+    return moveToEmptyNeighbor(cell, "S", List.of("SW", "SE"), FALLINGSAND_SAND);
   }
 
   private int handleWater(FallingSandCell cell) {
-    return moveToEmptyNeighbor(cell, "DOWN", List.of("LEFT", "RIGHT"), FALLINGSAND_WATER);
+    return moveToEmptyNeighbor(cell, "S", List.of("W", "E"), FALLINGSAND_WATER);
   }
 
   private int moveToEmptyNeighbor(FallingSandCell cell, String primaryDirection,
@@ -88,24 +84,6 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
         .findFirst();
   }
 
-
-  private boolean matchesDirection(FallingSandCell cell, FallingSandCell neighbor,
-      String direction) {
-    int[] pos = neighbor.getPosition();
-    int[] posCell = cell.getPosition();
-
-    int dx = pos[0] - posCell[0];
-    int dy = pos[1] - posCell[1];
-
-    return switch (direction) {
-      case "DOWN" -> dx == 0 && dy == 1;
-      case "DOWN_LEFT" -> dx == -1 && dy == 1;
-      case "DOWN_RIGHT" -> dx == 1 && dy == 1;
-      case "LEFT" -> dx == -1 && dy == 0;
-      case "RIGHT" -> dx == 1 && dy == 0;
-      default -> false;
-    };
-  }
 
 
 }

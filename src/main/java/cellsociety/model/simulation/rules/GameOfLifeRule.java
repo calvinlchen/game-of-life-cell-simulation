@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_ALIVE;
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
+
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import java.util.Map;
@@ -11,9 +14,6 @@ import java.util.Map;
  */
 public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
 
-  private final int GAMEOFLIFE_DEAD;
-  private final int GAMEOFLIFE_ALIVE;
-
   /**
    * Constructor for the Rule class
    *
@@ -21,9 +21,6 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
    */
   public GameOfLifeRule(GameOfLifeParameters parameters) {
     super(parameters);
-
-    GAMEOFLIFE_ALIVE = super.getStateProperty("GAMEOFLIFE_ALIVE");
-    GAMEOFLIFE_DEAD = super.getStateProperty("GAMEOFLIFE_DEAD");
   }
 
   @Override

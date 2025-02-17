@@ -1,6 +1,8 @@
 package cellsociety.model.simulation.cell;
 
 
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_EMPTY;
+
 import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.simulation.rules.FallingSandRule;
 
@@ -24,7 +26,7 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
   @Override
   public void calcNextState() {
     // don't need to calculate next state if empty
-    if (getCurrentState() != super.getStateProperty("FALLINGSAND_EMPTY")) {
+    if (getCurrentState() != FALLINGSAND_EMPTY) {
       super.calcNextState();
     }
   }

@@ -1,5 +1,6 @@
 package cellsociety.model.factories.statefactory.handler;
 
+import cellsociety.model.util.constants.CellStates;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +16,9 @@ public class SegregationStateHandler extends CellStateHandlerStatic {
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
-    cellStates.put(0, "empty");
-    cellStates.put(1, "agentA");
-    cellStates.put(2, "agentB");
+    cellStates.put(CellStates.SEGREGATION_EMPTY, "empty");
+    cellStates.put(CellStates.SEGREGATION_A, "agentA");
+    cellStates.put(CellStates.SEGREGATION_B, "agentB");
   }
 
   public SegregationStateHandler() {

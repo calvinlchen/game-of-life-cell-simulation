@@ -147,18 +147,38 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     return parameters.getParameterKeys();
   }
 
+  /**
+   * Return xmlData that created the simulation
+   *
+   * @return xmlData that created the simulation
+   */
   public XMLData getXMLData() {
     return xmlData;
   }
 
+  /**
+   * Return the simtype of the simulation
+   *
+   * @return simtype of the simulation
+   */
   public SimType getSimulationType() {
     return xmlData.getType();
   }
 
+  /**
+   * return the simulation id from the xmlData
+   *
+   * @return simulation id from the xmlData
+   */
   public int getSimulationID() {
     return xmlData.getId();
   }
 
+  /**
+   * return the number states from the xmlData (only accurate for dynamic states)
+   *
+   * @return the number of states from the xmlData parameters
+   */
   public int getNumStates() {
     return xmlData.getNumStates();
   }

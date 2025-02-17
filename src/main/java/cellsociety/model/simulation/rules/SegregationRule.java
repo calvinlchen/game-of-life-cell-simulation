@@ -1,5 +1,7 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
+
 import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.simulation.parameters.SegregationParameters;
 import java.util.List;
@@ -13,7 +15,6 @@ import java.util.Random;
 public class SegregationRule extends Rule<SegregationCell, SegregationParameters> {
 
   private final Random random = new Random();
-  private final int SEGREGATION_EMPTY;
 
   /**
    * Constructor for the Rule class
@@ -22,7 +23,6 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
    */
   public SegregationRule(SegregationParameters parameters) {
     super(parameters);
-    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
   }
 
   /**

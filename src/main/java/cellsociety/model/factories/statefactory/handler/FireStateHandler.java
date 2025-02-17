@@ -1,5 +1,6 @@
 package cellsociety.model.factories.statefactory.handler;
 
+import cellsociety.model.util.constants.CellStates;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +16,9 @@ public class FireStateHandler extends CellStateHandlerStatic {
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
-    cellStates.put(0, "empty");
-    cellStates.put(1, "tree");
-    cellStates.put(2, "burning");
+    cellStates.put(CellStates.FIRE_EMPTY, "empty");
+    cellStates.put(CellStates.FIRE_TREE, "tree");
+    cellStates.put(CellStates.FIRE_BURNING, "burning");
   }
 
   public FireStateHandler() {

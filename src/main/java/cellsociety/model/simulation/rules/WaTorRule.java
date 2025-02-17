@@ -1,5 +1,9 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
+import static cellsociety.model.util.constants.CellStates.WATOR_FISH;
+import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
+
 import cellsociety.model.simulation.cell.WaTorCell;
 import cellsociety.model.simulation.parameters.WaTorParameters;
 import java.util.List;
@@ -18,11 +22,6 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
   private int sharkEnergyGain;
   private int sharkReproductionTime;
 
-  private final int WATOR_EMPTY;
-  private final int WATOR_FISH;
-  private final int WATOR_SHARK;
-
-
   /**
    * Constructor for the Rule class
    *
@@ -34,18 +33,14 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
     fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
     sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
     sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
-
-    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
-    WATOR_FISH = super.getStateProperty("WATOR_FISH");
-    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
   }
 
   @Override
   public int apply(WaTorCell cell) {
     int currentState = cell.getCurrentState();
     return switch (currentState) {
-      case 1 -> handleFish(cell);
-      case 2 -> handleShark(cell);
+      case WATOR_FISH -> handleFish(cell);
+      case WATOR_SHARK -> handleShark(cell);
       default -> WATOR_EMPTY;
     };
   }

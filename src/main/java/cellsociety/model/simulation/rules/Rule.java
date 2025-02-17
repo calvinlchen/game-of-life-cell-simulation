@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.cell.ChouReg2Cell;
 import cellsociety.model.simulation.parameters.Parameters;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -19,9 +20,6 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
 
-  private final ResourceBundle myResources;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
-
   /**
    * Constructor for the Rule class
    *
@@ -29,8 +27,6 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    */
   public Rule(P parameters) {
     this.parameters = parameters;
-
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
   }
 
   /**
@@ -51,12 +47,30 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   }
 
   /**
-   * Returns the int associated with the state from the resource property
+   * returns true if the cell matches a direction
    *
-   * @param key - the String key associated with the state
-   * @return the int associated with the property's key
+   * @param cell      - the cell
+   * @param neighbor  - neighbor of a cell
+   * @param direction - direction to test (N, S, E, W, NE, NW, SE, SW)
+   * @return true if the neighbor is the direction neighbor
    */
-  public int getStateProperty(String key) {
-    return Integer.parseInt(myResources.getString(key));
+  public boolean matchesDirection(C cell, C neighbor, String direction) {
+    int[] pos = neighbor.getPosition();
+    int[] posCell = cell.getPosition();
+
+    int dx = pos[0] - posCell[0];
+    int dy = pos[1] - posCell[1];
+
+    return switch (direction) {
+      case "S" -> dx == 0 && dy == 1;
+      case "N" -> dx == 0 && dy == -1;
+      case "W" -> dx == -1 && dy == 0;
+      case "E" -> dx == 1 && dy == 0;
+      case "NE" -> dx == 1 && dy == -1;
+      case "NW" -> dx == -1 && dy == -1;
+      case "SE" -> dx == 1 && dy == 1;
+      case "SW" -> dx == -1 && dy == 1;
+      default -> false;
+    };
   }
 }
