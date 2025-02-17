@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.parameters;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Parameters for Falling Sand
+ *
+ * @author Jessica Chen
+ */
 public class FallingSandParameters extends Parameters {
   public FallingSandParameters() {
     super();

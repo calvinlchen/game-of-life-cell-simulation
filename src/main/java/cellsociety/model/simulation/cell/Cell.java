@@ -28,9 +28,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
 
   private LinkedList<Integer> stateHistory;
 
-  private ResourceBundle myResources;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
-
   /**
    * Constructs a cell with specified initial state.
    *
@@ -44,8 +41,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     neighbors = new ArrayList<>();
     stateHistory = new LinkedList<>();
     saveCurrentState();
-
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
   }
 
   /**
@@ -210,16 +205,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
       throw new IllegalArgumentException("Neighbor is not in the list");
     }
     return neighbors.remove(neighbor);
-  }
-
-  /**
-   * Returns the int associated with the state from the resource property
-   *
-   * @param key - the String key associated with the state
-   * @return the int associated with the property's key
-   */
-  public int getStateProperty(String key) {
-    return Integer.parseInt(myResources.getString(key));
   }
 
   /**

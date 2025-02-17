@@ -1,5 +1,6 @@
 package cellsociety.model.factories.statefactory.handler;
 
+import cellsociety.model.util.constants.CellStates;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +16,9 @@ public class WaTorStateHandler extends CellStateHandlerStatic {
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
-    cellStates.put(0, "empty");
-    cellStates.put(1, "fish");
-    cellStates.put(2, "shark");
+    cellStates.put(CellStates.WATOR_EMPTY, "empty");
+    cellStates.put(CellStates.WATOR_FISH, "fish");
+    cellStates.put(CellStates.WATOR_SHARK, "shark");
   }
 
   public WaTorStateHandler() {

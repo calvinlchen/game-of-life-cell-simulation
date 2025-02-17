@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.parameters;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Parameters for Langton's Loop
+ *
+ * @author Jessica Chen
+ */
 public class LangtonParameters extends Parameters {
   public LangtonParameters() {
     super();

@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
+import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
+
 import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 
@@ -19,9 +22,6 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   private boolean consumed;
   private WaTorCell movedFrom;
 
-  private final int WATOR_EMPTY;
-  private final int WATOR_SHARK;
-
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
@@ -30,9 +30,6 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
    */
   public WaTorCell(int state, WaTorRule rule) {
     super(state, rule);
-
-    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
-    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
 
     initializeDefaultVariables(state);
   }

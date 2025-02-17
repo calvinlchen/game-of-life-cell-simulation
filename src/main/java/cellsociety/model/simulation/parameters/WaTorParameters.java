@@ -3,7 +3,17 @@ package cellsociety.model.simulation.parameters;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parameters for WaTor World
+ *
+ * @author Jessica Chen
+ */
 public class WaTorParameters extends Parameters {
+
+  /**
+   * initializes fishReproductionTime (3), sharkEnergyGain (2), sharkReproductionTime (3),
+   * sharkInitialEnergy (5)
+   */
   public WaTorParameters() {
     super();
 
