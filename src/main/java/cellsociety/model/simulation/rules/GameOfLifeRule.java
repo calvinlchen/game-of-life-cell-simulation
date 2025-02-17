@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_ALIVE;
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
+
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import java.util.Map;
@@ -10,8 +13,6 @@ import java.util.Map;
  * @author Jessica Chen
  */
 public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
-  private final int GAMEOFLIFE_DEAD;
-  private final int GAMEOFLIFE_ALIVE;
 
   /**
    * Constructor for the Rule class
@@ -20,19 +21,17 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
    */
   public GameOfLifeRule(GameOfLifeParameters parameters) {
     super(parameters);
-
-    GAMEOFLIFE_ALIVE = super.getStateProperty("GAMEOFLIFE_ALIVE");
-    GAMEOFLIFE_DEAD = super.getStateProperty("GAMEOFLIFE_DEAD");
   }
 
   @Override
   public int apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);
 
-    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE &&
-        (aliveNeighbors < 2 || aliveNeighbors > 3)) {
+    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE && !getParameters().getSurviveRules()
+        .contains((int) aliveNeighbors)) {
       return GAMEOFLIFE_DEAD;
-    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && aliveNeighbors == 3) {
+    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && getParameters().getBornRules()
+        .contains((int) aliveNeighbors)) {
       return GAMEOFLIFE_ALIVE;
     }
 

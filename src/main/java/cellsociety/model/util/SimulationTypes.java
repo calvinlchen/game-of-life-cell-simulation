@@ -6,11 +6,26 @@ public class SimulationTypes {
      * Enum for representing the types of simulations the program can run
      */
     public enum SimType {
-        GameOfLife,
-        Percolation,
-        Fire,
-        Segregation,
-        WaTor
+        GameOfLife(false),
+        Percolation(false),
+        Fire(false),
+        Segregation(false),
+        WaTor(false),
+        FallingSand(false),
+        RPS(true),
+        Langton(false),
+        ChouReg2(false),
+        Petelka(false);
+
+        private final boolean isDynamic;
+
+        SimType(boolean isDynamic) {
+            this.isDynamic = isDynamic;
+        }
+
+        public boolean isDynamic() {
+            return isDynamic;
+        }
     }
 
 }

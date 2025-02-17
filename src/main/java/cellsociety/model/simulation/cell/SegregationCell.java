@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_MAXSTATE;
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
+
 import cellsociety.model.simulation.parameters.SegregationParameters;
 import cellsociety.model.simulation.rules.SegregationRule;
 
@@ -10,7 +13,6 @@ import cellsociety.model.simulation.rules.SegregationRule;
  * @author Jessica Chen
  */
 public class SegregationCell extends Cell<SegregationCell, SegregationRule, SegregationParameters> {
-  private final int SEGREGATION_EMPTY;
 
   /**
    * Constructs a cell with specified initial state.
@@ -20,8 +22,7 @@ public class SegregationCell extends Cell<SegregationCell, SegregationRule, Segr
    */
   public SegregationCell(int state, SegregationRule rule) {
     super(state, rule);
-
-    SEGREGATION_EMPTY = super.getStateProperty("SEGREGATION_EMPTY");
+    validateState(state, SEGREGATION_MAXSTATE);
   }
 
   @Override
@@ -37,5 +38,17 @@ public class SegregationCell extends Cell<SegregationCell, SegregationRule, Segr
   @Override
   protected SegregationCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, SEGREGATION_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, SEGREGATION_MAXSTATE);
+    super.setNextState(state);
   }
 }

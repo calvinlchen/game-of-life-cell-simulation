@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
+import static cellsociety.model.util.constants.CellStates.FIRE_MAXSTATE;
+
 import cellsociety.model.simulation.parameters.FireParameters;
 import cellsociety.model.simulation.rules.FireRule;
 
@@ -18,10 +21,23 @@ public class FireCell extends Cell<FireCell, FireRule, FireParameters> {
    */
   public FireCell(int state, FireRule rule) {
     super(state, rule);
+    validateState(state, FIRE_MAXSTATE);
   }
 
   @Override
   protected FireCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, FIRE_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, FIRE_MAXSTATE);
+    super.setNextState(state);
   }
 }

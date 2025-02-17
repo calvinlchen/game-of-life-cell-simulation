@@ -3,7 +3,16 @@ package cellsociety.model.simulation.parameters;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parameters for Chou Reg 2 Langton's Loop
+ *
+ * @author Jessica Chen
+ */
 public class SegregationParameters extends Parameters {
+
+  /**
+   * initializes parameter toleranceThreshold (0.5)
+   */
   public SegregationParameters() {
     super();
 

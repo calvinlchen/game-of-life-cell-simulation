@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.grid;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 
 /**
@@ -21,7 +22,16 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    * @param cols  - number of columns in the grid
    */
   public RectangularGrid(List<T> cells, int rows, int cols) {
-   super(cells, rows, cols);
+    super(cells, rows, cols);
+    if (cells == null) {
+      throw new SimulationException(getResources().getString("NullCellsList"));
+    }
+
+    if (cells.size() != rows * cols) {
+      throw new SimulationException(
+          String.format(getResources().getString("MismatchedCellCount"), cells.size(),
+              rows * cols));
+    }
     setNeighbors();
   }
 
@@ -32,7 +42,11 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
-    setNeighbors(directions);
+    try {
+      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+      setNeighbors(directions);
+    } catch (Exception e) {
+      throw new SimulationException(getResources().getString("NeighborSettingFailed"), e);
+    }
   }
 }
