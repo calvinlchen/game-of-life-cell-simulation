@@ -27,7 +27,6 @@ public class CellStateHandlerStatic {
         return entry.getKey();
       }
     }
-    // TODO: make this a custom exception
     throw new CellStateFactoryException("Invalid state: " + state);
   }
 
