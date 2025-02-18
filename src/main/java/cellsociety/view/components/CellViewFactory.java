@@ -1,6 +1,11 @@
 package cellsociety.view.components;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.components.cell.FireCellView;
+import cellsociety.view.components.cell.GameOfLifeCellView;
+import cellsociety.view.components.cell.PercolationCellView;
+import cellsociety.view.components.cell.SegregationCellView;
+import cellsociety.view.components.cell.WaTorCellView;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;

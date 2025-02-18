@@ -4,6 +4,11 @@ import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.components.cell.FireCellView;
+import cellsociety.view.components.cell.GameOfLifeCellView;
+import cellsociety.view.components.cell.PercolationCellView;
+import cellsociety.view.components.cell.SegregationCellView;
+import cellsociety.view.components.cell.WaTorCellView;
 import javafx.scene.layout.Pane;
 
 /**
