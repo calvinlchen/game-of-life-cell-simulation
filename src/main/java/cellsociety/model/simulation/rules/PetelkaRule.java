@@ -51,27 +51,12 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
   public int apply(PetelkaCell cell) {
     String stateKey = getStateKey(cell, new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"});
     // if not in map the default is 0
+    if (stateKey.length() != 9) {
+      return cell.getCurrentState();
+    }
     return RULES_MAP_PETELKA.getOrDefault(stateKey, 0);
 
 
-  }
-
-  private String getStateKey(PetelkaCell cell, String[] directions) {
-    StringBuilder stateBuilder = new StringBuilder();
-
-    stateBuilder.append(cell.getCurrentState());
-    for (String dir : directions) {
-      cell.getNeighbors().stream()
-          .filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst()
-          .ifPresentOrElse(
-              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append("0")
-              // TODO: if no neighbor on a side add 0? not sure how it supposed to behave actually
-          );
-    }
-
-    return stateBuilder.toString();
   }
 
 }

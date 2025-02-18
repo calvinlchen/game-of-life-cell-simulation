@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.grid;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 
 /**
@@ -30,8 +31,9 @@ public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    setNeighbors(directions);
+      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+      setNeighbors(directions);
   }
 }
+
 

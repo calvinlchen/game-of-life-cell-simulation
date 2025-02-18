@@ -1,8 +1,12 @@
 package cellsociety.model.simulation.parameters;
 
+import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Abstract class for representing a rules for a simulation
@@ -11,7 +15,8 @@ import java.util.Map;
  */
 public abstract class Parameters {
 
-  private Map<String, Double> parameters;
+  private final Map<String, Double> parameters;
+  private ResourceBundle myResources;
 
   /**
    * Constructor for simulations
@@ -21,6 +26,20 @@ public abstract class Parameters {
   public Parameters() {
     parameters = new HashMap<>();
     parameters.put("maxHistorySize", 10.0);
+
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+  }
+
+  /**
+   * Constructor for simulations
+   *
+   * <p> starts all simulations with a max history size with default of size 10
+   */
+  public Parameters(String language) {
+    parameters = new HashMap<>();
+    parameters.put("maxHistorySize", 10.0);
+
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
   }
 
   /**
@@ -39,6 +58,10 @@ public abstract class Parameters {
    * @param newParams - new parameters to add to rules / update with
    */
   public void setParameters(Map<String, Double> newParams) {
+    if (newParams == null) {
+      throw new SimulationException(String.format(myResources.getString("NullParameterMap")));
+    }
+
     parameters.putAll(newParams);
   }
 
@@ -49,6 +72,13 @@ public abstract class Parameters {
    * @return value associated with the rule
    */
   public double getParameter(String key) {
+    if (key == null || key.isEmpty()) {
+      throw new SimulationException(String.format(myResources.getString("EmptyParameterKey")));
+    }
+    if (!parameters.containsKey(key)) {
+      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+    }
+
     return parameters.getOrDefault(key, 0.0);
   }
 
@@ -59,11 +89,11 @@ public abstract class Parameters {
    * @param value - value to update the rule too
    */
   public void setParameter(String key, double value) {
-    if (parameters.containsKey(key)) {
-      parameters.put(key, value);
-    } else {
-      throw new IllegalArgumentException("Invalid parameter: " + key);
+    if (key == null || key.isEmpty()) {
+      throw new SimulationException(String.format(myResources.getString("EmptyParameterKey")));
     }
+
+    parameters.put(key, value);
   }
 
   /**
@@ -83,6 +113,15 @@ public abstract class Parameters {
    */
   public boolean isValidKey(String key) {
     return parameters.containsKey(key);
+  }
+
+  /**
+   * return resource bundle associated for exceptions
+   *
+   * @return resource bundle associated for exception
+   */
+  public ResourceBundle getResources() {
+    return myResources;
   }
 
 }

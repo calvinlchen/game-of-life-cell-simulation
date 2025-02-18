@@ -1,6 +1,6 @@
 package cellsociety.model.simulation.cell;
 
-
+import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_EMPTY;
 
 import cellsociety.model.simulation.parameters.FallingSandParameters;
@@ -21,12 +21,12 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
    */
   public FallingSandCell(int state, FallingSandRule rule) {
     super(state, rule);
+    validateState(state, FALLINGSAND_MAXSTATE);
   }
 
   @Override
   public void calcNextState() {
-    // don't need to calculate next state if empty
-    if (getCurrentState() != FALLINGSAND_EMPTY) {
+    if (getCurrentState() == getNextState()) {
       super.calcNextState();
     }
   }
@@ -34,5 +34,17 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
   @Override
   protected FallingSandCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, FALLINGSAND_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, FALLINGSAND_MAXSTATE);
+    super.setNextState(state);
   }
 }

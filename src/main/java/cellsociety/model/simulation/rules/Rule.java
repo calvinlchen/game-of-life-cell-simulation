@@ -1,8 +1,12 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.cell.ChouReg2Cell;
+import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.Parameters;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -19,6 +23,7 @@ import java.util.ResourceBundle;
 public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
+  private ResourceBundle myResources;
 
   /**
    * Constructor for the Rule class
@@ -26,6 +31,27 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
   public Rule(P parameters) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+
+    if (parameters == null) {
+      throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
+    }
+
+    this.parameters = parameters;
+  }
+
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   */
+  public Rule(P parameters, String language) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+
+    if (parameters == null) {
+      throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
+    }
+
     this.parameters = parameters;
   }
 
@@ -54,7 +80,18 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param direction - direction to test (N, S, E, W, NE, NW, SE, SW)
    * @return true if the neighbor is the direction neighbor
    */
-  public boolean matchesDirection(C cell, C neighbor, String direction) {
+  protected boolean matchesDirection(C cell, C neighbor, String direction) {
+    if (cell == null || neighbor == null) {
+      throw new SimulationException(String.format(myResources.getString("NullCellOrNeighbor")));
+    }
+    // this should not happen but in case
+    if (cell.getPosition() == null || neighbor.getPosition() == null) {
+      throw new SimulationException(String.format(myResources.getString("NullPosition")));
+    }
+    if (!isValidDirection(direction)) {
+      throw new SimulationException(String.format(myResources.getString("InvalidDirection"), direction));
+    }
+
     int[] pos = neighbor.getPosition();
     int[] posCell = cell.getPosition();
 
@@ -72,5 +109,36 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
       case "SW" -> dx == -1 && dy == 1;
       default -> false;
     };
+  }
+
+  protected String getStateKey(C cell, String[] directions) {
+    StringBuilder stateBuilder = new StringBuilder();
+
+    stateBuilder.append(cell.getCurrentState());
+    for (String dir : directions) {
+      cell.getNeighbors().stream()
+          .filter(neighbor -> matchesDirection(cell, neighbor, dir))
+          .findFirst()
+          .ifPresentOrElse(
+              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
+              () -> stateBuilder.append("")
+          );
+    }
+
+    return stateBuilder.toString();
+  }
+
+  private boolean isValidDirection(String direction) {
+    return direction.equals("N") || direction.equals("S") || direction.equals("E") || direction.equals("W") ||
+        direction.equals("NE") || direction.equals("NW") || direction.equals("SE") || direction.equals("SW");
+  }
+
+  /**
+   * return resource bundle associated for exceptions
+   *
+   * @return resource bundle associated for exception
+   */
+  public ResourceBundle getResources() {
+    return myResources;
   }
 }
