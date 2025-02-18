@@ -4,11 +4,6 @@ import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.interfaces.CellView;
-import cellsociety.view.components.cell.FireCellView;
-import cellsociety.view.components.cell.GameOfLifeCellView;
-import cellsociety.view.components.cell.PercolationCellView;
-import cellsociety.view.components.cell.SegregationCellView;
-import cellsociety.view.components.cell.WaTorCellView;
 import javafx.scene.layout.Pane;
 
 /**
@@ -16,15 +11,15 @@ import javafx.scene.layout.Pane;
  */
 public class SimulationView {
 
-  private Pane myDisplay;
-  private double myGridWidth;
-  private double myGridHeight;
+  private final Pane myDisplay;
+  private final double myGridWidth;
+  private final double myGridHeight;
   private CellView[][] myCellViews;
   private double myCellWidth;
   private double myCellHeight;
 
   private XMLData myXML;
-  private Simulation mySimulation;
+  private Simulation<?> mySimulation;
 
   public SimulationView(double width, double height) {
     myDisplay = new Pane();
@@ -82,23 +77,8 @@ public class SimulationView {
 
   private void createCellView(int cellRow, int cellCol, int cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
-    double x = position[0];
-    double y = position[1];
 
-    CellView cellView = null;
-
-    switch (simType) {
-      case GameOfLife ->
-          cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Fire -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Percolation ->
-          cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Segregation ->
-          cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case WaTor -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
-      default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
-    }
-
+    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight, cellState);
     if (cellView != null) {
       myCellViews[cellRow][cellCol] = cellView;
       myDisplay.getChildren().add(cellView.getShape());
@@ -165,7 +145,7 @@ public class SimulationView {
    *
    * @return null or Simulation object
    */
-  public Simulation getSimulation() {
+  public Simulation<?> getSimulation() {
     return mySimulation;
   }
 }
