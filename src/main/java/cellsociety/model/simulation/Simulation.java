@@ -1,6 +1,7 @@
 package cellsociety.model.simulation;
 
 import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.factories.RuleFactory;
 import cellsociety.model.simulation.cell.Cell;
@@ -37,7 +38,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private ResourceBundle myResources;
 
   public Simulation(XMLData data) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
 
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
@@ -49,7 +50,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   }
 
   public Simulation(XMLData data, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
 
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));

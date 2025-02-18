@@ -9,5 +9,5 @@ public class ChouReg2Parameters extends Parameters {
   public ChouReg2Parameters() {
     super();
   }
-
+  public ChouReg2Parameters(String language) { super(language); }
 }

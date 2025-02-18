@@ -9,5 +9,5 @@ public class LangtonParameters extends Parameters {
   public LangtonParameters() {
     super();
   }
-
+  public LangtonParameters(String language) { super(language); }
 }

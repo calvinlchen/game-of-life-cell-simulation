@@ -22,6 +22,18 @@ public class ChouReg2Cell extends Cell<ChouReg2Cell, ChouReg2Rule, ChouReg2Param
     validateState(state, CHOUREG2_MAXSTATE);
   }
 
+  /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state - the initial state of the cell
+   * @param rule  - the ChouReg2 Langton's Loop rule to calculate the next state
+   * @param language - name of language, for error message display
+   */
+  public ChouReg2Cell(int state, ChouReg2Rule rule, String language) {
+    super(state, rule, language);
+    validateState(state, CHOUREG2_MAXSTATE);
+  }
+
   @Override
   protected ChouReg2Cell getSelf() {
     return this;

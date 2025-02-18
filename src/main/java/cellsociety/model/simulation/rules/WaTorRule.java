@@ -36,6 +36,20 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
     sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public WaTorRule(WaTorParameters parameters, String language) {
+    super(parameters, language);
+
+    fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
+    sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
+    sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
+  }
+
   @Override
   public int apply(WaTorCell cell) {
     int currentState = cell.getCurrentState();

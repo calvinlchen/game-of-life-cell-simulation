@@ -1,6 +1,7 @@
 package cellsociety.model.factories;
 
 import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
@@ -23,7 +24,7 @@ public class RuleFactory {
 
   private static final String RULE_PACKAGE = "cellsociety.model.simulation.rules.";
   private static final String PARAMETER_PACKAGE = "cellsociety.model.simulation.parameters.";
-  private static ResourceBundle myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+  private static ResourceBundle myResources = getErrorSimulationResourceBundle("English");
 
   /**
    * Update the language of the error messages
@@ -31,7 +32,7 @@ public class RuleFactory {
    * @param language - update the language of the error messages
    */
   public static void updateLanguage(String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
   }
 
   /**

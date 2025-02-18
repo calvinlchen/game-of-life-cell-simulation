@@ -21,4 +21,17 @@ public class SegregationParameters extends Parameters {
 
     setParameters(parameters);
   }
+
+  /**
+   * initializes parameter toleranceThreshold (0.5)
+   * @param language - name of language, for error message display
+   */
+  public SegregationParameters(String language) {
+    super(language);
+
+    Map<String, Double> parameters = new HashMap<>();
+    parameters.put("toleranceThreshold", 0.5);
+
+    setParameters(parameters);
+  }
 }

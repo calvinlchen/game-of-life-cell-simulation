@@ -1,13 +1,12 @@
 package cellsociety.model.simulation.grid;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * Abstract class for general grid.
@@ -36,7 +35,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param cols  - number of columns in the grid
    */
   public Grid(List<T> cells, int rows, int cols) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
 
     if (rows <= 0 || cols <= 0) {
       throw new SimulationException(myResources.getString("InvalidGridDimensions"));
@@ -57,7 +56,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param cols  - number of columns in the grid
    */
   public Grid(List<T> cells, int rows, int cols, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
 
     if (rows <= 0 || cols <= 0) {
       throw new SimulationException(myResources.getString("InvalidGridDimensions"));

@@ -32,6 +32,16 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
   /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public FallingSandRule(FallingSandParameters parameters, String language) {
+    super(parameters, language);
+  }
+
+  /**
    * ASSUMPTION: traverse calc from left to right and top to bottom
    * <p> this is because of sand and water gravity rules
    *

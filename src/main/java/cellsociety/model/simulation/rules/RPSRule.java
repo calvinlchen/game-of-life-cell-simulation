@@ -23,6 +23,18 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
     totalNumStates = (int) parameters.getParameter("numStates");
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public RPSRule(RPSParameters parameters, String language) {
+    super(parameters, language);
+
+    totalNumStates = (int) parameters.getParameter("numStates");
+  }
+
   @Override
   public int apply(RPSCell cell) {
     // so like with 3 0 -> 1 -> 2 -> 0 (bc 2 + 1 = 3 % 3 = 0)
