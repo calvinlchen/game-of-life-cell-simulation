@@ -5,7 +5,6 @@ import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.XMLException;
-import java.util.ResourceBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,10 +17,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A class that interacts with xml files, either by reading them or writing to them.
@@ -67,30 +63,25 @@ public class XMLUtils {
           String SimulationType = simulationElement.getElementsByTagName("type").item(0)
               .getTextContent();
 
-          switch (SimulationType) { //swtich case to determine enum type
+          switch (SimulationType.toLowerCase()) { //swtich case to determine enum type
 
-            case "Game of Life":
-            case "GAMEOFLIFE":
-            case "GameOfLife":
+            case "game of life":
+            case "gameoflife":
               xmlObject.setType(SimType.GameOfLife);
               break;
-            case "Spreading of Fire":
-            case "FIRE":
-            case "Fire":
+            case "spreading of fire":
+            case "fire":
               xmlObject.setType(SimType.Fire);
               break;
-            case "Percolation":
-            case "PERCOLATION":
+            case "percolation":
               xmlObject.setType(SimType.Percolation);
               break;
-            case "Model of Segregation":
-            case "SEGREGATION":
-            case "Segregation":
+            case "model of segregation":
+            case "segregation":
               xmlObject.setType(SimType.Segregation);
               break;
-            case "Wa-Tor World":
-            case "WATOR":
-            case "WaTor":
+            case "wa-tor world":
+            case "wator":
               xmlObject.setType(SimType.WaTor);
               break;
             default:
@@ -291,21 +282,42 @@ public class XMLUtils {
    * list
    *
    * @param paramList      an NodeList variable that holds the xml data's parameter data
-   * @param SimulationType an Enum representing the intended simulation type
+   * @param simulationType an Enum representing the intended simulation type
    */
-  private Map<String, Double> parameterToMap(NodeList paramList, Enum SimulationType) {
-
+  private Map<String, Double> parameterToMap(NodeList paramList, Enum simulationType) {
     Map<String, Double> parameters = new HashMap<>();
 
     for (int i = 0; i < paramList.getLength(); i++) {
       Element paramElement = (Element) paramList.item(i);
       String paramName = paramElement.getAttribute("name");
-      double paramValue = Double.parseDouble(paramElement.getAttribute("value"));
-      parameters.put(paramName, paramValue);
+      String paramValue = paramElement.getAttribute("value");
+
+      // Special handling for Game of Life's "rulestring" parameter
+      if (simulationType == SimType.GameOfLife && paramName.toLowerCase().equals("rulestring")) {
+        // Split the rulestring based on '/'
+        String[] ruleParts = paramValue.split("/");
+        if (ruleParts.length == 2) {
+          // Process the first part (e.g., "B1")
+          if (ruleParts[0].startsWith("B")) {
+            String birthRules = ruleParts[0].substring(1); // Extract "1"
+            parameters.put("B", Double.parseDouble(birthRules));
+          }
+
+          // Process the second part (e.g., "S12345")
+          if (ruleParts[1].startsWith("S")) {
+            String survivalRules = ruleParts[1].substring(1); // Extract "12345"
+            parameters.put("S", Double.parseDouble(survivalRules));
+          }
+        } else {
+          throw new IllegalArgumentException("Invalid rulestring format. Expected format: Bx/Sy");
+        }
+      } else {
+        // Default behavior for other parameters
+        parameters.put(paramName, Double.parseDouble(paramValue));
+      }
     }
 
     return parameters;
-
   }
 
   /**

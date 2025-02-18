@@ -1,0 +1,69 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Rulestring Test 2</title>
+        <author>Robert C. Duvall</author>
+        <description>I hate my life.</description>
+    </metadata>
+
+    <grid rows="9" columns="5">
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+    </grid>
+
+    <parameters>
+        <parameter name="Rulestring" value="B5/S04"/>
+    </parameters>
+</simulation>
