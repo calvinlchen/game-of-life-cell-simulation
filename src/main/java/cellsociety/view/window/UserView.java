@@ -119,6 +119,10 @@ public class UserView {
     Scene scene = new Scene(myRoot, mySceneWidth, mySceneHeight);
     myStage.setScene(scene);
     myStage.setTitle(SimViewConstants.TITLE);
+
+    // Apply the selected theme on startup
+    myControlPanel.applyCurrentlySelectedTheme();
+
     myStage.show();
   }
 
@@ -311,6 +315,14 @@ public class UserView {
   }
 
   /**
+   * Asks the simulation grid to turn gridlines on or off.
+   * @param enable TRUE to enable gridlines, FALSE to disable gridlines
+   */
+  public void toggleGridlines(boolean enable) {
+    mySimulationView.toggleGridlines(enable);
+  }
+
+  /**
    * Retrieve the current state of this simulation
    * @return Enum value such as EMPTY, LOAD, RUN, etc.
    */
@@ -332,5 +344,13 @@ public class UserView {
    */
   public String getLanguage() {
     return myLanguage;
+  }
+
+  /**
+   * Retrieve the Scene that this window is displaying
+   * @return Scene object containing all on-screen elements as children
+   */
+  public Scene getScene() {
+    return myStage.getScene();
   }
 }
