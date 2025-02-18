@@ -23,6 +23,16 @@ public class PercolationRule extends Rule<PercolationCell, PercolationParameters
     super(parameters);
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public PercolationRule(PercolationParameters parameters, String language) {
+    super(parameters, language);
+  }
+
   @Override
   public int apply(PercolationCell cell) {
     if (cell.getCurrentState() == PERCOLATION_OPEN && neighborIsPercolated(cell)) {

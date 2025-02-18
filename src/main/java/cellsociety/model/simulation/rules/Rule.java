@@ -1,13 +1,10 @@
 package cellsociety.model.simulation.rules;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.cell.Cell;
-import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -23,7 +20,7 @@ import java.util.ResourceBundle;
 public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
-  private ResourceBundle myResources;
+  private final ResourceBundle myResources;
 
   /**
    * Constructor for the Rule class
@@ -31,13 +28,9 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
   public Rule(P parameters) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
 
-    if (parameters == null) {
-      throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
-    }
-
-    this.parameters = parameters;
+    checkAndSetParams(parameters);
   }
 
   /**
@@ -46,12 +39,15 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
   public Rule(P parameters, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
 
+    checkAndSetParams(parameters);
+  }
+
+  private void checkAndSetParams(P parameters) {
     if (parameters == null) {
       throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
     }
-
     this.parameters = parameters;
   }
 

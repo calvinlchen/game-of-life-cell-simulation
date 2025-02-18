@@ -22,6 +22,18 @@ public class PercolationCell extends Cell<PercolationCell, PercolationRule, Perc
     validateState(state, PERCOLATION_MAXSTATE);
   }
 
+  /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state - the initial state of the cell
+   * @param rule  - the Percolation rule to calculate the next state
+   * @param language - name of language, for error message display
+   */
+  public PercolationCell(int state, PercolationRule rule, String language) {
+    super(state, rule, language);
+    validateState(state, PERCOLATION_MAXSTATE);
+  }
+
   @Override
   protected PercolationCell getSelf() {
     return this;

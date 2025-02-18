@@ -17,6 +17,21 @@ public class FireParameters extends Parameters {
   public FireParameters() {
     super();
 
+    initializeParams();
+  }
+
+  /**
+   * initials fire with parameters ignition likelihood ratio (0.1) and tree spawn likelihood ratio
+   * (0.01)
+   * @param language - name of language, for error message display
+   */
+  public FireParameters(String language) {
+    super(language);
+
+    initializeParams();
+  }
+
+  private void initializeParams() {
     Map<String, Double> parameters = new HashMap<>();
     parameters.put("ignitionLikelihood", 0.1);
     parameters.put("treeSpawnLikelihood", 0.01);

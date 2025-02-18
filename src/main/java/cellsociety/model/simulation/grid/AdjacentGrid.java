@@ -1,7 +1,6 @@
 package cellsociety.model.simulation.grid;
 
 import cellsociety.model.simulation.cell.Cell;
-import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 
 /**
@@ -21,6 +20,19 @@ public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   public AdjacentGrid(List<T> cells, int rows, int cols) {
     super(cells, rows, cols);
+    setNeighbors();
+  }
+
+  /**
+   * Constructs an AdjacentGrid with specified dimensions.
+   *
+   * @param cells - cells to be added
+   * @param rows  - number of rows in the grid
+   * @param cols  - number of columns in the grid
+   * @param language - name of language, for error message display
+   */
+  public AdjacentGrid(List<T> cells, int rows, int cols, String language) {
+    super(cells, rows, cols, language);
     setNeighbors();
   }
 

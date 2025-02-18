@@ -1,6 +1,6 @@
 package cellsociety.model.simulation.cell;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
@@ -31,7 +31,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
 
   private LinkedList<Integer> stateHistory;
 
-  private ResourceBundle myResources;
+  private final ResourceBundle myResources;
 
   /**
    * Constructs a cell with specified initial state.
@@ -40,14 +40,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
 
-    this.currentState = state;
-    this.nextState = state;
-    this.rule = rule;
-    neighbors = new ArrayList<>();
-    stateHistory = new LinkedList<>();
-    saveCurrentState();
+    initializeCell(state, rule);
   }
 
   /**
@@ -57,8 +52,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
 
+    initializeCell(state, rule);
+  }
+
+  private void initializeCell(int state, R rule) {
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;

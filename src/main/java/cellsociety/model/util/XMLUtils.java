@@ -1,8 +1,9 @@
 package cellsociety.model.util;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
-import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.XMLException;
@@ -26,6 +27,15 @@ import java.util.*;
  * @author Kyaira Boughton
  */
 public class XMLUtils {
+  ResourceBundle myErrorResources;
+
+  public XMLUtils() {
+    myErrorResources = getErrorSimulationResourceBundle("English");
+  }
+
+  public XMLUtils(String language) {
+    myErrorResources = getErrorSimulationResourceBundle(language);
+  }
 
   /**
    * A method that reads a pre-existing xml file.
@@ -44,7 +54,7 @@ public class XMLUtils {
 
       NodeList simulationList = doc.getElementsByTagName("simulation");
       if (simulationList.getLength() == 0) {
-        throw new IllegalArgumentException("No <simulation> tag found in the XML file.");
+        throw new IllegalArgumentException(myErrorResources.getString("NoSimTag"));
       }
 
       for (int i = 0; i < simulationList.getLength();
@@ -79,7 +89,7 @@ public class XMLUtils {
               xmlObject.setType(SimType.WaTor);
               break;
             default:
-              throw new IllegalArgumentException("Unknown simulation type: " + SimulationType);
+              throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + SimulationType);
 
           }
 
@@ -106,14 +116,14 @@ public class XMLUtils {
           //parameters are nested under <parameters> vs nested directly under <grid>
           paramList = Objects.requireNonNullElse(parametersElement, gridElement)
               .getElementsByTagName("parameter");
-          xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
+          xmlObject.setParameters(parameterToMap(paramList));
 
           //extract cell info
           NodeList cellList = gridElement.getElementsByTagName("cell");
           if (cellList.getLength() != rows * columns) {
             throw new XMLException(
-                "Error: Expected " + (rows * columns) + " <cell> elements, but found "
-                    + cellList.getLength());
+                myErrorResources.getString("ExpectedDifferentNumber")
+                    + (rows * columns) + ", " + cellList.getLength());
           }
           xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType(), xmlObject.getId(), xmlObject.getNumStates()));
 
@@ -137,9 +147,9 @@ public class XMLUtils {
    * @param simulation  a simulation object that holds the current state of all cells.
    */
   public void writeToXML(File file, String title, String author, String description,
-      Simulation simulation) {
+      Simulation<?> simulation) {
     if (file == null) {
-      throw new XMLException("No file selected for saving.");
+      throw new XMLException(myErrorResources.getString("NoFileSelectedSave"));
     }
 
     try {
@@ -200,7 +210,7 @@ public class XMLUtils {
       transformer.transform(source, result);
 
     } catch (Exception e) {
-      throw new XMLException("Error saving XML file: " + e.getMessage());
+      throw new XMLException(myErrorResources.getString("XMLSaveError") + e.getMessage());
     }
 
   }
@@ -213,7 +223,7 @@ public class XMLUtils {
    * @param colNum     an int variable of the number of rows in the grid@
    * @param simulation a simulation object that holds the current state of all cells.
    */
-  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation simulation) {
+  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation<?> simulation) {
 
     ArrayList<String> cellStateList = new ArrayList<>();
 
@@ -223,7 +233,7 @@ public class XMLUtils {
     // TODO: make better exceptions
     if (handler == null) {
       throw new IllegalArgumentException(
-          "Unknown simulation type: " + simulation.getSimulationType());
+          myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
     }
 
     for (int i = 0; i < rowNum; i++) {
@@ -231,7 +241,7 @@ public class XMLUtils {
         int currentCellState = simulation.getCurrentState(i, j);
 
         if (!handler.isValidState(currentCellState)) {
-          throw new IllegalArgumentException("Unknown cell state: " + currentCellState);
+          throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + currentCellState);
         }
 
         cellStateList.add(handler.statetoString(currentCellState));
@@ -254,7 +264,7 @@ public class XMLUtils {
 
     CellStateHandler handler = CellStateFactory.getHandler(id, simulationType, numStates);
     if (handler == null) {
-      throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
+      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
     }
 
     for (int j = 0; j < cellList.getLength(); j++) {
@@ -265,7 +275,7 @@ public class XMLUtils {
         int stateEnum = handler.stateFromString(currentCellState);
         cellStateEnums.add(stateEnum);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException("Unknown cell state: " + currentCellState, e);
+        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + currentCellState, e);
       }
     }
 

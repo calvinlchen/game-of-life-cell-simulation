@@ -22,6 +22,18 @@ public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfL
     validateState(state, GAMEOFLIFE_MAXSTATE);
   }
 
+  /**
+   * Constructs a Game of Life cell with a specified initial state and rule.
+   *
+   * @param state - the initial state of the cell (must be a state from GameOfLifeStates)
+   * @param rule  - the Game of Life rule to calculate the next state
+   * @param language - name of language, for error message display
+   */
+  public GameOfLifeCell(int state, GameOfLifeRule rule, String language) {
+    super(state, rule, language);
+    validateState(state, GAMEOFLIFE_MAXSTATE);
+  }
+
   @Override
   protected GameOfLifeCell getSelf() {
     return this;

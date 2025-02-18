@@ -91,6 +91,16 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
     super(parameters);
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public ChouReg2Rule(ChouReg2Parameters parameters, String language) {
+    super(parameters, language);
+  }
+
   @Override
   public int apply(ChouReg2Cell cell) {
     String stateKey = getStateKey(cell, new String[]{"N", "E", "S", "W"});

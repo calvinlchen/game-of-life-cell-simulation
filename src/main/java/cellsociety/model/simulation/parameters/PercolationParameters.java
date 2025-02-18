@@ -9,5 +9,7 @@ public class PercolationParameters extends Parameters {
   public PercolationParameters() {
     super();
   }
-
+  public PercolationParameters(String language) {
+    super(language);
+  }
 }

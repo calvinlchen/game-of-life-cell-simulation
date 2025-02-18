@@ -9,4 +9,7 @@ public class FallingSandParameters extends Parameters {
   public FallingSandParameters() {
     super();
   }
+  public FallingSandParameters(String language) {
+    super(language);
+  }
 }
