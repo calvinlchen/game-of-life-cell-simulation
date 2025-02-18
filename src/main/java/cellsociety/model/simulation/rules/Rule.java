@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
-  private ResourceBundle myResources;
+  private final ResourceBundle myResources;
 
   /**
    * Constructor for the Rule class

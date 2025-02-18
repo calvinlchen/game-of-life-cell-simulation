@@ -56,7 +56,7 @@ public class UserView {
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
-  private final XMLUtils xmlUtils = new XMLUtils();
+  private final XMLUtils xmlUtils;
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
@@ -64,6 +64,7 @@ public class UserView {
     mySceneHeight = sceneHeight;
 
     myLanguage = language;
+    xmlUtils = new XMLUtils(myLanguage);
     try {
       myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
     }
@@ -93,7 +94,7 @@ public class UserView {
 
     // Initialize UI components
     mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN, myLanguage);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox(myResources);
     myStateColorLegend = new StateColorLegend();  // Add Color-State legend
@@ -228,6 +229,7 @@ public class UserView {
       myStateColorLegend.updateLegend(xmlData);
     }
     catch (SimulationException e) {
+      e.printStackTrace();
       myState = ViewState.ERROR;
       showMessage(Alert.AlertType.ERROR, e.getMessage());
     }

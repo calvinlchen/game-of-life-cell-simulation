@@ -20,8 +20,9 @@ public class SimulationView {
 
   private XMLData myXML;
   private Simulation<?> mySimulation;
+  private final String myLanguage;
 
-  public SimulationView(double width, double height) {
+  public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
     myGridWidth = width;
     myGridHeight = height;
@@ -30,6 +31,7 @@ public class SimulationView {
     myCellViews = new CellView[0][0];
     myCellWidth = 0;
     myCellHeight = 0;
+    myLanguage = language;
   }
 
   /**
@@ -56,7 +58,7 @@ public class SimulationView {
 
     myCellViews = new CellView[numRows][numCols];
 
-    mySimulation = new Simulation(xmlData);
+    mySimulation = new Simulation(xmlData, myLanguage);
   }
 
   /**
