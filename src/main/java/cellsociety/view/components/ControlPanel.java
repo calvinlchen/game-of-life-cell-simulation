@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -78,7 +79,10 @@ public class ControlPanel {
     HBox speedPanel = makeSpeedPanel();
     // Panel containing theme options
     VBox themePanel = makeThemePanel();
-    myPanel.getChildren().addAll(speedPanel, themePanel);
+    // Panel containing grid-line toggle
+    HBox outlinePanel = makeOutlinePanel();
+
+    myPanel.getChildren().addAll(speedPanel, themePanel, outlinePanel);
   }
 
   private HBox makeSpeedPanel() {
@@ -91,6 +95,22 @@ public class ControlPanel {
     speedPanel.getChildren().addAll(speedUpButton, slowDownButton);
 
     return speedPanel;
+  }
+
+  private HBox makeOutlinePanel() {
+    HBox outlinePanel = new HBox((double) VBOX_SPACING / 2);
+
+    CheckBox outlineCheckbox = new CheckBox(myResources.getString("ShowGridlines"));
+    outlineCheckbox.setSelected(true); // Default to showing outlines
+
+    outlineCheckbox.setOnAction(e -> toggleOutlines(outlineCheckbox.isSelected()));
+
+    outlinePanel.getChildren().add(outlineCheckbox);
+    return outlinePanel;
+  }
+
+  private void toggleOutlines(boolean enable) {
+    myUserView.toggleGridlines(enable);
   }
 
   private VBox makeThemePanel() {

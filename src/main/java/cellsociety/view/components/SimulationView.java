@@ -141,6 +141,18 @@ public class SimulationView {
   }
 
   /**
+   * Toggles grid lines (AKA cell outlines) for all CellViews in the simulation grid.
+   * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
+   */
+  public void toggleGridlines(boolean enable) {
+    for (CellView[] row : myCellViews) {
+      for (CellView cellView : row) {
+        cellView.toggleOutlines(enable);
+      }
+    }
+  }
+
+  /**
    * Resets the grid to an empty state.
    */
   public void resetGrid() {

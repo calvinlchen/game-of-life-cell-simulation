@@ -315,6 +315,14 @@ public class UserView {
   }
 
   /**
+   * Asks the simulation grid to turn gridlines on or off.
+   * @param enable TRUE to enable gridlines, FALSE to disable gridlines
+   */
+  public void toggleGridlines(boolean enable) {
+    mySimulationView.toggleGridlines(enable);
+  }
+
+  /**
    * Retrieve the current state of this simulation
    * @return Enum value such as EMPTY, LOAD, RUN, etc.
    */

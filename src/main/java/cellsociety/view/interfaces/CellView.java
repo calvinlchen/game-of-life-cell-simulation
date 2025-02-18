@@ -11,10 +11,12 @@ import javafx.scene.shape.Shape;
  */
 public abstract class CellView {
   public static final String DEFAULT_OUTLINE_CLASS = "cell-default-outline";
+  public static final String DEFAULT_NO_OUTLINE_CLASS = "cell-no-outline";
 
   private static Map<Integer, Color> myColorMap;  // contains state-to-color mappings
   protected int myCellState;
   protected Shape myShape;
+  private boolean myOutlinesEnabled;
 
   /**
    * Constructs a cell to be displayed to the user.
@@ -29,8 +31,8 @@ public abstract class CellView {
     myCellState = cellState;
     myColorMap = new HashMap<>(colorMap); // configure state colors according to colorMap
     myShape = createShape(x,y,width,height);
-    myShape.getStyleClass().addAll(DEFAULT_OUTLINE_CLASS); // Apply CSS
-    updateViewColor(); // Set color based on cell state
+    enableOutlines();   // enable grid outlines by default
+    updateViewColor();  // Set color based on cell state
   }
 
   /**
@@ -95,5 +97,40 @@ public abstract class CellView {
   public void setColorForState(int state, Color color) {
     myColorMap.put(state, color);
     updateViewColor();
+  }
+
+  /**
+   * Add "grid" outlines based on CSS file format (resets cell CSS formatting)
+   */
+  private void enableOutlines() {
+    if (!myOutlinesEnabled) {
+      myShape.getStyleClass().remove(DEFAULT_NO_OUTLINE_CLASS);
+      myShape.getStyleClass().addAll(DEFAULT_OUTLINE_CLASS);    // Apply CSS
+      myOutlinesEnabled = true;
+    }
+  }
+
+  /**
+   * Remove "grid" outlines based on CSS file format (resets cell CSS formatting)
+   */
+  private void disableOutlines() {
+    if (myOutlinesEnabled) {
+      myShape.getStyleClass().remove(DEFAULT_OUTLINE_CLASS);
+      myShape.getStyleClass().addAll(DEFAULT_NO_OUTLINE_CLASS); // Apply CSS
+      myOutlinesEnabled = false;
+    }
+  }
+
+  /**
+   * Toggles the cell outline on/off for this CellView
+   * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
+   */
+  public void toggleOutlines(boolean enable) {
+    if (enable) {
+      enableOutlines();
+    }
+    else {
+      disableOutlines();
+    }
   }
 }
