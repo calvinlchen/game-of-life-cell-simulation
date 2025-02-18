@@ -21,6 +21,9 @@ public class InformationBox {
     myTextArea.setPrefWidth(Main.SIM_WINDOW_WIDTH);
     myTextArea.setEditable(false);
 
+    // Apply CSS class
+    myTextArea.getStyleClass().add("info-box");
+
     // Info will display in UI language
     myResources = resources;
 

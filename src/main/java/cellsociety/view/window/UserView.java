@@ -119,6 +119,10 @@ public class UserView {
     Scene scene = new Scene(myRoot, mySceneWidth, mySceneHeight);
     myStage.setScene(scene);
     myStage.setTitle(SimViewConstants.TITLE);
+
+    // Apply the selected theme on startup
+    myControlPanel.applyCurrentlySelectedTheme();
+
     myStage.show();
   }
 
@@ -332,5 +336,13 @@ public class UserView {
    */
   public String getLanguage() {
     return myLanguage;
+  }
+
+  /**
+   * Retrieve the Scene that this window is displaying
+   * @return Scene object containing all on-screen elements as children
+   */
+  public Scene getScene() {
+    return myStage.getScene();
   }
 }

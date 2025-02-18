@@ -1,9 +1,33 @@
 .root {
   -fx-background-color: white;
   -fx-text-fill: black;
+  -fx-font-size: 12px;
+  -fx-padding: 12px;
+  -fx-font-family: "Arial";
 }
 
 .button {
   -fx-background-color: #e0e0e0;
   -fx-text-fill: black;
+}
+
+.button:hover {
+  -fx-background-color: lightblue;
+}
+
+.text {
+  -fx-text-fill: black;
+}
+
+.bold-text {
+  -fx-font-weight: bold;
+  -fx-fill: black;
+}
+
+.info-box {
+  -fx-background-color: white;
+  -fx-text-fill: black;
+  -fx-border-color: #e0e0e0;
+  -fx-border-radius: 5px;
+  -fx-control-inner-background: white;
 }

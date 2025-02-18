@@ -7,6 +7,7 @@ import cellsociety.view.window.UserView.ViewState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
@@ -24,6 +25,7 @@ public class ControlPanel {
   private final UserView myUserView;
   private final ResourceBundle myResources;
   private final List<Button> myButtons;
+  private ChoiceBox<String> myThemeChoices;
 
   /**
    * Contains a column of control buttons for Cell Society
@@ -95,23 +97,47 @@ public class ControlPanel {
     VBox themePanel = new VBox((double) VBOX_SPACING / 2);
 
     Text themeTitle = new Text(myResources.getString("ThemeHeader"));
+    themeTitle.getStyleClass().add("bold-text");
     themePanel.getChildren().addAll(themeTitle);
 
     List<String> themes = ResourceAnalyzer.getAvailableStylesheets();
     if (themes.isEmpty()) {
-      Text defaultText = new Text(myResources.getString("None"));
-      themePanel.getChildren().addAll(defaultText);
+      // if no theme option(s) exist, display None
+      Text noneText = new Text(myResources.getString("None"));
+      themeTitle.getStyleClass().add("bold-text");
+      themePanel.getChildren().addAll(noneText);
     }
     else {
-      ChoiceBox<String> themeChoices = new ChoiceBox<>();
-      themeChoices.getItems().addAll(themes);
-      themeChoices.setValue(themes.getFirst());
+      myThemeChoices = new ChoiceBox<>();
+      myThemeChoices.getItems().addAll(themes);
+      myThemeChoices.setValue(themes.getFirst()); // default to first available theme
 
-      themePanel.getChildren().addAll(themeChoices);
+      // Update theme when selection changes
+      myThemeChoices.setOnAction(event -> applyCurrentlySelectedTheme());
+
+      themePanel.getChildren().addAll(myThemeChoices);
     }
 
     return themePanel;
   }
+
+  /**
+   * Apply the theme that is currently selected in the dropdown menu
+   */
+  public void applyCurrentlySelectedTheme() {
+    applyTheme(myThemeChoices.getValue());
+  }
+
+  private void applyTheme(String themeName) {
+    String stylesheetPath = "/" + Main.DEFAULT_STYLESHEET_FOLDER + themeName + ".css";
+    Scene scene = myUserView.getScene();
+
+    if (scene != null) {
+      scene.getStylesheets().clear(); // Remove old theme
+      scene.getStylesheets().add(getClass().getResource(stylesheetPath).toExternalForm());
+    }
+  }
+
 
   /**
    * Return the vertical panel of control buttons
