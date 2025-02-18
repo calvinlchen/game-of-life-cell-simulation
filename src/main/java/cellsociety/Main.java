@@ -12,7 +12,11 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
   // default to start in the data folder to make it easy on the user to find
-  public static final String DATA_FILE_FOLDER = System.getProperty("user.dir") + "/data";
+  public static final String DEFAULT_DATA_FOLDER = System.getProperty("user.dir") + "/data";
+
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.resourceproperty.";
+  public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
+  public static final String BLANK = " ";
 
   // width and height of application window
   public static final int SIM_WINDOW_WIDTH = 1200;
@@ -23,15 +27,17 @@ public class Main extends Application {
   private static double nextStageX = 100;  // stores the X position of the next-generated simulation window
   private static double nextStageY = 100;  // stores the Y position of the next-generated simulation window
 
+  private String myLanguage = "English";
+
   /**
    * @see Application#start(Stage)
    */
   @Override
   public void start(Stage primaryStage) {
-    startEmptySimulationWindow();
+    startEmptySimulationWindow(myLanguage);
   }
 
-  public static UserView startEmptySimulationWindow() {
+  public static UserView startEmptySimulationWindow(String language) {
     // Create a new window
     Stage newStage = new Stage();
     newStage.setX(nextStageX);
@@ -40,17 +46,17 @@ public class Main extends Application {
     // Update nextStage position variables in case another window is generated later
     setNextStagePosition();
 
-    UserView view = new UserView(SIM_WINDOW_WIDTH, SIM_WINDOW_HEIGHT, newStage);
+    UserView view = new UserView(SIM_WINDOW_WIDTH, SIM_WINDOW_HEIGHT, newStage, language);
     view.resetView();
     return view;
   }
 
-  public static void startSimulationWindowWithFilePrompt() {
-    startEmptySimulationWindow().chooseFileAndLoadSimulation();
+  public static void startSimulationWindowWithFilePrompt(String language) {
+    startEmptySimulationWindow(language).chooseFileAndLoadSimulation();
   }
 
-  public static void startSimulationWindowWithRandomGameOfLife() {
-    startEmptySimulationWindow().loadRandomGameOfLife();
+  public static void startSimulationWindowWithRandomGameOfLife(String language) {
+    startEmptySimulationWindow(language).loadRandomGameOfLife();
   }
 
   /**

@@ -1,5 +1,6 @@
 package cellsociety.view.window;
 
+import cellsociety.Main;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.exceptions.XMLException;
@@ -12,6 +13,7 @@ import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.utils.DateTime;
 import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
+import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -38,6 +40,10 @@ public class UserView {
   private final int mySceneHeight;
   private final Stage myStage;
 
+  private final String myLanguage;
+  private ResourceBundle myResources;
+  private ResourceBundle myErrorResources;
+
   private ViewState myState;
   private BorderPane myRoot;
   private Timeline myAnimation;
@@ -51,10 +57,26 @@ public class UserView {
   private StateColorLegend myStateColorLegend;
   private final XMLUtils xmlUtils = new XMLUtils();
 
-  public UserView(int sceneWidth, int sceneHeight, Stage stage) {
+  public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
     mySceneWidth = sceneWidth;
     mySceneHeight = sceneHeight;
+
+    myLanguage = language;
+    try {
+      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
+    }
+    catch (Exception e) {
+      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "English");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("LanguageUnavailable"));
+    }
+    try {
+      myErrorResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "Errors" + language);
+    }
+    catch (Exception e) {
+      myErrorResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "ErrorsEnglish");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("AlertsInEnglish") + language + ".");
+    }
 
     // by default, run simulation at default speed
     mySpeedFactor = 1;
@@ -72,7 +94,7 @@ public class UserView {
     mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
         mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
-    myInformationBox = new InformationBox();
+    myInformationBox = new InformationBox(myResources);
     myStateColorLegend = new StateColorLegend();  // Add Color-State legend
 
     // Set components in BorderPane
@@ -210,7 +232,7 @@ public class UserView {
    */
   public void saveSimulation() {
     if (!checkSimulationExists()) {
-      showMessage(Alert.AlertType.WARNING, "No simulation to save.");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToSave"));
       return;
     }
 
@@ -218,7 +240,7 @@ public class UserView {
 
     // Open file chooser for saving
     FileChooser fileChooser = FileExplorer.getSaveFileChooser();
-    fileChooser.setInitialFileName("simulation_" + DateTime.getLocalDateTime() + ".xml"); // Default filename
+    fileChooser.setInitialFileName(myResources.getString("DefaultFilePrefix") + DateTime.getLocalDateTime() + ".xml"); // Default filename
     File saveFile = fileChooser.showSaveDialog(myStage);
 
     if (saveFile != null) {
@@ -229,10 +251,10 @@ public class UserView {
             mySimulationView.getSimulation().getXMLData().getAuthor(),
             mySimulationView.getSimulation().getXMLData().getDescription(),
             mySimulationView.getSimulation());
-        showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
+        showMessage(Alert.AlertType.INFORMATION, myResources.getString("SimulationSaved"));
       } catch (XMLException e) {
         myState = ViewState.ERROR;
-        showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
+        showMessage(Alert.AlertType.ERROR, myErrorResources.getString("ErrorSaving") + e.getMessage());
       }
     }
     // Return myState to paused state.
@@ -294,5 +316,21 @@ public class UserView {
    */
   public ViewState getState() {
     return myState;
+  }
+
+  /**
+   * Retrieve the resource properties for displaying text in correct language
+   * @return ResourceBundle object
+   */
+  public ResourceBundle getResources() {
+    return myResources;
+  }
+
+  /**
+   * Retrieve the currently-displayed language (assuming its .properties file exists)
+   * @return name of current UI language as a String
+   */
+  public String getLanguage() {
+    return myLanguage;
   }
 }

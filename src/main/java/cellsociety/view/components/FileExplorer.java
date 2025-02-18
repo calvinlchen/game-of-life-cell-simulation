@@ -17,7 +17,7 @@ public class FileExplorer {
     FileChooser result = new FileChooser();
     result.setTitle(title);
     // pick a reasonable place to start searching for files
-    result.setInitialDirectory(new File(Main.DATA_FILE_FOLDER));
+    result.setInitialDirectory(new File(Main.DEFAULT_DATA_FOLDER));
     result.getExtensionFilters()
         .setAll(new FileChooser.ExtensionFilter("Data Files", DATA_FILE_EXTENSION));
     return result;
