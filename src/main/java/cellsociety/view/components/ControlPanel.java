@@ -1,6 +1,8 @@
 package cellsociety.view.components;
 
+import cellsociety.Main;
 import cellsociety.view.window.UserView;
+import cellsociety.view.window.UserView.ViewState;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Button;
@@ -44,7 +46,14 @@ public class ControlPanel {
     myButtons.add(clearButton);
 
     Button loadButton = new Button("Load New File");
-    loadButton.setOnAction(e -> myUserView.loadSimulation());
+    loadButton.setOnAction(e -> {
+      if (myUserView.getState() == ViewState.EMPTY || myUserView.getState() == ViewState.ERROR) {
+        myUserView.chooseFileAndLoadSimulation();
+      }
+      else {
+        Main.startSimulationWindowWithFilePrompt();
+      }
+    });
     myButtons.add(loadButton);
 
     Button saveButton = new Button("Save As");

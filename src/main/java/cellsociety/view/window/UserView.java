@@ -158,10 +158,10 @@ public class UserView {
   }
 
   /**
-   * Requests a file to be loaded into the simulation.
+   * Attempts to load a new simulation from a provided file.
+   * @param dataFile XML file containing simulation info
    */
-  public void loadSimulation() {
-    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
+  private void loadSimulationFromFile(File dataFile) {
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
@@ -173,6 +173,14 @@ public class UserView {
         showMessage(AlertType.ERROR, e.getMessage());
       }
     }
+  }
+
+  /**
+   * prompts user to select an XML file, then attempts to load a new simulation from that file.
+   */
+  public void chooseFileAndLoadSimulation() {
+    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
+    loadSimulationFromFile(dataFile);
   }
 
   private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
@@ -278,5 +286,13 @@ public class UserView {
     XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
     configureAndDisplaySimFromXML(randomXMLData);
+  }
+
+  /**
+   * Retrieve the current state of this simulation
+   * @return Enum value such as EMPTY, LOAD, RUN, etc.
+   */
+  public ViewState getState() {
+    return myState;
   }
 }

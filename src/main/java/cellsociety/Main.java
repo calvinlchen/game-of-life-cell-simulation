@@ -2,6 +2,8 @@ package cellsociety;
 
 import cellsociety.view.window.UserView;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -13,17 +15,68 @@ public class Main extends Application {
   public static final String DATA_FILE_FOLDER = System.getProperty("user.dir") + "/data";
 
   // width and height of application window
-  public static final int SCENE_WIDTH = 1200;
-  public static final int SCENE_HEIGHT = 800;
+  public static final int SIM_WINDOW_WIDTH = 1200;
+  public static final int SIM_WINDOW_HEIGHT = 800;
+
+  // positional variables for each generated Stage
+  private static final int STAGE_OFFSET = 30; // determines how far a new stage is offset from the previous
+  private static double nextStageX = 100;  // stores the X position of the next-generated simulation window
+  private static double nextStageY = 100;  // stores the Y position of the next-generated simulation window
 
   /**
    * @see Application#start(Stage)
    */
   @Override
   public void start(Stage primaryStage) {
-    UserView view = new UserView(SCENE_WIDTH, SCENE_HEIGHT, primaryStage);
-    view.resetView();
+    startEmptySimulationWindow();
+  }
 
+  public static UserView startEmptySimulationWindow() {
+    // Create a new window
+    Stage newStage = new Stage();
+    newStage.setX(nextStageX);
+    newStage.setY(nextStageY);
+
+    // Update nextStage position variables in case another window is generated later
+    setNextStagePosition();
+
+    UserView view = new UserView(SIM_WINDOW_WIDTH, SIM_WINDOW_HEIGHT, newStage);
+    view.resetView();
+    return view;
+  }
+
+  public static void startSimulationWindowWithFilePrompt() {
+    startEmptySimulationWindow().chooseFileAndLoadSimulation();
+  }
+
+  public static void startSimulationWindowWithRandomGameOfLife() {
+    startEmptySimulationWindow().loadRandomGameOfLife();
+  }
+
+  /**
+   * Update nextStageX and nextStageY based on offset value and screen bounds.
+   * Code for fetching screen bounds was advised by ChatGPT.
+   * "How do I get the screen size to ensure that the stage won't be off the screen?"
+   */
+  private static void setNextStagePosition() {
+    // Get the screen size (excluding taskbars)
+    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+    // Calculate and store x-position for next window (in case a new window is generated later)
+    if (nextStageX + SIM_WINDOW_WIDTH + STAGE_OFFSET > screenBounds.getMaxX()) {
+      nextStageX = screenBounds.getMinX() + STAGE_OFFSET;
+    }
+    else {
+      nextStageX += STAGE_OFFSET;
+    }
+
+    // Calculate and store y-position for next window
+    if (nextStageY + SIM_WINDOW_HEIGHT + STAGE_OFFSET > screenBounds.getMaxY()) {
+      nextStageY = screenBounds.getMinY() + STAGE_OFFSET;
+    }
+    else {
+      nextStageY += STAGE_OFFSET;
+    }
   }
 
   /**

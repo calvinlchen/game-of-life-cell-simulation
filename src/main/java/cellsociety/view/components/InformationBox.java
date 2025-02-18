@@ -2,7 +2,7 @@ package cellsociety.view.components;
 
 import cellsociety.Main;
 import cellsociety.model.util.XMLData;
-import cellsociety.view.window.UserView;
+import cellsociety.view.utils.SimViewConstants;
 import java.util.Map;
 import javafx.scene.control.TextArea;
 
@@ -15,8 +15,8 @@ public class InformationBox {
    */
   public InformationBox() {
     myTextArea = new TextArea();
-    myTextArea.setPrefHeight(Main.SCENE_HEIGHT * (1 - UserView.GRID_PROPORTION_OF_SCREEN));
-    myTextArea.setPrefWidth(Main.SCENE_WIDTH);
+    myTextArea.setPrefHeight(Main.SIM_WINDOW_HEIGHT * (1 - SimViewConstants.GRID_PROPORTION_OF_SCREEN));
+    myTextArea.setPrefWidth(Main.SIM_WINDOW_WIDTH);
     myTextArea.setEditable(false);
     emptyFields();
   }
