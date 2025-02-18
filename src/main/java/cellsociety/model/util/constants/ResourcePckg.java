@@ -3,7 +3,7 @@ package cellsociety.model.util.constants;
 import java.util.ResourceBundle;
 
 public class ResourcePckg {
-  public static final String ERROR_SIMULATION_RESOURCE_PACKAGE = "cellsociety.resourceproperty.ErrorsSimulation";
+  public static final String ERROR_SIMULATION_RESOURCE_PACKAGE = "cellsociety.resourceproperty.Errors";
 
   public static ResourceBundle getErrorSimulationResourceBundle(String language) {
     ResourceBundle resources;
