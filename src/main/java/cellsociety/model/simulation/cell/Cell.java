@@ -1,9 +1,12 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
-import java.util.Deque;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -29,39 +32,67 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   private LinkedList<Integer> stateHistory;
 
   private ResourceBundle myResources;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.constants.CellStates";
 
   /**
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
-   * @param rule     - the rule used to calculate the next state
+   * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;
     neighbors = new ArrayList<>();
     stateHistory = new LinkedList<>();
     saveCurrentState();
+  }
 
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
+  /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state - the initial state of the cell
+   * @param rule  - the rule used to calculate the next state
+   */
+  public Cell(int state, R rule, String language) {
+    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+
+    this.currentState = state;
+    this.nextState = state;
+    this.rule = rule;
+    neighbors = new ArrayList<>();
+    stateHistory = new LinkedList<>();
+    saveCurrentState();
   }
 
   /**
    * Save current state
    */
   public void saveCurrentState() {
+    int maxHistorySize;
+
+    maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
+    if (maxHistorySize < 1) {
+      throw new SimulationException(String.format(myResources.getString("InvalidHistorySize")));
+    }
+
     stateHistory.addLast(currentState);
-    if (stateHistory.size() > rule.getParameters().getParameter("maxHistorySize")) {
+    if (stateHistory.size() > maxHistorySize) {
       stateHistory.removeFirst();
     }
   }
+
 
   /**
    * Step one step backbward
    */
   public void stepBack() {
+    // this error should never reach with how stateHistory is set up in initialization
+    if (stateHistory.isEmpty()) {
+      throw new SimulationException(String.format(myResources.getString("NoHistory")));
+    }
 
     int lastState = stateHistory.getLast();
     if (stateHistory.size() > 1) {
@@ -90,7 +121,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-      * Retrieves the current cell instance.
+   * Retrieves the current cell instance.
    */
   protected abstract C getSelf();
 
@@ -148,18 +179,24 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return the position of the cell as an array [row, column]
    */
   public int[] getPosition() {
+    if (position == null) {
+      throw new SimulationException(String.format(myResources.getString("PositionNotSet")));
+    }
     return position;
   }
+
 
   /**
    * Sets the position of the cell
    *
    * @param position - the position to set, represented as an array [row, column]
-   * @throws IllegalArgumentException if position is null or has invalid length
    */
   public void setPosition(int[] position) {
-    if (position == null || position.length != 2) {
-      throw new IllegalArgumentException("Position must be a non-null array of length 2");
+    if (position == null) {
+      throw new SimulationException(String.format(myResources.getString("NoPosition")));
+    } else if (position.length != 2) {
+      throw new SimulationException(String.format(myResources.getString("InvalidPosition"),
+          Arrays.toString(position)));
     }
     this.position = position;
   }
@@ -170,8 +207,14 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return a list of neighboring cells
    */
   public List<C> getNeighbors() {
+    // should never be null because can't set to null
+    if (neighbors == null) {
+      throw new SimulationException(
+          String.format(myResources.getString("NeighborsNotInitialized")));
+    }
     return neighbors;
   }
+
 
   /**
    * Sets the neighbors of the cell
@@ -179,8 +222,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param neighbors - a list of neighboring cells to set
    */
   public void setNeighbors(List<C> neighbors) {
+    if (neighbors == null) {
+      throw new SimulationException(String.format(myResources.getString("NullNeighborList")));
+    }
     this.neighbors = neighbors;
   }
+
 
   /**
    * Adds a specific cell to the list of neighbors
@@ -190,9 +237,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public boolean addNeighbor(C neighbor) {
     if (neighbor == null) {
-      throw new IllegalArgumentException("Neighbor cannot be null");
+      throw new SimulationException(String.format(myResources.getString("NullNeighbor")));
     } else if (neighbors.contains(neighbor)) {
-      throw new IllegalArgumentException("Neighbor is already in the list");
+      throw new SimulationException(String.format(myResources.getString("DuplicateNeighbor")));
     }
     return neighbors.add(neighbor);
   }
@@ -204,25 +251,40 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return true if the neighbor was successfully removed; false otherwise
    */
   public boolean removeNeighbor(C neighbor) {
-    if (neighbor == null) {
-      throw new IllegalArgumentException("Neighbor to remove cannot be null");
-    } else if (!neighbors.contains(neighbor)) {
-      throw new IllegalArgumentException("Neighbor is not in the list");
+    if (!neighbors.contains(neighbor)) {
+      throw new SimulationException(String.format(myResources.getString("NeighborNotFound")));
     }
     return neighbors.remove(neighbor);
   }
 
   /**
-   * Returns the int associated with the state from the resource property
+   * Get rule for cell
    *
-   * @param key - the String key associated with the state
-   * @return the int associated with the property's key
+   * @return the rule for the cell
    */
-  public int getStateProperty(String key) {
-    return Integer.parseInt(myResources.getString(key));
-  }
-
   R getRule() {
     return rule;
+  }
+
+  /**
+   * Return resource bundle for error handling
+   *
+   * @return resource bundle for error handling
+   */
+  ResourceBundle getMyResources() {
+    return myResources;
+  }
+
+  /**
+   * check if state is a valid state
+   *
+   * @param state    - state to check
+   * @param maxState - max state for a simulation
+   */
+  public void validateState(int state, int maxState) {
+    if (state < 0 || state >= maxState) {
+      throw new SimulationException(
+          String.format(getMyResources().getString("InvalidState"), state, maxState));
+    }
   }
 }

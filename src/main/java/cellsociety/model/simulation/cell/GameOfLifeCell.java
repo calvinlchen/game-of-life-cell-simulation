@@ -1,5 +1,7 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_MAXSTATE;
+
 import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 
@@ -17,10 +19,23 @@ public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfL
    */
   public GameOfLifeCell(int state, GameOfLifeRule rule) {
     super(state, rule);
+    validateState(state, GAMEOFLIFE_MAXSTATE);
   }
 
   @Override
   protected GameOfLifeCell getSelf() {
     return this;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, GAMEOFLIFE_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, GAMEOFLIFE_MAXSTATE);
+    super.setNextState(state);
   }
 }

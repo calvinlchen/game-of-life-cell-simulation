@@ -1,11 +1,11 @@
-package cellsociety.view.components;
+package cellsociety.view.components.cell;
 
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
 
-public class PercolationCellView extends CellView {
+public class WaTorCellView extends CellView {
 
-  public PercolationCellView(double x, double y, double width, double height, int cellState) {
+  public WaTorCellView(double x, double y, double width, double height, int cellState) {
     super(x, y, width, height, cellState);
   }
 
@@ -15,7 +15,7 @@ public class PercolationCellView extends CellView {
   @Override
   public Color getColorForState(int state) {
     return switch (state) {
-      case 1 -> DEFAULT_FILL.invert();
+      case 1 -> Color.ORANGE;
       case 2 -> Color.BLUE;
       default -> DEFAULT_FILL;
     };

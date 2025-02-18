@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.grid;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    * @param cols  - number of columns in the grid
    */
   public RectangularGrid(List<T> cells, int rows, int cols) {
-   super(cells, rows, cols);
+    super(cells, rows, cols);
     setNeighbors();
   }
 

@@ -1,10 +1,19 @@
-package cellsociety.view.components;
+package cellsociety.view.window;
 
+import cellsociety.Main;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.view.components.ControlPanel;
+import cellsociety.view.components.FileExplorer;
+import cellsociety.view.components.InformationBox;
+import cellsociety.view.components.RandomSimulationGenerator;
+import cellsociety.view.components.SimulationView;
+import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.utils.DateTime;
+import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
+import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -27,15 +36,13 @@ public class UserView {
     EMPTY, LOAD, RUN, PAUSE, ERROR, SAVE
   }
 
-  public static final String TITLE = "Cell Society";
-  public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
-  public static final double DEFAULT_SIM_STEP_TIME = 0.5; // in seconds
-  public static final double MIN_SIM_STEP_TIME = 0.02;
-  public static final double MAX_SIM_STEP_TIME = 4;
-
   private final int mySceneWidth;
   private final int mySceneHeight;
   private final Stage myStage;
+
+  private final String myLanguage;
+  private ResourceBundle myResources;
+  private ResourceBundle myErrorResources;
 
   private ViewState myState;
   private BorderPane myRoot;
@@ -50,10 +57,26 @@ public class UserView {
   private StateColorLegend myStateColorLegend;
   private final XMLUtils xmlUtils = new XMLUtils();
 
-  public UserView(int sceneWidth, int sceneHeight, Stage stage) {
+  public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
     mySceneWidth = sceneWidth;
     mySceneHeight = sceneHeight;
+
+    myLanguage = language;
+    try {
+      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
+    }
+    catch (Exception e) {
+      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "English");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("LanguageUnavailable"));
+    }
+    try {
+      myErrorResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "Errors" + language);
+    }
+    catch (Exception e) {
+      myErrorResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "ErrorsEnglish");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("AlertsInEnglish") + language + ".");
+    }
 
     // by default, run simulation at default speed
     mySpeedFactor = 1;
@@ -68,10 +91,10 @@ public class UserView {
     myRoot = new BorderPane();
 
     // Initialize UI components
-    mySimulationView = new SimulationView(mySceneWidth*GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight*GRID_PROPORTION_OF_SCREEN);
+    mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
-    myInformationBox = new InformationBox();
+    myInformationBox = new InformationBox(myResources);
     myStateColorLegend = new StateColorLegend();  // Add Color-State legend
 
     // Set components in BorderPane
@@ -95,7 +118,7 @@ public class UserView {
   private void initializeScene() {
     Scene scene = new Scene(myRoot, mySceneWidth, mySceneHeight);
     myStage.setScene(scene);
-    myStage.setTitle(TITLE);
+    myStage.setTitle(SimViewConstants.TITLE);
     myStage.show();
   }
 
@@ -126,7 +149,7 @@ public class UserView {
     }
 
     // Otherwise, create a new animation and start it
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
@@ -157,10 +180,10 @@ public class UserView {
   }
 
   /**
-   * Requests a file to be loaded into the simulation.
+   * Attempts to load a new simulation from a provided file.
+   * @param dataFile XML file containing simulation info
    */
-  public void loadSimulation() {
-    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
+  private void loadSimulationFromFile(File dataFile) {
     if (dataFile != null) {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
@@ -172,6 +195,14 @@ public class UserView {
         showMessage(AlertType.ERROR, e.getMessage());
       }
     }
+  }
+
+  /**
+   * prompts user to select an XML file, then attempts to load a new simulation from that file.
+   */
+  public void chooseFileAndLoadSimulation() {
+    File dataFile = FileExplorer.getFileLoadChooser().showOpenDialog(myStage);
+    loadSimulationFromFile(dataFile);
   }
 
   private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
@@ -188,7 +219,7 @@ public class UserView {
     myInformationBox.updateInfo(xmlData);
 
     // Update legend based on simulation type
-    myStateColorLegend.updateLegend(xmlData.getType());
+    myStateColorLegend.updateLegend(xmlData);
   }
 
   // display given message to user using the given type of Alert dialog box
@@ -201,7 +232,7 @@ public class UserView {
    */
   public void saveSimulation() {
     if (!checkSimulationExists()) {
-      showMessage(Alert.AlertType.WARNING, "No simulation to save.");
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToSave"));
       return;
     }
 
@@ -209,7 +240,7 @@ public class UserView {
 
     // Open file chooser for saving
     FileChooser fileChooser = FileExplorer.getSaveFileChooser();
-    fileChooser.setInitialFileName("simulation_" + DateTime.getLocalDateTime() + ".xml"); // Default filename
+    fileChooser.setInitialFileName(myResources.getString("DefaultFilePrefix") + DateTime.getLocalDateTime() + ".xml"); // Default filename
     File saveFile = fileChooser.showSaveDialog(myStage);
 
     if (saveFile != null) {
@@ -220,10 +251,10 @@ public class UserView {
             mySimulationView.getSimulation().getXMLData().getAuthor(),
             mySimulationView.getSimulation().getXMLData().getDescription(),
             mySimulationView.getSimulation());
-        showMessage(Alert.AlertType.INFORMATION, "Simulation saved successfully!");
+        showMessage(Alert.AlertType.INFORMATION, myResources.getString("SimulationSaved"));
       } catch (XMLException e) {
         myState = ViewState.ERROR;
-        showMessage(Alert.AlertType.ERROR, "Error saving simulation: " + e.getMessage());
+        showMessage(Alert.AlertType.ERROR, myErrorResources.getString("ErrorSaving") + e.getMessage());
       }
     }
     // Return myState to paused state.
@@ -240,7 +271,7 @@ public class UserView {
     }
     double newSpeedFactor = mySpeedFactor * adjustmentFactor;
     // Only change the animation speed if the new speed is within bounds
-    if (checkStepTimeWithinBounds(DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
+    if (checkStepTimeWithinBounds(SimViewConstants.DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
       mySpeedFactor = newSpeedFactor;
       if(myAnimation != null) {
         if(myState == ViewState.RUN) {
@@ -251,7 +282,7 @@ public class UserView {
   }
 
   private boolean checkStepTimeWithinBounds(double stepTime) {
-    return (stepTime >= MIN_SIM_STEP_TIME && stepTime <= MAX_SIM_STEP_TIME);
+    return (stepTime >= SimViewConstants.MIN_SIM_STEP_TIME && stepTime <= SimViewConstants.MAX_SIM_STEP_TIME);
   }
 
   /**
@@ -261,7 +292,7 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
@@ -277,5 +308,29 @@ public class UserView {
     XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
     configureAndDisplaySimFromXML(randomXMLData);
+  }
+
+  /**
+   * Retrieve the current state of this simulation
+   * @return Enum value such as EMPTY, LOAD, RUN, etc.
+   */
+  public ViewState getState() {
+    return myState;
+  }
+
+  /**
+   * Retrieve the resource properties for displaying text in correct language
+   * @return ResourceBundle object
+   */
+  public ResourceBundle getResources() {
+    return myResources;
+  }
+
+  /**
+   * Retrieve the currently-displayed language (assuming its .properties file exists)
+   * @return name of current UI language as a String
+   */
+  public String getLanguage() {
+    return myLanguage;
   }
 }
