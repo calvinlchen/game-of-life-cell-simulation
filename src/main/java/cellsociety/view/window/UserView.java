@@ -10,6 +10,7 @@ import cellsociety.view.components.RandomSimulationGenerator;
 import cellsociety.view.components.SimulationView;
 import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.utils.DateTime;
+import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -32,12 +33,6 @@ public class UserView {
   public enum ViewState {
     EMPTY, LOAD, RUN, PAUSE, ERROR, SAVE
   }
-
-  public static final String TITLE = "Cell Society";
-  public static final double GRID_PROPORTION_OF_SCREEN = 0.85;
-  public static final double DEFAULT_SIM_STEP_TIME = 0.5; // in seconds
-  public static final double MIN_SIM_STEP_TIME = 0.02;
-  public static final double MAX_SIM_STEP_TIME = 4;
 
   private final int mySceneWidth;
   private final int mySceneHeight;
@@ -74,8 +69,8 @@ public class UserView {
     myRoot = new BorderPane();
 
     // Initialize UI components
-    mySimulationView = new SimulationView(mySceneWidth*GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight*GRID_PROPORTION_OF_SCREEN);
+    mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox();
     myStateColorLegend = new StateColorLegend();  // Add Color-State legend
@@ -101,7 +96,7 @@ public class UserView {
   private void initializeScene() {
     Scene scene = new Scene(myRoot, mySceneWidth, mySceneHeight);
     myStage.setScene(scene);
-    myStage.setTitle(TITLE);
+    myStage.setTitle(SimViewConstants.TITLE);
     myStage.show();
   }
 
@@ -132,7 +127,7 @@ public class UserView {
     }
 
     // Otherwise, create a new animation and start it
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
@@ -246,7 +241,7 @@ public class UserView {
     }
     double newSpeedFactor = mySpeedFactor * adjustmentFactor;
     // Only change the animation speed if the new speed is within bounds
-    if (checkStepTimeWithinBounds(DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
+    if (checkStepTimeWithinBounds(SimViewConstants.DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
       mySpeedFactor = newSpeedFactor;
       if(myAnimation != null) {
         if(myState == ViewState.RUN) {
@@ -257,7 +252,7 @@ public class UserView {
   }
 
   private boolean checkStepTimeWithinBounds(double stepTime) {
-    return (stepTime >= MIN_SIM_STEP_TIME && stepTime <= MAX_SIM_STEP_TIME);
+    return (stepTime >= SimViewConstants.MIN_SIM_STEP_TIME && stepTime <= SimViewConstants.MAX_SIM_STEP_TIME);
   }
 
   /**
@@ -267,7 +262,7 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(DEFAULT_SIM_STEP_TIME / mySpeedFactor),
+    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.play();
