@@ -7,7 +7,6 @@ import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 import cellsociety.model.simulation.cell.WaTorCell;
 import cellsociety.model.simulation.parameters.WaTorParameters;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -30,10 +29,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
    */
   public WaTorRule(WaTorParameters parameters) {
     super(parameters);
-
-    fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
-    sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
-    sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
+    setMyParams();
   }
 
   /**
@@ -44,7 +40,10 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
    */
   public WaTorRule(WaTorParameters parameters, String language) {
     super(parameters, language);
+    setMyParams();
+  }
 
+  private void setMyParams() {
     fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
     sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
     sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");

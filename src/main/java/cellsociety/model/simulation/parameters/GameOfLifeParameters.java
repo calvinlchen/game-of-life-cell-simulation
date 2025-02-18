@@ -11,29 +11,32 @@ public class GameOfLifeParameters extends Parameters {
 
   public GameOfLifeParameters() {
     super();
+    initializeDefaultParams();
+  }
+
+  private void initializeDefaultParams() {
     survive = new ArrayList<>(Arrays.asList(2, 3));
     born = new ArrayList<>(List.of(3));
   }
 
   public GameOfLifeParameters(String language) {
     super(language);
-    survive = new ArrayList<>(Arrays.asList(2, 3));
-    born = new ArrayList<>(List.of(3));
+    initializeDefaultParams();
   }
 
   public GameOfLifeParameters(List<Integer> survive, List<Integer> born) {
     super();
 
-    validateRules(survive, "InvalidSurviveRules");
-    validateRules(born, "InvalidBornRules");
-
-    this.survive = survive;
-    this.born = born;
+    initializeParams(survive, born);
   }
 
   public GameOfLifeParameters(List<Integer> survive, List<Integer> born, String language) {
     super(language);
 
+    initializeParams(survive, born);
+  }
+
+  private void initializeParams(List<Integer> survive, List<Integer> born) {
     validateRules(survive, "InvalidSurviveRules");
     validateRules(born, "InvalidBornRules");
 

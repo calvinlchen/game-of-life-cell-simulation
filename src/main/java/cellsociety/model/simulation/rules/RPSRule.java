@@ -20,7 +20,7 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
   public RPSRule(RPSParameters parameters) {
     super(parameters);
 
-    totalNumStates = (int) parameters.getParameter("numStates");
+    totalNumStates = getTotalNumStates(parameters);
   }
 
   /**
@@ -32,7 +32,13 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
   public RPSRule(RPSParameters parameters, String language) {
     super(parameters, language);
 
+    totalNumStates = getTotalNumStates(parameters);
+  }
+
+  private int getTotalNumStates(RPSParameters parameters) {
+    final int totalNumStates;
     totalNumStates = (int) parameters.getParameter("numStates");
+    return totalNumStates;
   }
 
   @Override

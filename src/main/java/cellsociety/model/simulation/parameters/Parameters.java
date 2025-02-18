@@ -24,8 +24,7 @@ public abstract class Parameters {
    * <p> starts all simulations with a max history size with default of size 10
    */
   public Parameters() {
-    parameters = new HashMap<>();
-    parameters.put("maxHistorySize", 10.0);
+    parameters = createParamMap();
 
     myResources = getErrorSimulationResourceBundle("English");
   }
@@ -36,10 +35,16 @@ public abstract class Parameters {
    * <p> starts all simulations with a max history size with default of size 10
    */
   public Parameters(String language) {
-    parameters = new HashMap<>();
-    parameters.put("maxHistorySize", 10.0);
+    parameters = createParamMap();
 
     myResources = getErrorSimulationResourceBundle(language);
+  }
+
+  private Map<String, Double> createParamMap() {
+    final Map<String, Double> parameters;
+    parameters = new HashMap<>();
+    parameters.put("maxHistorySize", 10.0);
+    return parameters;
   }
 
   /**

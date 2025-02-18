@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 public abstract class Grid<T extends Cell<T, ?, ?>> {
 
   private final List<List<T>> myGrid;
-  private final int myRows;
-  private final int myCols;
+  private int myRows;
+  private int myCols;
 
   private ResourceBundle myResources;
 
@@ -37,15 +37,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public Grid(List<T> cells, int rows, int cols) {
     myResources = getErrorSimulationResourceBundle("English");
 
-    if (rows <= 0 || cols <= 0) {
-      throw new SimulationException(myResources.getString("InvalidGridDimensions"));
-    }
-
-    myRows = rows;
-    myCols = cols;
-    myGrid = new ArrayList<>();
-
-    initializeCells(cells);
+    myGrid = initializeGrid(cells, rows, cols);
   }
 
   /**
@@ -58,6 +50,11 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public Grid(List<T> cells, int rows, int cols, String language) {
     myResources = getErrorSimulationResourceBundle(language);
 
+    myGrid = initializeGrid(cells, rows, cols);
+  }
+
+  private List<List<T>> initializeGrid(List<T> cells, int rows, int cols) {
+    final List<List<T>> myGrid;
     if (rows <= 0 || cols <= 0) {
       throw new SimulationException(myResources.getString("InvalidGridDimensions"));
     }
@@ -67,6 +64,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     myGrid = new ArrayList<>();
 
     initializeCells(cells);
+    return myGrid;
   }
 
   /**

@@ -16,10 +16,7 @@ public class SegregationParameters extends Parameters {
   public SegregationParameters() {
     super();
 
-    Map<String, Double> parameters = new HashMap<>();
-    parameters.put("toleranceThreshold", 0.5);
-
-    setParameters(parameters);
+    initializeParams();
   }
 
   /**
@@ -29,6 +26,10 @@ public class SegregationParameters extends Parameters {
   public SegregationParameters(String language) {
     super(language);
 
+    initializeParams();
+  }
+
+  private void initializeParams() {
     Map<String, Double> parameters = new HashMap<>();
     parameters.put("toleranceThreshold", 0.5);
 

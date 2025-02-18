@@ -39,26 +39,25 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   public Simulation(XMLData data) {
     myResources = getErrorSimulationResourceBundle("English");
-
-    if (data == null) {
-      throw new SimulationException(myResources.getString("NullXMLData"));
-    }
-
-    xmlData = data;
-
+    xmlData = getXmlData(data);
     setUpSimulation();
   }
 
   public Simulation(XMLData data, String language) {
     myResources = getErrorSimulationResourceBundle(language);
+    xmlData = getXmlData(data);
+    setUpSimulation();
+  }
 
+  private XMLData getXmlData(XMLData data) {
+    final XMLData xmlData;
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
 
     xmlData = data;
-
-    setUpSimulation();}
+    return xmlData;
+  }
 
   /**
    * Sets up the simulation, initializing the rule, parameters, and grid dynamically.

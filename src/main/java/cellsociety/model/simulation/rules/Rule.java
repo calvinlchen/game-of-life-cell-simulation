@@ -30,11 +30,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   public Rule(P parameters) {
     myResources = getErrorSimulationResourceBundle("English");
 
-    if (parameters == null) {
-      throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
-    }
-
-    this.parameters = parameters;
+    checkAndSetParams(parameters);
   }
 
   /**
@@ -45,10 +41,13 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   public Rule(P parameters, String language) {
     myResources = getErrorSimulationResourceBundle(language);
 
+    checkAndSetParams(parameters);
+  }
+
+  private void checkAndSetParams(P parameters) {
     if (parameters == null) {
       throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
     }
-
     this.parameters = parameters;
   }
 
