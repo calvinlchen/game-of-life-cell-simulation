@@ -1,0 +1,42 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Rulestring Test 1</title>
+        <author>Robert C. Duvall</author>
+        <description>This is my second Game of Life simulation!</description>
+    </metadata>
+
+    <grid rows="4" columns="6">
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="alive"/>
+
+        <cell state="alive"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+        <cell state="dead"/>
+    </grid>
+
+    <parameters>
+        <parameter name="Rulestring" value="B3/S12345"/>
+    </parameters>
+</simulation>
