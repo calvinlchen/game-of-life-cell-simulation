@@ -1,5 +1,6 @@
 package cellsociety;
 
+import cellsociety.view.window.SplashScreenView;
 import cellsociety.view.window.UserView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -15,8 +16,7 @@ public class Main extends Application {
   public static final String DEFAULT_DATA_FOLDER = System.getProperty("user.dir") + "/data";
 
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.resourceproperty.";
-  public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
-  public static final String BLANK = " ";
+  public static final String DEFAULT_RESOURCE_FOLDER = DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
 
   // width and height of application window
   public static final int SIM_WINDOW_WIDTH = 1200;
@@ -27,14 +27,12 @@ public class Main extends Application {
   private static double nextStageX = 100;  // stores the X position of the next-generated simulation window
   private static double nextStageY = 100;  // stores the Y position of the next-generated simulation window
 
-  private String myLanguage = "English";
-
   /**
    * @see Application#start(Stage)
    */
   @Override
   public void start(Stage primaryStage) {
-    startEmptySimulationWindow(myLanguage);
+    new SplashScreenView(primaryStage);
   }
 
   public static UserView startEmptySimulationWindow(String language) {
