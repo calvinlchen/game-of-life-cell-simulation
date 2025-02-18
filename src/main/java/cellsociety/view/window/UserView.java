@@ -3,6 +3,7 @@ package cellsociety.view.window;
 import cellsociety.Main;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import cellsociety.model.util.constants.exceptions.XMLException;
 import cellsociety.view.components.ControlPanel;
 import cellsociety.view.components.FileExplorer;
@@ -214,16 +215,22 @@ public class UserView {
     myState = ViewState.LOAD;
 
     // Upload simulation to mySimulationView
-    mySimulationView.configureFromXML(xmlUtils);
-    mySimulationView.initializeGridView();
+    try {
+      mySimulationView.configureFromXML(xmlUtils);
+      mySimulationView.initializeGridView();
 
-    XMLData xmlData = mySimulationView.getSimulation().getXMLData();
+      XMLData xmlData = mySimulationView.getSimulation().getXMLData();
 
-    // Update text box with simulation information
-    myInformationBox.updateInfo(xmlData);
+      // Update text box with simulation information
+      myInformationBox.updateInfo(xmlData);
 
-    // Update legend based on simulation type
-    myStateColorLegend.updateLegend(xmlData);
+      // Update legend based on simulation type
+      myStateColorLegend.updateLegend(xmlData);
+    }
+    catch (SimulationException e) {
+      myState = ViewState.ERROR;
+      showMessage(Alert.AlertType.ERROR, e.getMessage());
+    }
   }
 
   // display given message to user using the given type of Alert dialog box
