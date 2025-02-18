@@ -1,23 +1,18 @@
 package cellsociety.view.components.cell;
 
 import cellsociety.view.interfaces.CellView;
+import java.util.Map;
 import javafx.scene.paint.Color;
 
 public class FireCellView extends CellView {
 
-  public FireCellView(double x, double y, double width, double height, int cellState) {
-    super(x, y, width, height, cellState);
-  }
+  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
+      0, Color.TRANSPARENT,   // Empty
+      1, Color.GREEN,   // Blocked
+      2, Color.RED      // Full
+  );
 
-  /**
-   * Maps a Spreading of Fire state to its corresponding color.
-   */
-  @Override
-  public Color getColorForState(int state) {
-    return switch (state) {
-      case 1 -> Color.GREEN;
-      case 2 -> Color.RED;
-      default -> DEFAULT_FILL;
-    };
+  public FireCellView(double x, double y, double width, double height, int cellState) {
+    super(x, y, width, height, cellState, DEFAULT_COLOR_MAP);
   }
 }

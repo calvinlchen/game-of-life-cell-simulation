@@ -1,23 +1,18 @@
 package cellsociety.view.components.cell;
 
 import cellsociety.view.interfaces.CellView;
+import java.util.Map;
 import javafx.scene.paint.Color;
 
 public class WaTorCellView extends CellView {
 
-  public WaTorCellView(double x, double y, double width, double height, int cellState) {
-    super(x, y, width, height, cellState);
-  }
+  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
+      0, Color.TRANSPARENT,   // Empty
+      1, Color.ORANGE,   // Fish
+      2, Color.BLUE      // Shark
+  );
 
-  /**
-   * Maps a Percolation state to its corresponding color.
-   */
-  @Override
-  public Color getColorForState(int state) {
-    return switch (state) {
-      case 1 -> Color.ORANGE;
-      case 2 -> Color.BLUE;
-      default -> DEFAULT_FILL;
-    };
+  public WaTorCellView(double x, double y, double width, double height, int cellState) {
+    super(x, y, width, height, cellState, DEFAULT_COLOR_MAP);
   }
 }

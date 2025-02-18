@@ -1,5 +1,7 @@
 package cellsociety.view.interfaces;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -8,9 +10,9 @@ import javafx.scene.shape.Shape;
  * Abstract class representing a Cell's visual representation.
  */
 public abstract class CellView {
-  public static Color DEFAULT_FILL = Color.BLACK;
-  public static Color DEFAULT_OUTLINE = Color.WHITE;
+  public static final String DEFAULT_OUTLINE_CLASS = "cell-default-outline";
 
+  private static Map<Integer, Color> myColorMap;  // contains state-to-color mappings
   protected int myCellState;
   protected Shape myShape;
 
@@ -23,9 +25,11 @@ public abstract class CellView {
    * @param cellState the current state represented by this cell
    * @author Calvin Chen
    */
-  protected CellView(double x, double y, double width, double height, int cellState) {
+  protected CellView(double x, double y, double width, double height, int cellState, Map<Integer, Color> colorMap) {
     myCellState = cellState;
+    myColorMap = new HashMap<>(colorMap); // configure state colors according to colorMap
     myShape = createShape(x,y,width,height);
+    myShape.getStyleClass().addAll(DEFAULT_OUTLINE_CLASS); // Apply CSS
     updateViewColor(); // Set color based on cell state
   }
 
@@ -34,11 +38,7 @@ public abstract class CellView {
    * Subclasses can Override this method to use a different cell Shape type or styling.
    */
   protected Shape createShape(double x, double y, double width, double height) {
-    Shape shape = new Rectangle(x, y, width, height);
-    shape.setFill(DEFAULT_FILL);
-    shape.setStroke(DEFAULT_OUTLINE);
-    shape.setStrokeWidth(1);
-    return shape;
+    return new Rectangle(x, y, width, height);
   }
 
   /**
@@ -82,7 +82,18 @@ public abstract class CellView {
   }
 
   /**
-   * Abstract method to be implemented by subclasses to provide state-to-color mapping. (ChatGPT)
+   * Returns the color value of a given state
+   * @param state int value of the state, such as 0 for EMPTY
    */
-  public abstract Color getColorForState(int state);
+  public Color getColorForState(int state) {
+    return myColorMap.getOrDefault(state, Color.TRANSPARENT);
+  }
+
+  /**
+   * Updates a state's assigned color in the map, and updates the cell view accordingly
+   */
+  public void setColorForState(int state, Color color) {
+    myColorMap.put(state, color);
+    updateViewColor();
+  }
 }
