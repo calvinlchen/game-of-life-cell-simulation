@@ -1,8 +1,14 @@
-package cellsociety.view.components;
+package cellsociety.view.window;
 
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.view.components.ControlPanel;
+import cellsociety.view.components.FileExplorer;
+import cellsociety.view.components.InformationBox;
+import cellsociety.view.components.RandomSimulationGenerator;
+import cellsociety.view.components.SimulationView;
+import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.utils.DateTime;
 import java.io.File;
 import javafx.animation.KeyFrame;

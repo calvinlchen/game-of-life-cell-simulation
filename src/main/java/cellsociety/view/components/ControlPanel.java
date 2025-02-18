@@ -1,5 +1,6 @@
 package cellsociety.view.components;
 
+import cellsociety.view.window.UserView;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Button;

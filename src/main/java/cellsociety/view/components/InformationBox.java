@@ -2,6 +2,7 @@ package cellsociety.view.components;
 
 import cellsociety.Main;
 import cellsociety.model.util.XMLData;
+import cellsociety.view.window.UserView;
 import java.util.Map;
 import javafx.scene.control.TextArea;
 

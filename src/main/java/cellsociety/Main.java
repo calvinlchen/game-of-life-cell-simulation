@@ -1,6 +1,6 @@
 package cellsociety;
 
-import cellsociety.view.components.UserView;
+import cellsociety.view.window.UserView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,6 +23,7 @@ public class Main extends Application {
   public void start(Stage primaryStage) {
     UserView view = new UserView(SCENE_WIDTH, SCENE_HEIGHT, primaryStage);
     view.resetView();
+
   }
 
   /**

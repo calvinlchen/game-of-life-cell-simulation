@@ -1,4 +1,4 @@
-package cellsociety.view.components;
+package cellsociety.view.components.cell;
 
 import cellsociety.view.interfaces.CellView;
 import javafx.scene.paint.Color;
