@@ -17,6 +17,7 @@ public class Main extends Application {
 
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.resourceproperty.";
   public static final String DEFAULT_RESOURCE_FOLDER = DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
+  public static final String DEFAULT_STYLESHEET_FOLDER = "cellsociety/stylesheets/";
 
   // width and height of application window
   public static final int SIM_WINDOW_WIDTH = 1200;

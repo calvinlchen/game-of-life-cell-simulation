@@ -1,14 +1,17 @@
 package cellsociety.view.components;
 
 import cellsociety.Main;
+import cellsociety.view.utils.ResourceAnalyzer;
 import cellsociety.view.window.UserView;
 import cellsociety.view.window.UserView.ViewState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 /**
  * Manages control buttons and status messages. (VBox suggested by ChatGPT.)
@@ -71,7 +74,9 @@ public class ControlPanel {
 
     // Panel containing buttons for speeding up / slowing down the simulations
     HBox speedPanel = makeSpeedPanel();
-    myPanel.getChildren().addAll(speedPanel);
+    // Panel containing theme options
+    VBox themePanel = makeThemePanel();
+    myPanel.getChildren().addAll(speedPanel, themePanel);
   }
 
   private HBox makeSpeedPanel() {
@@ -84,6 +89,28 @@ public class ControlPanel {
     speedPanel.getChildren().addAll(speedUpButton, slowDownButton);
 
     return speedPanel;
+  }
+
+  private VBox makeThemePanel() {
+    VBox themePanel = new VBox((double) VBOX_SPACING / 2);
+
+    Text themeTitle = new Text(myResources.getString("ThemeHeader"));
+    themePanel.getChildren().addAll(themeTitle);
+
+    List<String> themes = ResourceAnalyzer.getAvailableStylesheets();
+    if (themes.isEmpty()) {
+      Text defaultText = new Text(myResources.getString("None"));
+      themePanel.getChildren().addAll(defaultText);
+    }
+    else {
+      ChoiceBox<String> themeChoices = new ChoiceBox<>();
+      themeChoices.getItems().addAll(themes);
+      themeChoices.setValue(themes.getFirst());
+
+      themePanel.getChildren().addAll(themeChoices);
+    }
+
+    return themePanel;
   }
 
   /**

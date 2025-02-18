@@ -43,4 +43,35 @@ public class ResourceAnalyzer {
     }
     return languages;
   }
+
+  /**
+   * Dynamically scans the resource folder to find available style files (.css) and extracts their filenames.
+   * @return List of available stylesheets
+   */
+  public static List<String> getAvailableStylesheets() {
+    List<String> stylesheets = new ArrayList<>();
+    try {
+      // Get the resource folder path from Main constants
+      String resourceFolder = Main.DEFAULT_STYLESHEET_FOLDER;
+
+      URL resourceURL = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
+
+      if (resourceURL != null) {
+        Path resourcePath = Paths.get(resourceURL.toURI());
+        DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.css");
+
+        for (Path path : stream) {
+          String fileName = path.getFileName().toString();
+          if (fileName.endsWith(".css")) {
+            stylesheets.add(fileName.replace(".css", "")); // Extract language name
+          }
+        }
+      }
+    } catch (IOException | URISyntaxException e) {
+      e.printStackTrace();
+      System.err.println("Error loading stylesheet files.");
+    }
+
+    return stylesheets;
+  }
 }
