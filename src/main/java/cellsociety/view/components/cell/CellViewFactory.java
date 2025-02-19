@@ -1,11 +1,6 @@
-package cellsociety.view.components;
+package cellsociety.view.components.cell;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.interfaces.CellView;
-import cellsociety.view.components.cell.FireCellView;
-import cellsociety.view.components.cell.GameOfLifeCellView;
-import cellsociety.view.components.cell.PercolationCellView;
-import cellsociety.view.components.cell.SegregationCellView;
-import cellsociety.view.components.cell.WaTorCellView;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -28,6 +23,18 @@ public class CellViewFactory {
 
     factoryMap.put(SimType.WaTor, (params, state) ->
         new WaTorCellView(params[0], params[1], params[2], params[3], state));
+
+    factoryMap.put(SimType.FallingSand, (params, state) ->
+        new FallingSandCellView(params[0], params[1], params[2], params[3], state));
+
+    factoryMap.put(SimType.Langton, (params, state) ->
+        new LangtonCellView(params[0], params[1], params[2], params[3], state));
+
+    factoryMap.put(SimType.ChouReg2, (params, state) ->
+        new ChouReg2CellView(params[0], params[1], params[2], params[3], state));
+
+    factoryMap.put(SimType.Petelka, (params, state) ->
+        new PetelkaCellView(params[0], params[1], params[2], params[3], state));
   }
 
   public static CellView createCellView(SimType simType, double[] position, double width, double height, Integer cellState) {

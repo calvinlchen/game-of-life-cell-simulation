@@ -8,6 +8,7 @@ import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
+import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.window.UserView;
 import java.util.ResourceBundle;
