@@ -59,14 +59,41 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
 
   @Override
   public int apply(PetelkaCell cell) {
-    String stateKey = getStateKey(cell, new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"});
-    // if not in map the default is 0
-    if (stateKey.length() != 9) {
-      return cell.getCurrentState();
+    String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+
+    for (int rotations = 0; rotations < 4; rotations++) {
+      String stateKey = getStateKey(cell, directions);
+
+      if (stateKey.length() != 9) {
+        return cell.getCurrentState();
+      }
+
+      if (RULES_MAP_PETELKA.containsKey(stateKey)) {
+        return RULES_MAP_PETELKA.get(stateKey);
+      }
+
+      // I think since i trying each rotation, then flipping horizontally gets all flips?
+      String reflectedKey = getStateKey(cell, reflectHorizontally(directions));
+      if (RULES_MAP_PETELKA.containsKey(reflectedKey)) {
+        return RULES_MAP_PETELKA.get(reflectedKey);
+      }
+
+      directions = rotateClockwise(directions);
     }
-    return RULES_MAP_PETELKA.getOrDefault(stateKey, 0);
 
-
+    // it is a valid length, then it returns 0 with Petelka's
+    return 0;
   }
+
+  private String[] rotateClockwise(String[] directions) {
+    return new String[]{directions[7], directions[0], directions[1], directions[2],
+        directions[3], directions[4], directions[5], directions[6]};
+  }
+
+  private String[] reflectHorizontally(String[] directions) {
+    return new String[]{directions[0], directions[7], directions[6], directions[5],
+        directions[4], directions[3], directions[2], directions[1]};
+  }
+
 
 }

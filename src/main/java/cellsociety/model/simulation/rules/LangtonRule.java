@@ -263,6 +263,10 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
     for (int rotations = 0; rotations < 4; rotations++) {
       String stateKey = getStateKey(cell, directions);
 
+      if (stateKey.length() != 5) {
+        return cell.getCurrentState();
+      }
+
       if (RULES_MAP_LANGTON.containsKey(stateKey)) {
         return RULES_MAP_LANGTON.get(stateKey);
       }

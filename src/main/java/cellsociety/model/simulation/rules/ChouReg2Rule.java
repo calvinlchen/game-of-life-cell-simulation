@@ -109,6 +109,10 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
     for (int rotations = 0; rotations < 4; rotations++) {
       String stateKey = getStateKey(cell, directions);
 
+      if (stateKey.length() != 5) {
+        return cell.getCurrentState();
+      }
+
       if (RULES_MAP_CHOUREG2.containsKey(stateKey)) {
         return RULES_MAP_CHOUREG2.get(stateKey);
       }
