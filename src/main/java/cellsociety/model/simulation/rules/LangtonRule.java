@@ -258,9 +258,26 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
 
   @Override
   public int apply(LangtonCell cell) {
-    String stateKey = getStateKey(cell, new String[]{"N", "E", "S", "W"});
-    return RULES_MAP_LANGTON.getOrDefault(stateKey, cell.getCurrentState());
+    String[] directions = {"N", "E", "S", "W"};
 
+    for (int rotations = 0; rotations < 4; rotations++) {
+      String stateKey = getStateKey(cell, directions);
+
+      if (RULES_MAP_LANGTON.containsKey(stateKey)) {
+        return RULES_MAP_LANGTON.get(stateKey);
+      }
+
+      directions = rotateClockwise(directions);
+    }
+
+    return cell.getCurrentState();
+  }
+
+  /**
+   * Rotates neighborhood direction labels clockwise (90° rotation).
+   */
+  private String[] rotateClockwise(String[] directions) {
+    return new String[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }
