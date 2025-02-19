@@ -54,8 +54,8 @@ public class XMLUtils {
    * @return an XMLData object containing the parsed simulation data
    * @throws XMLException if there is an error reading or parsing the XML file
    */
-  public XMLData readXML(File fXmlFile) {
-    XMLData xmlObject = new XMLData();
+  public XMLData readXML(File fXmlFile, String language) {
+    XMLData xmlObject = new XMLData(language);
 
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -97,6 +97,25 @@ public class XMLUtils {
             case "wa-tor world":
             case "wator":
               xmlObject.setType(SimType.WaTor);
+              break;
+            case "falling sand":
+            case "fallingsand":
+              xmlObject.setType(SimType.FallingSand);
+              break;
+            case "langton":
+            case "langton's loops":
+            case "langtonsloops":
+              xmlObject.setType(SimType.Langton);
+              break;
+            case "chou-reggia loop":
+            case "choureggialoop":
+            case "choureg":
+            case "choureg2":
+            case "chou":
+              xmlObject.setType(SimType.ChouReg2);
+              break;
+            case "petelka":
+              xmlObject.setType(SimType.Petelka);
               break;
             default:
               throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + SimulationType);
@@ -147,7 +166,10 @@ public class XMLUtils {
           Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
           if (parametersElement != null) {
             NodeList paramList = parametersElement.getElementsByTagName("parameter");
-            xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
+            Map<String, Double> params = parameterToMap(paramList, xmlObject.getType());
+            xmlObject.setParameters(params);
+          } else {
+            xmlObject.setParameters(new HashMap<>());  // Prevent parameters from being null
           }
         }
       }
