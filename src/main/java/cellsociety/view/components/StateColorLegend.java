@@ -76,7 +76,7 @@ public class StateColorLegend {
       return;
     }
 
-    Text clickToChangeText = new Text(myResources.getString("ClickToChangeColors"));
+    Text clickToChangeText = new Text(String.format(myResources.getString("ClickToChangeColors")));
     clickToChangeText.getStyleClass().add("bold-text");
     myLegendBox.getChildren().add(clickToChangeText);
 

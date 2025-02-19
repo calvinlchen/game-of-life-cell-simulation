@@ -116,7 +116,7 @@ public class XMLUtils {
           //parameters are nested under <parameters> vs nested directly under <grid>
           paramList = Objects.requireNonNullElse(parametersElement, gridElement)
               .getElementsByTagName("parameter");
-          xmlObject.setParameters(parameterToMap(paramList));
+          xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
 
           //extract cell info
           NodeList cellList = gridElement.getElementsByTagName("cell");
@@ -290,7 +290,7 @@ public class XMLUtils {
    * @param paramList      an NodeList variable that holds the xml data's parameter data
    * @param simulationType an Enum representing the intended simulation type
    */
-  private Map<String, Double> parameterToMap(NodeList paramList, Enum simulationType) {
+  private Map<String, Double> parameterToMap(NodeList paramList, Enum<?> simulationType) {
     Map<String, Double> parameters = new HashMap<>();
 
     for (int i = 0; i < paramList.getLength(); i++) {
