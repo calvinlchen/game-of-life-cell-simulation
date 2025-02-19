@@ -103,8 +103,8 @@ public class XMLUtils {
               xmlObject.setType(SimType.FallingSand);
               break;
             case "langton":
-            case "langton's loops":
-            case "langtonsloops":
+            case "langton's loop":
+            case "langtonsloop":
               xmlObject.setType(SimType.Langton);
               break;
             case "chou-reggia loop":
