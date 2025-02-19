@@ -333,7 +333,7 @@ public class XMLUtils {
    * @param simulationType the type of the simulation
    * @return a map of parameter names to their corresponding values
    */
-  private Map<String, Double> parameterToMap(NodeList paramList, Enum simulationType) {
+  private Map<String, Double> parameterToMap(NodeList paramList, Enum<?> simulationType) {
     Map<String, Double> parameters = new HashMap<>();
 
     for (int i = 0; i < paramList.getLength(); i++) {

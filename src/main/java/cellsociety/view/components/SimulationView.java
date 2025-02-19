@@ -4,6 +4,9 @@ import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.interfaces.CellView;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.scene.layout.Pane;
 
 /**
@@ -149,5 +152,20 @@ public class SimulationView {
    */
   public Simulation<?> getSimulation() {
     return mySimulation;
+  }
+
+  /**
+   * Get all CellView objects that are currently in this simulation
+   */
+  public List<CellView> getCellViewList() {
+    if (myCellViews == null) {
+      return new ArrayList<>();
+    }
+
+    List<CellView> list = new ArrayList<>();
+    for (CellView[] row : myCellViews) {
+      list.addAll(Arrays.asList(row));
+    }
+    return list;
   }
 }
