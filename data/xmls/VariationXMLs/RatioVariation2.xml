@@ -1,0 +1,22 @@
+<simulation>
+    <metadata>
+        <type>Wa-Tor World</type>
+        <title>Sea Tales?</title>
+        <author>Sammy Sea Turtle</author>
+        <description>This movie exists, right? A movie about a sea turtle who I think got lost? There's a sad bruno mars song in the middle?</description>
+    </metadata>
+
+    <grid rows="30" columns="30">
+        <variation type="ratio">
+            <cell cellType="fish">0.34</cell> <!-- 60% alive -->
+            <cell cellType="shark">0.17</cell>
+        </variation>
+    </grid>
+
+    <parameters>
+        <parameter name="fishReproductionTime" value="3"/>
+        <parameter name="sharkEnergyGain" value="4"/>
+        <parameter name="sharkReproductionTime" value="8"/>
+        <parameter name="sharkInitialEnergy" value="2"/>
+    </parameters>
+</simulation>

@@ -1,0 +1,18 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Random Game of Life</title>
+        <author>John Doe</author>
+        <description>A Game of Life simulation with random initial states.</description>
+    </metadata>
+
+    <grid rows="10" columns="10">
+        <variation type="ratio">
+            <cell cellType="alive">0.6</cell> <!-- 60% alive -->
+        </variation>
+    </grid>
+
+    <parameters>
+        <parameter name="Rulestring" value="B4/S1"/>
+    </parameters>
+</simulation>

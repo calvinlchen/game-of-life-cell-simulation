@@ -1,0 +1,18 @@
+<simulation>
+    <metadata>
+        <type>Game of Life</type>
+        <title>Overpopulation</title>
+        <author>Elon Musk</author>
+        <description>Too much artificial insemination.</description>
+    </metadata>
+
+    <grid rows="10" columns="10">
+        <variation type="explicit">
+            <cell cellType="alive">50</cell>
+        </variation>
+    </grid>
+
+    <parameters>
+
+    </parameters>
+</simulation>

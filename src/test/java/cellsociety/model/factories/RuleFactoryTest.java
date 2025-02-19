@@ -1,10 +1,10 @@
 package cellsociety.model.factories;
 
-import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
-import org.junit.jupiter.api.Test;
+import cellsociety.model.simulation.rules.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,7 +81,7 @@ class RuleFactoryTest {
 
         // Act & Assert
         Exception exception = assertThrows(NullPointerException.class, () -> {
-            RuleFactory.createRule(ruleType, null);
+            Rule<?, ?> rule = RuleFactory.createRule(ruleType, null);
         });
 
         assertNotNull(exception);

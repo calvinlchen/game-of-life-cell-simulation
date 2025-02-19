@@ -1,7 +1,5 @@
 package cellsociety.model.util;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
@@ -21,27 +19,40 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.*;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 /**
- * A class that interacts with xml files, either by reading them or writing to them.
+ * A utility class for reading and writing simulation data to/from XML files.
+ * Provides functionality to read simulation details, grid data, and parameters from XML files,
+ * and also to write simulation data to XML files.
  *
  * @author Kyaira Boughton
  */
 public class XMLUtils {
   ResourceBundle myErrorResources;
 
+  /**
+   * Constructs an XMLUtils object with the default language (English).
+   */
   public XMLUtils() {
     myErrorResources = getErrorSimulationResourceBundle("English");
   }
 
+  /**
+   * Constructs an XMLUtils object with a specified language.
+   *
+   * @param language the language to be used for error messages
+   */
   public XMLUtils(String language) {
     myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
   /**
-   * A method that reads a pre-existing xml file.
+   * Reads an XML file and parses it into an XMLData object.
    *
-   * @param fXmlFile a File object containing the XML
-   * @return an XMLData object with all information found from the provided xml file
+   * @param fXmlFile the XML file to be read
+   * @return an XMLData object containing the parsed simulation data
+   * @throws XMLException if there is an error reading or parsing the XML file
    */
   public XMLData readXML(File fXmlFile) {
     XMLData xmlObject = new XMLData();
@@ -57,18 +68,17 @@ public class XMLUtils {
         throw new IllegalArgumentException(myErrorResources.getString("NoSimTag"));
       }
 
-      for (int i = 0; i < simulationList.getLength();
-          i++) { //just in case there is somehow more than one simulation?
+      for (int i = 0; i < simulationList.getLength(); i++) {
         Node simulationNode = simulationList.item(i);
         if (simulationNode.getNodeType() == Node.ELEMENT_NODE) {
           Element simulationElement = (Element) simulationNode;
 
-          //extract metadata
+          // Extract metadata
+          Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata").item(0);
           String SimulationType = simulationElement.getElementsByTagName("type").item(0)
-              .getTextContent();
+                  .getTextContent();
 
-          switch (SimulationType.toLowerCase()) { //swtich case to determine enum type
-
+          switch (SimulationType.toLowerCase()) { //switch case to determine enum type
             case "game of life":
             case "gameoflife":
               xmlObject.setType(SimType.GameOfLife);
@@ -90,43 +100,55 @@ public class XMLUtils {
               break;
             default:
               throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + SimulationType);
-
           }
 
-          xmlObject.setTitle(
-              simulationElement.getElementsByTagName("title").item(0).getTextContent());
-          xmlObject.setAuthor(
-              simulationElement.getElementsByTagName("author").item(0).getTextContent());
-          xmlObject.setDescription(
-              simulationElement.getElementsByTagName("description").item(0).getTextContent());
+          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(), xmlObject.getType(), xmlObject.getNumStates());
+          if (handler == null) {
+            throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + xmlObject.getType());
+          }
 
-          //extract grid info
+          xmlObject.setTitle(metadataElement.getElementsByTagName("title").item(0).getTextContent());
+          xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
+          xmlObject.setDescription(metadataElement.getElementsByTagName("description").item(0).getTextContent());
+
+          NodeList languageNodes = metadataElement.getElementsByTagName("language");
+          if (languageNodes.getLength() > 0) {
+            xmlObject.setLanguage(languageNodes.item(0).getTextContent());
+          }
+
+          NodeList colorsList = metadataElement.getElementsByTagName("color");
+          if (colorsList.getLength() > 0) {
+            xmlObject.setCustomColorMap(colorsToMap(colorsList, handler));
+          }
+
+          // Extract grid info
           Element gridElement = (Element) simulationElement.getElementsByTagName("grid").item(0);
           int rows = Integer.parseInt(gridElement.getAttribute("rows"));
           int columns = Integer.parseInt(gridElement.getAttribute("columns"));
-
           xmlObject.setGridRowNum(rows);
           xmlObject.setGridColNum(columns);
 
-          //extract parameter info
-          NodeList paramList;
-          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters")
-              .item(0);
-
-          //parameters are nested under <parameters> vs nested directly under <grid>
-          paramList = Objects.requireNonNullElse(parametersElement, gridElement)
-              .getElementsByTagName("parameter");
-          xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
-
-          //extract cell info
-          NodeList cellList = gridElement.getElementsByTagName("cell");
-          if (cellList.getLength() != rows * columns) {
-            throw new XMLException(
-                myErrorResources.getString("ExpectedDifferentNumber")
-                    + (rows * columns) + ", " + cellList.getLength());
+          // Check for variation
+          NodeList variationList = gridElement.getElementsByTagName("variation");
+          if (variationList.getLength() > 0) {
+            // Process variation (randomly generated cells)
+            xmlObject.setCellStateList(generateRandomCellStates(rows, columns, gridElement, xmlObject.getType(), handler));
+          } else {
+            // No variation: use explicitly defined cell states
+            NodeList cellList = gridElement.getElementsByTagName("cell");
+            if (cellList.getLength() != rows * columns) {
+              throw new XMLException(myErrorResources.getString("ExpectedDifferentNumber")
+                      + (rows * columns) + ", " + cellList.getLength());
+            }
+            xmlObject.setCellStateList(cellStatesToEnum(cellList, handler));
           }
-          xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType(), xmlObject.getId(), xmlObject.getNumStates()));
 
+          // Extract parameters
+          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
+          if (parametersElement != null) {
+            NodeList paramList = parametersElement.getElementsByTagName("parameter");
+            xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
+          }
         }
       }
     } catch (Exception e) {
@@ -137,17 +159,17 @@ public class XMLUtils {
   }
 
   /**
-   * up     * A method that writes a simulation data to both pre-existing and non-existing xml
-   * files.
+   * Writes simulation data to an XML file.
    *
-   * @param file        a File object where the XML should be stored
-   * @param title       a String variable of the title of the simulation
-   * @param author      a String variable of the author of the simulation
-   * @param description a String variable of the description of the simulation
-   * @param simulation  a simulation object that holds the current state of all cells.
+   * @param file        the file to store the XML data
+   * @param title       the title of the simulation
+   * @param author      the author of the simulation
+   * @param description the description of the simulation
+   * @param simulation  the simulation object containing the simulation data
+   * @throws XMLException if there is an error writing to the XML file
    */
   public void writeToXML(File file, String title, String author, String description,
-      Simulation<?> simulation) {
+                         Simulation simulation) {
     if (file == null) {
       throw new XMLException(myErrorResources.getString("NoFileSelectedSave"));
     }
@@ -157,11 +179,11 @@ public class XMLUtils {
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       Document doc = docBuilder.newDocument();
 
-      //create root element
+      // Create root element
       Element rootElement = doc.createElement("simulation");
       doc.appendChild(rootElement);
 
-      //add metadata
+      // Add metadata
       Element typeElement = doc.createElement("type");
       typeElement.appendChild(doc.createTextNode(simulation.getXMLData().getType().toString()));
       rootElement.appendChild(typeElement);
@@ -178,22 +200,22 @@ public class XMLUtils {
       descriptionElement.appendChild(doc.createTextNode(description));
       rootElement.appendChild(descriptionElement);
 
-      //add grid info
+      // Add grid info
       Element gridElement = doc.createElement("grid");
       gridElement.setAttribute("rows", String.valueOf(simulation.getXMLData().getGridRowNum()));
       gridElement.setAttribute("columns", String.valueOf(simulation.getXMLData().getGridColNum()));
       rootElement.appendChild(gridElement);
 
-      //add cell states
+      // Add cell states
       ArrayList<String> cellStateList = cellStatesToString(simulation.getXMLData().getGridRowNum(),
-          simulation.getXMLData().getGridColNum(), simulation);
+              simulation.getXMLData().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
         cellElement.setAttribute("state", state);
         gridElement.appendChild(cellElement);
       }
 
-      //add parameters
+      // Add parameters
       Map<String, Double> parameters = simulation.getXMLData().getParameters();
       for (Map.Entry<String, Double> entry : parameters.entrySet()) {
         Element paramElement = doc.createElement("parameter");
@@ -202,7 +224,7 @@ public class XMLUtils {
         gridElement.appendChild(paramElement);
       }
 
-      // Write the content into the selected XML file
+      // Write the content to the selected XML file
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       DOMSource source = new DOMSource(doc);
@@ -212,28 +234,27 @@ public class XMLUtils {
     } catch (Exception e) {
       throw new XMLException(myErrorResources.getString("XMLSaveError") + e.getMessage());
     }
-
   }
 
   /**
-   * A method that extracts the cellstates from the simulation data and turns them into a string
-   * list
+   * Converts the cell states from a simulation object into a list of strings.
    *
-   * @param rowNum     an int variable of the number of rows in the grid
-   * @param colNum     an int variable of the number of rows in the grid@
-   * @param simulation a simulation object that holds the current state of all cells.
+   * @param rowNum     the number of rows in the grid
+   * @param colNum     the number of columns in the grid
+   * @param simulation the simulation object containing the grid's cell states
+   * @return a list of strings representing the state of each cell in the grid
+   * @throws IllegalArgumentException if an invalid cell state is encountered
    */
-  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation<?> simulation) {
-
+  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation simulation) {
     ArrayList<String> cellStateList = new ArrayList<>();
 
-    // TODO: if it dynamic the last thing should be number of states to make it with
+    // Get the handler for the simulation's cell states
     CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(), simulation.getSimulationType(),
-        simulation.getNumStates());
-    // TODO: make better exceptions
+            simulation.getNumStates());
+
     if (handler == null) {
       throw new IllegalArgumentException(
-          myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
+              myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
     }
 
     for (int i = 0; i < rowNum; i++) {
@@ -252,20 +273,43 @@ public class XMLUtils {
   }
 
   /**
+   * Converts a list of cell state strings into a list of cell state enums.
+   *
+   * @param cellTypes a list of cell state strings
+   * @param handler   the handler to convert the string to the appropriate cell state
+   * @return a list of integers representing the cell states as enums
+   * @throws IllegalArgumentException if an invalid cell state is encountered
+   */
+  private ArrayList<Integer> cellStatesToEnum(List<String> cellTypes, CellStateHandler handler) {
+    ArrayList<Integer> cellStateEnums = new ArrayList<>();
+
+    if (handler == null) {
+      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType"));
+    }
+
+    for (String cellType : cellTypes) {
+      try {
+        int stateEnum = handler.stateFromString(cellType);
+        cellStateEnums.add(stateEnum);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + cellType, e);
+      }
+    }
+
+    return cellStateEnums;
+  }
+
+  /**
    * A method that extracts the cellstates from the simulation xml and turns them into a string
    * list
    *
    * @param cellList       an NodeList variable that holds the xml data's cell data
-   * @param simulationType an Enum representing the intended simulation type
+   * @param handler   the handler to convert the string to the appropriate cell state
+   * @return a list of integers representing the cell states as enums
+   * @throws IllegalArgumentException if an invalid cell state is encountered
    */
-  private ArrayList<Integer> cellStatesToEnum(NodeList cellList, SimType simulationType, int id, int numStates) {
-
+  private ArrayList<Integer> cellStatesToEnum(NodeList cellList, CellStateHandler handler) {
     ArrayList<Integer> cellStateEnums = new ArrayList<>();
-
-    CellStateHandler handler = CellStateFactory.getHandler(id, simulationType, numStates);
-    if (handler == null) {
-      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
-    }
 
     for (int j = 0; j < cellList.getLength(); j++) {
       Element cellElement = (Element) cellList.item(j);
@@ -280,15 +324,14 @@ public class XMLUtils {
     }
 
     return cellStateEnums;
-
   }
 
   /**
-   * A method that extracts the parameters from the simulation xml and turns them into a string
-   * list
+   * Converts the parameters from the XML file into a map.
    *
-   * @param paramList      an NodeList variable that holds the xml data's parameter data
-   * @param simulationType an Enum representing the intended simulation type
+   * @param paramList      a NodeList containing the parameter data
+   * @param simulationType the type of the simulation
+   * @return a map of parameter names to their corresponding values
    */
   private Map<String, Double> parameterToMap(NodeList paramList, Enum<?> simulationType) {
     Map<String, Double> parameters = new HashMap<>();
@@ -302,6 +345,7 @@ public class XMLUtils {
       if (simulationType == SimType.GameOfLife && paramName.toLowerCase().equals("rulestring")) {
         // Split the rulestring based on '/'
         String[] ruleParts = paramValue.split("/");
+
         if (ruleParts.length == 2) {
           // Process the first part (e.g., "B1")
           if (ruleParts[0].startsWith("B")) {
@@ -315,7 +359,7 @@ public class XMLUtils {
             parameters.put("S", Double.parseDouble(survivalRules));
           }
         } else {
-          throw new IllegalArgumentException("Invalid rulestring format. Expected format: Bx/Sy");
+          throw new IllegalArgumentException(myErrorResources.getString("RulestringFormat"));
         }
       } else {
         // Default behavior for other parameters
@@ -324,5 +368,83 @@ public class XMLUtils {
     }
 
     return parameters;
+  }
+
+  public static Map<Integer, String> colorsToMap(NodeList colorList, CellStateHandler handler) {
+    Map<Integer, String> colors = new HashMap<>();
+
+    for (int i = 0; i < colorList.getLength(); i++) {
+      Element colorElement = (Element) colorList.item(i);
+      String colorName = colorElement.getAttribute("cellType");
+      String colorValue = colorElement.getAttribute("value");
+
+      colors.put(handler.stateFromString(colorName), colorValue);
+    }
+
+    return colors;
+  }
+
+  /**
+   * Generates random cell states based on the grid size and variation information in the XML file.
+   *
+   * @param rows          the number of rows in the grid
+   * @param columns      the number of columns in the grid
+   * @param gridElement  the XML element containing the grid's variation data
+   * @param simulationType the type of the simulation
+   * @param handler      the handler for cell state conversion
+   * @return a list of random cell states for the grid
+   * @throws IllegalArgumentException if there are issues with the grid's variation data
+   */
+  private ArrayList<Integer> generateRandomCellStates(int rows, int columns, Element gridElement, SimType simulationType, CellStateHandler handler) {
+    ArrayList<Integer> cellStateList = new ArrayList<>();
+    List<String> statesToAssign = new ArrayList<>();
+
+    if (handler == null) {
+      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType"));
+    }
+
+    // Process variation
+    NodeList variationList = gridElement.getElementsByTagName("variation");
+    if (variationList.getLength() > 0) {
+      Element variationElement = (Element) variationList.item(0);
+      String variationType = variationElement.getAttribute("type");
+      NodeList cellList = variationElement.getElementsByTagName("cell");
+
+      // Calculate cell counts based on variation type
+      Map<String, Integer> cellCounts = new HashMap<>();
+      int totalCells = rows * columns;
+      int remainingCells = totalCells;
+
+      for (int j = 0; j < cellList.getLength(); j++) {
+        Element cellElement = (Element) cellList.item(j);
+        String cellType = cellElement.getAttribute("cellType");
+        double value = Double.parseDouble(cellElement.getAttribute("value"));
+        cellCounts.put(cellType, (int) (value * totalCells));
+        remainingCells -= cellCounts.get(cellType);
+      }
+
+      // Add random cells based on counts
+      for (Map.Entry<String, Integer> entry : cellCounts.entrySet()) {
+        for (int i = 0; i < entry.getValue(); i++) {
+          statesToAssign.add(entry.getKey());
+        }
+      }
+
+      // Fill remaining cells with random states if needed
+      while (statesToAssign.size() < totalCells) {
+        statesToAssign.add(statesToAssign.get(0)); // Reassign random states
+      }
+    }
+
+    // Create cell state list based on variation
+    for (String state : statesToAssign) {
+      try {
+        cellStateList.add(handler.stateFromString(state));
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + state);
+      }
+    }
+
+    return cellStateList;
   }
 }
