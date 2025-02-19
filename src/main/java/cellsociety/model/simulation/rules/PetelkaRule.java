@@ -105,15 +105,13 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
       return RULES_MAP_PETELKA.get(stateKey);
     }
 
-//    (s, sw, w, nw, n, ne, e, se)
-    directions = new String[]{"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
+    directions = new String[]{"W", "SW", "S", "SE", "E", "NE", "N", "NW"};
     stateKey = getStateKey(cell, directions);
     if (RULES_MAP_PETELKA.containsKey(stateKey)) {
       return RULES_MAP_PETELKA.get(stateKey);
     }
 
-//    w, nw, n, ne, e, se, s, sw
-    directions = new String[]{"W", "NW", "N", "NE", "E", "SE", "S", "SW"};
+    directions = new String[]{"E", "NE", "N", "NW", "W", "SW", "S", "SE"};
     stateKey = getStateKey(cell, directions);
     if (RULES_MAP_PETELKA.containsKey(stateKey)) {
       return RULES_MAP_PETELKA.get(stateKey);
