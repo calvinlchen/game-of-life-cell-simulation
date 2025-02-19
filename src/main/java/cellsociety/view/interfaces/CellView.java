@@ -100,6 +100,14 @@ public abstract class CellView {
   }
 
   /**
+   * Get the number of displayable states
+   * @return the total number of possible states for this cell
+   */
+  public int getNumStates() {
+    return myColorMap.size();
+  }
+
+  /**
    * Add "grid" outlines based on CSS file format (resets cell CSS formatting)
    */
   private void enableOutlines() {

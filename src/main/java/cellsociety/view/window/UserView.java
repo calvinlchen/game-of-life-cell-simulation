@@ -11,9 +11,12 @@ import cellsociety.view.components.InformationBox;
 import cellsociety.view.components.RandomSimulationGenerator;
 import cellsociety.view.components.SimulationView;
 import cellsociety.view.components.StateColorLegend;
+import cellsociety.view.interfaces.CellView;
 import cellsociety.view.utils.DateTime;
 import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -97,7 +101,7 @@ public class UserView {
         mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN, myLanguage);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox(myResources);
-    myStateColorLegend = new StateColorLegend();  // Add Color-State legend
+    myStateColorLegend = new StateColorLegend(this, myLanguage);  // Color-state legend, with passed reference for event handling
 
     // Set components in BorderPane
     myRoot.setLeft(mySimulationView.getDisplay());
@@ -182,6 +186,7 @@ public class UserView {
     }
     mySimulationView.resetGrid();
     myInformationBox.emptyFields();
+    myStateColorLegend.clearLegend();
     mySpeedFactor = 1;
   }
 
@@ -361,5 +366,38 @@ public class UserView {
    */
   public Scene getScene() {
     return myStage.getScene();
+  }
+
+  /**
+   * Retrieve a List of CellView objects that this window is displaying
+   * @return ArrayList of CellView objects
+   */
+  public List<CellView> getCellViewList() {
+    List<CellView> list = mySimulationView.getCellViewList();
+    if (list == null) {
+      return new ArrayList<>();
+    }
+    return list;
+  }
+
+  /**
+   * Updates a given state to a new color, assuming the color exists
+   */
+  public void updateColorForState(int state, Color newColor) {
+    List<CellView> cellList = getCellViewList();
+
+    if (cellList.isEmpty()) {
+      return;
+    }
+    if (state < 0 || state >= cellList.getFirst().getNumStates()) {
+      throw new IllegalArgumentException(String.format(myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()));
+    }
+
+    for (CellView cellView : cellList) {
+      cellView.setColorForState(state, newColor);
+      if (cellView.getCellState() == state) {
+        cellView.updateViewColor();
+      }
+    }
   }
 }
