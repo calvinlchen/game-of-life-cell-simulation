@@ -2,7 +2,6 @@ package cellsociety.model.util;
 
 import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
-import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.XMLException;
@@ -47,76 +46,78 @@ public class XMLUtils {
         throw new IllegalArgumentException("No <simulation> tag found in the XML file.");
       }
 
-      for (int i = 0; i < simulationList.getLength();
-          i++) { //just in case there is somehow more than one simulation?
+      for (int i = 0; i < simulationList.getLength(); i++) {
         Node simulationNode = simulationList.item(i);
         if (simulationNode.getNodeType() == Node.ELEMENT_NODE) {
           Element simulationElement = (Element) simulationNode;
 
-          //extract metadata
-          String SimulationType = simulationElement.getElementsByTagName("type").item(0)
-              .getTextContent();
+          // Extract metadata
+          Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata").item(0);
+          SimType simulationType = SimType.valueOf(metadataElement.getElementsByTagName("type").item(0).getTextContent());
+          xmlObject.setType(simulationType);
+          xmlObject.setTitle(metadataElement.getElementsByTagName("title").item(0).getTextContent());
+          xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
+          xmlObject.setDescription(metadataElement.getElementsByTagName("description").item(0).getTextContent());
 
-          switch (SimulationType.toLowerCase()) { //swtich case to determine enum type
-
-            case "game of life":
-            case "gameoflife":
-              xmlObject.setType(SimType.GameOfLife);
-              break;
-            case "spreading of fire":
-            case "fire":
-              xmlObject.setType(SimType.Fire);
-              break;
-            case "percolation":
-              xmlObject.setType(SimType.Percolation);
-              break;
-            case "model of segregation":
-            case "segregation":
-              xmlObject.setType(SimType.Segregation);
-              break;
-            case "wa-tor world":
-            case "wator":
-              xmlObject.setType(SimType.WaTor);
-              break;
-            default:
-              throw new IllegalArgumentException("Unknown simulation type: " + SimulationType);
-
-          }
-
-          xmlObject.setTitle(
-              simulationElement.getElementsByTagName("title").item(0).getTextContent());
-          xmlObject.setAuthor(
-              simulationElement.getElementsByTagName("author").item(0).getTextContent());
-          xmlObject.setDescription(
-              simulationElement.getElementsByTagName("description").item(0).getTextContent());
-
-          //extract grid info
+          // Extract grid info
           Element gridElement = (Element) simulationElement.getElementsByTagName("grid").item(0);
           int rows = Integer.parseInt(gridElement.getAttribute("rows"));
           int columns = Integer.parseInt(gridElement.getAttribute("columns"));
-
           xmlObject.setGridRowNum(rows);
           xmlObject.setGridColNum(columns);
 
-          //extract parameter info
-          NodeList paramList;
-          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters")
-              .item(0);
+          // Check for variation
+          NodeList variationList = gridElement.getElementsByTagName("variation");
+          if (variationList.getLength() > 0) {
+            // Process variation
+            Element variationElement = (Element) variationList.item(0);
+            String variationType = variationElement.getAttribute("type");
+            NodeList cellList = variationElement.getElementsByTagName("cell");
 
-          //parameters are nested under <parameters> vs nested directly under <grid>
-          paramList = Objects.requireNonNullElse(parametersElement, gridElement)
-              .getElementsByTagName("parameter");
-          xmlObject.setParameters(parameterToMap(paramList, xmlObject.getType()));
+            // Calculate cell counts based on variation type
+            Map<String, Integer> cellCounts = new HashMap<>();
+            int totalCells = rows * columns;
+            int remainingCells = totalCells;
 
-          //extract cell info
-          NodeList cellList = gridElement.getElementsByTagName("cell");
-          if (cellList.getLength() != rows * columns) {
-            throw new XMLException(
-                "Error: Expected " + (rows * columns) + " <cell> elements, but found "
-                    + cellList.getLength());
+            for (int j = 0; j < cellList.getLength(); j++) {
+              Element cellElement = (Element) cellList.item(j);
+              String cellType = cellElement.getAttribute("cellType");
+              double value = Double.parseDouble(cellElement.getTextContent());
+
+              int count;
+              if (variationType.equals("explicit")) {
+                count = (int) value; // Use exact count
+              } else if (variationType.equals("ratio")) {
+                count = (int) (value * totalCells); // Calculate count from ratio
+              } else {
+                throw new IllegalArgumentException("Unknown variation type: " + variationType);
+              }
+
+              cellCounts.put(cellType, count);
+              remainingCells -= count;
+            }
+
+            // Add remaining cells as default state
+            String defaultState = simulationType == SimType.GameOfLife ? "dead" : "empty";
+            cellCounts.put(defaultState, remainingCells);
+
+            // Randomly assign cell states using the CellStateHandler
+            xmlObject.setCellStateList(generateRandomCellStates(rows, columns, cellCounts, simulationType, xmlObject.getId(), xmlObject.getNumStates()));
+          } else {
+            // No variation: use explicit cell states
+            NodeList cellList = gridElement.getElementsByTagName("cell");
+            if (cellList.getLength() != rows * columns) {
+              throw new XMLException("Error: Expected " + (rows * columns) + " <cell> elements, but found " + cellList.getLength());
+            }
+            xmlObject.setCellStateList(cellStatesToEnum(cellList, simulationType, xmlObject.getId(), xmlObject.getNumStates()));
           }
-          xmlObject.setCellStateList(cellStatesToEnum(cellList, xmlObject.getType(), xmlObject.getId(), xmlObject.getNumStates()));
 
+          // Extract parameters
+          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
+          if (parametersElement != null) {
+            NodeList paramList = parametersElement.getElementsByTagName("parameter");
+            xmlObject.setParameters(parameterToMap(paramList, simulationType));
+          }
         }
       }
     } catch (Exception e) {
@@ -137,7 +138,7 @@ public class XMLUtils {
    * @param simulation  a simulation object that holds the current state of all cells.
    */
   public void writeToXML(File file, String title, String author, String description,
-      Simulation simulation) {
+                         Simulation simulation) {
     if (file == null) {
       throw new XMLException("No file selected for saving.");
     }
@@ -176,7 +177,7 @@ public class XMLUtils {
 
       //add cell states
       ArrayList<String> cellStateList = cellStatesToString(simulation.getXMLData().getGridRowNum(),
-          simulation.getXMLData().getGridColNum(), simulation);
+              simulation.getXMLData().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
         cellElement.setAttribute("state", state);
@@ -219,11 +220,11 @@ public class XMLUtils {
 
     // TODO: if it dynamic the last thing should be number of states to make it with
     CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(), simulation.getSimulationType(),
-        simulation.getNumStates());
+            simulation.getNumStates());
     // TODO: make better exceptions
     if (handler == null) {
       throw new IllegalArgumentException(
-          "Unknown simulation type: " + simulation.getSimulationType());
+              "Unknown simulation type: " + simulation.getSimulationType());
     }
 
     for (int i = 0; i < rowNum; i++) {
@@ -314,5 +315,65 @@ public class XMLUtils {
     }
 
     return parameters;
+  }
+
+  private ArrayList<Integer> generateRandomCellStates(int rows, int columns, Map<String, Integer> cellCounts, SimType simulationType, int id, int numStates) {
+    ArrayList<Integer> cellStateList = new ArrayList<>();
+    List<String> statesToAssign = new ArrayList<>();
+
+    // Get the CellStateHandler for the simulation type
+    CellStateHandler handler = CellStateFactory.getHandler(id, simulationType, numStates);
+    if (handler == null) {
+      throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
+    }
+
+    // Calculate total cells in the grid
+    int totalCells = rows * columns;
+
+    // Validate cell counts
+    int totalAssignedCells = 0;
+    for (Map.Entry<String, Integer> entry : cellCounts.entrySet()) {
+      String cellType = entry.getKey();
+      int count = entry.getValue();
+
+      // Check if the count is valid
+      if (count < 0) {
+        throw new IllegalArgumentException("Invalid cell count for type: " + cellType + ". Count cannot be negative.");
+      }
+
+      totalAssignedCells += count;
+
+      // Check if the total assigned cells exceed the grid size
+      if (totalAssignedCells > totalCells) {
+        throw new IllegalArgumentException("Total cell count exceeds grid size. Grid size: " + totalCells + ", Assigned cells: " + totalAssignedCells);
+      }
+
+      // Populate the list with states based on their counts
+      for (int i = 0; i < count; i++) {
+        statesToAssign.add(cellType);
+      }
+    }
+
+    // Add remaining cells as default state
+    String defaultState = simulationType == SimType.GameOfLife ? "dead" : "empty";
+    int remainingCells = totalCells - totalAssignedCells;
+    for (int i = 0; i < remainingCells; i++) {
+      statesToAssign.add(defaultState);
+    }
+
+    // Shuffle the list to randomize the order
+    Collections.shuffle(statesToAssign);
+
+    // Assign states to the grid using the CellStateHandler
+    for (String cellType : statesToAssign) {
+      try {
+        int state = handler.stateFromString(cellType);
+        cellStateList.add(state);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException("Unknown cell type: " + cellType, e);
+      }
+    }
+
+    return cellStateList;
   }
 }
