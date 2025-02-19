@@ -193,7 +193,7 @@ public class StateColorLegend {
     SimType simulationType= xmlData.getType();
     
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
-        xmlData.getNumStates());
+        myUserView.getCellViewList().getFirst().getNumStates());
     if (handler == null) {
       throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
     }

@@ -121,11 +121,6 @@ public class XMLUtils {
               throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + SimulationType);
           }
 
-          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(), xmlObject.getType(), xmlObject.getNumStates());
-          if (handler == null) {
-            throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + xmlObject.getType());
-          }
-
           xmlObject.setTitle(metadataElement.getElementsByTagName("title").item(0).getTextContent());
           xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
           xmlObject.setDescription(metadataElement.getElementsByTagName("description").item(0).getTextContent());
@@ -133,6 +128,21 @@ public class XMLUtils {
           NodeList languageNodes = metadataElement.getElementsByTagName("language");
           if (languageNodes.getLength() > 0) {
             xmlObject.setLanguage(languageNodes.item(0).getTextContent());
+          }
+
+          // Extract parameters
+          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
+          if (parametersElement != null) {
+            NodeList paramList = parametersElement.getElementsByTagName("parameter");
+            Map<String, Double> params = parameterToMap(paramList, xmlObject.getType());
+            xmlObject.setParameters(params);
+          } else {
+            xmlObject.setParameters(new HashMap<>());  // Prevent parameters from being null
+          }
+
+          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(), xmlObject.getType(), xmlObject.getNumStates());
+          if (handler == null) {
+            throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + xmlObject.getType());
           }
 
           NodeList colorsList = metadataElement.getElementsByTagName("color");
@@ -160,16 +170,6 @@ public class XMLUtils {
                       + (rows * columns) + ", " + cellList.getLength());
             }
             xmlObject.setCellStateList(cellStatesToEnum(cellList, handler));
-          }
-
-          // Extract parameters
-          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
-          if (parametersElement != null) {
-            NodeList paramList = parametersElement.getElementsByTagName("parameter");
-            Map<String, Double> params = parameterToMap(paramList, xmlObject.getType());
-            xmlObject.setParameters(params);
-          } else {
-            xmlObject.setParameters(new HashMap<>());  // Prevent parameters from being null
           }
         }
       }
