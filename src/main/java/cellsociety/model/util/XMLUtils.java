@@ -349,7 +349,7 @@ public class XMLUtils {
             parameters.put("S", Double.parseDouble(survivalRules));
           }
         } else {
-          throw new IllegalArgumentException("Invalid rulestring format. Expected format: Bx/Sy");
+          throw new IllegalArgumentException(myErrorResources.getString("RulestringFormat"));
         }
       } else {
         // Default behavior for other parameters
@@ -376,7 +376,7 @@ public class XMLUtils {
     List<String> statesToAssign = new ArrayList<>();
 
     if (handler == null) {
-      throw new IllegalArgumentException("Unknown simulation type: " + simulationType);
+      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType"));
     }
 
     // Process variation
@@ -417,7 +417,7 @@ public class XMLUtils {
       try {
         cellStateList.add(handler.stateFromString(state));
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException("Unknown cell state: " + state);
+        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + state);
       }
     }
 
