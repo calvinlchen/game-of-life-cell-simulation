@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
+import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,9 +104,23 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
 
   @Override
   public int apply(ChouReg2Cell cell) {
-    String stateKey = getStateKey(cell, new String[]{"N", "E", "S", "W"});
-    return RULES_MAP_CHOUREG2.getOrDefault(stateKey, cell.getCurrentState());
+    String[] directions = {"N", "E", "S", "W"};
 
+    for (int rotations = 0; rotations < 4; rotations++) {
+      String stateKey = getStateKey(cell, directions);
+
+      if (RULES_MAP_CHOUREG2.containsKey(stateKey)) {
+        return RULES_MAP_CHOUREG2.get(stateKey);
+      }
+
+      directions = rotateClockwise(directions);
+    }
+
+    return cell.getCurrentState();
+  }
+
+  private String[] rotateClockwise(String[] directions) {
+    return new String[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }
