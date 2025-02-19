@@ -1,13 +1,12 @@
 package cellsociety.model.simulation.grid;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * Abstract class for general grid.
@@ -23,10 +22,10 @@ import java.util.stream.Collectors;
 public abstract class Grid<T extends Cell<T, ?, ?>> {
 
   private final List<List<T>> myGrid;
-  private final int myRows;
-  private final int myCols;
+  private int myRows;
+  private int myCols;
 
-  private ResourceBundle myResources;
+  private final ResourceBundle myResources;
 
   /**
    * Constructs a Grid with specified dimensions.
@@ -36,16 +35,9 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param cols  - number of columns in the grid
    */
   public Grid(List<T> cells, int rows, int cols) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
 
-    if (rows <= 0 || cols <= 0) {
-      throw new SimulationException(myResources.getString("InvalidGridDimensions"));
-    }
-
-    myRows = rows;
-    myCols = cols;
-    myGrid = new ArrayList<>();
-
+    myGrid = initializeGrid(rows, cols);
     initializeCells(cells);
   }
 
@@ -57,17 +49,23 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param cols  - number of columns in the grid
    */
   public Grid(List<T> cells, int rows, int cols, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
 
+    myGrid = initializeGrid(rows, cols);
+    initializeCells(cells);
+  }
+
+  private List<List<T>> initializeGrid(int rows, int cols) {
+    final List<List<T>> grid;
     if (rows <= 0 || cols <= 0) {
+      System.out.println(myResources.getString("InvalidGridDimensions"));
       throw new SimulationException(myResources.getString("InvalidGridDimensions"));
     }
 
     myRows = rows;
     myCols = cols;
-    myGrid = new ArrayList<>();
-
-    initializeCells(cells);
+    grid = new ArrayList<>();
+    return grid;
   }
 
   /**

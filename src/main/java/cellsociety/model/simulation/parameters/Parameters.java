@@ -1,6 +1,6 @@
 package cellsociety.model.simulation.parameters;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
@@ -24,10 +24,9 @@ public abstract class Parameters {
    * <p> starts all simulations with a max history size with default of size 10
    */
   public Parameters() {
-    parameters = new HashMap<>();
-    parameters.put("maxHistorySize", 10.0);
+    parameters = createParamMap();
 
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
+    myResources = getErrorSimulationResourceBundle("English");
   }
 
   /**
@@ -36,10 +35,16 @@ public abstract class Parameters {
    * <p> starts all simulations with a max history size with default of size 10
    */
   public Parameters(String language) {
+    parameters = createParamMap();
+
+    myResources = getErrorSimulationResourceBundle(language);
+  }
+
+  private Map<String, Double> createParamMap() {
+    final Map<String, Double> parameters;
     parameters = new HashMap<>();
     parameters.put("maxHistorySize", 10.0);
-
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    return parameters;
   }
 
   /**

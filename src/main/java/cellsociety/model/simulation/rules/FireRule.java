@@ -25,6 +25,16 @@ public class FireRule extends Rule<FireCell, FireParameters> {
     super(parameters);
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public FireRule(FireParameters parameters, String language) {
+    super(parameters, language);
+  }
+
   @Override
   public int apply(FireCell cell) {
     return switch (cell.getCurrentState()) {

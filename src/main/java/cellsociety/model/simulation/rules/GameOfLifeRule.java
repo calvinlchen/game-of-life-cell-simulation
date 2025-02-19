@@ -23,6 +23,16 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
     super(parameters);
   }
 
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public GameOfLifeRule(GameOfLifeParameters parameters, String language) {
+    super(parameters, language);
+  }
+
   @Override
   public int apply(GameOfLifeCell cell) {
     long aliveNeighbors = countAliveNeighbors(cell);

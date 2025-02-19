@@ -1,6 +1,6 @@
 package cellsociety.model.simulation;
 
-import static cellsociety.model.util.constants.ResourcePckg.ERROR_SIMULATION_RESOURCE_PACKAGE;
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.factories.RuleFactory;
 import cellsociety.model.simulation.cell.Cell;
@@ -34,30 +34,32 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   private static final String CELL_PACKAGE = "cellsociety.model.simulation.cell.";
 
-  private ResourceBundle myResources;
+  private final ResourceBundle myResources;
+  private final String myLanguage;
 
   public Simulation(XMLData data) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
-
-    if (data == null) {
-      throw new SimulationException(myResources.getString("NullXMLData"));
-    }
-
-    xmlData = data;
-
+    myResources = getErrorSimulationResourceBundle("English");
+    myLanguage = "English";
+    xmlData = getXmlData(data);
     setUpSimulation();
   }
 
   public Simulation(XMLData data, String language) {
-    myResources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
+    myResources = getErrorSimulationResourceBundle(language);
+    myLanguage = language;
+    xmlData = getXmlData(data);
+    setUpSimulation();
+  }
 
+  private XMLData getXmlData(XMLData data) {
+    final XMLData xmlData;
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
 
     xmlData = data;
-
-    setUpSimulation();}
+    return xmlData;
+  }
 
   /**
    * Sets up the simulation, initializing the rule, parameters, and grid dynamically.
@@ -67,13 +69,14 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       SimType simType = xmlData.getType();
       Map<String, Double> params = xmlData.getParameters();
 
-      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params);
+      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params, myLanguage);
       parameters = rule.getParameters();
 
-      List<Cell<T, ?, ?>> cellList = createCells(simType, rule);
+      List<Cell<T, ?, ?>> cellList = createCells(simType, rule, myLanguage);
 
       setUpGridStructure(cellList, simType);
     } catch (Exception e) {
+      e.printStackTrace();
       throw new SimulationException(myResources.getString("SimulationSetupFailed"), e);
     }
   }
@@ -85,15 +88,15 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @param rule    - The rule instance to associate with each cell
    * @return List of dynamically created cells
    */
-  private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule) {
+  private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule, String language) {
     List<Cell<T, ?, ?>> cellList = new ArrayList<>();
 
     try {
       Class<?> cellClass = Class.forName(CELL_PACKAGE + simType.name() + "Cell");
-      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass());
+      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(), String.class);
 
       for (Integer state : xmlData.getCellStateList()) {
-        cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule));
+        cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule, language));
       }
     } catch (ClassNotFoundException e) {
       throw new SimulationException(
@@ -117,9 +120,9 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    */
   private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
     if (simType.isDefaultRectangularGrid()) {
-      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
+      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
     } else {
-      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum());
+      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
     }
   }
 

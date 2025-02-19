@@ -22,6 +22,18 @@ public class LangtonCell extends Cell<LangtonCell, LangtonRule, LangtonParameter
     validateState(state, LANGTON_MAXSTATE);
   }
 
+  /**
+   * Constructs a cell with specified initial state.
+   *
+   * @param state - the initial state of the cell
+   * @param rule  - the Langton's Loop rule to calculate the next state
+   * @param language - name of language, for error message display
+   */
+  public LangtonCell(int state, LangtonRule rule, String language) {
+    super(state, rule, language);
+    validateState(state, LANGTON_MAXSTATE);
+  }
+
   @Override
   protected LangtonCell getSelf() {
     return this;

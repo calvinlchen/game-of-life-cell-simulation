@@ -3,6 +3,7 @@ package cellsociety.view.window;
 import cellsociety.Main;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.util.XMLUtils;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import cellsociety.model.util.constants.exceptions.XMLException;
 import cellsociety.view.components.ControlPanel;
 import cellsociety.view.components.FileExplorer;
@@ -55,7 +56,7 @@ public class UserView {
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
-  private final XMLUtils xmlUtils = new XMLUtils();
+  private final XMLUtils xmlUtils;
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
@@ -63,6 +64,7 @@ public class UserView {
     mySceneHeight = sceneHeight;
 
     myLanguage = language;
+    xmlUtils = new XMLUtils(myLanguage);
     try {
       myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
     }
@@ -92,7 +94,7 @@ public class UserView {
 
     // Initialize UI components
     mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN, myLanguage);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox(myResources);
     myStateColorLegend = new StateColorLegend();  // Add Color-State legend
@@ -214,16 +216,23 @@ public class UserView {
     myState = ViewState.LOAD;
 
     // Upload simulation to mySimulationView
-    mySimulationView.configureFromXML(xmlUtils);
-    mySimulationView.initializeGridView();
+    try {
+      mySimulationView.configureFromXML(xmlUtils);
+      mySimulationView.initializeGridView();
 
-    XMLData xmlData = mySimulationView.getSimulation().getXMLData();
+      XMLData xmlData = mySimulationView.getSimulation().getXMLData();
 
-    // Update text box with simulation information
-    myInformationBox.updateInfo(xmlData);
+      // Update text box with simulation information
+      myInformationBox.updateInfo(xmlData);
 
-    // Update legend based on simulation type
-    myStateColorLegend.updateLegend(xmlData);
+      // Update legend based on simulation type
+      myStateColorLegend.updateLegend(xmlData);
+    }
+    catch (SimulationException e) {
+      e.printStackTrace();
+      myState = ViewState.ERROR;
+      showMessage(Alert.AlertType.ERROR, e.getMessage());
+    }
   }
 
   // display given message to user using the given type of Alert dialog box

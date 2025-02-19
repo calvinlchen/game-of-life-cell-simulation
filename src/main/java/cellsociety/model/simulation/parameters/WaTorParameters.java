@@ -17,6 +17,21 @@ public class WaTorParameters extends Parameters {
   public WaTorParameters() {
     super();
 
+    initializeParams();
+  }
+
+  /**
+   * initializes fishReproductionTime (3), sharkEnergyGain (2), sharkReproductionTime (3),
+   * sharkInitialEnergy (5)
+   * @param language - name of language, for error message display
+   */
+  public WaTorParameters(String language) {
+    super(language);
+
+    initializeParams();
+  }
+
+  private void initializeParams() {
     Map<String, Double> parameters = new HashMap<>();
     parameters.put("fishReproductionTime", 3.);
     parameters.put("sharkEnergyGain", 2.);

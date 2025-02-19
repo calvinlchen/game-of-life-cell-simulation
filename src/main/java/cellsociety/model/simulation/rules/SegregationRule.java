@@ -27,6 +27,16 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
   }
 
   /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public SegregationRule(SegregationParameters parameters, String language) {
+    super(parameters, language);
+  }
+
+  /**
    * <p> If cell is not satisfied, will attempt to move to an empty adjacent space
    *
    * @param cell - cell to apply the rules to
