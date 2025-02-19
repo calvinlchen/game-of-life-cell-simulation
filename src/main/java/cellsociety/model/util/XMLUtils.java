@@ -111,6 +111,16 @@ public class XMLUtils {
           xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
           xmlObject.setDescription(metadataElement.getElementsByTagName("description").item(0).getTextContent());
 
+          NodeList languageNodes = metadataElement.getElementsByTagName("language");
+          if (languageNodes.getLength() > 0) {
+            xmlObject.setLanguage(languageNodes.item(0).getTextContent());
+          }
+
+          NodeList colorsList = metadataElement.getElementsByTagName("color");
+          if (colorsList.getLength() > 0) {
+            xmlObject.setCustomColorMap(colorsToMap(colorsList, handler));
+          }
+
           // Extract grid info
           Element gridElement = (Element) simulationElement.getElementsByTagName("grid").item(0);
           int rows = Integer.parseInt(gridElement.getAttribute("rows"));
@@ -358,6 +368,20 @@ public class XMLUtils {
     }
 
     return parameters;
+  }
+
+  public static Map<Integer, String> colorsToMap(NodeList colorList, CellStateHandler handler) {
+    Map<Integer, String> colors = new HashMap<>();
+
+    for (int i = 0; i < colorList.getLength(); i++) {
+      Element colorElement = (Element) colorList.item(i);
+      String colorName = colorElement.getAttribute("cellType");
+      String colorValue = colorElement.getAttribute("value");
+
+      colors.put(handler.stateFromString(colorName), colorValue);
+    }
+
+    return colors;
   }
 
   /**

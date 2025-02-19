@@ -81,7 +81,7 @@ class RuleFactoryTest {
 
         // Act & Assert
         Exception exception = assertThrows(NullPointerException.class, () -> {
-            RuleFactory.createRule(ruleType, null);
+            Rule<?, ?> rule = RuleFactory.createRule(ruleType, null);
         });
 
         assertNotNull(exception);
