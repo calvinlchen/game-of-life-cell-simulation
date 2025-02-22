@@ -1,11 +1,13 @@
 package cellsociety.model.util;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.StateEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * An object that holds simulation data
@@ -14,14 +16,37 @@ import java.util.Map;
  */
 public class XMLData {
 
-  private SimType type; //enum for game type
-  private String title; //title of game
-  private String author; //name of author
-  private String description; //description of simulation behavior
-  private int gridRowNum; //number of rows in a grid
-  private int gridColNum; //number of columns in grid.
-  private List<Integer> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
-  private Map<String, Double> parameters; //<parameter name as string, value>
+    private SimType type; //enum for game type
+    private String title; //title of game
+    private String author; //name of author
+    private String description; //description of simulation behavior
+    private String theme; //saving the (color??) theme of the simulation
+    private String language; //language of default & error text on screen
+    private int reverseStateNum; //the number of states that the simulation will hold for the process of reversal.
+    private Map<Integer, String> customColorMap; //a map of the custom colors
+    private int gridRowNum; //number of rows in a grid
+    private int gridColNum; //number of columns in grid.
+    private List<Integer> cellStateList = new ArrayList<>(); //a list of each cell's state in the grid. size unknown
+    private Map<String, Double> parameters; //<parameter name as string, value>
+    private int id;
+    public static int totalSimulations;
+
+    private ResourceBundle myErrorResources;
+
+    public XMLData() {
+        myErrorResources = getErrorSimulationResourceBundle("English");
+        initializeXMLData();
+    }
+
+    public XMLData(String language) {
+        myErrorResources = getErrorSimulationResourceBundle(language);
+        initializeXMLData();
+    }
+
+    private void initializeXMLData() {
+        id = totalSimulations;
+        totalSimulations++;
+    }
 
     /**
      * Returns the value of the type.
@@ -165,5 +190,59 @@ public class XMLData {
      */
     public void setParameters(Map<String, Double> parameters) {
         this.parameters = parameters;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Map<Integer, String> getCustomColorMap() {
+        return customColorMap;
+    }
+
+    public void setCustomColorMap(Map<Integer, String> customColorMap) {
+        this.customColorMap = customColorMap;
+    }
+
+    public int getReverseStateNum() {
+        return reverseStateNum;
+    }
+
+    public void setReverseStateNum(int reverseStateNum) {
+        this.reverseStateNum = reverseStateNum;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    //the number of cell states in a simulation type, meant for dynamic state count
+    public int getNumStates() {
+        if (parameters == null) {
+            throw new IllegalStateException(myErrorResources.getString("NullParameterMap"));
+        }
+
+        Double numStates = parameters.getOrDefault("numStates", 0.0);
+        if (numStates == null) {
+            throw new IllegalStateException(String.format(myErrorResources.getString("NullParameterMap"), "numStates"));
+        }
+
+        return numStates.intValue();
     }
 }

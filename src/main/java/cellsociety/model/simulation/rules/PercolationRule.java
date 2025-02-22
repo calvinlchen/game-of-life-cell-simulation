@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.PERCOLATION_OPEN;
+import static cellsociety.model.util.constants.CellStates.PERCOLATION_PERCOLATED;
+
 import cellsociety.model.simulation.cell.PercolationCell;
 import cellsociety.model.simulation.parameters.PercolationParameters;
 import java.util.Map;
@@ -10,8 +13,6 @@ import java.util.Map;
  * @author Jessica Chen
  */
 public class PercolationRule extends Rule<PercolationCell, PercolationParameters> {
-  private final int PERCOLATION_PERCOLATED;
-  private final int PERCOLATION_OPEN;
 
   /**
    * Constructor for the Rule class
@@ -20,8 +21,16 @@ public class PercolationRule extends Rule<PercolationCell, PercolationParameters
    */
   public PercolationRule(PercolationParameters parameters) {
     super(parameters);
-    PERCOLATION_OPEN = super.getStateProperty("PERCOLATION_OPEN");
-    PERCOLATION_PERCOLATED = super.getStateProperty("PERCOLATION_PERCOLATED");
+  }
+
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public PercolationRule(PercolationParameters parameters, String language) {
+    super(parameters, language);
   }
 
   @Override

@@ -24,14 +24,28 @@ public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
   }
 
   /**
+   * Constructs an AdjacentGrid with specified dimensions.
+   *
+   * @param cells - cells to be added
+   * @param rows  - number of rows in the grid
+   * @param cols  - number of columns in the grid
+   * @param language - name of language, for error message display
+   */
+  public AdjacentGrid(List<T> cells, int rows, int cols, String language) {
+    super(cells, rows, cols, language);
+    setNeighbors();
+  }
+
+  /**
    * Set neighbors for all cells in the grid.
    *
    * <p> Neighbors are only the four directly adjacent cells (up, down, left, right)
    */
   @Override
   public void setNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    setNeighbors(directions);
+      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+      setNeighbors(directions);
   }
 }
+
 

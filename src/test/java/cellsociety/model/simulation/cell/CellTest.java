@@ -1,261 +1,291 @@
 package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
-import java.util.ArrayList;
-import java.util.HashMap;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 
-/**
- * Test cell for testing
- */
-class TestCell extends Cell<TestCell, TestRule, TestParameters> {
-  public TestCell(int state, TestRule rule) {
-    super(state, rule);
-  }
-
-  @Override
-  public void calcNextState() {
-    return;
-  }
-
-  @Override
-  public void step() {
-    return;
-  }
-
-  @Override
-  protected TestCell getSelf() {return this;}
-}
-
-class TestRule extends Rule<TestCell, TestParameters> {
-
-  public TestRule(TestParameters parameters) {
-    super(parameters);
-  }
-
-  @Override
-  public int apply(TestCell cell) {
-    return 0;
-  }
-}
-
-/**
- * A minimal test parameters class for unit testing.
- *
- * @author chatgpt
- * @author Jessica Chen, modified constructor
- */
-class TestParameters extends Parameters {
-
-  public TestParameters() {
-    super();
-
-    Map<String, Double> parameters = new HashMap<>();
-    parameters.put("maxHistorySize", 3.);
-    setParameters(parameters);
-
-  }
-}
-
-/**
- * Tester for cell interface
- */
 class CellTest {
-  private TestCell cell;
-  private TestCell neighbor;
-  private TestRule rule;
+
+  private TestCell testCell;
+  private TestRule mockRule;
+  private Parameters mockParameters;
+
+  // Mockito set up done with the help of chatGPT,
+  // although edited to fit the actual generic structure
+  static class TestCell extends Cell<TestCell, TestRule, Parameters> {
+
+    public TestCell(int state, TestRule rule) {
+      super(state, rule);
+    }
+
+    @Override
+    protected TestCell getSelf() {
+      return this;
+    }
+  }
+
+  static class TestRule extends Rule<TestCell, Parameters> {
+
+    public TestRule(Parameters parameters) {
+      super(parameters);
+    }
+
+    @Override
+    public int apply(TestCell cell) {
+      return 0;
+    }
+  }
+
 
   @BeforeEach
   void setUp() {
-    TestParameters parameters = new TestParameters();
-    rule = new TestRule(parameters);
-    cell = new TestCell(0, rule);
-    neighbor = new TestCell(0, rule);
-  }
+    mockRule = Mockito.mock(TestRule.class);
+    mockParameters = Mockito.mock(Parameters.class);
+    when(mockRule.getParameters()).thenReturn(mockParameters);
+    when(mockParameters.getParameter("maxHistorySize")).thenReturn(3.);
 
-  // Positive Checks
+    testCell = new TestCell(1, mockRule);
+  }
 
   @Test
   @DisplayName("Initial state is set correctly")
-  void initialState_Verified() {
-    assertEquals(0, cell.getCurrentState());
-    assertEquals(0, cell.getNeighbors().size());
+  void cell_TestInitializedState_ReturnInitialCorrectStates() {
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(1, testCell.getNextState());
+    assertEquals(0, testCell.getNeighbors().size());
+
+    testCell.stepBack();
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(1, testCell.getNextState());
   }
 
   @Test
-  @DisplayName("Set and get current state correctly")
-  void currentState_SetAndGet_Verified() {
-    assertEquals(0, cell.getCurrentState());
-    cell.setCurrentState(1);
-    assertEquals(1, cell.getCurrentState());
+  @DisplayName("Save current state saves current state")
+  void saveCurrentState_TestSaveState_SaveCurrentState() {
+    testCell.setCurrentState(3);
+
+    testCell.stepBack();
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(1, testCell.getNextState());
+
+    testCell.setCurrentState(3);
+    testCell.saveCurrentState();
+    testCell.setCurrentState(2);
+    testCell.stepBack();
+    assertEquals(3, testCell.getCurrentState());
+    assertEquals(3, testCell.getNextState());
   }
 
   @Test
-  @DisplayName("Set and get next state correctly")
-  void nextState_SetAndGet_Verified() {
-    assertEquals(0, cell.getNextState());
-    cell.setNextState(1);
-    assertEquals(1, cell.getNextState());
-  }
+  @DisplayName("Save only up to history amount of steps")
+  void saveCurrentState_TestSaveOnlyUpToHistoryAmountOfSteps_SaveLast3States() {
+    // 1
+    testCell.setCurrentState(2);
+    testCell.saveCurrentState();  // 1 -> 2
 
+    testCell.setCurrentState(3);
+    testCell.saveCurrentState();  // 1 -> 2 -> 3
 
-  @Test
-  @DisplayName("Set and get position correctly")
-  void position_SetAndGet_Verified() {
-    int[] position = {2, 3};
-    cell.setPosition(position);
-    assertArrayEquals(position, cell.getPosition());
-  }
+    testCell.setCurrentState(4);
+    testCell.saveCurrentState();  // 2 -> 3 -> 4
 
-  @Test
-  @DisplayName("Set and get neighbors correctly")
-  void neighbors_SetAndGet_Verified() {
-    List<TestCell> neighborsToAdd = new ArrayList<>();
-    neighborsToAdd.add(neighbor);
+    testCell.setCurrentState(5);
 
-    cell.setNeighbors(neighborsToAdd);
-    List<TestCell> neighbors = cell.getNeighbors();
-    assertEquals(1, neighbors.size());
-    assertTrue(neighbors.contains(neighbor));
-  }
+    testCell.stepBack();
+    assertEquals(4, testCell.getCurrentState());
+    assertEquals(4, testCell.getNextState());
 
-  @Test
-  @DisplayName("Successfully add neighbor")
-  void neighbors_AddSingleNeighbor_Verified() {
-    assertTrue(cell.addNeighbor(neighbor));
+    testCell.stepBack();
+    assertEquals(3, testCell.getCurrentState());
+    assertEquals(3, testCell.getNextState());
 
-    List<TestCell> neighbors = cell.getNeighbors();
-    assertEquals(1, neighbors.size());
-    assertTrue(neighbors.contains(neighbor));
+    testCell.stepBack();
+    assertEquals(2, testCell.getCurrentState());
+    assertEquals(2, testCell.getNextState());
+
+    testCell.stepBack();
+    assertEquals(2, testCell.getCurrentState());
+    assertEquals(2, testCell.getNextState());
   }
 
   @Test
-  @DisplayName("Successfully remove neighbor")
-  void neighbors_RemoveSingleNeighbor_Verified() {
-    assertTrue(cell.addNeighbor(neighbor));
-    assertTrue(cell.removeNeighbor(neighbor));
+  @DisplayName("Throw error if maxHistorySize is invalid")
+  void saveCurrentState_InvalidMaxHistorySize_ThrowSimulationException() {
+    TestRule mockRule2 = Mockito.mock(TestRule.class);
+    Parameters mockParameters2 = Mockito.mock(Parameters.class);
+    when(mockRule2.getParameters()).thenReturn(mockParameters2);
+    when(mockParameters2.getParameter("maxHistorySize")).thenReturn(-3.);
+
+    assertThrows(SimulationException.class, () -> new TestCell(1, mockRule2));
   }
 
   @Test
-  @DisplayName("Step back restores previous state")
-  void stepBack_RestoresPreviousState_Verified() {
-    cell.setCurrentState(1);
+  @DisplayName("Test calculate next state")
+  void calcNextState_TestCalcNextState_SetNextStateToRuleApply() {
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(1, testCell.getNextState());
 
-    cell.saveCurrentState();
-    cell.setCurrentState(2);
+    testCell.calcNextState();
 
-
-    cell.stepBack();
-    assertEquals(1, cell.getCurrentState());
-    assertEquals(1, cell.getNextState());
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(0, testCell.getNextState());
   }
 
   @Test
-  @DisplayName("Step back does not go beyond initial state")
-  void stepBack_DoesNotExceedInitialState_Verified() {
-    cell.setCurrentState(1);
-    cell.stepBack();
+  @DisplayName("Test step updates to next step")
+  void step_TestStep_SetCurrentStateToNextStep() {
+    assertEquals(1, testCell.getCurrentState());
+    assertEquals(1, testCell.getNextState());
 
-    assertEquals(0, cell.getCurrentState());
-    assertEquals(0, cell.getNextState());
+    testCell.setNextState(2);
+    assertEquals(1, testCell.getCurrentState());
+
+    testCell.step();
+    assertEquals(2, testCell.getCurrentState());
   }
 
   @Test
-  @DisplayName("Step back after multiple steps restores last saved state")
-  void stepBack_AfterMultipleSteps_Verified() {
-    cell.setCurrentState(1);
-    cell.saveCurrentState();
-    cell.setCurrentState(2);
-
-    cell.stepBack();
-    assertEquals(1, cell.getCurrentState());
-    assertEquals(1, cell.getNextState());
-
-    cell.stepBack();
-    assertEquals(0, cell.getCurrentState());
-    assertEquals(0, cell.getNextState());
+  @DisplayName("Test get position of cell returns current position")
+  void getPosition_TestGetPosition_ReturnCurrentPosition() {
+    int[] position = new int[]{1, 2};
+    testCell.setPosition(position);
+    assertEquals(position, testCell.getPosition());
   }
 
   @Test
-  @DisplayName("Step back only restores up to the maxSavedStates limit")
-  void stepBack_RespectsMaxSavedStatesLimit_Verified() {
-    // 0
-    cell.setCurrentState(1);
-    cell.saveCurrentState();  // 1-> 0
-    cell.setCurrentState(2);
-    cell.saveCurrentState();  // 2-> 1 -> 0
-    cell.setCurrentState(3);
-    cell.saveCurrentState();  // 3-> 2 -> 1
-    cell.setCurrentState(4);
-
-    cell.stepBack();
-    assertEquals(3, cell.getCurrentState());
-    assertEquals(3, cell.getNextState());
-
-    cell.stepBack();
-    assertEquals(2, cell.getCurrentState());
-    assertEquals(2, cell.getNextState());
-
-    cell.stepBack();
-    assertEquals(1, cell.getCurrentState());
-    assertEquals(1, cell.getNextState());
-
-    cell.stepBack();
-    assertEquals(1, cell.getCurrentState());
-    assertEquals(1, cell.getNextState());
-  }
-
-
-
-  // Negative Tests
-
-  @Test
-  @DisplayName("Set invalid number of position arguments in position constructor")
-  void position_InvalidPosition_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setPosition(new int[]{0}));
+  @DisplayName("Get position throws error if cell does not have position")
+  void getPosition_TestGetPosition_ThrowsSimulationExceptionIfNullPosition() {
+    assertThrows(SimulationException.class, () -> testCell.getPosition());
   }
 
   @Test
-  @DisplayName("Set position to null")
-  void position_Null_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setPosition(null));
+  @DisplayName("Set position throws simulation exception if trying to set position to null")
+  void setPosition_TestSetPosition_ThrowsSimulationExceptionIfNullPosition() {
+    assertThrows(SimulationException.class, () -> testCell.setPosition(null));
   }
 
   @Test
-  @DisplayName("Add the same neighbor")
-  void neighbors_AddSameNeighbor_IllegalArgumentException() {
-    assertTrue(cell.addNeighbor(neighbor));
-    assertThrows(IllegalArgumentException.class, () -> cell.addNeighbor(neighbor));
-  }
-
-
-  @Test
-  @DisplayName("Add neighbor that is null")
-  void neighbors_AddNull_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.addNeighbor(null));
-  }
-
-
-  @Test
-  @DisplayName("Fail to remove neighbor when not in list")
-  void neighbors_RemoveNonExistentNeighbor_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.removeNeighbor(neighbor));
+  @DisplayName("Set position throws simulation exception if trying to set position to invalid length")
+  void setPosition_TestSetPosition_ThrowsSimulationExceptionIfInvalidLength() {
+    assertThrows(SimulationException.class, () -> testCell.setPosition(new int[]{1}));
   }
 
   @Test
-  @DisplayName("Remove null neighbor")
-  void neighbors_RemoveNull_IllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.removeNeighbor(null));
+  @DisplayName("Correctly returns neighbors")
+  void getNeighbors_TestGetNeighbors_ReturnNeighbors() {
+    assertEquals(0, testCell.getNeighbors().size());
+
+    TestCell neighbor1 = new TestCell(2, mockRule);
+    TestCell neighbor2 = new TestCell(3, mockRule);
+    TestCell nonNeighbor = new TestCell(4, mockRule);
+
+    testCell.addNeighbor(neighbor1);
+    testCell.addNeighbor(neighbor2);
+
+    assertEquals(2, testCell.getNeighbors().size());
+    assertTrue(testCell.getNeighbors().contains(neighbor1));
+    assertTrue(testCell.getNeighbors().contains(neighbor2));
+    assertFalse(testCell.getNeighbors().contains(nonNeighbor));
   }
 
+  @Test
+  @DisplayName("Correctly can set neighbors")
+  void setNeighbors_TestSetNeighbors_SetNeighbors() {
+    TestCell neighbor1 = new TestCell(2, mockRule);
+    TestCell neighbor2 = new TestCell(3, mockRule);
+    TestCell nonNeighbor = new TestCell(4, mockRule);
 
+    testCell.addNeighbor(neighbor1);
+    testCell.addNeighbor(neighbor2);
 
+    assertEquals(2, testCell.getNeighbors().size());
+    assertTrue(testCell.getNeighbors().contains(neighbor1));
+    assertTrue(testCell.getNeighbors().contains(neighbor2));
+    assertFalse(testCell.getNeighbors().contains(nonNeighbor));
+
+    testCell.setNeighbors(List.of(nonNeighbor));
+    assertEquals(1, testCell.getNeighbors().size());
+    assertFalse(testCell.getNeighbors().contains(neighbor1));
+    assertFalse(testCell.getNeighbors().contains(neighbor2));
+    assertTrue(testCell.getNeighbors().contains(nonNeighbor));
+  }
+
+  @Test
+  @DisplayName("Throws simulation exception if you try to set neighbors to null")
+  void setNeighbors_TestIllegalParameters_ThrowsSimulationExceptionIfNullNeighbors() {
+    assertThrows(SimulationException.class, () -> testCell.setNeighbors(null));
+  }
+
+  @Test
+  @DisplayName("Throws simulation exception if you try to add null neighbor")
+  void addNeighbor_TestAddIllegalNeighbor_ThrowsSimulationExceptionIfNullNeighbor() {
+    assertThrows(SimulationException.class, () -> testCell.addNeighbor(null));
+  }
+
+  @Test
+  @DisplayName("Throws simulation exception if you try to add a neighbor already in the list")
+  void addNeighbor_TestAddIllegalNeighbor_ThrowsSimulationExceptionIfNeighborAlreadyInList() {
+    TestCell neighbor = new TestCell(1, mockRule);
+    testCell.addNeighbor(neighbor);
+    assertThrows(SimulationException.class, () -> testCell.addNeighbor(neighbor));
+  }
+
+  @Test
+  @DisplayName("Test that remove neighbors properly removes neighbors")
+  void removeNeighbors_TestRemoveNeighbors_RemoveNeighbor2() {
+    TestCell neighbor1 = new TestCell(2, mockRule);
+    TestCell neighbor2 = new TestCell(3, mockRule);
+
+    testCell.addNeighbor(neighbor1);
+    testCell.addNeighbor(neighbor2);
+
+    assertEquals(2, testCell.getNeighbors().size());
+    assertTrue(testCell.getNeighbors().contains(neighbor1));
+    assertTrue(testCell.getNeighbors().contains(neighbor2));
+
+    testCell.removeNeighbor(neighbor2);
+    assertEquals(1, testCell.getNeighbors().size());
+    assertTrue(testCell.getNeighbors().contains(neighbor1));
+    assertFalse(testCell.getNeighbors().contains(neighbor2));
+  }
+
+  @Test
+  @DisplayName("Throws Simulation Exception if try to remove cell that is not a neighbor")
+  void removeNeighbor_TestRemoveNeighborInvalidParameter_ThrowsSimulationExceptionIfCellIsNotANeighbor() {
+    assertThrows(SimulationException.class,
+        () -> testCell.removeNeighbor(new TestCell(1, mockRule)));
+  }
+
+  @Test
+  @DisplayName("Returns rule correctly")
+  void getRule_TestGetRule_ReturnRule() {
+    assertEquals(mockRule, testCell.getRule());
+  }
+
+  @Test
+  @DisplayName("No error if passed in state is valid")
+  void validateState_TestIsValidState_NoError() {
+    testCell.validateState(2, 3);
+  }
+
+  @Test
+  @DisplayName("error if passed in state is negative")
+  void validateState_TestIsNegativeState_ThrowSimulationException() {
+    assertThrows(SimulationException.class, () -> testCell.validateState(-1, 3));
+  }
+
+  @Test
+  @DisplayName("error if passed in cell is greater than max")
+  void validateState_TestIsGreaterMaxState_ThrowSimulationException() {
+    assertThrows(SimulationException.class, () -> testCell.validateState(1, 1));
+  }
 }

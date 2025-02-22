@@ -1,12 +1,26 @@
 package cellsociety.model.factories.statefactory.handler;
 
+import cellsociety.model.factories.statefactory.exceptions.CellStateFactoryException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CellStateHandlerStatic {
+/**
+ * Static implementation of {@link CellStateHandler} that defines the main handling for static states
+ *
+ * <p> Assumption: cell states are passed in through the constructor
+ *
+ * @author Jessica Chen
+ */
+public class CellStateHandlerStatic implements CellStateHandler {
   private Map<Integer, String> cellStates = new HashMap<>();
 
+  /**
+   * Constructs a {@code CellStateHandlerStatic} with a predefined set of states.
+   *
+   * @param cellStates A map containing state integer values and their corresponding names.
+   */
   public CellStateHandlerStatic(Map<Integer, String> cellStates) {
     this.cellStates = cellStates;
   }
@@ -25,8 +39,7 @@ public class CellStateHandlerStatic {
         return entry.getKey();
       }
     }
-    // TODO: make this a custom exception
-    throw new IllegalArgumentException("Invalid state: " + state);
+    throw new CellStateFactoryException("Invalid state: " + state);
   }
 
   public String statetoString(int state) {

@@ -1,0 +1,25 @@
+<simulation>
+    <metadata>
+        <type>Percolation</type>
+        <title>Poison</title>
+        <author>Bell Biv Divoe</author>
+        <description>That girl is...</description>
+        <language>Espanol</language>
+        <colors>
+            <color cellType="percolated" value="#800080"/>
+            <color cellType="blocked" value="#BC4A3C"/>
+            <color cellType="open" value="#0000FF"/>
+        </colors>
+    </metadata>
+
+    <grid rows="30" columns="30">
+        <variation type="ratio">
+            <cell cellType="percolated" value="0.34"/>
+            <cell cellType="blocked" value="0.09"/>
+        </variation>
+    </grid>
+
+    <parameters>
+        <!-- This is where parameters would go -->
+    </parameters>
+</simulation>

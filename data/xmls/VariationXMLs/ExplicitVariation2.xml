@@ -1,0 +1,19 @@
+<simulation>
+    <metadata>
+        <type>Segregation</type>
+        <title>Unbalanced</title>
+        <author>Anakin Skywalker</author>
+        <description>Uh... The dark rises to meet the light? I've never watched the original or the prequel trilogy lol.</description>
+    </metadata>
+
+    <grid rows="5" columns="7">
+        <variation type="explicit">
+            <cell cellType="AgentA">19</cell>
+            <cell cellType="AgentB">5</cell>
+        </variation>
+    </grid>
+
+    <parameters>
+        <parameter name="toleranceThreshold" value="0.3"/>
+    </parameters>
+</simulation>

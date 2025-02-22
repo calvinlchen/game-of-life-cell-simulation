@@ -1,5 +1,9 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.FIRE_BURNING;
+import static cellsociety.model.util.constants.CellStates.FIRE_EMPTY;
+import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
+
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.FireParameters;
 import java.util.Map;
@@ -11,9 +15,7 @@ import java.util.Map;
  * @author Jessica Chen
  */
 public class FireRule extends Rule<FireCell, FireParameters> {
-  private final int FIRE_EMPTY;
-  private final int FIRE_TREE;
-  private final int FIRE_BURNING;
+
   /**
    * Constructor for the Rule class
    *
@@ -21,21 +23,24 @@ public class FireRule extends Rule<FireCell, FireParameters> {
    */
   public FireRule(FireParameters parameters) {
     super(parameters);
+  }
 
-    FIRE_EMPTY = super.getStateProperty("FIRE_EMPTY");
-    FIRE_TREE = super.getStateProperty("FIRE_TREE");
-    FIRE_BURNING = super.getStateProperty("FIRE_BURNING");
+  /**
+   * Constructor for the Rule class
+   *
+   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param language - name of language, for error message display
+   */
+  public FireRule(FireParameters parameters, String language) {
+    super(parameters, language);
   }
 
   @Override
   public int apply(FireCell cell) {
     return switch (cell.getCurrentState()) {
-      case 2 ->                     // burning
-          FIRE_EMPTY;
-      case 1 ->                     // tree
-          handleTree(cell);
-      case 0 ->                     // empty
-          handleEmpty(cell);
+      case FIRE_BURNING -> FIRE_EMPTY;
+      case FIRE_TREE -> handleTree(cell);
+      case FIRE_EMPTY -> handleEmpty(cell);
       default -> cell.getCurrentState();
     };
   }

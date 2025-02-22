@@ -3,7 +3,11 @@ package cellsociety.view.components;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.scene.layout.Pane;
 
 /**
@@ -11,17 +15,18 @@ import javafx.scene.layout.Pane;
  */
 public class SimulationView {
 
-  private Pane myDisplay;
-  private double myGridWidth;
-  private double myGridHeight;
+  private final Pane myDisplay;
+  private final double myGridWidth;
+  private final double myGridHeight;
   private CellView[][] myCellViews;
   private double myCellWidth;
   private double myCellHeight;
 
   private XMLData myXML;
-  private Simulation mySimulation;
+  private Simulation<?> mySimulation;
+  private final String myLanguage;
 
-  public SimulationView(double width, double height) {
+  public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
     myGridWidth = width;
     myGridHeight = height;
@@ -30,6 +35,7 @@ public class SimulationView {
     myCellViews = new CellView[0][0];
     myCellWidth = 0;
     myCellHeight = 0;
+    myLanguage = language;
   }
 
   /**
@@ -56,7 +62,7 @@ public class SimulationView {
 
     myCellViews = new CellView[numRows][numCols];
 
-    mySimulation = new Simulation(xmlData);
+    mySimulation = new Simulation(xmlData, myLanguage);
   }
 
   /**
@@ -77,23 +83,8 @@ public class SimulationView {
 
   private void createCellView(int cellRow, int cellCol, int cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
-    double x = position[0];
-    double y = position[1];
 
-    CellView cellView = null;
-
-    switch (simType) {
-      case GameOfLife ->
-          cellView = new GameOfLifeCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Fire -> cellView = new FireCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Percolation ->
-          cellView = new PercolationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case Segregation ->
-          cellView = new SegregationCellView(x, y, myCellWidth, myCellHeight, cellState);
-      case WaTor -> cellView = new WaTorCellView(x, y, myCellWidth, myCellHeight, cellState);
-      default -> throw new IllegalArgumentException("Unsupported simulation type: " + simType);
-    }
-
+    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight, cellState);
     if (cellView != null) {
       myCellViews[cellRow][cellCol] = cellView;
       myDisplay.getChildren().add(cellView.getShape());
@@ -136,6 +127,18 @@ public class SimulationView {
   }
 
   /**
+   * Toggles grid lines (AKA cell outlines) for all CellViews in the simulation grid.
+   * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
+   */
+  public void toggleGridlines(boolean enable) {
+    for (CellView[] row : myCellViews) {
+      for (CellView cellView : row) {
+        cellView.toggleOutlines(enable);
+      }
+    }
+  }
+
+  /**
    * Resets the grid to an empty state.
    */
   public void resetGrid() {
@@ -148,7 +151,22 @@ public class SimulationView {
    *
    * @return null or Simulation object
    */
-  public Simulation getSimulation() {
+  public Simulation<?> getSimulation() {
     return mySimulation;
+  }
+
+  /**
+   * Get all CellView objects that are currently in this simulation
+   */
+  public List<CellView> getCellViewList() {
+    if (myCellViews == null) {
+      return new ArrayList<>();
+    }
+
+    List<CellView> list = new ArrayList<>();
+    for (CellView[] row : myCellViews) {
+      list.addAll(Arrays.asList(row));
+    }
+    return list;
   }
 }

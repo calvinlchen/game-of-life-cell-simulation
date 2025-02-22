@@ -1,5 +1,9 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.CellStates.WATOR_MAXSTATE;
+import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
+import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
+
 import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 
@@ -19,9 +23,6 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   private boolean consumed;
   private WaTorCell movedFrom;
 
-  private final int WATOR_EMPTY;
-  private final int WATOR_SHARK;
-
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
@@ -31,13 +32,24 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   public WaTorCell(int state, WaTorRule rule) {
     super(state, rule);
 
-    WATOR_EMPTY = super.getStateProperty("WATOR_EMPTY");
-    WATOR_SHARK = super.getStateProperty("WATOR_SHARK");
+    initializeDefaultVariables(state);
+  }
+
+  /**
+   * Constructs a WaTorCell with a specified initial state and rule.
+   *
+   * @param state - the initial state of the cell (must be a state from WaTorStates)
+   * @param rule  - the WaTorRule to calculate the next state
+   * @param language - name of language, for error message display
+   */
+  public WaTorCell(int state, WaTorRule rule, String language) {
+    super(state, rule, language);
 
     initializeDefaultVariables(state);
   }
 
   private void initializeDefaultVariables(int state) {
+    validateState(state, WATOR_MAXSTATE);
 
     myStepsSurvived = 0;
     myEnergy =
@@ -172,5 +184,17 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
     myEnergy = myNextEnergy;
     consumed = false;
     movedFrom = null;
+  }
+
+  @Override
+  public void setCurrentState(int state) {
+    validateState(state, WATOR_MAXSTATE);
+    super.setCurrentState(state);
+  }
+
+  @Override
+  public void setNextState(int state) {
+    validateState(state, WATOR_MAXSTATE);
+    super.setNextState(state);
   }
 }

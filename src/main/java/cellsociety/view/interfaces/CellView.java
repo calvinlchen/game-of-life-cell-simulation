@@ -1,5 +1,7 @@
 package cellsociety.view.interfaces;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -8,11 +10,13 @@ import javafx.scene.shape.Shape;
  * Abstract class representing a Cell's visual representation.
  */
 public abstract class CellView {
-  public static Color DEFAULT_FILL = Color.BLACK;
-  public static Color DEFAULT_OUTLINE = Color.WHITE;
+  public static final String DEFAULT_OUTLINE_CLASS = "cell-default-outline";
+  public static final String DEFAULT_NO_OUTLINE_CLASS = "cell-no-outline";
 
+  private static Map<Integer, Color> myColorMap;  // contains state-to-color mappings
   protected int myCellState;
   protected Shape myShape;
+  private boolean myOutlinesEnabled;
 
   /**
    * Constructs a cell to be displayed to the user.
@@ -23,10 +27,12 @@ public abstract class CellView {
    * @param cellState the current state represented by this cell
    * @author Calvin Chen
    */
-  protected CellView(double x, double y, double width, double height, int cellState) {
+  protected CellView(double x, double y, double width, double height, int cellState, Map<Integer, Color> colorMap) {
     myCellState = cellState;
+    myColorMap = new HashMap<>(colorMap); // configure state colors according to colorMap
     myShape = createShape(x,y,width,height);
-    updateViewColor(); // Set color based on cell state
+    enableOutlines();   // enable grid outlines by default
+    updateViewColor();  // Set color based on cell state
   }
 
   /**
@@ -34,11 +40,7 @@ public abstract class CellView {
    * Subclasses can Override this method to use a different cell Shape type or styling.
    */
   protected Shape createShape(double x, double y, double width, double height) {
-    Shape shape = new Rectangle(x, y, width, height);
-    shape.setFill(DEFAULT_FILL);
-    shape.setStroke(DEFAULT_OUTLINE);
-    shape.setStrokeWidth(1);
-    return shape;
+    return new Rectangle(x, y, width, height);
   }
 
   /**
@@ -82,7 +84,61 @@ public abstract class CellView {
   }
 
   /**
-   * Abstract method to be implemented by subclasses to provide state-to-color mapping. (ChatGPT)
+   * Returns the color value of a given state
+   * @param state int value of the state, such as 0 for EMPTY
    */
-  public abstract Color getColorForState(int state);
+  public Color getColorForState(int state) {
+    return myColorMap.getOrDefault(state, Color.TRANSPARENT);
+  }
+
+  /**
+   * Updates a state's assigned color in the map, and updates the cell view accordingly
+   */
+  public void setColorForState(int state, Color color) {
+    myColorMap.put(state, color);
+    updateViewColor();
+  }
+
+  /**
+   * Get the number of displayable states
+   * @return the total number of possible states for this cell
+   */
+  public int getNumStates() {
+    return myColorMap.size();
+  }
+
+  /**
+   * Add "grid" outlines based on CSS file format (resets cell CSS formatting)
+   */
+  private void enableOutlines() {
+    if (!myOutlinesEnabled) {
+      myShape.getStyleClass().remove(DEFAULT_NO_OUTLINE_CLASS);
+      myShape.getStyleClass().addAll(DEFAULT_OUTLINE_CLASS);    // Apply CSS
+      myOutlinesEnabled = true;
+    }
+  }
+
+  /**
+   * Remove "grid" outlines based on CSS file format (resets cell CSS formatting)
+   */
+  private void disableOutlines() {
+    if (myOutlinesEnabled) {
+      myShape.getStyleClass().remove(DEFAULT_OUTLINE_CLASS);
+      myShape.getStyleClass().addAll(DEFAULT_NO_OUTLINE_CLASS); // Apply CSS
+      myOutlinesEnabled = false;
+    }
+  }
+
+  /**
+   * Toggles the cell outline on/off for this CellView
+   * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
+   */
+  public void toggleOutlines(boolean enable) {
+    if (enable) {
+      enableOutlines();
+    }
+    else {
+      disableOutlines();
+    }
+  }
 }
