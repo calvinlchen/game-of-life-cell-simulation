@@ -77,49 +77,7 @@ public class XMLUtils {
           Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata").item(0);
           String SimulationType = simulationElement.getElementsByTagName("type").item(0)
                   .getTextContent();
-
-          switch (SimulationType.toLowerCase()) { //switch case to determine enum type
-            case "game of life":
-            case "gameoflife":
-              xmlObject.setType(SimType.GameOfLife);
-              break;
-            case "spreading of fire":
-            case "fire":
-              xmlObject.setType(SimType.Fire);
-              break;
-            case "percolation":
-              xmlObject.setType(SimType.Percolation);
-              break;
-            case "model of segregation":
-            case "segregation":
-              xmlObject.setType(SimType.Segregation);
-              break;
-            case "wa-tor world":
-            case "wator":
-              xmlObject.setType(SimType.WaTor);
-              break;
-            case "falling sand":
-            case "fallingsand":
-              xmlObject.setType(SimType.FallingSand);
-              break;
-            case "langton":
-            case "langton's loop":
-            case "langtonsloop":
-              xmlObject.setType(SimType.Langton);
-              break;
-            case "chou-reggia loop":
-            case "choureggialoop":
-            case "choureg":
-            case "choureg2":
-            case "chou":
-              xmlObject.setType(SimType.ChouReg2);
-              break;
-            case "petelka":
-              xmlObject.setType(SimType.Petelka);
-              break;
-            default:
-              throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + SimulationType);
-          }
+          xmlObject.setType(simTypeFromString(SimulationType));
 
           xmlObject.setTitle(metadataElement.getElementsByTagName("title").item(0).getTextContent());
           xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
@@ -128,6 +86,8 @@ public class XMLUtils {
           NodeList languageNodes = metadataElement.getElementsByTagName("language");
           if (languageNodes.getLength() > 0) {
             xmlObject.setLanguage(languageNodes.item(0).getTextContent());
+          } else {
+            xmlObject.setLanguage(language); //if no language in og xml, will use the input language as default.
           }
 
           // Extract parameters
@@ -205,22 +165,29 @@ public class XMLUtils {
       Element rootElement = doc.createElement("simulation");
       doc.appendChild(rootElement);
 
-      // Add metadata
+      // Add metadata section
+      Element metadataElement = doc.createElement("metadata");
+      rootElement.appendChild(metadataElement);
+
       Element typeElement = doc.createElement("type");
       typeElement.appendChild(doc.createTextNode(simulation.getXMLData().getType().toString()));
-      rootElement.appendChild(typeElement);
+      metadataElement.appendChild(typeElement);
 
       Element titleElement = doc.createElement("title");
       titleElement.appendChild(doc.createTextNode(title));
-      rootElement.appendChild(titleElement);
+      metadataElement.appendChild(titleElement);
 
       Element authorElement = doc.createElement("author");
       authorElement.appendChild(doc.createTextNode(author));
-      rootElement.appendChild(authorElement);
+      metadataElement.appendChild(authorElement);
+
+      Element languageElement = doc.createElement("language");
+      languageElement.appendChild(doc.createTextNode(simulation.getXMLData().getLanguage()));
+      metadataElement.appendChild(languageElement);
 
       Element descriptionElement = doc.createElement("description");
       descriptionElement.appendChild(doc.createTextNode(description));
-      rootElement.appendChild(descriptionElement);
+      metadataElement.appendChild(descriptionElement);
 
       // Add grid info
       Element gridElement = doc.createElement("grid");
@@ -237,13 +204,17 @@ public class XMLUtils {
         gridElement.appendChild(cellElement);
       }
 
+      // Add parameters section
+      Element parametersElement = doc.createElement("parameters");
+      rootElement.appendChild(parametersElement);
+
       // Add parameters
       Map<String, Double> parameters = simulation.getXMLData().getParameters();
       for (Map.Entry<String, Double> entry : parameters.entrySet()) {
         Element paramElement = doc.createElement("parameter");
         paramElement.setAttribute("name", entry.getKey());
         paramElement.setAttribute("value", String.valueOf(entry.getValue()));
-        gridElement.appendChild(paramElement);
+        parametersElement.appendChild(paramElement);
       }
 
       // Write the content to the selected XML file
@@ -468,5 +439,20 @@ public class XMLUtils {
     }
 
     return cellStateList;
+  }
+  private SimType simTypeFromString(String simTypeString) {
+      return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
+          case "game of life", "gameoflife" -> SimType.GameOfLife;
+          case "spreading of fire", "fire" -> SimType.Fire;
+          case "percolation" -> SimType.Percolation;
+          case "model of segregation", "segregation" -> SimType.Segregation;
+          case "wa-tor world", "wator" -> SimType.WaTor;
+          case "falling sand", "fallingsand" -> SimType.FallingSand;
+          case "langton", "langton's loop", "langtonsloop" -> SimType.Langton;
+          case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -> SimType.ChouReg2;
+          case "petelka" -> SimType.Petelka;
+          case "rock paper scissors", "rps" -> SimType.RPS;
+          default -> throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simTypeString);
+      };
   }
 }
