@@ -381,21 +381,14 @@ public class UserView {
    * Updates a given state to a new color, assuming the color exists
    */
   public void updateColorForState(int state, Color newColor) {
-    List<CellView> cellList = getCellViewList();
-
-    if (cellList.isEmpty()) {
-      return;
-    }
-    if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(String.format(
-          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
+    if (mySimulationView == null) {
+      throw new SimulationException(myErrorResources.getString("NoSimulationToSave"));
     }
 
-    for (CellView cellView : cellList) {
-      cellView.setColorForState(state, newColor);
-      if (cellView.getCellState() == state) {
-        cellView.updateViewColor();
-      }
+    try {
+      mySimulationView.updateCellColorsForState(state, newColor);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(e.getMessage());
     }
   }
 }

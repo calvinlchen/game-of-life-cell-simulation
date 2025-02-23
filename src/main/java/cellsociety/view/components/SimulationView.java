@@ -1,5 +1,7 @@
 package cellsociety.view.components;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -8,7 +10,9 @@ import cellsociety.view.interfaces.CellView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * Manages the position and display of the simulation's cells. (Pane suggested by ChatGPT.)
@@ -25,6 +29,7 @@ public class SimulationView {
   private XMLData myXML;
   private Simulation<?> mySimulation;
   private final String myLanguage;
+  private final ResourceBundle myErrorResources;
 
   public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
@@ -36,6 +41,7 @@ public class SimulationView {
     myCellWidth = 0;
     myCellHeight = 0;
     myLanguage = language;
+    myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
   /**
@@ -168,5 +174,27 @@ public class SimulationView {
       list.addAll(Arrays.asList(row));
     }
     return list;
+  }
+
+  /**
+   * Updates a given state to a new color, assuming the color exists
+   */
+  public void updateCellColorsForState(int state, Color newColor) {
+    List<CellView> cellList = getCellViewList();
+
+    if (cellList.isEmpty()) {
+      return;
+    }
+    if (state < 0 || state >= cellList.getFirst().getNumStates()) {
+      throw new IllegalArgumentException(String.format(
+          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
+    }
+
+    for (CellView cellView : cellList) {
+      cellView.setColorForState(state, newColor);
+      if (cellView.getCellState() == state) {
+        cellView.updateViewColor();
+      }
+    }
   }
 }
