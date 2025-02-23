@@ -276,6 +276,26 @@ public class UserView {
   }
 
   /**
+   * Flip the displayed cell grid horizontally, if a simulation exists in this window.
+   */
+  public void flipGridHorizontally() {
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+    }
+    mySimulationView.flipDisplayHorizontally();
+  }
+
+  /**
+   * Flip the displayed cell grid vertically, if a simulation exists in this window.
+   */
+  public void flipGridVertically() {
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+    }
+    mySimulationView.flipDisplayVertically();
+  }
+
+  /**
    * Change the speed of simulation view stepper based on an adjustmentFactor multiplier.
    * @param adjustmentFactor Speed multiplier value. For example 2.0 will result in the animation running twice as fast.
    */

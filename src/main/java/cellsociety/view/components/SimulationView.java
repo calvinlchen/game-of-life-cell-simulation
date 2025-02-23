@@ -31,6 +31,10 @@ public class SimulationView {
   private final String myLanguage;
   private final ResourceBundle myErrorResources;
 
+  // These define whether the cell grid view is visually flipped or not
+  private boolean isFlippedHorizontally = false;
+  private boolean isFlippedVertically = false;
+
   public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
     myGridWidth = width;
@@ -98,19 +102,61 @@ public class SimulationView {
   }
 
   /**
-   * Returns a coordinate position for a cell based on its row and column
+   * Visually flips the entire CellView grid horizontally. For example:
+   * A B  -->  B A
+   * C D       D C
+   */
+  public void flipDisplayHorizontally() {
+    if (myCellViewsIsEmpty()) {
+      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+    }
+    if (isFlippedHorizontally) {
+      myDisplay.setScaleX(1);
+    }
+    else {
+      myDisplay.setScaleX(-1);
+    }
+    isFlippedHorizontally = !isFlippedHorizontally;
+  }
+
+  /**
+   * Visually flips the entire CellView grid vertically. For example:
+   * A B  -->  C D
+   * C D       A B
+   */
+  public void flipDisplayVertically() {
+    if (myCellViewsIsEmpty()) {
+      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+    }
+    if (isFlippedVertically) {
+      myDisplay.setScaleY(1);
+    }
+    else {
+      myDisplay.setScaleY(-1);
+    }
+    isFlippedVertically = !isFlippedVertically;
+  }
+
+  private boolean myCellViewsIsEmpty() {
+    return myCellViews.length == 0 || myCellViews[0].length == 0;
+  }
+
+  /**
+   * Returns a coordinate position for a cell based on its row and column, as well as grid flip status
    *
    * @param row    A cell's row in the grid (index starting from 0)
    * @param column A cell's column in the grid (index starting from 0)
    * @return double array: [0] = x-coordinate, [1] = y-coordinate
    */
   private double[] getCellPosition(int row, int column) {
-    double[] cellPositions = new double[2];
-    // x-position
-    cellPositions[0] = myCellWidth * column;
-    // y-position
-    cellPositions[1] = myCellHeight * row;
-    return cellPositions;
+    int numRows = myCellViews.length;
+    int numCols = myCellViews[0].length;
+
+    // reverse row/col placement if necessary, depending on if grid is flipped in either direction
+    int displayRow = isFlippedVertically ? numRows - 1 - row : row;
+    int displayCol = isFlippedHorizontally ? numCols - 1 - column : column;
+
+    return new double[]{myCellWidth * displayCol, myCellHeight * displayRow};
   }
 
   /**

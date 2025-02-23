@@ -73,6 +73,14 @@ public class ControlPanel {
     randomButton.setOnAction(e -> myUserView.loadRandomGameOfLife());
     myButtons.add(randomButton);
 
+    Button flipHorizontalButton = new Button(myResources.getString("FlipGridHorizontal"));
+    flipHorizontalButton.setOnAction(e -> myUserView.flipGridHorizontally());
+    myButtons.add(flipHorizontalButton);
+
+    Button flipVerticalButton = new Button(myResources.getString("FlipGridVertical"));
+    flipVerticalButton.setOnAction(e -> myUserView.flipGridVertically());
+    myButtons.add(flipVerticalButton);
+
     myPanel.getChildren().addAll(myButtons);
 
     // Panel containing buttons for speeding up / slowing down the simulations
