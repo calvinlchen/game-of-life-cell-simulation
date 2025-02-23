@@ -390,7 +390,8 @@ public class UserView {
       return;
     }
     if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(String.format(myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()));
+      throw new IllegalArgumentException(String.format(
+          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
     }
 
     for (CellView cellView : cellList) {
