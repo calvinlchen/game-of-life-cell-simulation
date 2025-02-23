@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 public class LangtonCellView extends CellView {
 
   private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
-      0, Color.GRAY,
+      0, Color.TRANSPARENT,
       1, Color.RED,
       2, Color.ORANGE,
       3, Color.YELLOW,

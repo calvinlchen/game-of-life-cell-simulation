@@ -13,7 +13,7 @@ public abstract class CellView {
   public static final String DEFAULT_OUTLINE_CLASS = "cell-default-outline";
   public static final String DEFAULT_NO_OUTLINE_CLASS = "cell-no-outline";
 
-  private static Map<Integer, Color> myColorMap;  // contains state-to-color mappings
+  private final Map<Integer, Color> myColorMap;  // contains state-to-color mappings
   protected int myCellState;
   protected Shape myShape;
   private boolean myOutlinesEnabled;

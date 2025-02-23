@@ -1,5 +1,7 @@
 package cellsociety.view.components;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -8,7 +10,9 @@ import cellsociety.view.interfaces.CellView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * Manages the position and display of the simulation's cells. (Pane suggested by ChatGPT.)
@@ -25,6 +29,11 @@ public class SimulationView {
   private XMLData myXML;
   private Simulation<?> mySimulation;
   private final String myLanguage;
+  private final ResourceBundle myErrorResources;
+
+  // These define whether the cell grid view is visually flipped or not
+  private boolean isFlippedHorizontally = false;
+  private boolean isFlippedVertically = false;
 
   public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
@@ -36,6 +45,7 @@ public class SimulationView {
     myCellWidth = 0;
     myCellHeight = 0;
     myLanguage = language;
+    myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
   /**
@@ -92,19 +102,61 @@ public class SimulationView {
   }
 
   /**
-   * Returns a coordinate position for a cell based on its row and column
+   * Visually flips the entire CellView grid horizontally. For example:
+   * A B  -->  B A
+   * C D       D C
+   */
+  public void flipDisplayHorizontally() {
+    if (myCellViewsIsEmpty()) {
+      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+    }
+    if (isFlippedHorizontally) {
+      myDisplay.setScaleX(1);
+    }
+    else {
+      myDisplay.setScaleX(-1);
+    }
+    isFlippedHorizontally = !isFlippedHorizontally;
+  }
+
+  /**
+   * Visually flips the entire CellView grid vertically. For example:
+   * A B  -->  C D
+   * C D       A B
+   */
+  public void flipDisplayVertically() {
+    if (myCellViewsIsEmpty()) {
+      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+    }
+    if (isFlippedVertically) {
+      myDisplay.setScaleY(1);
+    }
+    else {
+      myDisplay.setScaleY(-1);
+    }
+    isFlippedVertically = !isFlippedVertically;
+  }
+
+  private boolean myCellViewsIsEmpty() {
+    return myCellViews.length == 0 || myCellViews[0].length == 0;
+  }
+
+  /**
+   * Returns a coordinate position for a cell based on its row and column, as well as grid flip status
    *
    * @param row    A cell's row in the grid (index starting from 0)
    * @param column A cell's column in the grid (index starting from 0)
    * @return double array: [0] = x-coordinate, [1] = y-coordinate
    */
   private double[] getCellPosition(int row, int column) {
-    double[] cellPositions = new double[2];
-    // x-position
-    cellPositions[0] = myCellWidth * column;
-    // y-position
-    cellPositions[1] = myCellHeight * row;
-    return cellPositions;
+    int numRows = myCellViews.length;
+    int numCols = myCellViews[0].length;
+
+    // reverse row/col placement if necessary, depending on if grid is flipped in either direction
+    int displayRow = isFlippedVertically ? numRows - 1 - row : row;
+    int displayCol = isFlippedHorizontally ? numCols - 1 - column : column;
+
+    return new double[]{myCellWidth * displayCol, myCellHeight * displayRow};
   }
 
   /**
@@ -168,5 +220,27 @@ public class SimulationView {
       list.addAll(Arrays.asList(row));
     }
     return list;
+  }
+
+  /**
+   * Updates a given state to a new color, assuming the color exists
+   */
+  public void updateCellColorsForState(int state, Color newColor) {
+    List<CellView> cellList = getCellViewList();
+
+    if (cellList.isEmpty()) {
+      return;
+    }
+    if (state < 0 || state >= cellList.getFirst().getNumStates()) {
+      throw new IllegalArgumentException(String.format(
+          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
+    }
+
+    for (CellView cellView : cellList) {
+      cellView.setColorForState(state, newColor);
+      if (cellView.getCellState() == state) {
+        cellView.updateViewColor();
+      }
+    }
   }
 }

@@ -7,11 +7,11 @@ import javafx.scene.paint.Color;
 public class PetelkaCellView extends CellView {
 
   private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
-      0, Color.RED,
-      1, Color.YELLOW,
-      2, Color.GREEN,
-      3, Color.BLUE,
-      4, Color.VIOLET
+      0, Color.TRANSPARENT,
+      1, Color.RED,
+      2, Color.YELLOW,
+      3, Color.GREEN,
+      4, Color.BLUE
   );
 
   public PetelkaCellView(double x, double y, double width, double height, int cellState) {

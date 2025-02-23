@@ -154,16 +154,12 @@ public class UserView {
       // If the animation is paused, resume it
       myAnimation.stop();
       // Account for changes to simulation speed while paused (user hitting speed up / slow down buttons)
-      playNewAnimation();
+      runNewAnimation();
       return;
     }
 
     // Otherwise, create a new animation and start it
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
-        e -> mySimulationView.stepGridSimulation()));
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-    myAnimation.play();
-    myState = ViewState.RUN;
+    runNewAnimation();
   }
 
   /**
@@ -280,6 +276,26 @@ public class UserView {
   }
 
   /**
+   * Flip the displayed cell grid horizontally, if a simulation exists in this window.
+   */
+  public void flipGridHorizontally() {
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+    }
+    mySimulationView.flipDisplayHorizontally();
+  }
+
+  /**
+   * Flip the displayed cell grid vertically, if a simulation exists in this window.
+   */
+  public void flipGridVertically() {
+    if (!checkSimulationExists()) {
+      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+    }
+    mySimulationView.flipDisplayVertically();
+  }
+
+  /**
    * Change the speed of simulation view stepper based on an adjustmentFactor multiplier.
    * @param adjustmentFactor Speed multiplier value. For example 2.0 will result in the animation running twice as fast.
    */
@@ -293,7 +309,7 @@ public class UserView {
       mySpeedFactor = newSpeedFactor;
       if(myAnimation != null) {
         if(myState == ViewState.RUN) {
-          playNewAnimation();
+          runNewAnimation();
         }
       }
     }
@@ -306,10 +322,11 @@ public class UserView {
   /**
    * Initializes an animation based on the current mySpeedFactor
    */
-  private void playNewAnimation() {
+  private void runNewAnimation() {
     if (myAnimation != null) {
       myAnimation.stop();
     }
+
     myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
@@ -384,20 +401,14 @@ public class UserView {
    * Updates a given state to a new color, assuming the color exists
    */
   public void updateColorForState(int state, Color newColor) {
-    List<CellView> cellList = getCellViewList();
-
-    if (cellList.isEmpty()) {
-      return;
-    }
-    if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(String.format(myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()));
+    if (mySimulationView == null) {
+      throw new SimulationException(myErrorResources.getString("NoSimulationToSave"));
     }
 
-    for (CellView cellView : cellList) {
-      cellView.setColorForState(state, newColor);
-      if (cellView.getCellState() == state) {
-        cellView.updateViewColor();
-      }
+    try {
+      mySimulationView.updateCellColorsForState(state, newColor);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(e.getMessage());
     }
   }
 }
