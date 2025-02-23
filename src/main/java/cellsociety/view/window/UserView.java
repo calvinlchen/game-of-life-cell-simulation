@@ -154,16 +154,12 @@ public class UserView {
       // If the animation is paused, resume it
       myAnimation.stop();
       // Account for changes to simulation speed while paused (user hitting speed up / slow down buttons)
-      playNewAnimation();
+      runNewAnimation();
       return;
     }
 
     // Otherwise, create a new animation and start it
-    myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
-        e -> mySimulationView.stepGridSimulation()));
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-    myAnimation.play();
-    myState = ViewState.RUN;
+    runNewAnimation();
   }
 
   /**
@@ -293,7 +289,7 @@ public class UserView {
       mySpeedFactor = newSpeedFactor;
       if(myAnimation != null) {
         if(myState == ViewState.RUN) {
-          playNewAnimation();
+          runNewAnimation();
         }
       }
     }
@@ -306,10 +302,11 @@ public class UserView {
   /**
    * Initializes an animation based on the current mySpeedFactor
    */
-  private void playNewAnimation() {
+  private void runNewAnimation() {
     if (myAnimation != null) {
       myAnimation.stop();
     }
+
     myAnimation = new Timeline(new KeyFrame(Duration.seconds(SimViewConstants.DEFAULT_SIM_STEP_TIME / mySpeedFactor),
         e -> mySimulationView.stepGridSimulation()));
     myAnimation.setCycleCount(Timeline.INDEFINITE);
