@@ -167,7 +167,7 @@ class GridTest {
   @DisplayName("Initialize cells assigns correct positions")
   void initializeCells_CheckForCorrectness_AssignsCorrectPositions() {
     for (int i = 0; i < 9; i++) {
-      verify(mockCells.get(i)).setPosition(new int[]{i / 3, i % 3});
+      verify(mockCells.get(i)).setPosition(new int[]{i % 3, i / 3});
     }
   }
 

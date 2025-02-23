@@ -1,10 +1,13 @@
 package cellsociety.model.util;
 
+import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+
 import cellsociety.model.util.SimulationTypes.SimType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * An object that holds simulation data
@@ -28,7 +31,19 @@ public class XMLData {
     private int id;
     public static int totalSimulations;
 
+    private ResourceBundle myErrorResources;
+
     public XMLData() {
+        myErrorResources = getErrorSimulationResourceBundle("English");
+        initializeXMLData();
+    }
+
+    public XMLData(String language) {
+        myErrorResources = getErrorSimulationResourceBundle(language);
+        initializeXMLData();
+    }
+
+    private void initializeXMLData() {
         id = totalSimulations;
         totalSimulations++;
     }
@@ -219,6 +234,15 @@ public class XMLData {
 
     //the number of cell states in a simulation type, meant for dynamic state count
     public int getNumStates() {
-        return parameters.getOrDefault("numStates", 0.).intValue();
+        if (parameters == null) {
+            throw new IllegalStateException(myErrorResources.getString("NullParameterMap"));
+        }
+
+        Double numStates = parameters.getOrDefault("numStates", 0.0);
+        if (numStates == null) {
+            throw new IllegalStateException(String.format(myErrorResources.getString("NullParameterMap"), "numStates"));
+        }
+
+        return numStates.intValue();
     }
 }

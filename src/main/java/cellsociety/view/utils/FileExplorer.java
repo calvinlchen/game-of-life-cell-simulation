@@ -1,4 +1,4 @@
-package cellsociety.view.components;
+package cellsociety.view.utils;
 
 import cellsociety.Main;
 import java.io.File;

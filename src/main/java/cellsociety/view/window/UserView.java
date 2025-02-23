@@ -6,7 +6,7 @@ import cellsociety.model.util.XMLUtils;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import cellsociety.model.util.constants.exceptions.XMLException;
 import cellsociety.view.components.ControlPanel;
-import cellsociety.view.components.FileExplorer;
+import cellsociety.view.utils.FileExplorer;
 import cellsociety.view.components.InformationBox;
 import cellsociety.view.components.RandomSimulationGenerator;
 import cellsociety.view.components.SimulationView;
@@ -199,7 +199,7 @@ public class UserView {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
       try {
-        configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile));
+        configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile, myLanguage));
       }
       catch (XMLException e) {
         myState = ViewState.ERROR;

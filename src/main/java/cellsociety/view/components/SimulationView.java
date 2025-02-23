@@ -3,6 +3,7 @@ package cellsociety.view.components;
 import cellsociety.model.util.XMLData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
 import java.util.ArrayList;
 import java.util.Arrays;

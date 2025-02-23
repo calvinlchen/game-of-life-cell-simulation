@@ -117,7 +117,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     for (int i = 0; i < myRows && index < cells.size(); i++) {
       List<T> row = new ArrayList<>();
       for (int j = 0; j < myCols && index < cells.size(); j++, index++) {
-        cells.get(index).setPosition(new int[]{i, j});
+        cells.get(index).setPosition(new int[]{j, i});
         row.add(cells.get(index));
       }
       myGrid.add(row);

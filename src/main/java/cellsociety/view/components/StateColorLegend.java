@@ -8,6 +8,7 @@ import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XMLData;
+import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.window.UserView;
 import java.util.ResourceBundle;
@@ -192,7 +193,7 @@ public class StateColorLegend {
     SimType simulationType= xmlData.getType();
     
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
-        xmlData.getNumStates());
+        myUserView.getCellViewList().getFirst().getNumStates());
     if (handler == null) {
       throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
     }
