@@ -125,7 +125,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     }
     if (cells.size() != myRows * myCols) {
       throw new SimulationException(
-          String.format(myResources.getString("MismatchedCellCount"), cells.size(), myRows * myCols));
+          String.format(myResources.getString("MismatchedCellCount"), cells.size(),
+              myRows * myCols));
     }
   }
 
