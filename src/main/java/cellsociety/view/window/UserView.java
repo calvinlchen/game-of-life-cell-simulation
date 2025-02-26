@@ -72,10 +72,10 @@ public class UserView {
   /**
    * Constructs a UserView instance and initializes the simulation window.
    *
-   * @param sceneWidth - the width of the scene
+   * @param sceneWidth  - the width of the scene
    * @param sceneHeight - the height of the scene
-   * @param stage - the primary stage of the application
-   * @param language - the selected language for the UI
+   * @param stage       - the primary stage of the application
+   * @param language    - the selected language for the UI
    */
   public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
@@ -169,7 +169,8 @@ public class UserView {
     if (myAnimation != null && myState == ViewState.PAUSE) {
       // If the animation is paused, resume it
       myAnimation.stop();
-      // Account for changes to simulation speed while paused (user hitting speed up / slow down buttons)
+      // Account for changes to simulation speed while paused
+      // (user hitting speed up / slow down buttons)
       runNewAnimation();
       return;
     }
@@ -254,7 +255,7 @@ public class UserView {
   /**
    * Displays an alert message to the user.
    *
-   * @param type - the type of alert (e.g., ERROR, WARNING, INFORMATION)
+   * @param type    - the type of alert (e.g., ERROR, WARNING, INFORMATION)
    * @param message - the message to be displayed
    */
   public static void showMessage(AlertType type, String message) {
@@ -282,7 +283,8 @@ public class UserView {
     if (saveFile != null) {
       myState = ViewState.SAVE;
       try {
-        xmlUtils.writeToXml(saveFile, mySimulationView.getSimulation().getXmlDataObject().getTitle(),
+        xmlUtils.writeToXml(saveFile,
+            mySimulationView.getSimulation().getXmlDataObject().getTitle(),
             mySimulationView.getSimulation().getXmlDataObject().getAuthor(),
             mySimulationView.getSimulation().getXmlDataObject().getDescription(),
             mySimulationView.getSimulation());

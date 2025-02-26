@@ -144,8 +144,8 @@ public class StateColorLegend {
         colorPickerIsOpen = false;
       });
     } else {
-      updateLegend(
-          myLastXmlData); // if the color picker is already open, then close the color picker by resetting the legend
+      // if the color picker is already open, then close the color picker by resetting the legend
+      updateLegend(myLastXmlData);
       colorPickerIsOpen = false;
     }
   }

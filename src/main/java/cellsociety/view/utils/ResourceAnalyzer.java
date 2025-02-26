@@ -35,10 +35,10 @@ public class ResourceAnalyzer {
       String resourceFolder = Main.DEFAULT_RESOURCE_FOLDER;
 
       // Some of the following code was provided by ChatGPT.
-      URL resourceURL = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
+      URL resourceUrl = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
 
-      if (resourceURL != null) {
-        Path resourcePath = Paths.get(resourceURL.toURI());
+      if (resourceUrl != null) {
+        Path resourcePath = Paths.get(resourceUrl.toURI());
         DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.properties");
 
         for (Path path : stream) {
@@ -71,10 +71,10 @@ public class ResourceAnalyzer {
       // Get the resource folder path from Main constants
       String resourceFolder = Main.DEFAULT_STYLESHEET_FOLDER;
 
-      URL resourceURL = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
+      URL resourceUrl = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
 
-      if (resourceURL != null) {
-        Path resourcePath = Paths.get(resourceURL.toURI());
+      if (resourceUrl != null) {
+        Path resourcePath = Paths.get(resourceUrl.toURI());
         DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.css");
 
         for (Path path : stream) {
