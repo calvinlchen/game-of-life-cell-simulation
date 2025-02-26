@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * AdjacentGrid represents a 2D grid where each cell only considers its four direct neighbors.
  *
- * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
 public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {

@@ -1,14 +1,14 @@
 package cellsociety.model.simulation.rules;
 
-import cellsociety.model.simulation.cell.RPSCell;
-import cellsociety.model.simulation.parameters.RPSParameters;
+import cellsociety.model.simulation.cell.RockPaperScissCell;
+import cellsociety.model.simulation.parameters.RockPaperScissParameters;
 
 /**
  * Class for representing rules for Rock Paper Scissor simulation
  *
  * @author Jessica Chen
  */
-public class RPSRule extends Rule<RPSCell, RPSParameters> {
+public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissParameters> {
 
   private final int totalNumStates; // this is the one parameter that should not change
 
@@ -17,7 +17,7 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public RPSRule(RPSParameters parameters) {
+  public RockPaperScissRule(RockPaperScissParameters parameters) {
     super(parameters);
 
     totalNumStates = getTotalNumStates(parameters);
@@ -29,20 +29,20 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public RPSRule(RPSParameters parameters, String language) {
+  public RockPaperScissRule(RockPaperScissParameters parameters, String language) {
     super(parameters, language);
 
     totalNumStates = getTotalNumStates(parameters);
   }
 
-  private int getTotalNumStates(RPSParameters parameters) {
+  private int getTotalNumStates(RockPaperScissParameters parameters) {
     final int totalNumStates;
     totalNumStates = (int) parameters.getParameter("numStates");
     return totalNumStates;
   }
 
   @Override
-  public int apply(RPSCell cell) {
+  public int apply(RockPaperScissCell cell) {
     // so like with 3 0 -> 1 -> 2 -> 0 (bc 2 + 1 = 3 % 3 = 0)
     int winningState = (cell.getCurrentState() + 1) % totalNumStates;
 

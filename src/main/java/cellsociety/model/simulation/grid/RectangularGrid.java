@@ -8,7 +8,7 @@ import java.util.List;
  *
  * <p>Default like what you think of when you think of a grid</p>
  *
- * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
 public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {

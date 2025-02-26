@@ -262,7 +262,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-   * Get rule for cell
+   * Get rule for cell.
    *
    * @return the rule for the cell
    */
@@ -271,7 +271,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-   * Return resource bundle for error handling
+   * Return resource bundle for error handling.
    *
    * @return resource bundle for error handling
    */

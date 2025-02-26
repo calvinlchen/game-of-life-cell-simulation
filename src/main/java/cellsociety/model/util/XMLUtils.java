@@ -467,7 +467,7 @@ public class XMLUtils {
       case "langton", "langton's loop", "langtonsloop" -> SimType.Langton;
       case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -> SimType.ChouReg2;
       case "petelka" -> SimType.Petelka;
-      case "rock paper scissors", "rps" -> SimType.RPS;
+      case "rock paper scissors", "rps" -> SimType.RockPaperSciss;
       default -> throw new IllegalArgumentException(
           myErrorResources.getString("UnknownSimType") + simTypeString);
     };

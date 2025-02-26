@@ -8,12 +8,12 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class RPSParameters extends Parameters {
+public class RockPaperScissParameters extends Parameters {
 
   /**
    * Initialize rockpaper scisors with numStates (3) and percentageToWin (0.5)
    */
-  public RPSParameters() {
+  public RockPaperScissParameters() {
     super();
 
     initializeParams();
@@ -24,7 +24,7 @@ public class RPSParameters extends Parameters {
    *
    * @param language - name of language, for error message display
    */
-  public RPSParameters(String language) {
+  public RockPaperScissParameters(String language) {
     super(language);
 
     initializeParams();

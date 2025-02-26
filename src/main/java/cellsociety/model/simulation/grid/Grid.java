@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
  *
  * <p> Reference for generics: https://www.geeksforgeeks.org/generics-in-java/
  *
- * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
 public abstract class Grid<T extends Cell<T, ?, ?>> {
@@ -74,9 +74,10 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public abstract void setNeighbors();
 
   /**
-   * Helper function for abstracted set neighbor
+   * Helper function for abstracted set neighbor.
    *
    * <p>for each cell, set neighbor in the given directions
+   *
    * @param directions - directions to set neighbors
    */
   public void setNeighbors(int[][] directions) {
@@ -99,7 +100,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Initialize the grid with
+   * Initialize the grid with correct cells.
    *
    * @param cells - cells to be added
    */
@@ -108,7 +109,9 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
       throw new SimulationException(myResources.getString("NullCellsList"));
     }
     if (cells.size() != myRows * myCols) {
-      throw new SimulationException(String.format(myResources.getString("MismatchedCellCount"), cells.size(), myRows * myCols));
+      throw new SimulationException(
+          String.format(myResources.getString("MismatchedCellCount"), cells.size(),
+              myRows * myCols));
     }
 
     myGrid.clear();
@@ -153,7 +156,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    */
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(String.format(myResources.getString("InvalidGridPosition"), row, col));
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col));
     }
     return myGrid.get(row).get(col);
   }
@@ -167,7 +171,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(String.format(myResources.getString("InvalidGridPosition"), row, col));
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col));
     }
     if (cell == null) {
       throw new SimulationException(myResources.getString("NullCell"));
@@ -208,13 +213,11 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @return A list of all cells in the grid as a flattened grid
    */
   public List<T> getCells() {
-    return myGrid.stream()
-        .flatMap(List::stream)
-        .toList();
+    return myGrid.stream().flatMap(List::stream).toList();
   }
 
   /**
-   * return resource bundle associated for exceptions
+   * return resource bundle associated for exceptions.
    *
    * @return resource bundle associated for exception
    */
