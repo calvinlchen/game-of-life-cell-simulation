@@ -10,13 +10,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class XMLDataTest {
+class XmlDataTest {
 
-    private XMLData xmlData;
+    private XmlData xmlData;
 
     @BeforeEach
     void setUp() {
-        xmlData = new XMLData();
+        xmlData = new XmlData();
     }
 
     @Test

@@ -10,13 +10,13 @@ package cellsociety.model.util.constants.exceptions;
  * @author Calvin Chen
  * @author Jessica Chen and ChatGPT for javadoc
  */
-public class XMLException extends IllegalArgumentException {
+public class XmlException extends IllegalArgumentException {
   /**
    * Constructs an XMLException with the specified error message.
    *
    * @param message - the detail message explaining the cause of the exception
    */
-  public XMLException(String message) {
+  public XmlException(String message) {
     super(message);
   }
 }

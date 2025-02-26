@@ -16,7 +16,8 @@ public class ResourcePckg {
   /**
    * The base package path for simulation error messages.
    */
-  public static final String ERROR_SIMULATION_RESOURCE_PACKAGE = "cellsociety.resourceproperty.Errors";
+  public static final String ERROR_SIMULATION_RESOURCE_PACKAGE =
+      "cellsociety.resourceproperty.Errors";
 
   /**
    * Retrieves the error message resource bundle for the specified language.
@@ -31,7 +32,8 @@ public class ResourcePckg {
     try {
       resources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + language);
     } catch (Exception e) {
-      // if an error occurs, such as no available resource for the given language, then default to English
+      // if an error occurs, such as no available resource for the given language,
+      // then default to English
       resources = ResourceBundle.getBundle(ERROR_SIMULATION_RESOURCE_PACKAGE + "English");
     }
     return resources;

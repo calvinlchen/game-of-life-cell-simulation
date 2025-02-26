@@ -4,7 +4,12 @@ import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.model.util.constants.exceptions.XmlException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,7 +22,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.*;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
@@ -28,14 +32,14 @@ import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationRe
  *
  * @author Kyaira Boughton
  */
-public class XMLUtils {
+public class XmlUtils {
 
   ResourceBundle myErrorResources;
 
   /**
    * Constructs an XMLUtils object with the default language (English).
    */
-  public XMLUtils() {
+  public XmlUtils() {
     myErrorResources = getErrorSimulationResourceBundle("English");
   }
 
@@ -44,7 +48,7 @@ public class XMLUtils {
    *
    * @param language the language to be used for error messages
    */
-  public XMLUtils(String language) {
+  public XmlUtils(String language) {
     myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
@@ -53,10 +57,10 @@ public class XMLUtils {
    *
    * @param fXmlFile the XML file to be read
    * @return an XMLData object containing the parsed simulation data
-   * @throws XMLException if there is an error reading or parsing the XML file
+   * @throws XmlException if there is an error reading or parsing the XML file
    */
-  public XMLData readXML(File fXmlFile, String language) {
-    XMLData xmlObject = new XMLData(language);
+  public XmlData readXml(File fXmlFile, String language) {
+    XmlData xmlObject = new XmlData(language);
 
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -77,9 +81,9 @@ public class XMLUtils {
           // Extract metadata
           Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata")
               .item(0);
-          String SimulationType = simulationElement.getElementsByTagName("type").item(0)
+          String simulationType = simulationElement.getElementsByTagName("type").item(0)
               .getTextContent();
-          xmlObject.setType(simTypeFromString(SimulationType));
+          xmlObject.setType(simTypeFromString(simulationType));
 
           xmlObject.setTitle(
               metadataElement.getElementsByTagName("title").item(0).getTextContent());
@@ -136,7 +140,7 @@ public class XMLUtils {
             // No variation: use explicitly defined cell states
             NodeList cellList = gridElement.getElementsByTagName("cell");
             if (cellList.getLength() != rows * columns) {
-              throw new XMLException(
+              throw new XmlException(
                   myErrorResources.getString("ExpectedDifferentNumber") + (rows * columns) + ", "
                       + cellList.getLength());
             }
@@ -145,7 +149,7 @@ public class XMLUtils {
         }
       }
     } catch (Exception e) {
-      throw new XMLException(e.getMessage());
+      throw new XmlException(e.getMessage());
     }
 
     return xmlObject;
@@ -159,12 +163,12 @@ public class XMLUtils {
    * @param author      the author of the simulation
    * @param description the description of the simulation
    * @param simulation  the simulation object containing the simulation data
-   * @throws XMLException if there is an error writing to the XML file
+   * @throws XmlException if there is an error writing to the XML file
    */
-  public void writeToXML(File file, String title, String author, String description,
+  public void writeToXml(File file, String title, String author, String description,
       Simulation simulation) {
     if (file == null) {
-      throw new XMLException(myErrorResources.getString("NoFileSelectedSave"));
+      throw new XmlException(myErrorResources.getString("NoFileSelectedSave"));
     }
 
     try {
@@ -181,7 +185,7 @@ public class XMLUtils {
       rootElement.appendChild(metadataElement);
 
       Element typeElement = doc.createElement("type");
-      typeElement.appendChild(doc.createTextNode(simulation.getXmlData().getType().toString()));
+      typeElement.appendChild(doc.createTextNode(simulation.getXmlDataObject().getType().toString()));
       metadataElement.appendChild(typeElement);
 
       Element titleElement = doc.createElement("title");
@@ -193,7 +197,7 @@ public class XMLUtils {
       metadataElement.appendChild(authorElement);
 
       Element languageElement = doc.createElement("language");
-      languageElement.appendChild(doc.createTextNode(simulation.getXmlData().getLanguage()));
+      languageElement.appendChild(doc.createTextNode(simulation.getXmlDataObject().getLanguage()));
       metadataElement.appendChild(languageElement);
 
       Element descriptionElement = doc.createElement("description");
@@ -202,13 +206,13 @@ public class XMLUtils {
 
       // Add grid info
       Element gridElement = doc.createElement("grid");
-      gridElement.setAttribute("rows", String.valueOf(simulation.getXmlData().getGridRowNum()));
-      gridElement.setAttribute("columns", String.valueOf(simulation.getXmlData().getGridColNum()));
+      gridElement.setAttribute("rows", String.valueOf(simulation.getXmlDataObject().getGridRowNum()));
+      gridElement.setAttribute("columns", String.valueOf(simulation.getXmlDataObject().getGridColNum()));
       rootElement.appendChild(gridElement);
 
       // Add cell states
-      ArrayList<String> cellStateList = cellStatesToString(simulation.getXmlData().getGridRowNum(),
-          simulation.getXmlData().getGridColNum(), simulation);
+      ArrayList<String> cellStateList = cellStatesToString(simulation.getXmlDataObject().getGridRowNum(),
+          simulation.getXmlDataObject().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
         cellElement.setAttribute("state", state);
@@ -220,7 +224,7 @@ public class XMLUtils {
       rootElement.appendChild(parametersElement);
 
       // Add parameters
-      Map<String, Double> parameters = simulation.getXmlData().getParameters();
+      Map<String, Double> parameters = simulation.getXmlDataObject().getParameters();
       for (Map.Entry<String, Double> entry : parameters.entrySet()) {
         Element paramElement = doc.createElement("parameter");
         paramElement.setAttribute("name", entry.getKey());
@@ -236,7 +240,7 @@ public class XMLUtils {
       transformer.transform(source, result);
 
     } catch (Exception e) {
-      throw new XMLException(myErrorResources.getString("XMLSaveError") + e.getMessage());
+      throw new XmlException(myErrorResources.getString("XMLSaveError") + e.getMessage());
     }
   }
 
@@ -307,7 +311,7 @@ public class XMLUtils {
 
   /**
    * A method that extracts the cellstates from the simulation xml and turns them into a string
-   * list
+   * list.
    *
    * @param cellList an NodeList variable that holds the xml data's cell data
    * @param handler  the handler to convert the string to the appropriate cell state
@@ -377,6 +381,13 @@ public class XMLUtils {
     return parameters;
   }
 
+  /**
+   * Converts color definitions from an XML node list into a mapping of cell states to colors.
+   *
+   * @param colorList - a NodeList containing the color definitions
+   * @param handler - the cell state handler used for conversion
+   * @return a map of cell states to their corresponding colors
+   */
   public static Map<Integer, String> colorsToMap(NodeList colorList, CellStateHandler handler) {
     Map<Integer, String> colors = new HashMap<>();
 

@@ -2,7 +2,7 @@ package cellsociety.view.components;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.components.cell.CellViewFactory;
@@ -26,7 +26,7 @@ public class SimulationView {
   private double myCellWidth;
   private double myCellHeight;
 
-  private XMLData myXML;
+  private XmlData myXML;
   private Simulation<?> mySimulation;
   private final String myLanguage;
   private final ResourceBundle myErrorResources;
@@ -62,7 +62,7 @@ public class SimulationView {
    *
    * @param xmlData XMLData object representing the XML file for a simulation
    */
-  public void configureFromXML(XMLData xmlData) {
+  public void configureFromXML(XmlData xmlData) {
     myXML = xmlData;
 
     int numRows = xmlData.getGridRowNum();

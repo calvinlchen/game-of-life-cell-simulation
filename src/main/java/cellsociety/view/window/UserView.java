@@ -1,10 +1,10 @@
 package cellsociety.view.window;
 
 import cellsociety.Main;
-import cellsociety.model.util.XMLData;
-import cellsociety.model.util.XMLUtils;
+import cellsociety.model.util.XmlData;
+import cellsociety.model.util.XmlUtils;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import cellsociety.model.util.constants.exceptions.XMLException;
+import cellsociety.model.util.constants.exceptions.XmlException;
 import cellsociety.view.components.ControlPanel;
 import cellsociety.view.utils.FileExplorer;
 import cellsociety.view.components.InformationBox;
@@ -61,7 +61,7 @@ public class UserView {
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
-  private final XMLUtils xmlUtils;
+  private final XmlUtils xmlUtils;
 
   public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
@@ -69,7 +69,7 @@ public class UserView {
     mySceneHeight = sceneHeight;
 
     myLanguage = language;
-    xmlUtils = new XMLUtils(myLanguage);
+    xmlUtils = new XmlUtils(myLanguage);
     try {
       myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
     } catch (Exception e) {
@@ -198,8 +198,8 @@ public class UserView {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
       try {
-        configureAndDisplaySimFromXML(xmlUtils.readXML(dataFile, myLanguage));
-      } catch (XMLException e) {
+        configureAndDisplaySimFromXML(xmlUtils.readXml(dataFile, myLanguage));
+      } catch (XmlException e) {
         myState = ViewState.ERROR;
         showMessage(AlertType.ERROR, e.getMessage());
       }
@@ -214,7 +214,7 @@ public class UserView {
     loadSimulationFromFile(dataFile);
   }
 
-  private void configureAndDisplaySimFromXML(XMLData xmlUtils) {
+  private void configureAndDisplaySimFromXML(XmlData xmlUtils) {
     // Set program state
     myState = ViewState.LOAD;
 
@@ -223,7 +223,7 @@ public class UserView {
       mySimulationView.configureFromXML(xmlUtils);
       mySimulationView.initializeGridView();
 
-      XMLData xmlData = mySimulationView.getSimulation().getXmlData();
+      XmlData xmlData = mySimulationView.getSimulation().getXmlDataObject();
 
       // Update text box with simulation information
       myInformationBox.updateInfo(xmlData);
@@ -263,12 +263,12 @@ public class UserView {
     if (saveFile != null) {
       myState = ViewState.SAVE;
       try {
-        xmlUtils.writeToXML(saveFile, mySimulationView.getSimulation().getXmlData().getTitle(),
-            mySimulationView.getSimulation().getXmlData().getAuthor(),
-            mySimulationView.getSimulation().getXmlData().getDescription(),
+        xmlUtils.writeToXml(saveFile, mySimulationView.getSimulation().getXmlDataObject().getTitle(),
+            mySimulationView.getSimulation().getXmlDataObject().getAuthor(),
+            mySimulationView.getSimulation().getXmlDataObject().getDescription(),
             mySimulationView.getSimulation());
         showMessage(Alert.AlertType.INFORMATION, myResources.getString("SimulationSaved"));
-      } catch (XMLException e) {
+      } catch (XmlException e) {
         myState = ViewState.ERROR;
         showMessage(Alert.AlertType.ERROR,
             myErrorResources.getString("ErrorSaving") + e.getMessage());
@@ -347,9 +347,9 @@ public class UserView {
   public void loadRandomGameOfLife() {
     stopAndResetSimulation();
 
-    XMLData randomXMLData = RandomSimulationGenerator.createRandomGameOfLifeXML();
+    XmlData randomXmlData = RandomSimulationGenerator.createRandomGameOfLifeXML();
 
-    configureAndDisplaySimFromXML(randomXMLData);
+    configureAndDisplaySimFromXML(randomXmlData);
   }
 
   /**

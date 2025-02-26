@@ -10,7 +10,7 @@ import cellsociety.model.simulation.grid.RectangularGrid;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.lang.reflect.Constructor;
@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  */
 public class Simulation<T extends Cell<T, ?, ?>> {
 
-  private final XMLData xmlData;
+  private final XmlData xmlData;
   private Grid<T> myGrid;
   private Parameters parameters;
 
@@ -44,7 +44,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @param data - XML data containing simulation configuration
    * @throws SimulationException if the XML data is null
    */
-  public Simulation(XMLData data) {
+  public Simulation(XmlData data) {
     myResources = getErrorSimulationResourceBundle("English");
     myLanguage = "English";
     xmlData = getXmlData(data);
@@ -59,15 +59,15 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @param language - name of the language for error message display
    * @throws SimulationException if the XML data is null
    */
-  public Simulation(XMLData data, String language) {
+  public Simulation(XmlData data, String language) {
     myResources = getErrorSimulationResourceBundle(language);
     myLanguage = language;
     xmlData = getXmlData(data);
     setUpSimulation();
   }
 
-  private XMLData getXmlData(XMLData data) {
-    final XMLData xmlData;
+  private XmlData getXmlData(XmlData data) {
+    final XmlData xmlData;
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
@@ -207,7 +207,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    *
    * @return the XMLData object containing the simulation's initial configuration
    */
-  public XMLData getXmlData() {
+  public XmlData getXmlDataObject() {
     return xmlData;
   }
 

@@ -1,7 +1,7 @@
 package cellsociety.view.components;
 
 import cellsociety.Main;
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 import cellsociety.view.utils.SimViewConstants;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -45,7 +45,7 @@ public class InformationBox {
    *
    * @param data XMLData containing the simulation's details.
    */
-  public void updateInfo(XMLData data) {
+  public void updateInfo(XmlData data) {
     StringBuilder infoText = new StringBuilder();
     infoText.append(myResources.getString("SimulationTypeHeader")).append(data.getType())
         .append("\n");

@@ -7,7 +7,7 @@ import cellsociety.Main;
 import cellsociety.model.factories.statefactory.CellStateFactory;
 import cellsociety.model.factories.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.window.UserView;
@@ -35,7 +35,7 @@ public class StateColorLegend {
   private final ResourceBundle myResources;
   private final ResourceBundle myErrorResources;
   private final UserView myUserView;
-  private XMLData myLastXMLData;
+  private XmlData myLastXmlData;
   private boolean colorPickerIsOpen = false;
 
   public static final int COLOR_BOX_LENGTH = 20;
@@ -71,7 +71,7 @@ public class StateColorLegend {
    *
    * @param xmlData - XMLData object containing complete fields
    */
-  public void updateLegend(XMLData xmlData) {
+  public void updateLegend(XmlData xmlData) {
     clearLegend();
 
     if (myUserView == null || myUserView.getCellViewList().isEmpty()) {
@@ -94,7 +94,7 @@ public class StateColorLegend {
       myLegendBox.getChildren().add(legendItem);
     }
 
-    myLastXMLData = xmlData;
+    myLastXmlData = xmlData;
   }
 
   private HBox createLegendItem(Color stateColor, String stateName, int stateValue) {
@@ -139,7 +139,7 @@ public class StateColorLegend {
       });
     } else {
       updateLegend(
-          myLastXMLData); // if the color picker is already open, then close the color picker by resetting the legend
+          myLastXmlData); // if the color picker is already open, then close the color picker by resetting the legend
       colorPickerIsOpen = false;
     }
   }
@@ -150,7 +150,7 @@ public class StateColorLegend {
    * customizations
    */
   @Deprecated
-  private Map<Integer, Color> getColorMapFromXML(XMLData xmlData) {
+  private Map<Integer, Color> getColorMapFromXML(XmlData xmlData) {
     SimType simulationType = xmlData.getType();
 
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
@@ -188,7 +188,7 @@ public class StateColorLegend {
   /**
    * Maps each state value to its corresponding name.
    */
-  private Map<Integer, String> getStateNameMap(XMLData xmlData) {
+  private Map<Integer, String> getStateNameMap(XmlData xmlData) {
     if (xmlData == null) {
       return new HashMap<>();
     }
