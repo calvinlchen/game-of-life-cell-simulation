@@ -42,8 +42,8 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
   /**
-   * ASSUMPTION: traverse calc from left to right and top to bottom
-   * <p> this is because of sand and water gravity rules
+   * ASSUMPTION: traverse calc from left to right and top to bottom.
+   * <p> this is because of sand and water gravity rules.
    *
    * @param cell - cell to apply the rules to
    * @return int next state of the current cell

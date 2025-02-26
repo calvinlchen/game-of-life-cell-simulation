@@ -4,15 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Parameters for WaTor World
+ * Parameters for the WaTor World simulation.
+ *
+ * <p>This class defines and initializes parameters for the WaTor World simulation, including:
+ * {@code fishReproductionTime} (time required for fish to reproduce),
+ * {@code sharkEnergyGain} (energy gained by sharks when eating fish),
+ * {@code sharkReproductionTime} (time required for sharks to reproduce),
+ * and {@code sharkInitialEnergy} (starting energy level of sharks).
  *
  * @author Jessica Chen
+ * @author ChatGPT, helped with some of the JavaDocs
  */
 public class WaTorParameters extends Parameters {
 
   /**
-   * initializes fishReproductionTime (3), sharkEnergyGain (2), sharkReproductionTime (3),
-   * sharkInitialEnergy (5)
+   * Initializes the WaTorParameters with default values.
+   *
+   * <p>Sets {@code fishReproductionTime} to 3, {@code sharkEnergyGain} to 2,
+   * {@code sharkReproductionTime} to 3, and {@code sharkInitialEnergy} to 5.
    */
   public WaTorParameters() {
     super();
@@ -21,10 +30,12 @@ public class WaTorParameters extends Parameters {
   }
 
   /**
-   * initializes fishReproductionTime (3), sharkEnergyGain (2), sharkReproductionTime (3),
-   * sharkInitialEnergy (5)
+   * Initializes the WaTorParameters with default values and a specified language for error messages.
    *
-   * @param language - name of language, for error message display
+   * <p>Sets {@code fishReproductionTime} to 3, {@code sharkEnergyGain} to 2,
+   * {@code sharkReproductionTime} to 3, and {@code sharkInitialEnergy} to 5.
+   *
+   * @param language - name of the language for error message display
    */
   public WaTorParameters(String language) {
     super(language);

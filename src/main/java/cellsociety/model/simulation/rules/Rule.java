@@ -123,13 +123,9 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
     stateBuilder.append(cell.getCurrentState());
     for (String dir : directions) {
-      cell.getNeighbors().stream()
-          .filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst()
-          .ifPresentOrElse(
-              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append("")
-          );
+      cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
+          .findFirst().ifPresentOrElse(neighbor -> stateBuilder.append(neighbor.getCurrentState()),
+              () -> stateBuilder.append(""));
     }
 
     return stateBuilder.toString();
@@ -137,9 +133,8 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private boolean isValidDirection(String direction) {
     return direction.equals("N") || direction.equals("S") || direction.equals("E")
-        || direction.equals("W") ||
-        direction.equals("NE") || direction.equals("NW") || direction.equals("SE")
-        || direction.equals("SW");
+        || direction.equals("W") || direction.equals("NE") || direction.equals("NW")
+        || direction.equals("SE") || direction.equals("SW");
   }
 
   /**

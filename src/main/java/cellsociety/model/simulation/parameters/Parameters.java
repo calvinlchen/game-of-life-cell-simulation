@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * Abstract class for representing a rules for a simulation
+ * Abstract class for representing a rules for a simulation.
  *
  * @author Jessica Chen
  */
@@ -19,7 +19,7 @@ public abstract class Parameters {
   private ResourceBundle myResources;
 
   /**
-   * Constructor for simulations
+   * Constructor for simulations.
    *
    * <p> starts all simulations with a max history size with default of size 10
    */
@@ -30,7 +30,7 @@ public abstract class Parameters {
   }
 
   /**
-   * Constructor for simulations
+   * Constructor for simulations.
    *
    * <p> starts all simulations with a max history size with default of size 10
    */
@@ -48,7 +48,7 @@ public abstract class Parameters {
   }
 
   /**
-   * Return the parameters
+   * Return the parameters.
    *
    * @return returns the parameter map
    */
@@ -58,7 +58,7 @@ public abstract class Parameters {
 
   /**
    * updates all parameters with the new parameters, while maintaining original parameters if
-   * unchanged
+   * unchanged.
    *
    * @param newParams - new parameters to add to rules / update with
    */
@@ -71,7 +71,7 @@ public abstract class Parameters {
   }
 
   /**
-   * gets the parameter value of the passed in rule
+   * gets the parameter value of the passed in rule.
    *
    * @param key - value to look up the rule for
    * @return value associated with the rule
@@ -88,7 +88,7 @@ public abstract class Parameters {
   }
 
   /**
-   * set the value for the given rule
+   * set the value for the given rule.
    *
    * @param key   - rule to modify
    * @param value - value to update the rule too
@@ -102,7 +102,7 @@ public abstract class Parameters {
   }
 
   /**
-   * get all rules associated with this simulation type
+   * get all rules associated with this simulation type.
    *
    * @return get all keys associated with this simulation type
    */
@@ -111,7 +111,7 @@ public abstract class Parameters {
   }
 
   /**
-   * returns whether key is a valid key in the state
+   * returns whether key is a valid key in the state.
    *
    * @param key - key to check if it is in rules
    * @return true if it is valid, false otherwise
@@ -121,7 +121,7 @@ public abstract class Parameters {
   }
 
   /**
-   * return resource bundle associated for exceptions
+   * return resource bundle associated for exceptions.
    *
    * @return resource bundle associated for exception
    */
