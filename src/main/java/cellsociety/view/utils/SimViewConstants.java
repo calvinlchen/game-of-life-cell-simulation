@@ -1,5 +1,14 @@
 package cellsociety.view.utils;
 
+/**
+ * Utility class for storing simulation view constants.
+ *
+ * <p>This class defines constants related to the graphical user interface of the simulation,
+ * such as window titles, grid proportions, and simulation step timing constraints.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
+ */
 public class SimViewConstants {
 
   public static final String TITLE = "Cell Society";

@@ -1,13 +1,12 @@
 package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
-import static cellsociety.model.util.constants.CellStates.FALLINGSAND_EMPTY;
 
 import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.simulation.rules.FallingSandRule;
 
 /**
- * Class for representing cell for Falling Sand/Water simulation
+ * Class for representing cell for Falling Sand/Water simulation.
  *
  * @author Jessica Chen
  */
@@ -27,8 +26,8 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - Falling Sand Rule to calculate next state
+   * @param state    - the initial state of the cell
+   * @param rule     - Falling Sand Rule to calculate next state
    * @param language - name of language, for error message display
    */
   public FallingSandCell(int state, FallingSandRule rule, String language) {

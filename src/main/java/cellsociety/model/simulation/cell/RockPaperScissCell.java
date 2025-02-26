@@ -1,22 +1,24 @@
 package cellsociety.model.simulation.cell;
 
 
-import cellsociety.model.simulation.parameters.RPSParameters;
-import cellsociety.model.simulation.rules.RPSRule;
+import cellsociety.model.simulation.parameters.RockPaperScissParameters;
+import cellsociety.model.simulation.rules.RockPaperScissRule;
 
 /**
- * Class for representing cell for Rock Paper Scissors simulation
+ * Class for representing cell for Rock Paper Scissors simulation.
  *
  * @author Jessica Chen
  */
-public class RPSCell extends Cell<RPSCell, RPSRule, RPSParameters> {
+public class RockPaperScissCell extends
+    Cell<RockPaperScissCell, RockPaperScissRule, RockPaperScissParameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
    * @param state - the initial state of the cell
    * @param rule  - the Rock Paper Scissors rule to calculate the next state
    */
-  public RPSCell(int state, RPSRule rule) {
+  public RockPaperScissCell(int state, RockPaperScissRule rule) {
     super(state, rule);
     validateState(state, rule.getMaxState());
   }
@@ -24,17 +26,17 @@ public class RPSCell extends Cell<RPSCell, RPSRule, RPSParameters> {
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the Rock Paper Scissors rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the Rock Paper Scissors rule to calculate the next state
    * @param language - name of language, for error message display
    */
-  public RPSCell(int state, RPSRule rule, String language) {
+  public RockPaperScissCell(int state, RockPaperScissRule rule, String language) {
     super(state, rule, language);
     validateState(state, rule.getMaxState());
   }
 
   @Override
-  protected RPSCell getSelf() {
+  protected RockPaperScissCell getSelf() {
     return this;
   }
 

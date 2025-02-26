@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A predefined state handler for the Segregation simulation.
- * This class extends {@link CellStateHandlerStatic} and defines a fixed
- * set of states for the Segregation simulation.
+ * A predefined state handler for the Segregation simulation. This class extends
+ * {@link CellStateHandlerStatic} and defines a fixed set of states for the Segregation simulation.
  *
  * @author Jessica Chen
  * @author javadoc by ChatGPT, edited by Jessica Chen
  */
 public class SegregationStateHandler extends CellStateHandlerStatic {
+
   private static final Map<Integer, String> cellStates = new HashMap<>();
 
   static {
@@ -21,6 +21,10 @@ public class SegregationStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.SEGREGATION_B, "agentB");
   }
 
+  /**
+   * Constructs a {@code SegregationStateHandler} with predefined states for Segregation
+   * simulation.
+   */
   public SegregationStateHandler() {
     super(cellStates);
   }

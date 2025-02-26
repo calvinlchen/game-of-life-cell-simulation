@@ -6,11 +6,12 @@ import cellsociety.model.simulation.parameters.PercolationParameters;
 import cellsociety.model.simulation.rules.PercolationRule;
 
 /**
- * Class for representing cell for Percolation simulation
+ * Class for representing cell for Percolation simulation.
  *
  * @author Jessica Chen
  */
 public class PercolationCell extends Cell<PercolationCell, PercolationRule, PercolationParameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
@@ -25,8 +26,8 @@ public class PercolationCell extends Cell<PercolationCell, PercolationRule, Perc
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the Percolation rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the Percolation rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public PercolationCell(int state, PercolationRule rule, String language) {

@@ -6,11 +6,12 @@ import cellsociety.model.simulation.parameters.PetelkaParameters;
 import cellsociety.model.simulation.rules.PetelkaRule;
 
 /**
- * Class for representing cell for Petelka's Loop simulation
+ * Class for representing cell for Petelka's Loop simulation.
  *
  * @author Jessica Chen
  */
 public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule, PetelkaParameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
@@ -25,8 +26,8 @@ public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule, PetelkaParameter
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the Petelka's Loop rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the Petelka's Loop rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public PetelkaCell(int state, PetelkaRule rule, String language) {

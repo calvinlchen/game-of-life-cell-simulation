@@ -4,13 +4,28 @@ import cellsociety.Main;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for dynamically analyzing available resources in the application.
+ *
+ * <p>This class scans the resource folders to detect available language files and stylesheets,
+ * providing a list of options that can be used within the application.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
+ */
 public class ResourceAnalyzer {
+
   /**
-   * Dynamically scans the resource folder to find available language files (.properties) and extracts the names of those languages.
+   * Dynamically scans the resource folder to find available language files (.properties) and
+   * extracts the names of those languages.
+   *
    * @return List of available languages
    */
   public static List<String> getAvailableLanguages() {
@@ -20,10 +35,10 @@ public class ResourceAnalyzer {
       String resourceFolder = Main.DEFAULT_RESOURCE_FOLDER;
 
       // Some of the following code was provided by ChatGPT.
-      URL resourceURL = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
+      URL resourceUrl = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
 
-      if (resourceURL != null) {
-        Path resourcePath = Paths.get(resourceURL.toURI());
+      if (resourceUrl != null) {
+        Path resourcePath = Paths.get(resourceUrl.toURI());
         DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.properties");
 
         for (Path path : stream) {
@@ -45,7 +60,9 @@ public class ResourceAnalyzer {
   }
 
   /**
-   * Dynamically scans the resource folder to find available style files (.css) and extracts their filenames.
+   * Dynamically scans the resource folder to find available style files (.css) and extracts their
+   * filenames.
+   *
    * @return List of available stylesheets
    */
   public static List<String> getAvailableStylesheets() {
@@ -54,10 +71,10 @@ public class ResourceAnalyzer {
       // Get the resource folder path from Main constants
       String resourceFolder = Main.DEFAULT_STYLESHEET_FOLDER;
 
-      URL resourceURL = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
+      URL resourceUrl = ResourceAnalyzer.class.getClassLoader().getResource(resourceFolder);
 
-      if (resourceURL != null) {
-        Path resourcePath = Paths.get(resourceURL.toURI());
+      if (resourceUrl != null) {
+        Path resourcePath = Paths.get(resourceUrl.toURI());
         DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.css");
 
         for (Path path : stream) {

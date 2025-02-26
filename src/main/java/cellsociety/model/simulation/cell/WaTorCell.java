@@ -8,7 +8,7 @@ import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 
 /**
- * Class for representing cell for WaTor simulation
+ * Class for representing cell for WaTor simulation.
  *
  * @author Jessica Chen
  */
@@ -38,8 +38,8 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
-   * @param state - the initial state of the cell (must be a state from WaTorStates)
-   * @param rule  - the WaTorRule to calculate the next state
+   * @param state    - the initial state of the cell (must be a state from WaTorStates)
+   * @param rule     - the WaTorRule to calculate the next state
    * @param language - name of language, for error message display
    */
   public WaTorCell(int state, WaTorRule rule, String language) {
@@ -64,7 +64,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Get the current steps survived
+   * Get the current steps survived.
    *
    * @return the current steps survived
    */
@@ -73,7 +73,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Set the current steps survived
+   * Set the current steps survived.
    *
    * <p> currently only used in tests, because can set in other ways in rules
    *
@@ -84,9 +84,9 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Set the energy to a specific amount
+   * Set the energy to a specific amount.
    *
-   * <p> currently only used in tests, because can set in other ways in rules
+   * <p> currently only used in tests, because can set in other ways in rules.
    *
    * @param energy - the energy left
    */
@@ -95,7 +95,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Get the current energy level of the cell
+   * Get the current energy level of the cell.
    *
    * @return the energy level of the cell
    */
@@ -104,7 +104,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Return if this cell has been consumed
+   * Return if this cell has been consumed.
    *
    * @return true if the cell in the current state has been consumed
    */
@@ -113,7 +113,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   }
 
   /**
-   * Set the state of if the cell has been consumed
+   * Set the state of if the cell has been consumed.
    *
    * @param consumed - true if the cell is consumed
    */
@@ -123,7 +123,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
 
   /**
    * Sets the next stage based on the calculated rules, based on the state return set the next steps
-   * survived and energy to the default ones for that state
+   * survived and energy to the default ones for that state.
    */
   @Override
   public void calcNextState() {
@@ -141,27 +141,9 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
     }
   }
 
-  /**
-   * Sets the next state of the cell to the given cell with the given cell values
-   *
-   * @param state         - the state the next state of the cell should be
-   * @param stepsSurvived - the number of steps the next state of the cell should have
-   * @param energy        - the amount of energy the next state of the cell should have
-   */
-  public void setNextState(int state, int stepsSurvived, int energy) {
-    setNextState(state);
-
-    myNextStepsSurvived = stepsSurvived;
-    myNextEnergy = energy;
-  }
-
-  public void setNextState(int state, int stepsSurvived, int energy, WaTorCell movedFrom) {
-    this.movedFrom = movedFrom;
-    setNextState(state, stepsSurvived, energy);
-  }
 
   /**
-   * Steps the current state to the next state as well as the cell values
+   * Steps the current state to the next state as well as the cell values.
    */
   @Override
   public void step() {
@@ -196,5 +178,32 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   public void setNextState(int state) {
     validateState(state, WATOR_MAXSTATE);
     super.setNextState(state);
+  }
+
+  /**
+   * Sets the next state of the cell to the given cell with the given cell values.
+   *
+   * @param state         - the state the next state of the cell should be
+   * @param stepsSurvived - the number of steps the next state of the cell should have
+   * @param energy        - the amount of energy the next state of the cell should have
+   */
+  public void setNextState(int state, int stepsSurvived, int energy) {
+    setNextState(state);
+
+    myNextStepsSurvived = stepsSurvived;
+    myNextEnergy = energy;
+  }
+
+  /**
+   * Sets the next state of the cell to the given cell with the given cell values.
+   *
+   * @param state         - the state the next state of the cell should be
+   * @param stepsSurvived - the number of steps the next state of the cell should have
+   * @param energy        - the amount of energy the next state of the cell should have
+   * @param movedFrom     - where the new state moved from, basically the old cell that state was
+   */
+  public void setNextState(int state, int stepsSurvived, int energy, WaTorCell movedFrom) {
+    this.movedFrom = movedFrom;
+    setNextState(state, stepsSurvived, energy);
   }
 }

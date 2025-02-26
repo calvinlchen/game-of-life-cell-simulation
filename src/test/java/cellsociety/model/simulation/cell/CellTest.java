@@ -158,7 +158,10 @@ class CellTest {
   void getPosition_TestGetPosition_ReturnCurrentPosition() {
     int[] position = new int[]{1, 2};
     testCell.setPosition(position);
-    assertEquals(position, testCell.getPosition());
+    int[] result = testCell.getPosition();
+    assertEquals(position.length, result.length);
+    assertEquals(position[0], result[0]);
+    assertEquals(position[1], result[1]);
   }
 
   @Test

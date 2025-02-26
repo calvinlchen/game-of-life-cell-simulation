@@ -10,7 +10,7 @@ import cellsociety.model.simulation.grid.RectangularGrid;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.lang.reflect.Constructor;
@@ -25,10 +25,11 @@ import java.util.ResourceBundle;
  *
  * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
+ * @author ChatGPT, helped with some of the JavaDocs
  */
 public class Simulation<T extends Cell<T, ?, ?>> {
 
-  private final XMLData xmlData;
+  private final XmlData xmlData;
   private Grid<T> myGrid;
   private Parameters parameters;
 
@@ -37,22 +38,36 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private final ResourceBundle myResources;
   private final String myLanguage;
 
-  public Simulation(XMLData data) {
+  /**
+   * Initializes a Simulation instance using the provided XML data.
+   *
+   * @param data - XML data containing simulation configuration
+   * @throws SimulationException if the XML data is null
+   */
+  public Simulation(XmlData data) {
     myResources = getErrorSimulationResourceBundle("English");
     myLanguage = "English";
     xmlData = getXmlData(data);
     setUpSimulation();
   }
 
-  public Simulation(XMLData data, String language) {
+  /**
+   * Initializes a Simulation instance using the provided XML data and a specified language for
+   * error messages.
+   *
+   * @param data     - XML data containing simulation configuration
+   * @param language - name of the language for error message display
+   * @throws SimulationException if the XML data is null
+   */
+  public Simulation(XmlData data, String language) {
     myResources = getErrorSimulationResourceBundle(language);
     myLanguage = language;
     xmlData = getXmlData(data);
     setUpSimulation();
   }
 
-  private XMLData getXmlData(XMLData data) {
-    final XMLData xmlData;
+  private XmlData getXmlData(XmlData data) {
+    final XmlData xmlData;
     if (data == null) {
       throw new SimulationException(myResources.getString("NullXMLData"));
     }
@@ -61,49 +76,34 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     return xmlData;
   }
 
-  /**
-   * Sets up the simulation, initializing the rule, parameters, and grid dynamically.
-   */
   private void setUpSimulation() {
     try {
       SimType simType = xmlData.getType();
       Map<String, Double> params = xmlData.getParameters();
 
-      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params, myLanguage);
+      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params,
+          myLanguage);
       parameters = rule.getParameters();
 
       List<Cell<T, ?, ?>> cellList = createCells(simType, rule, myLanguage);
 
       setUpGridStructure(cellList, simType);
     } catch (Exception e) {
-      e.printStackTrace();
       throw new SimulationException(myResources.getString("SimulationSetupFailed"), e);
     }
   }
 
-  /**
-   * Dynamically creates cells based on the simulation type.
-   *
-   * @param simType - Type of simulation
-   * @param rule    - The rule instance to associate with each cell
-   * @return List of dynamically created cells
-   */
   private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule, String language) {
     List<Cell<T, ?, ?>> cellList = new ArrayList<>();
 
     try {
       Class<?> cellClass = Class.forName(CELL_PACKAGE + simType.name() + "Cell");
-      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(), String.class);
+      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(),
+          String.class);
 
       for (Integer state : xmlData.getCellStateList()) {
         cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule, language));
       }
-    } catch (ClassNotFoundException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("CellClassNotFound"), simType), e);
-    } catch (NoSuchMethodException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("CellConstructorNotFound"), simType), e);
     } catch (Exception e) {
       throw new SimulationException(
           String.format(myResources.getString("CellCreationFailed"), simType), e);
@@ -112,17 +112,13 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     return cellList;
   }
 
-  /**
-   * Configures the grid structure based on the simulation type.
-   *
-   * @param cellList - The list of cells for the simulation
-   * @param simType  - The type of simulation
-   */
   private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
     if (simType.isDefaultRectangularGrid()) {
-      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
+      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          myLanguage);
     } else {
-      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
+      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          myLanguage);
     }
   }
 
@@ -137,9 +133,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * Moves all cells in the simulation forward by one step.
    */
   public void step() {
-    // add get cells to simplify this
-    // TODO: jessica once you done refactoring need to refactor your random comments
-    // TOOD: really adding so much refactoring for myself *facepalm*
     myGrid.getCells().forEach(Cell::saveCurrentState);
     myGrid.getCells().forEach(Cell::calcNextState);
     myGrid.getCells().forEach(Cell::step);
@@ -147,92 +140,100 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Returns the state of the cell at location [row, col].
+   * Returns the state of the cell at a specified location in the grid.
    *
-   * @return the state of the cell at the location if valid
-   * @throws IllegalArgumentException if the row and col are an invalid position on the grid
+   * @param row - row index of the cell
+   * @param col - column index of the cell
+   * @return the current state of the cell at the specified location
+   * @throws SimulationException if the row and column are out of bounds
    */
   public int getCurrentState(int row, int col) {
     try {
       return myGrid.getCell(row, col).getCurrentState();
     } catch (Exception e) {
       throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col));
+          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
     }
   }
 
   /**
-   * Update a single simulation parameter dynamically.
+   * Updates a single simulation parameter dynamically.
    *
-   * @param key   - The parameter name
-   * @param value - The new value for the parameter
+   * @param key   - the parameter name
+   * @param value - the new value for the parameter
+   * @throws SimulationException if the parameter key is not found
    */
   public void updateParameter(String key, double value) {
     try {
       parameters.setParameter(key, value);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
+          e);
     }
   }
 
   /**
-   * Retrieve the current value of a parameter.
+   * Retrieves the current value of a parameter.
    *
-   * @param key - The parameter name
-   * @return The parameter's current value
+   * @param key - the parameter name
+   * @return the parameter's current value
+   * @throws SimulationException if the parameter key is not found
    */
   public double getParameter(String key) {
     try {
       return parameters.getParameter(key);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
+          e);
     }
   }
 
   /**
-   * Retrieve all parameter keys.
+   * Retrieves all parameter keys in the simulation.
    *
-   * @return A set of parameter keys
+   * @return a list of parameter keys
    */
   public List<String> getParameterKeys() {
     return parameters.getParameterKeys();
   }
 
   /**
-   * Return xmlData that created the simulation
+   * Returns the XML data that created the simulation.
    *
-   * @return xmlData that created the simulation
+   * @return the XMLData object containing the simulation's initial configuration
    */
-  public XMLData getXMLData() {
+  public XmlData getXmlDataObject() {
     return xmlData;
   }
 
   /**
-   * Return the simtype of the simulation
-   * <p> Assumptio: this only works if for each dynamic type, they are initialized with a different
-   * XMLData
+   * Retrieves the simulation type.
    *
-   * @return simtype of the simulation
+   * <p>Assumption: Each dynamic type is initialized with a unique XMLData instance.
+   *
+   * @return the simulation type as a SimType enum
    */
   public SimType getSimulationType() {
     return xmlData.getType();
   }
 
   /**
-   * return the simulation id from the xmlData
-   * <p> Assumptio: this only works if for each dynamic type, they are initialized with a different
-   * XMLData
+   * Retrieves the simulation ID from the XML data.
    *
-   * @return simulation id from the xmlData
+   * <p>Assumption: Each dynamic type is initialized with a unique XMLData instance.
+   *
+   * @return the simulation ID from the XML data
    */
-  public int getSimulationID() {
+  public int getSimulationId() {
     return xmlData.getId();
   }
 
   /**
-   * return the number states from the xmlData (only accurate for dynamic states)
+   * Retrieves the number of states from the XML data.
    *
-   * @return the number of states from the xmlData parameters
+   * <p>This value is only accurate for simulations with dynamically assigned states.
+   *
+   * @return the number of states from the XML data parameters
    */
   public int getNumStates() {
     return xmlData.getNumStates();

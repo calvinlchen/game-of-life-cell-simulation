@@ -4,14 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Parameters for Chou Reg 2 Langton's Loop
+ * Parameters for the Segregation simulation.
+ *
+ * <p>This class defines and initializes the parameter {@code toleranceThreshold},
+ * which determines the threshold for segregation behavior in the simulation.
  *
  * @author Jessica Chen
+ * @author ChatGPT, helped with some of the java docs
  */
 public class SegregationParameters extends Parameters {
 
   /**
-   * initializes parameter toleranceThreshold (0.5)
+   * Initializes the SegregationParameters with default values.
+   *
+   * <p>Sets the {@code toleranceThreshold} parameter to 0.5.
    */
   public SegregationParameters() {
     super();
@@ -20,8 +26,12 @@ public class SegregationParameters extends Parameters {
   }
 
   /**
-   * initializes parameter toleranceThreshold (0.5)
-   * @param language - name of language, for error message display
+   * Initializes the SegregationParameters with default values and a specified language for error
+   * messages.
+   *
+   * <p>Sets the {@code toleranceThreshold} parameter to 0.5.
+   *
+   * @param language - name of the language for error message display
    */
   public SegregationParameters(String language) {
     super(language);

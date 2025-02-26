@@ -23,7 +23,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   private final ResourceBundle myResources;
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -34,7 +34,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -52,7 +52,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   }
 
   /**
-   * Apply the rules to determine the next state of a cell
+   * Apply the rules to determine the next state of a cell.
    *
    * @param cell - cell to apply the rules to
    * @return next state of the cell
@@ -60,7 +60,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   public abstract int apply(C cell);
 
   /**
-   * Get the parameters for this rule set
+   * Get the parameters for this rule set.
    *
    * @return parameters
    */
@@ -69,7 +69,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
   }
 
   /**
-   * returns true if the cell matches a direction
+   * returns true if the cell matches a direction.
    *
    * @param cell      - the cell
    * @param neighbor  - neighbor of a cell
@@ -85,7 +85,8 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
       throw new SimulationException(String.format(myResources.getString("NullPosition")));
     }
     if (!isValidDirection(direction)) {
-      throw new SimulationException(String.format(myResources.getString("InvalidDirection"), direction));
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidDirection"), direction));
     }
 
     int[] pos = neighbor.getPosition();
@@ -107,30 +108,37 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
     };
   }
 
+  /**
+   * Constructs a state key based on the current state of the cell and the states of its neighbors
+   * in the specified directions.
+   *
+   * @param cell       - the reference cell for which the state key is generated
+   * @param directions - an array of direction strings (e.g., "N", "S", "E", "W", "NE", "NW", "SE",
+   *                   "SW")
+   * @return a string representing the state key, which includes the cell's current state followed
+   * by the states of its neighbors in the given directions
+   */
   protected String getStateKey(C cell, String[] directions) {
     StringBuilder stateBuilder = new StringBuilder();
 
     stateBuilder.append(cell.getCurrentState());
     for (String dir : directions) {
-      cell.getNeighbors().stream()
-          .filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst()
-          .ifPresentOrElse(
-              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append("")
-          );
+      cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
+          .findFirst().ifPresentOrElse(neighbor -> stateBuilder.append(neighbor.getCurrentState()),
+              () -> stateBuilder.append(""));
     }
 
     return stateBuilder.toString();
   }
 
   private boolean isValidDirection(String direction) {
-    return direction.equals("N") || direction.equals("S") || direction.equals("E") || direction.equals("W") ||
-        direction.equals("NE") || direction.equals("NW") || direction.equals("SE") || direction.equals("SW");
+    return direction.equals("N") || direction.equals("S") || direction.equals("E")
+        || direction.equals("W") || direction.equals("NE") || direction.equals("NW")
+        || direction.equals("SE") || direction.equals("SW");
   }
 
   /**
-   * return resource bundle associated for exceptions
+   * return resource bundle associated for exceptions.
    *
    * @return resource bundle associated for exception
    */

@@ -13,8 +13,8 @@ import java.util.ResourceBundle;
 /**
  * Creates Rule and Parameters instances dynamically for a simulation.
  *
- * <p> Assumption: For this to work, all the rules and parameters should be named SimTypeRule and SimTypeParameters.
- * Implements robust exception handling for reflection-related issues.
+ * <p> Assumption: For this to work, all the rules and parameters should be named SimTypeRule and
+ * SimTypeParameters. Implements robust exception handling for reflection-related issues.
  *
  * @author Jessica Chen
  */
@@ -25,7 +25,7 @@ public class RuleFactory {
   private static ResourceBundle myResources = getErrorSimulationResourceBundle("English");
 
   /**
-   * Update the language of the error messages
+   * Update the language of the error messages.
    *
    * @param language - update the language of the error messages
    */
@@ -42,8 +42,10 @@ public class RuleFactory {
    * @return an instance of the Rule with its parameters initialized
    * @throws SimulationException if any reflection error occurs during rule creation
    */
-  public static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters, String language) {
-    updateLanguage(language); // errors will display using the given language's resource properties file
+  public static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters,
+      String language) {
+    updateLanguage(
+        language); // errors will display using the given language's resource properties file
 
     try {
       // create the Parameters class
@@ -59,12 +61,6 @@ public class RuleFactory {
       Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass, String.class);
       return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance, language);
 
-    } catch (ClassNotFoundException e) {
-      throw new SimulationException(String.format(myResources.getString("RuleClassNotFound"), ruleType), e);
-    } catch (NoSuchMethodException e) {
-      throw new SimulationException(String.format(myResources.getString("RuleConstructorNotFound"), ruleType), e);
-    } catch (ReflectiveOperationException e) {
-      throw new SimulationException(String.format(myResources.getString("RuleInstantiationFailed"), ruleType), e);
     } catch (Exception e) {
       throw new SimulationException(myResources.getString("UnknownRuleCreationError"), e);
     }

@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
  *
  * <p> Reference for generics: https://www.geeksforgeeks.org/generics-in-java/
  *
- * @param <T> - the type of cell in the grid, must extend Cell<S>
+ * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
 public abstract class Grid<T extends Cell<T, ?, ?>> {
@@ -74,55 +74,81 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public abstract void setNeighbors();
 
   /**
-   * Helper function for abstracted set neighbor
+   * Helper function for abstracted set neighbor.
    *
    * <p>for each cell, set neighbor in the given directions
+   *
    * @param directions - directions to set neighbors
    */
   public void setNeighbors(int[][] directions) {
-    for (int i = 0; i < getRows(); i++) {
-      for (int j = 0; j < getCols(); j++) {
-        T cell = getGrid().get(i).get(j);
+    List<List<T>> grid = getGrid();
+    int rows = getRows();
+    int cols = getCols();
+
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        T cell = grid.get(i).get(j);
         if (cell != null) {
-          List<T> neighbors = new ArrayList<>();
-          for (int[] dir : directions) {
-            int newRow = i + dir[0];
-            int newCol = j + dir[1];
-            if (isValidPosition(newRow, newCol)) {
-              neighbors.add(getGrid().get(newRow).get(newCol));
-            }
-          }
-          cell.setNeighbors(neighbors);
+          cell.setNeighbors(getValidNeighbors(grid, i, j, directions));
         }
       }
     }
   }
 
+  private List<T> getValidNeighbors(List<List<T>> grid, int row, int col, int[][] directions) {
+    List<T> neighbors = new ArrayList<>();
+    for (int[] dir : directions) {
+      int newRow = row + dir[0];
+      int newCol = col + dir[1];
+      if (isValidPosition(newRow, newCol)) {
+        neighbors.add(grid.get(newRow).get(newCol));
+      }
+    }
+    return neighbors;
+  }
+
+
   /**
-   * Initialize the grid with
+   * Initialize the grid with correct cells.
    *
    * @param cells - cells to be added
    */
   public void initializeCells(List<T> cells) {
+    validateCells(cells);
+    myGrid.clear();
+    fillGridWithCells(cells);
+  }
+
+  private void validateCells(List<T> cells) {
     if (cells == null) {
       throw new SimulationException(myResources.getString("NullCellsList"));
     }
     if (cells.size() != myRows * myCols) {
-      throw new SimulationException(String.format(myResources.getString("MismatchedCellCount"), cells.size(), myRows * myCols));
-    }
-
-    myGrid.clear();
-
-    int index = 0;
-    for (int i = 0; i < myRows && index < cells.size(); i++) {
-      List<T> row = new ArrayList<>();
-      for (int j = 0; j < myCols && index < cells.size(); j++, index++) {
-        cells.get(index).setPosition(new int[]{j, i});
-        row.add(cells.get(index));
-      }
-      myGrid.add(row);
+      throw new SimulationException(
+          String.format(myResources.getString("MismatchedCellCount"), cells.size(),
+              myRows * myCols));
     }
   }
+
+  private void fillGridWithCells(List<T> cells) {
+    int index = 0;
+    for (int i = 0; i < myRows; i++) {
+      myGrid.add(createRow(cells, i, index));
+      index += myCols;
+    }
+  }
+
+  private List<T> createRow(List<T> cells, int rowIndex, int startIndex) {
+    List<T> row = new ArrayList<>();
+    int endIndex = Math.min(startIndex + myCols, cells.size());
+    for (int j = startIndex; j < endIndex; j++) {
+      T cell = cells.get(j);
+      cell.setPosition(new int[]{(j - startIndex), rowIndex});
+      row.add(cell);
+    }
+    return row;
+  }
+
 
   /**
    * Get neighbors of a specific cell.
@@ -153,7 +179,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    */
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(String.format(myResources.getString("InvalidGridPosition"), row, col));
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col));
     }
     return myGrid.get(row).get(col);
   }
@@ -167,7 +194,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(String.format(myResources.getString("InvalidGridPosition"), row, col));
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col));
     }
     if (cell == null) {
       throw new SimulationException(myResources.getString("NullCell"));
@@ -203,18 +231,16 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Get all cells in the grid as a flattened list
+   * Get all cells in the grid as a flattened list.
    *
    * @return A list of all cells in the grid as a flattened grid
    */
   public List<T> getCells() {
-    return myGrid.stream()
-        .flatMap(List::stream)
-        .toList();
+    return myGrid.stream().flatMap(List::stream).toList();
   }
 
   /**
-   * return resource bundle associated for exceptions
+   * return resource bundle associated for exceptions.
    *
    * @return resource bundle associated for exception
    */
