@@ -68,6 +68,7 @@ public class StateColorLegend {
 
   /**
    * Updates the legend based on the current simulation type based on an XMLData file.
+   *
    * @param xmlData - XMLData object containing complete fields
    */
   public void updateLegend(XMLData xmlData) {
@@ -136,25 +137,27 @@ public class StateColorLegend {
 
         colorPickerIsOpen = false;
       });
-    }
-    else {
-      updateLegend(myLastXMLData); // if the color picker is already open, then close the color picker by resetting the legend
+    } else {
+      updateLegend(
+          myLastXMLData); // if the color picker is already open, then close the color picker by resetting the legend
       colorPickerIsOpen = false;
     }
   }
 
   /**
-   * Retrieves the appropriate `getColorForState()` method based on simulation type.
-   * No longer in use since this only retrieves the default color mapping, not including any dynamic customizations
+   * Retrieves the appropriate `getColorForState()` method based on simulation type. No longer in
+   * use since this only retrieves the default color mapping, not including any dynamic
+   * customizations
    */
   @Deprecated
   private Map<Integer, Color> getColorMapFromXML(XMLData xmlData) {
-    SimType simulationType= xmlData.getType();
+    SimType simulationType = xmlData.getType();
 
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
         xmlData.getNumStates());
     if (handler == null) {
-      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
+      throw new IllegalArgumentException(
+          myErrorResources.getString("UnknownSimType") + simulationType);
     }
 
     Map<Integer, Color> stateColorMap = new HashMap<>();
@@ -176,7 +179,7 @@ public class StateColorLegend {
     }
 
     CellView cellView = userView.getCellViewList().getFirst();
-    for(int k = 0; k < cellView.getNumStates(); k++) {
+    for (int k = 0; k < cellView.getNumStates(); k++) {
       colorMap.put(k, cellView.getColorForState(k));
     }
     return colorMap;
@@ -190,12 +193,13 @@ public class StateColorLegend {
       return new HashMap<>();
     }
 
-    SimType simulationType= xmlData.getType();
-    
+    SimType simulationType = xmlData.getType();
+
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
         myUserView.getCellViewList().getFirst().getNumStates());
     if (handler == null) {
-      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simulationType);
+      throw new IllegalArgumentException(
+          myErrorResources.getString("UnknownSimType") + simulationType);
     }
 
     Map<Integer, String> stateNameMap = new HashMap<>();

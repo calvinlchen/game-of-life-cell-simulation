@@ -6,9 +6,11 @@ package cellsociety.model.simulation.parameters;
  * @author Jessica Chen
  */
 public class FallingSandParameters extends Parameters {
+
   public FallingSandParameters() {
     super();
   }
+
   public FallingSandParameters(String language) {
     super(language);
   }

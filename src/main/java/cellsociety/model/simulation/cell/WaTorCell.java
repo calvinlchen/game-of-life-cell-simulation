@@ -38,8 +38,8 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   /**
    * Constructs a WaTorCell with a specified initial state and rule.
    *
-   * @param state - the initial state of the cell (must be a state from WaTorStates)
-   * @param rule  - the WaTorRule to calculate the next state
+   * @param state    - the initial state of the cell (must be a state from WaTorStates)
+   * @param rule     - the WaTorRule to calculate the next state
    * @param language - name of language, for error message display
    */
   public WaTorCell(int state, WaTorRule rule, String language) {

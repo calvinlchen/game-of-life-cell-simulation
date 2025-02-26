@@ -3,11 +3,13 @@ package cellsociety.model.util.constants;
 /**
  * State constants to use for rules to keep them central
  *
- * <p> I tried doing them in resource properties originally, but you can't use them in switch statements
+ * <p> I tried doing them in resource properties originally, but you can't use them in switch
+ * statements
  *
  * @author Jessica Chen
  */
 public class CellStates {
+
   public static final int GAMEOFLIFE_DEAD = 0;
   public static final int GAMEOFLIFE_ALIVE = 1;
   public static final int GAMEOFLIFE_MAXSTATE = 2;

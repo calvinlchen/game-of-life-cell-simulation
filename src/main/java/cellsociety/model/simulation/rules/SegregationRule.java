@@ -30,7 +30,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public SegregationRule(SegregationParameters parameters, String language) {
     super(parameters, language);
@@ -72,18 +72,16 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
     }
 
     long similarNeighbors = neighbors.stream()
-        .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState())
-        .count();
+        .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState()).count();
 
     double similarityRatio = (double) similarNeighbors / totalNeighbors;
     return similarityRatio >= threshold;
   }
 
   private Optional<SegregationCell> findEmptyCell(SegregationCell cell) {
-    List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
-            && neighbor.getNextState() == SEGREGATION_EMPTY)
-        .toList();
+    List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream().filter(
+        neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
+            && neighbor.getNextState() == SEGREGATION_EMPTY).toList();
 
     if (emptyNeighbors.isEmpty()) {
       return Optional.empty();

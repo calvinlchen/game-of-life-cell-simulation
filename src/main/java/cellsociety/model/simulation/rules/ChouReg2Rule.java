@@ -96,7 +96,7 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public ChouReg2Rule(ChouReg2Parameters parameters, String language) {
     super(parameters, language);

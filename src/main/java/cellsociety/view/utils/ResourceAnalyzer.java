@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResourceAnalyzer {
+
   /**
-   * Dynamically scans the resource folder to find available language files (.properties) and extracts the names of those languages.
+   * Dynamically scans the resource folder to find available language files (.properties) and
+   * extracts the names of those languages.
+   *
    * @return List of available languages
    */
   public static List<String> getAvailableLanguages() {
@@ -45,7 +48,9 @@ public class ResourceAnalyzer {
   }
 
   /**
-   * Dynamically scans the resource folder to find available style files (.css) and extracts their filenames.
+   * Dynamically scans the resource folder to find available style files (.css) and extracts their
+   * filenames.
+   *
    * @return List of available stylesheets
    */
   public static List<String> getAvailableStylesheets() {

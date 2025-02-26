@@ -23,6 +23,7 @@ public class FireParameters extends Parameters {
   /**
    * initials fire with parameters ignition likelihood ratio (0.1) and tree spawn likelihood ratio
    * (0.01)
+   *
    * @param language - name of language, for error message display
    */
   public FireParameters(String language) {

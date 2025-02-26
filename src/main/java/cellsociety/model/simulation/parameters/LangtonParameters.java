@@ -6,8 +6,12 @@ package cellsociety.model.simulation.parameters;
  * @author Jessica Chen
  */
 public class LangtonParameters extends Parameters {
+
   public LangtonParameters() {
     super();
   }
-  public LangtonParameters(String language) { super(language); }
+
+  public LangtonParameters(String language) {
+    super(language);
+  }
 }

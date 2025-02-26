@@ -10,6 +10,7 @@ import cellsociety.model.simulation.rules.RPSRule;
  * @author Jessica Chen
  */
 public class RPSCell extends Cell<RPSCell, RPSRule, RPSParameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
@@ -24,8 +25,8 @@ public class RPSCell extends Cell<RPSCell, RPSRule, RPSParameters> {
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the Rock Paper Scissors rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the Rock Paper Scissors rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public RPSCell(int state, RPSRule rule, String language) {

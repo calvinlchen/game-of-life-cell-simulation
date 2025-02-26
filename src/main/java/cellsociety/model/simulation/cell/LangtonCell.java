@@ -11,6 +11,7 @@ import cellsociety.model.simulation.rules.LangtonRule;
  * @author Jessica Chen
  */
 public class LangtonCell extends Cell<LangtonCell, LangtonRule, LangtonParameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
@@ -25,8 +26,8 @@ public class LangtonCell extends Cell<LangtonCell, LangtonRule, LangtonParameter
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the Langton's Loop rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the Langton's Loop rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public LangtonCell(int state, LangtonRule rule, String language) {

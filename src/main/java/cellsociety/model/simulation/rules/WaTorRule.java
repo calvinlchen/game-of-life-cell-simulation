@@ -36,7 +36,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public WaTorRule(WaTorParameters parameters, String language) {
     super(parameters, language);
@@ -120,10 +120,9 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
   }
 
   private Optional<WaTorCell> findEmptyCell(WaTorCell cell) {
-    List<WaTorCell> emptyNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == WATOR_EMPTY
-            && neighbor.getNextState() == WATOR_EMPTY)
-        .toList();
+    List<WaTorCell> emptyNeighbors = cell.getNeighbors().stream().filter(
+        neighbor -> neighbor.getCurrentState() == WATOR_EMPTY
+            && neighbor.getNextState() == WATOR_EMPTY).toList();
 
     if (emptyNeighbors.isEmpty()) {
       return Optional.empty();
@@ -133,8 +132,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
 
   private Optional<WaTorCell> findFishCell(WaTorCell cell) {
     List<WaTorCell> fishNeighbors = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == WATOR_FISH)
-        .toList();
+        .filter(neighbor -> neighbor.getCurrentState() == WATOR_FISH).toList();
 
     if (fishNeighbors.isEmpty()) {
       return Optional.empty();

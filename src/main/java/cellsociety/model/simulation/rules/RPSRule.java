@@ -27,7 +27,7 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public RPSRule(RPSParameters parameters, String language) {
     super(parameters, language);
@@ -48,8 +48,7 @@ public class RPSRule extends Rule<RPSCell, RPSParameters> {
 
     // count how many neighbors have winning state
     long winningNeighborsCount = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == winningState)
-        .count();
+        .filter(neighbor -> neighbor.getCurrentState() == winningState).count();
 
     if ((double) winningNeighborsCount / cell.getNeighbors().size() > getParameters().getParameter(
         "percentageToWin")) {

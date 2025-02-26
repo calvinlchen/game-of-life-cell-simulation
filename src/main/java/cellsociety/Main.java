@@ -59,9 +59,9 @@ public class Main extends Application {
   }
 
   /**
-   * Update nextStageX and nextStageY based on offset value and screen bounds.
-   * Code for fetching screen bounds was advised by ChatGPT.
-   * "How do I get the screen size to ensure that the stage won't be off the screen?"
+   * Update nextStageX and nextStageY based on offset value and screen bounds. Code for fetching
+   * screen bounds was advised by ChatGPT. "How do I get the screen size to ensure that the stage
+   * won't be off the screen?"
    */
   private static void setNextStagePosition() {
     // Get the screen size (excluding taskbars)
@@ -70,16 +70,14 @@ public class Main extends Application {
     // Calculate and store x-position for next window (in case a new window is generated later)
     if (nextStageX + SIM_WINDOW_WIDTH + STAGE_OFFSET > screenBounds.getMaxX()) {
       nextStageX = screenBounds.getMinX() + STAGE_OFFSET;
-    }
-    else {
+    } else {
       nextStageX += STAGE_OFFSET;
     }
 
     // Calculate and store y-position for next window
     if (nextStageY + SIM_WINDOW_HEIGHT + STAGE_OFFSET > screenBounds.getMaxY()) {
       nextStageY = screenBounds.getMinY() + STAGE_OFFSET;
-    }
-    else {
+    } else {
       nextStageY += STAGE_OFFSET;
     }
   }

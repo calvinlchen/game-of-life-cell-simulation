@@ -94,7 +94,8 @@ public class SimulationView {
   private void createCellView(int cellRow, int cellCol, int cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
 
-    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight, cellState);
+    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight,
+        cellState);
     if (cellView != null) {
       myCellViews[cellRow][cellCol] = cellView;
       myDisplay.getChildren().add(cellView.getShape());
@@ -102,9 +103,7 @@ public class SimulationView {
   }
 
   /**
-   * Visually flips the entire CellView grid horizontally. For example:
-   * A B  -->  B A
-   * C D       D C
+   * Visually flips the entire CellView grid horizontally. For example: A B  -->  B A C D       D C
    */
   public void flipDisplayHorizontally() {
     if (myCellViewsIsEmpty()) {
@@ -112,17 +111,14 @@ public class SimulationView {
     }
     if (isFlippedHorizontally) {
       myDisplay.setScaleX(1);
-    }
-    else {
+    } else {
       myDisplay.setScaleX(-1);
     }
     isFlippedHorizontally = !isFlippedHorizontally;
   }
 
   /**
-   * Visually flips the entire CellView grid vertically. For example:
-   * A B  -->  C D
-   * C D       A B
+   * Visually flips the entire CellView grid vertically. For example: A B  -->  C D C D       A B
    */
   public void flipDisplayVertically() {
     if (myCellViewsIsEmpty()) {
@@ -130,8 +126,7 @@ public class SimulationView {
     }
     if (isFlippedVertically) {
       myDisplay.setScaleY(1);
-    }
-    else {
+    } else {
       myDisplay.setScaleY(-1);
     }
     isFlippedVertically = !isFlippedVertically;
@@ -142,7 +137,8 @@ public class SimulationView {
   }
 
   /**
-   * Returns a coordinate position for a cell based on its row and column, as well as grid flip status
+   * Returns a coordinate position for a cell based on its row and column, as well as grid flip
+   * status
    *
    * @param row    A cell's row in the grid (index starting from 0)
    * @param column A cell's column in the grid (index starting from 0)
@@ -180,6 +176,7 @@ public class SimulationView {
 
   /**
    * Toggles grid lines (AKA cell outlines) for all CellViews in the simulation grid.
+   *
    * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
    */
   public void toggleGridlines(boolean enable) {
@@ -232,8 +229,9 @@ public class SimulationView {
       return;
     }
     if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(String.format(
-          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
+      throw new IllegalArgumentException(
+          String.format(myErrorResources.getString("InvalidState"), state,
+              cellList.getFirst().getNumStates() - 1));
     }
 
     for (CellView cellView : cellList) {

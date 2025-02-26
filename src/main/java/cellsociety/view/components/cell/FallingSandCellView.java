@@ -7,8 +7,7 @@ import javafx.scene.paint.Color;
 
 public class FallingSandCellView extends CellView {
 
-  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
-      0, Color.TRANSPARENT, // Empty
+  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(0, Color.TRANSPARENT, // Empty
       1, Color.SILVER,      // Steel
       2, Color.YELLOW,      // Sand
       3, Color.BLUE         // Water

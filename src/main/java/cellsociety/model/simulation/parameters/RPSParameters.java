@@ -21,6 +21,7 @@ public class RPSParameters extends Parameters {
 
   /**
    * Initialize rockpaper scisors with numStates (3) and percentageToWin (0.5)
+   *
    * @param language - name of language, for error message display
    */
   public RPSParameters(String language) {

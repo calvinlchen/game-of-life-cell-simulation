@@ -28,9 +28,9 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
   /**
    * Constructs a RectangularGrid with specified dimensions.
    *
-   * @param cells - cells to be added
-   * @param rows  - number of rows in the grid
-   * @param cols  - number of columns in the grid
+   * @param cells    - cells to be added
+   * @param rows     - number of rows in the grid
+   * @param cols     - number of columns in the grid
    * @param language - name of language, for error message display
    */
   public RectangularGrid(List<T> cells, int rows, int cols, String language) {

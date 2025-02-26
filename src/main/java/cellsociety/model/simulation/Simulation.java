@@ -69,7 +69,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       SimType simType = xmlData.getType();
       Map<String, Double> params = xmlData.getParameters();
 
-      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params, myLanguage);
+      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params,
+          myLanguage);
       parameters = rule.getParameters();
 
       List<Cell<T, ?, ?>> cellList = createCells(simType, rule, myLanguage);
@@ -93,7 +94,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
     try {
       Class<?> cellClass = Class.forName(CELL_PACKAGE + simType.name() + "Cell");
-      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(), String.class);
+      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(),
+          String.class);
 
       for (Integer state : xmlData.getCellStateList()) {
         cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule, language));
@@ -120,9 +122,11 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    */
   private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
     if (simType.isDefaultRectangularGrid()) {
-      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
+      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          myLanguage);
     } else {
-      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(), myLanguage);
+      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          myLanguage);
     }
   }
 

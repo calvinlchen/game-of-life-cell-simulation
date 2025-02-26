@@ -21,6 +21,7 @@ public class SegregationParameters extends Parameters {
 
   /**
    * initializes parameter toleranceThreshold (0.5)
+   *
    * @param language - name of language, for error message display
    */
   public SegregationParameters(String language) {

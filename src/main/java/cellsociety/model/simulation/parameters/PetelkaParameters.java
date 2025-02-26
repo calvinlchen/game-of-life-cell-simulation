@@ -6,9 +6,11 @@ package cellsociety.model.simulation.parameters;
  * @author Jessica Chen
  */
 public class PetelkaParameters extends Parameters {
+
   public PetelkaParameters() {
     super();
   }
+
   public PetelkaParameters(String language) {
     super(language);
   }

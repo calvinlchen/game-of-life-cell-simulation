@@ -250,7 +250,7 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public LangtonRule(LangtonParameters parameters, String language) {
     super(parameters, language);

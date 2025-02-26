@@ -6,8 +6,7 @@ import javafx.scene.paint.Color;
 
 public class PercolationCellView extends CellView {
 
-  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(
-      0, Color.BLACK,     // Blocked
+  private static final Map<Integer, Color> DEFAULT_COLOR_MAP = Map.of(0, Color.BLACK,     // Blocked
       1, Color.TRANSPARENT,   // Empty
       2, Color.BLUE           // Full
   );

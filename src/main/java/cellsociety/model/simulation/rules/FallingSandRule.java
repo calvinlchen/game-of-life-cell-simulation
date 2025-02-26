@@ -35,7 +35,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
    * Constructor for the Rule class
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public FallingSandRule(FallingSandParameters parameters, String language) {
     super(parameters, language);
@@ -71,8 +71,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
 
       List<FallingSandCell> possibleMoves = secondaryDirections.stream()
           .map(dir -> findNeighborInDirection(cell, dir, replaceableNeighbor))
-          .flatMap(Optional::stream)
-          .toList();
+          .flatMap(Optional::stream).toList();
       // chose random secondary
       if (!possibleMoves.isEmpty()) {
         FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
@@ -84,12 +83,11 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
 
-  public Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell,
-      String direction, int state) {
+  public Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell, String direction,
+      int state) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> matchesDirection(cell, neighbor, direction))
-        .filter(neighbor -> neighbor.getCurrentState() == state
-            && neighbor.getNextState() == state)
+        .filter(neighbor -> neighbor.getCurrentState() == state && neighbor.getNextState() == state)
         .findFirst();
   }
 

@@ -11,6 +11,7 @@ import cellsociety.model.simulation.rules.GameOfLifeRule;
  * @author Jessica Chen
  */
 public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfLifeParameters> {
+
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
    *
@@ -25,8 +26,8 @@ public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfL
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.
    *
-   * @param state - the initial state of the cell (must be a state from GameOfLifeStates)
-   * @param rule  - the Game of Life rule to calculate the next state
+   * @param state    - the initial state of the cell (must be a state from GameOfLifeStates)
+   * @param rule     - the Game of Life rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public GameOfLifeCell(int state, GameOfLifeRule rule, String language) {

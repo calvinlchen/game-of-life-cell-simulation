@@ -22,13 +22,14 @@ import java.util.*;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 /**
- * A utility class for reading and writing simulation data to/from XML files.
- * Provides functionality to read simulation details, grid data, and parameters from XML files,
- * and also to write simulation data to XML files.
+ * A utility class for reading and writing simulation data to/from XML files. Provides functionality
+ * to read simulation details, grid data, and parameters from XML files, and also to write
+ * simulation data to XML files.
  *
  * @author Kyaira Boughton
  */
 public class XMLUtils {
+
   ResourceBundle myErrorResources;
 
   /**
@@ -74,24 +75,30 @@ public class XMLUtils {
           Element simulationElement = (Element) simulationNode;
 
           // Extract metadata
-          Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata").item(0);
+          Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata")
+              .item(0);
           String SimulationType = simulationElement.getElementsByTagName("type").item(0)
-                  .getTextContent();
+              .getTextContent();
           xmlObject.setType(simTypeFromString(SimulationType));
 
-          xmlObject.setTitle(metadataElement.getElementsByTagName("title").item(0).getTextContent());
-          xmlObject.setAuthor(metadataElement.getElementsByTagName("author").item(0).getTextContent());
-          xmlObject.setDescription(metadataElement.getElementsByTagName("description").item(0).getTextContent());
+          xmlObject.setTitle(
+              metadataElement.getElementsByTagName("title").item(0).getTextContent());
+          xmlObject.setAuthor(
+              metadataElement.getElementsByTagName("author").item(0).getTextContent());
+          xmlObject.setDescription(
+              metadataElement.getElementsByTagName("description").item(0).getTextContent());
 
           NodeList languageNodes = metadataElement.getElementsByTagName("language");
           if (languageNodes.getLength() > 0) {
             xmlObject.setLanguage(languageNodes.item(0).getTextContent());
           } else {
-            xmlObject.setLanguage(language); //if no language in og xml, will use the input language as default.
+            xmlObject.setLanguage(
+                language); //if no language in og xml, will use the input language as default.
           }
 
           // Extract parameters
-          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters").item(0);
+          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters")
+              .item(0);
           if (parametersElement != null) {
             NodeList paramList = parametersElement.getElementsByTagName("parameter");
             Map<String, Double> params = parameterToMap(paramList, xmlObject.getType());
@@ -100,9 +107,11 @@ public class XMLUtils {
             xmlObject.setParameters(new HashMap<>());  // Prevent parameters from being null
           }
 
-          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(), xmlObject.getType(), xmlObject.getNumStates());
+          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(),
+              xmlObject.getType(), xmlObject.getNumStates());
           if (handler == null) {
-            throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + xmlObject.getType());
+            throw new IllegalArgumentException(
+                myErrorResources.getString("UnknownSimType") + xmlObject.getType());
           }
 
           NodeList colorsList = metadataElement.getElementsByTagName("color");
@@ -121,13 +130,15 @@ public class XMLUtils {
           NodeList variationList = gridElement.getElementsByTagName("variation");
           if (variationList.getLength() > 0) {
             // Process variation (randomly generated cells)
-            xmlObject.setCellStateList(generateRandomCellStates(rows, columns, gridElement, xmlObject.getType(), handler));
+            xmlObject.setCellStateList(
+                generateRandomCellStates(rows, columns, gridElement, xmlObject.getType(), handler));
           } else {
             // No variation: use explicitly defined cell states
             NodeList cellList = gridElement.getElementsByTagName("cell");
             if (cellList.getLength() != rows * columns) {
-              throw new XMLException(myErrorResources.getString("ExpectedDifferentNumber")
-                      + (rows * columns) + ", " + cellList.getLength());
+              throw new XMLException(
+                  myErrorResources.getString("ExpectedDifferentNumber") + (rows * columns) + ", "
+                      + cellList.getLength());
             }
             xmlObject.setCellStateList(cellStatesToEnum(cellList, handler));
           }
@@ -151,7 +162,7 @@ public class XMLUtils {
    * @throws XMLException if there is an error writing to the XML file
    */
   public void writeToXML(File file, String title, String author, String description,
-                         Simulation simulation) {
+      Simulation simulation) {
     if (file == null) {
       throw new XMLException(myErrorResources.getString("NoFileSelectedSave"));
     }
@@ -197,7 +208,7 @@ public class XMLUtils {
 
       // Add cell states
       ArrayList<String> cellStateList = cellStatesToString(simulation.getXMLData().getGridRowNum(),
-              simulation.getXMLData().getGridColNum(), simulation);
+          simulation.getXMLData().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
         cellElement.setAttribute("state", state);
@@ -242,12 +253,12 @@ public class XMLUtils {
     ArrayList<String> cellStateList = new ArrayList<>();
 
     // Get the handler for the simulation's cell states
-    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(), simulation.getSimulationType(),
-            simulation.getNumStates());
+    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(),
+        simulation.getSimulationType(), simulation.getNumStates());
 
     if (handler == null) {
       throw new IllegalArgumentException(
-              myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
+          myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
     }
 
     for (int i = 0; i < rowNum; i++) {
@@ -255,7 +266,8 @@ public class XMLUtils {
         int currentCellState = simulation.getCurrentState(i, j);
 
         if (!handler.isValidState(currentCellState)) {
-          throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + currentCellState);
+          throw new IllegalArgumentException(
+              myErrorResources.getString("UnknownCellState") + currentCellState);
         }
 
         cellStateList.add(handler.statetoString(currentCellState));
@@ -285,7 +297,8 @@ public class XMLUtils {
         int stateEnum = handler.stateFromString(cellType);
         cellStateEnums.add(stateEnum);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + cellType, e);
+        throw new IllegalArgumentException(
+            myErrorResources.getString("UnknownCellState") + cellType, e);
       }
     }
 
@@ -296,8 +309,8 @@ public class XMLUtils {
    * A method that extracts the cellstates from the simulation xml and turns them into a string
    * list
    *
-   * @param cellList       an NodeList variable that holds the xml data's cell data
-   * @param handler   the handler to convert the string to the appropriate cell state
+   * @param cellList an NodeList variable that holds the xml data's cell data
+   * @param handler  the handler to convert the string to the appropriate cell state
    * @return a list of integers representing the cell states as enums
    * @throws IllegalArgumentException if an invalid cell state is encountered
    */
@@ -312,7 +325,8 @@ public class XMLUtils {
         int stateEnum = handler.stateFromString(currentCellState);
         cellStateEnums.add(stateEnum);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + currentCellState, e);
+        throw new IllegalArgumentException(
+            myErrorResources.getString("UnknownCellState") + currentCellState, e);
       }
     }
 
@@ -380,15 +394,16 @@ public class XMLUtils {
   /**
    * Generates random cell states based on the grid size and variation information in the XML file.
    *
-   * @param rows          the number of rows in the grid
-   * @param columns      the number of columns in the grid
-   * @param gridElement  the XML element containing the grid's variation data
+   * @param rows           the number of rows in the grid
+   * @param columns        the number of columns in the grid
+   * @param gridElement    the XML element containing the grid's variation data
    * @param simulationType the type of the simulation
-   * @param handler      the handler for cell state conversion
+   * @param handler        the handler for cell state conversion
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private ArrayList<Integer> generateRandomCellStates(int rows, int columns, Element gridElement, SimType simulationType, CellStateHandler handler) {
+  private ArrayList<Integer> generateRandomCellStates(int rows, int columns, Element gridElement,
+      SimType simulationType, CellStateHandler handler) {
     ArrayList<Integer> cellStateList = new ArrayList<>();
     List<String> statesToAssign = new ArrayList<>();
 
@@ -440,19 +455,21 @@ public class XMLUtils {
 
     return cellStateList;
   }
+
   private SimType simTypeFromString(String simTypeString) {
-      return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
-          case "game of life", "gameoflife" -> SimType.GameOfLife;
-          case "spreading of fire", "fire" -> SimType.Fire;
-          case "percolation" -> SimType.Percolation;
-          case "model of segregation", "segregation" -> SimType.Segregation;
-          case "wa-tor world", "wator" -> SimType.WaTor;
-          case "falling sand", "fallingsand" -> SimType.FallingSand;
-          case "langton", "langton's loop", "langtonsloop" -> SimType.Langton;
-          case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -> SimType.ChouReg2;
-          case "petelka" -> SimType.Petelka;
-          case "rock paper scissors", "rps" -> SimType.RPS;
-          default -> throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType") + simTypeString);
-      };
+    return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
+      case "game of life", "gameoflife" -> SimType.GameOfLife;
+      case "spreading of fire", "fire" -> SimType.Fire;
+      case "percolation" -> SimType.Percolation;
+      case "model of segregation", "segregation" -> SimType.Segregation;
+      case "wa-tor world", "wator" -> SimType.WaTor;
+      case "falling sand", "fallingsand" -> SimType.FallingSand;
+      case "langton", "langton's loop", "langtonsloop" -> SimType.Langton;
+      case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -> SimType.ChouReg2;
+      case "petelka" -> SimType.Petelka;
+      case "rock paper scissors", "rps" -> SimType.RPS;
+      default -> throw new IllegalArgumentException(
+          myErrorResources.getString("UnknownSimType") + simTypeString);
+    };
   }
 }

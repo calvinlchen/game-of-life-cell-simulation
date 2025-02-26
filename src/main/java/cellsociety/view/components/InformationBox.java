@@ -17,7 +17,8 @@ public class InformationBox {
    */
   public InformationBox(ResourceBundle resources) {
     myTextArea = new TextArea();
-    myTextArea.setPrefHeight(Main.SIM_WINDOW_HEIGHT * (1 - SimViewConstants.GRID_PROPORTION_OF_SCREEN));
+    myTextArea.setPrefHeight(
+        Main.SIM_WINDOW_HEIGHT * (1 - SimViewConstants.GRID_PROPORTION_OF_SCREEN));
     myTextArea.setPrefWidth(Main.SIM_WINDOW_WIDTH);
     myTextArea.setEditable(false);
 
@@ -46,17 +47,19 @@ public class InformationBox {
    */
   public void updateInfo(XMLData data) {
     StringBuilder infoText = new StringBuilder();
-    infoText.append(myResources.getString("SimulationTypeHeader")).append(data.getType()).append("\n");
+    infoText.append(myResources.getString("SimulationTypeHeader")).append(data.getType())
+        .append("\n");
     infoText.append(myResources.getString("TitleHeader")).append(data.getTitle()).append("\n");
     infoText.append(myResources.getString("AuthorHeader")).append(data.getAuthor()).append("\n");
-    infoText.append(myResources.getString("GridSizeHeader")).append(data.getGridRowNum()).append(" x ")
-        .append(data.getGridColNum()).append("\n");
+    infoText.append(myResources.getString("GridSizeHeader")).append(data.getGridRowNum())
+        .append(" x ").append(data.getGridColNum()).append("\n");
     infoText.append(myResources.getString("ParametersHeader"));
     for (Map.Entry<String, Double> entry : data.getParameters().entrySet()) {
       infoText.append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
     }
     infoText.append("\n");
-    infoText.append(myResources.getString("DescriptionHeader")).append(data.getDescription()).append("\n");
+    infoText.append(myResources.getString("DescriptionHeader")).append(data.getDescription())
+        .append("\n");
 
     myTextArea.setText(infoText.toString());
   }
@@ -66,12 +69,9 @@ public class InformationBox {
    */
   public void emptyFields() {
     myTextArea.setText(
-        myResources.getString("SimulationTypeHeader") + "\n" +
-            myResources.getString("TitleHeader") + "\n" +
-            myResources.getString("AuthorHeader") + "\n" +
-            myResources.getString("GridSizeHeader") + "\n" +
-            myResources.getString("ParametersHeader") + "\n" +
-            myResources.getString("DescriptionHeader") + "\n"
-    );
+        myResources.getString("SimulationTypeHeader") + "\n" + myResources.getString("TitleHeader")
+            + "\n" + myResources.getString("AuthorHeader") + "\n" + myResources.getString(
+            "GridSizeHeader") + "\n" + myResources.getString("ParametersHeader") + "\n"
+            + myResources.getString("DescriptionHeader") + "\n");
   }
 }

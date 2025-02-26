@@ -43,8 +43,8 @@ public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-      int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-      setNeighbors(directions);
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    setNeighbors(directions);
   }
 }
 

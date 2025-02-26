@@ -7,13 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Static implementation of {@link CellStateHandler} that defines the main handling for static states
+ * Static implementation of {@link CellStateHandler} that defines the main handling for static
+ * states
  *
  * <p> Assumption: cell states are passed in through the constructor
  *
  * @author Jessica Chen
  */
 public class CellStateHandlerStatic implements CellStateHandler {
+
   private Map<Integer, String> cellStates = new HashMap<>();
 
   /**

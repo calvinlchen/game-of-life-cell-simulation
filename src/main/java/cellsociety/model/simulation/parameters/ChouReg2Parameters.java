@@ -6,8 +6,12 @@ package cellsociety.model.simulation.parameters;
  * @author Jessica Chen
  */
 public class ChouReg2Parameters extends Parameters {
+
   public ChouReg2Parameters() {
     super();
   }
-  public ChouReg2Parameters(String language) { super(language); }
+
+  public ChouReg2Parameters(String language) {
+    super(language);
+  }
 }

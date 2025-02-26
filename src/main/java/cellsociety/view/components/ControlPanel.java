@@ -58,8 +58,7 @@ public class ControlPanel {
     loadButton.setOnAction(e -> {
       if (myUserView.getState() == ViewState.EMPTY || myUserView.getState() == ViewState.ERROR) {
         myUserView.chooseFileAndLoadSimulation();
-      }
-      else {
+      } else {
         Main.startSimulationWindowWithFilePrompt(myUserView.getLanguage());
       }
     });
@@ -134,8 +133,7 @@ public class ControlPanel {
       Text noneText = new Text(myResources.getString("None"));
       themeTitle.getStyleClass().add("bold-text");
       themePanel.getChildren().addAll(noneText);
-    }
-    else {
+    } else {
       myThemeChoices = new ChoiceBox<>();
       myThemeChoices.getItems().addAll(themes);
       myThemeChoices.setValue(themes.getFirst()); // default to first available theme
