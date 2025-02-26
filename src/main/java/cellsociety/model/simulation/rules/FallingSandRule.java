@@ -14,7 +14,7 @@ import java.util.Random;
 
 
 /**
- * Class for representing rules for Falling Sand simulation
+ * Class for representing rules for Falling Sand simulation.
  *
  * @author Jessica Chen
  */
@@ -23,7 +23,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   private final Random random = new Random();
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -32,7 +32,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
@@ -46,7 +46,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
    * <p> this is because of sand and water gravity rules
    *
    * @param cell - cell to apply the rules to
-   * @return
+   * @return int next state of the current cell
    */
   @Override
   public int apply(FallingSandCell cell) {
@@ -83,7 +83,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
 
-  public Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell, String direction,
+  private Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell, String direction,
       int state) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> matchesDirection(cell, neighbor, direction))

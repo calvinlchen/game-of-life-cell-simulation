@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class for representing rules for Langton's Loop simulation
+ * Class for representing rules for Langton's Loop simulation.
  *
  * @author Jessica Chen
  */
@@ -238,7 +238,7 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
 
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -247,7 +247,7 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display

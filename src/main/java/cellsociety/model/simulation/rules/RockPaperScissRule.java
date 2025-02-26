@@ -4,7 +4,7 @@ import cellsociety.model.simulation.cell.RockPaperScissCell;
 import cellsociety.model.simulation.parameters.RockPaperScissParameters;
 
 /**
- * Class for representing rules for Rock Paper Scissor simulation
+ * Class for representing rules for Rock Paper Scissor simulation.
  *
  * @author Jessica Chen
  */
@@ -13,7 +13,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
   private final int totalNumStates; // this is the one parameter that should not change
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -24,7 +24,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
@@ -60,7 +60,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
   }
 
   /**
-   * return max state for this RPS rule
+   * return max state for this RPS rule.
    *
    * @return max state for this RPS rule
    */

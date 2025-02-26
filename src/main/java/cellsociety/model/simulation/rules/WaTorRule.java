@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Random;
 
 /**
- * Class for representing rules for WaTor World simulation
+ * Class for representing rules for WaTor World simulation.
  *
  * @author Jessica Chen
  */
@@ -23,7 +23,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
   private int sharkReproductionTime;
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -33,7 +33,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display

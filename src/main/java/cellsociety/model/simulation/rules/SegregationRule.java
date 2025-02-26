@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Random;
 
 /**
- * Class for representing rules for Segregation simulation
+ * Class for representing rules for Segregation simulation.
  *
  * @author Jessica Chen
  */
@@ -18,7 +18,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
   private final Random random = new Random();
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -27,7 +27,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
@@ -37,7 +37,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
   }
 
   /**
-   * <p> If cell is not satisfied, will attempt to move to an empty adjacent space
+   * If cell is not satisfied, will attempt to move to an empty adjacent space.
    *
    * @param cell - cell to apply the rules to
    * @return next state for cell to go to on step
