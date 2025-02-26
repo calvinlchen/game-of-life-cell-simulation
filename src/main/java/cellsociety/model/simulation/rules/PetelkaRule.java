@@ -68,41 +68,49 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
     }
 
     // Check all rotations of the directions
+    int rotationsState = checkRotations(cell, baseDirections);
+    if (rotationsState != -1) {
+      return rotationsState;
+    }
+
+    int reflectionsState = checkReflections(cell);
+    if (reflectionsState != -1) {
+      return reflectionsState;
+    }
+
+    // If no match is found, return 0
+    return 0;
+  }
+
+  private int checkRotations(PetelkaCell cell, String[] directions) {
+    String stateKey = getStateKey(cell, directions);
     for (int i = 0; i < 4; i++) {
       if (RULES_MAP_PETELKA.containsKey(stateKey)) {
         return RULES_MAP_PETELKA.get(stateKey);
       }
 
-      baseDirections = rotateArray(baseDirections);
-      stateKey = getStateKey(cell, baseDirections);
+      directions = rotateArray(directions);
+      stateKey = getStateKey(cell, directions);
     }
 
-    String[] directions = new String[]{"S", "SE", "E", "NE", "N", "NW", "W", "SW"};
-    stateKey = getStateKey(cell, directions);
-    if (RULES_MAP_PETELKA.containsKey(stateKey)) {
-      return RULES_MAP_PETELKA.get(stateKey);
+    return -1;
+  }
+
+  private int checkReflections(PetelkaCell cell) {
+    String[][] reflectionSet = {
+        {"S", "SE", "E", "NE", "N", "NW", "W", "SW"},
+        {"N", "NW", "W", "SW", "S", "SE", "E", "NE"},
+        {"W", "SW", "S", "SE", "E", "NE", "N", "NW"},
+        {"E", "NE", "N", "NW", "W", "SW", "S", "SE"}
+    };
+    for (String[] directions : reflectionSet) {
+      String stateKey = getStateKey(cell, directions);
+      if (RULES_MAP_PETELKA.containsKey(stateKey)) {
+        return RULES_MAP_PETELKA.get(stateKey);
+      }
     }
 
-    directions = new String[]{"N", "NW", "W", "SW", "S", "SE", "E", "NE"};
-    stateKey = getStateKey(cell, directions);
-    if (RULES_MAP_PETELKA.containsKey(stateKey)) {
-      return RULES_MAP_PETELKA.get(stateKey);
-    }
-
-    directions = new String[]{"W", "SW", "S", "SE", "E", "NE", "N", "NW"};
-    stateKey = getStateKey(cell, directions);
-    if (RULES_MAP_PETELKA.containsKey(stateKey)) {
-      return RULES_MAP_PETELKA.get(stateKey);
-    }
-
-    directions = new String[]{"E", "NE", "N", "NW", "W", "SW", "S", "SE"};
-    stateKey = getStateKey(cell, directions);
-    if (RULES_MAP_PETELKA.containsKey(stateKey)) {
-      return RULES_MAP_PETELKA.get(stateKey);
-    }
-
-    // If no match is found, return 0
-    return 0;
+    return -1;
   }
 
   private String[] rotateArray(String[] array) {

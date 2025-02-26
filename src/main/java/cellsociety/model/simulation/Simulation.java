@@ -89,7 +89,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
       setUpGridStructure(cellList, simType);
     } catch (Exception e) {
-      e.printStackTrace();
       throw new SimulationException(myResources.getString("SimulationSetupFailed"), e);
     }
   }
@@ -105,12 +104,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       for (Integer state : xmlData.getCellStateList()) {
         cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule, language));
       }
-    } catch (ClassNotFoundException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("CellClassNotFound"), simType), e);
-    } catch (NoSuchMethodException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("CellConstructorNotFound"), simType), e);
     } catch (Exception e) {
       throw new SimulationException(
           String.format(myResources.getString("CellCreationFailed"), simType), e);
@@ -159,7 +152,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       return myGrid.getCell(row, col).getCurrentState();
     } catch (Exception e) {
       throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col));
+          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
     }
   }
 
@@ -174,7 +167,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       parameters.setParameter(key, value);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
+          e);
     }
   }
 
@@ -189,7 +183,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return parameters.getParameter(key);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
+          e);
     }
   }
 

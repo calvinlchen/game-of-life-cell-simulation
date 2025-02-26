@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class CellStateHandlerStatic implements CellStateHandler {
 
-  private Map<Integer, String> cellStates = new HashMap<>();
+  private final Map<Integer, String> cellStates;
 
   /**
    * Constructs a {@code CellStateHandlerStatic} with a predefined set of states.

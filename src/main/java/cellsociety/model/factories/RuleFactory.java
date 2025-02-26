@@ -61,15 +61,6 @@ public class RuleFactory {
       Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass, String.class);
       return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance, language);
 
-    } catch (ClassNotFoundException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("RuleClassNotFound"), ruleType), e);
-    } catch (NoSuchMethodException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("RuleConstructorNotFound"), ruleType), e);
-    } catch (ReflectiveOperationException e) {
-      throw new SimulationException(
-          String.format(myResources.getString("RuleInstantiationFailed"), ruleType), e);
     } catch (Exception e) {
       throw new SimulationException(myResources.getString("UnknownRuleCreationError"), e);
     }

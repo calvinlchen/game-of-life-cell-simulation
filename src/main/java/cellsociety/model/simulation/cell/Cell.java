@@ -132,6 +132,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * <p>Override if needed.
    */
   public void resetParameters() {
+    // Intentionally left blank; override in subclasses if needed.
   }
 
   // ==== Setters and Getters ====
@@ -182,7 +183,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     if (position == null) {
       throw new SimulationException(String.format(myResources.getString("PositionNotSet")));
     }
-    return position;
+    return Arrays.copyOf(position, position.length);
   }
 
 
@@ -199,7 +200,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
       throw new SimulationException(
           String.format(myResources.getString("InvalidPosition"), Arrays.toString(position)));
     }
-    this.position = position;
+    this.position = Arrays.copyOf(position, position.length);
   }
 
   /**
