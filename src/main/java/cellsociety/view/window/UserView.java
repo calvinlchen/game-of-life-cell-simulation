@@ -32,11 +32,17 @@ import javafx.util.Duration;
 
 /**
  * UserView manages the main display window for the simulation.
+ *
+ * <p>This class is responsible for rendering the simulation, managing user interactions,
+ * handling file operations, and controlling simulation speed and state.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
  */
 public class UserView {
 
   /**
-   * Defines the possible states of the program
+   * Defines the possible states of the program.
    */
   public enum ViewState {
     EMPTY, LOAD, RUN, PAUSE, ERROR, SAVE
@@ -63,6 +69,14 @@ public class UserView {
   private StateColorLegend myStateColorLegend;
   private final XmlUtils xmlUtils;
 
+  /**
+   * Constructs a UserView instance and initializes the simulation window.
+   *
+   * @param sceneWidth - the width of the scene
+   * @param sceneHeight - the height of the scene
+   * @param stage - the primary stage of the application
+   * @param language - the selected language for the UI
+   */
   public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
     myStage = stage;
     mySceneWidth = sceneWidth;
@@ -198,7 +212,7 @@ public class UserView {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
       try {
-        configureAndDisplaySimFromXML(xmlUtils.readXml(dataFile, myLanguage));
+        configureAndDisplaySimFromXml(xmlUtils.readXml(dataFile, myLanguage));
       } catch (XmlException e) {
         myState = ViewState.ERROR;
         showMessage(AlertType.ERROR, e.getMessage());
@@ -214,13 +228,13 @@ public class UserView {
     loadSimulationFromFile(dataFile);
   }
 
-  private void configureAndDisplaySimFromXML(XmlData xmlUtils) {
+  private void configureAndDisplaySimFromXml(XmlData xmlUtils) {
     // Set program state
     myState = ViewState.LOAD;
 
     // Upload simulation to mySimulationView
     try {
-      mySimulationView.configureFromXML(xmlUtils);
+      mySimulationView.configureFromXml(xmlUtils);
       mySimulationView.initializeGridView();
 
       XmlData xmlData = mySimulationView.getSimulation().getXmlDataObject();
@@ -237,7 +251,12 @@ public class UserView {
     }
   }
 
-  // display given message to user using the given type of Alert dialog box
+  /**
+   * Displays an alert message to the user.
+   *
+   * @param type - the type of alert (e.g., ERROR, WARNING, INFORMATION)
+   * @param message - the message to be displayed
+   */
   public static void showMessage(AlertType type, String message) {
     new Alert(type, message).showAndWait();
   }
@@ -326,7 +345,7 @@ public class UserView {
   }
 
   /**
-   * Initializes an animation based on the current mySpeedFactor
+   * Initializes an animation based on the current mySpeedFactor.
    */
   private void runNewAnimation() {
     if (myAnimation != null) {
@@ -347,9 +366,9 @@ public class UserView {
   public void loadRandomGameOfLife() {
     stopAndResetSimulation();
 
-    XmlData randomXmlData = RandomSimulationGenerator.createRandomGameOfLifeXML();
+    XmlData randomXmlData = RandomSimulationGenerator.createRandomGameOfLifeXml();
 
-    configureAndDisplaySimFromXML(randomXmlData);
+    configureAndDisplaySimFromXml(randomXmlData);
   }
 
   /**
@@ -362,7 +381,7 @@ public class UserView {
   }
 
   /**
-   * Retrieve the current state of this simulation
+   * Retrieve the current state of this simulation.
    *
    * @return Enum value such as EMPTY, LOAD, RUN, etc.
    */
@@ -371,7 +390,7 @@ public class UserView {
   }
 
   /**
-   * Retrieve the resource properties for displaying text in correct language
+   * Retrieve the resource properties for displaying text in correct language.
    *
    * @return ResourceBundle object
    */
@@ -380,7 +399,7 @@ public class UserView {
   }
 
   /**
-   * Retrieve the currently-displayed language (assuming its .properties file exists)
+   * Retrieve the currently-displayed language (assuming its .properties file exists).
    *
    * @return name of current UI language as a String
    */
@@ -389,7 +408,7 @@ public class UserView {
   }
 
   /**
-   * Retrieve the Scene that this window is displaying
+   * Retrieve the Scene that this window is displaying.
    *
    * @return Scene object containing all on-screen elements as children
    */
@@ -398,7 +417,7 @@ public class UserView {
   }
 
   /**
-   * Retrieve a List of CellView objects that this window is displaying
+   * Retrieve a List of CellView objects that this window is displaying.
    *
    * @return ArrayList of CellView objects
    */
@@ -411,7 +430,7 @@ public class UserView {
   }
 
   /**
-   * Updates a given state to a new color, assuming the color exists
+   * Updates a given state to a new color, assuming the color exists.
    */
   public void updateColorForState(int state, Color newColor) {
     if (mySimulationView == null) {

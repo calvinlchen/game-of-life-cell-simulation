@@ -55,17 +55,17 @@ public class XmlUtils {
   /**
    * Reads an XML file and parses it into an XMLData object.
    *
-   * @param fXmlFile the XML file to be read
+   * @param fxmlFile the XML file to be read
    * @return an XMLData object containing the parsed simulation data
    * @throws XmlException if there is an error reading or parsing the XML file
    */
-  public XmlData readXml(File fXmlFile, String language) {
+  public XmlData readXml(File fxmlFile, String language) {
     XmlData xmlObject = new XmlData(language);
 
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      Document doc = dBuilder.parse(fXmlFile);
+      DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+      Document doc = docBuilder.parse(fxmlFile);
       doc.getDocumentElement().normalize();
 
       NodeList simulationList = doc.getElementsByTagName("simulation");
@@ -185,7 +185,8 @@ public class XmlUtils {
       rootElement.appendChild(metadataElement);
 
       Element typeElement = doc.createElement("type");
-      typeElement.appendChild(doc.createTextNode(simulation.getXmlDataObject().getType().toString()));
+      typeElement.appendChild(
+          doc.createTextNode(simulation.getXmlDataObject().getType().toString()));
       metadataElement.appendChild(typeElement);
 
       Element titleElement = doc.createElement("title");
@@ -206,12 +207,15 @@ public class XmlUtils {
 
       // Add grid info
       Element gridElement = doc.createElement("grid");
-      gridElement.setAttribute("rows", String.valueOf(simulation.getXmlDataObject().getGridRowNum()));
-      gridElement.setAttribute("columns", String.valueOf(simulation.getXmlDataObject().getGridColNum()));
+      gridElement.setAttribute("rows",
+          String.valueOf(simulation.getXmlDataObject().getGridRowNum()));
+      gridElement.setAttribute("columns",
+          String.valueOf(simulation.getXmlDataObject().getGridColNum()));
       rootElement.appendChild(gridElement);
 
       // Add cell states
-      ArrayList<String> cellStateList = cellStatesToString(simulation.getXmlDataObject().getGridRowNum(),
+      ArrayList<String> cellStateList = cellStatesToString(
+          simulation.getXmlDataObject().getGridRowNum(),
           simulation.getXmlDataObject().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
@@ -385,7 +389,7 @@ public class XmlUtils {
    * Converts color definitions from an XML node list into a mapping of cell states to colors.
    *
    * @param colorList - a NodeList containing the color definitions
-   * @param handler - the cell state handler used for conversion
+   * @param handler   - the cell state handler used for conversion
    * @return a map of cell states to their corresponding colors
    */
   public static Map<Integer, String> colorsToMap(NodeList colorList, CellStateHandler handler) {

@@ -4,10 +4,22 @@ import cellsociety.Main;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for dynamically analyzing available resources in the application.
+ *
+ * <p>This class scans the resource folders to detect available language files and stylesheets,
+ * providing a list of options that can be used within the application.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
+ */
 public class ResourceAnalyzer {
 
   /**

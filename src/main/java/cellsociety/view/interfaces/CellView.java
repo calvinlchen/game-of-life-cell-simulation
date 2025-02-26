@@ -47,7 +47,7 @@ public abstract class CellView {
   }
 
   /**
-   * Return the cell's view as a Shape object
+   * Return the cell's view as a Shape object.
    *
    * @return my Shape object
    */
@@ -56,7 +56,7 @@ public abstract class CellView {
   }
 
   /**
-   * Set the State represented by this cell view
+   * Set the State represented by this cell view.
    *
    * @param state corresponding State
    */
@@ -66,7 +66,7 @@ public abstract class CellView {
   }
 
   /**
-   * Return the State represented by this cell view
+   * Return the State represented by this cell view.
    *
    * @return corresponding State
    */
@@ -82,7 +82,7 @@ public abstract class CellView {
   }
 
   /**
-   * Set the fill of the cell's Shape to the given Color
+   * Set the fill of the cell's Shape to the given Color.
    *
    * @param color Color to fill the cell
    */
@@ -91,7 +91,7 @@ public abstract class CellView {
   }
 
   /**
-   * Returns the color value of a given state
+   * Returns the color value of a given state.
    *
    * @param state int value of the state, such as 0 for EMPTY
    */
@@ -100,7 +100,7 @@ public abstract class CellView {
   }
 
   /**
-   * Updates a state's assigned color in the map, and updates the cell view accordingly
+   * Updates a state's assigned color in the map, and updates the cell view accordingly.
    */
   public void setColorForState(int state, Color color) {
     myColorMap.put(state, color);
@@ -108,7 +108,7 @@ public abstract class CellView {
   }
 
   /**
-   * Get the number of displayable states
+   * Get the number of displayable states.
    *
    * @return the total number of possible states for this cell
    */
@@ -117,7 +117,7 @@ public abstract class CellView {
   }
 
   /**
-   * Add "grid" outlines based on CSS file format (resets cell CSS formatting)
+   * Add "grid" outlines based on CSS file format (resets cell CSS formatting).
    */
   private void enableOutlines() {
     if (!myOutlinesEnabled) {
@@ -128,7 +128,7 @@ public abstract class CellView {
   }
 
   /**
-   * Remove "grid" outlines based on CSS file format (resets cell CSS formatting)
+   * Remove "grid" outlines based on CSS file format (resets cell CSS formatting).
    */
   private void disableOutlines() {
     if (myOutlinesEnabled) {
@@ -139,7 +139,7 @@ public abstract class CellView {
   }
 
   /**
-   * Toggles the cell outline on/off for this CellView
+   * Toggles the cell outline on/off for this CellView.
    *
    * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
    */

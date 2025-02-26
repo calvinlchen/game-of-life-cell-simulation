@@ -41,6 +41,12 @@ public class StateColorLegend {
   public static final int COLOR_BOX_LENGTH = 20;
   public static final int COLOR_PICKER_MAX_LENGTH = 4 * COLOR_BOX_LENGTH;
 
+  /**
+   * Constructs a StateColorLegend that dynamically updates based on the simulation type.
+   *
+   * @param userView - the UserView instance that manages the simulation window
+   * @param language - the selected language for UI text
+   */
   public StateColorLegend(UserView userView, String language) {
     myLegendBox = new VBox();
     myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING / 2);
@@ -51,7 +57,7 @@ public class StateColorLegend {
   }
 
   /**
-   * Return view of color-state legend
+   * Return view of color-state legend.
    *
    * @return VBox object containing legend view
    */
@@ -60,7 +66,7 @@ public class StateColorLegend {
   }
 
   /**
-   * Removes all elements from the legend display
+   * Removes all elements from the legend display.
    */
   public void clearLegend() {
     myLegendBox.getChildren().clear();
@@ -147,10 +153,10 @@ public class StateColorLegend {
   /**
    * Retrieves the appropriate `getColorForState()` method based on simulation type. No longer in
    * use since this only retrieves the default color mapping, not including any dynamic
-   * customizations
+   * customizations.
    */
   @Deprecated
-  private Map<Integer, Color> getColorMapFromXML(XmlData xmlData) {
+  private Map<Integer, Color> getColorMapFromXml(XmlData xmlData) {
     SimType simulationType = xmlData.getType();
 
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
@@ -170,7 +176,7 @@ public class StateColorLegend {
   }
 
   /**
-   * Maps colors to their states according to the current simulation configuration
+   * Maps colors to their states according to the current simulation configuration.
    */
   private Map<Integer, Color> getColorMapFromUserView(UserView userView) {
     Map<Integer, Color> colorMap = new HashMap<>();

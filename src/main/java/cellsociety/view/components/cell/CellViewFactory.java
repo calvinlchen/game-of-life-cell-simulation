@@ -6,9 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * CellViewFactory is responsible for creating CellView objects based on the simulation type.
+ *
+ * <p>This factory uses a mapping of simulation types to corresponding CellView constructors,
+ * allowing for dynamic instantiation of different cell views.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
+ */
 public class CellViewFactory {
 
-  private static final Map<SimType, BiFunction<Double[], Integer, CellView>> factoryMap = new HashMap<>();
+  private static final Map<SimType, BiFunction<Double[], Integer, CellView>> factoryMap =
+      new HashMap<>();
 
   static {
     factoryMap.put(SimType.GameOfLife,
@@ -43,6 +53,17 @@ public class CellViewFactory {
         (params, state) -> new PetelkaCellView(params[0], params[1], params[2], params[3], state));
   }
 
+  /**
+   * Creates a CellView instance based on the given simulation type.
+   *
+   * @param simType   - the type of simulation
+   * @param position  - an array containing the x and y coordinates of the cell
+   * @param width     - the width of the cell
+   * @param height    - the height of the cell
+   * @param cellState - the initial state of the cell
+   * @return a CellView object corresponding to the simulation type
+   * @throws IllegalArgumentException if the simulation type is unsupported
+   */
   public static CellView createCellView(SimType simType, double[] position, double width,
       double height, Integer cellState) {
     BiFunction<Double[], Integer, CellView> constructor = factoryMap.get(simType);

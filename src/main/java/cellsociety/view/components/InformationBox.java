@@ -7,13 +7,23 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.scene.control.TextArea;
 
+/**
+ * InformationBox displays the details of the currently loaded simulation.
+ *
+ * <p>This class creates a non-editable text area that provides metadata about
+ * the simulation, including its type, title, author, grid size, parameters,
+ * and description.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
+ */
 public class InformationBox {
 
   private final TextArea myTextArea;
   private final ResourceBundle myResources;
 
   /**
-   * Creates the text box which displays current simulation info
+   * Creates the text box which displays current simulation info.
    */
   public InformationBox(ResourceBundle resources) {
     myTextArea = new TextArea();
@@ -32,7 +42,7 @@ public class InformationBox {
   }
 
   /**
-   * Return text/information box view
+   * Return text/information box view.
    *
    * @return TextArea object
    */
@@ -65,7 +75,7 @@ public class InformationBox {
   }
 
   /**
-   * Resets the text area to default state, displaying no simulation info
+   * Resets the text area to default state, displaying no simulation info.
    */
   public void emptyFields() {
     myTextArea.setText(
