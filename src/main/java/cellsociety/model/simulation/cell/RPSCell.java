@@ -5,7 +5,7 @@ import cellsociety.model.simulation.parameters.RPSParameters;
 import cellsociety.model.simulation.rules.RPSRule;
 
 /**
- * Class for representing cell for Rock Paper Scissors simulation
+ * Class for representing cell for Rock Paper Scissors simulation.
  *
  * @author Jessica Chen
  */

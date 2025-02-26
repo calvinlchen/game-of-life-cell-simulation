@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.PercolationParameters;
 import cellsociety.model.simulation.rules.PercolationRule;
 
 /**
- * Class for representing cell for Percolation simulation
+ * Class for representing cell for Percolation simulation.
  *
  * @author Jessica Chen
  */

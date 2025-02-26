@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.LangtonParameters;
 import cellsociety.model.simulation.rules.LangtonRule;
 
 /**
- * Class for representing cell for Langton's Loop simulation
+ * Class for representing cell for Langton's Loop simulation.
  *
  * @author Jessica Chen
  */

@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.PetelkaParameters;
 import cellsociety.model.simulation.rules.PetelkaRule;
 
 /**
- * Class for representing cell for Petelka's Loop simulation
+ * Class for representing cell for Petelka's Loop simulation.
  *
  * @author Jessica Chen
  */

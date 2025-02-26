@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.FireParameters;
 import cellsociety.model.simulation.rules.FireRule;
 
 /**
- * Class for representing cell for Spreading of Fire simulation
+ * Class for representing cell for Spreading of Fire simulation.
  *
  * @author Jessica Chen
  */

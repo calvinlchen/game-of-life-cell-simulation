@@ -8,7 +8,7 @@ import cellsociety.model.simulation.rules.SegregationRule;
 
 
 /**
- * Class for representing cell for Schelling's Model of Segregation simulation
+ * Class for representing cell for Schelling's Model of Segregation simulation.
  *
  * @author Jessica Chen
  */

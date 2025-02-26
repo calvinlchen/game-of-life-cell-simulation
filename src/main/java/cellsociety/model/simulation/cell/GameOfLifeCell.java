@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 
 /**
- * Class for representing cell for Game of Life simulation
+ * Class for representing cell for Game of Life simulation.
  *
  * @author Jessica Chen
  */

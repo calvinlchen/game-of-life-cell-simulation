@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import cellsociety.model.simulation.rules.ChouReg2Rule;
 
 /**
- * Class for representing cell for ChouReg2 Langton's Loop simulation
+ * Class for representing cell for ChouReg2 Langton's Loop simulation.
  *
  * @author Jessica Chen
  */
