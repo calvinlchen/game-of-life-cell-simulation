@@ -1,6 +1,16 @@
 package cellsociety.model.factories.statefactory;
 
-import cellsociety.model.factories.statefactory.handler.*;
+import cellsociety.model.factories.statefactory.handler.CellStateHandler;
+import cellsociety.model.factories.statefactory.handler.CellStateHandlerDynamic;
+import cellsociety.model.factories.statefactory.handler.CellStateHandlerStatic;
+import cellsociety.model.factories.statefactory.handler.FallingSandStateHandler;
+import cellsociety.model.factories.statefactory.handler.FireStateHandler;
+import cellsociety.model.factories.statefactory.handler.GameOfLifeStateHandler;
+import cellsociety.model.factories.statefactory.handler.LangtonStateHandler;
+import cellsociety.model.factories.statefactory.handler.PercolationStateHandler;
+import cellsociety.model.factories.statefactory.handler.PetelkaStateHandler;
+import cellsociety.model.factories.statefactory.handler.SegregationStateHandler;
+import cellsociety.model.factories.statefactory.handler.WaTorStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,22 +48,22 @@ public class CellStateFactory {
 
   /**
    * Retrieves the cell state handler for a simulation, dynamically creating a new handler if
-   * necessary
+   * necessary.
    *
    * <p> If simulation type is static, still need to put in ID and number of states, but these
-   * values do not matter
+   * values do not matter.
    *
-   * @param simulationID   - unique identifier for the simulation instance (does not matter if
+   * @param simulationId   - unique identifier for the simulation instance (does not matter if
    *                       static)
    * @param simulationType - the type of simulation
    * @param numStates      - number of states in the simulation (foes not matter if static
    * @return CellStateHandler or the simulation
    * @throws IllegalArgumentException if the simulation type is not recognized
    */
-  public static CellStateHandler getHandler(int simulationID, SimType simulationType,
+  public static CellStateHandler getHandler(int simulationId, SimType simulationType,
       int numStates) {
     if (simulationType.isDynamic()) {
-      return dynamicHandlerMap.computeIfAbsent(simulationID,
+      return dynamicHandlerMap.computeIfAbsent(simulationId,
           k -> createNewDynamicStateHandler(numStates));
     }
 

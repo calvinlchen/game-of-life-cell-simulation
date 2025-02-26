@@ -21,6 +21,10 @@ public class SegregationStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.SEGREGATION_B, "agentB");
   }
 
+  /**
+   * Constructs a {@code SegregationStateHandler} with predefined states for Segregation
+   * simulation.
+   */
   public SegregationStateHandler() {
     super(cellStates);
   }

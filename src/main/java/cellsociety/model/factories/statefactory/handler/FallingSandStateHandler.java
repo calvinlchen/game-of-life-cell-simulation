@@ -23,6 +23,10 @@ public class FallingSandStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.FALLINGSAND_WATER, "water");
   }
 
+  /**
+   * Constructs a {@code FallingSandStateHandler} with predefined states for the Falling Sand
+   * simulation.
+   */
   public FallingSandStateHandler() {
     super(cellStates);
   }

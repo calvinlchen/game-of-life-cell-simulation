@@ -22,6 +22,10 @@ public class FireStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.FIRE_BURNING, "burning");
   }
 
+  /**
+   * Constructs a {@code FireStateHandler} with predefined states for the Spreading of Fire
+   * simulation.
+   */
   public FireStateHandler() {
     super(cellStates);
   }

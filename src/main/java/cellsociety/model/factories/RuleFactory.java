@@ -25,7 +25,7 @@ public class RuleFactory {
   private static ResourceBundle myResources = getErrorSimulationResourceBundle("English");
 
   /**
-   * Update the language of the error messages
+   * Update the language of the error messages.
    *
    * @param language - update the language of the error messages
    */

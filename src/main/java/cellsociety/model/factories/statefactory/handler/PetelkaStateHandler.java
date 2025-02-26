@@ -21,6 +21,10 @@ public class PetelkaStateHandler extends CellStateHandlerStatic {
     }
   }
 
+  /**
+   * Constructs a {@code PetelkaStateHandler} with predefined states for Petelka's Langton's Loop
+   * simulation.
+   */
   public PetelkaStateHandler() {
     super(cellStates);
   }

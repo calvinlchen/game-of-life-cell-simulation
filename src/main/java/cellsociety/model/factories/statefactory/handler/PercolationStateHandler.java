@@ -21,6 +21,10 @@ public class PercolationStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.PERCOLATION_PERCOLATED, "percolated");
   }
 
+  /**
+   * Constructs a {@code PercolationStateHandler} with predefined states for Percolation
+   * simulation.
+   */
   public PercolationStateHandler() {
     super(cellStates);
   }

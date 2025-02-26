@@ -21,6 +21,9 @@ public class WaTorStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.WATOR_SHARK, "shark");
   }
 
+  /**
+   * Constructs a {@code WaTorStateHandler} with predefined states for WaTor World simulation.
+   */
   public WaTorStateHandler() {
     super(cellStates);
   }

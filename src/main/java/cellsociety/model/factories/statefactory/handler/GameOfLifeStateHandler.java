@@ -21,6 +21,10 @@ public class GameOfLifeStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.GAMEOFLIFE_ALIVE, "alive");
   }
 
+  /**
+   * Constructs a {@code GameOfLifeStateHandler} with predefined states for the Conway's Game of
+   * Life simulation.
+   */
   public GameOfLifeStateHandler() {
     super(cellStates);
   }

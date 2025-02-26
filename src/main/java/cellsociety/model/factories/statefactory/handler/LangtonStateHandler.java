@@ -21,6 +21,10 @@ public class LangtonStateHandler extends CellStateHandlerStatic {
     }
   }
 
+  /**
+   * Constructs a {@code LangtonStateHandler} with predefined states for the Langton's Loop
+   * simulation.
+   */
   public LangtonStateHandler() {
     super(cellStates);
   }

@@ -3,7 +3,7 @@ package cellsociety.model.factories.statefactory.handler;
 import java.util.List;
 
 /**
- * Interface defining the behavior for handling retrieving cell states in different simulations
+ * Interface defining the behavior for handling retrieving cell states in different simulations.
  *
  * @author Jessica Chen
  * @author javadoc authored with help of chatgpt
