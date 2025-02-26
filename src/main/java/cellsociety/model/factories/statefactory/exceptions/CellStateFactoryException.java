@@ -6,6 +6,7 @@ package cellsociety.model.factories.statefactory.exceptions;
  * during the creation of cell states.
  *
  * @author Kyaira Boughton
+ * @author Calvin Chen
  * @author Jessica Chen and ChatGPT for javadoc
  */
 public class CellStateFactoryException extends IllegalArgumentException {

@@ -119,12 +119,12 @@ class SimulationTest {
 
   @Test
   @DisplayName("Verify XML data is correctly retrieved from simulation")
-  void getXMLData_verifyXMLData_correctDataReturned() {
-    assertNotNull(gameOfLifeSimulation.getXMLData());
-    assertNotNull(segregationSimulation.getXMLData());
-    assertNotNull(fireSimulation.getXMLData());
-    assertNotNull(percolationSimulation.getXMLData());
-    assertNotNull(watorSimulation.getXMLData());
+  void getXMLData_verifyXmlData_correctDataReturned() {
+    assertNotNull(gameOfLifeSimulation.getXmlData());
+    assertNotNull(segregationSimulation.getXmlData());
+    assertNotNull(fireSimulation.getXmlData());
+    assertNotNull(percolationSimulation.getXmlData());
+    assertNotNull(watorSimulation.getXmlData());
   }
 
   @Test

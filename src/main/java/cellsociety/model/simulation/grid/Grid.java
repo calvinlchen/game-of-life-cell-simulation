@@ -208,7 +208,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Get all cells in the grid as a flattened list
+   * Get all cells in the grid as a flattened list.
    *
    * @return A list of all cells in the grid as a flattened grid
    */

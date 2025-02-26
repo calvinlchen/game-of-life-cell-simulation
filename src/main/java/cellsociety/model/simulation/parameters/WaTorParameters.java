@@ -7,10 +7,9 @@ import java.util.Map;
  * Parameters for the WaTor World simulation.
  *
  * <p>This class defines and initializes parameters for the WaTor World simulation, including:
- * {@code fishReproductionTime} (time required for fish to reproduce),
- * {@code sharkEnergyGain} (energy gained by sharks when eating fish),
- * {@code sharkReproductionTime} (time required for sharks to reproduce),
- * and {@code sharkInitialEnergy} (starting energy level of sharks).
+ * {@code fishReproductionTime} (time required for fish to reproduce), {@code sharkEnergyGain}
+ * (energy gained by sharks when eating fish), {@code sharkReproductionTime} (time required for
+ * sharks to reproduce), and {@code sharkInitialEnergy} (starting energy level of sharks).
  *
  * @author Jessica Chen
  * @author ChatGPT, helped with some of the JavaDocs
@@ -30,7 +29,8 @@ public class WaTorParameters extends Parameters {
   }
 
   /**
-   * Initializes the WaTorParameters with default values and a specified language for error messages.
+   * Initializes the WaTorParameters with default values and a specified language for error
+   * messages.
    *
    * <p>Sets {@code fishReproductionTime} to 3, {@code sharkEnergyGain} to 2,
    * {@code sharkReproductionTime} to 3, and {@code sharkInitialEnergy} to 5.

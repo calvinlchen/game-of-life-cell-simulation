@@ -4,7 +4,7 @@ import cellsociety.model.simulation.cell.Cell;
 import java.util.List;
 
 /**
- * RectangularGrid represents a 2D grid of cells
+ * RectangularGrid represents a 2D grid of cells.
  *
  * <p>Default like what you think of when you think of a grid</p>
  *

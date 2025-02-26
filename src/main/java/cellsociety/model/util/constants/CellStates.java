@@ -1,7 +1,7 @@
 package cellsociety.model.util.constants;
 
 /**
- * State constants to use for rules to keep them central
+ * State constants to use for rules to keep them central.
  *
  * <p> I tried doing them in resource properties originally, but you can't use them in switch
  * statements

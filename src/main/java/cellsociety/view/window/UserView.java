@@ -223,7 +223,7 @@ public class UserView {
       mySimulationView.configureFromXML(xmlUtils);
       mySimulationView.initializeGridView();
 
-      XMLData xmlData = mySimulationView.getSimulation().getXMLData();
+      XMLData xmlData = mySimulationView.getSimulation().getXmlData();
 
       // Update text box with simulation information
       myInformationBox.updateInfo(xmlData);
@@ -263,9 +263,9 @@ public class UserView {
     if (saveFile != null) {
       myState = ViewState.SAVE;
       try {
-        xmlUtils.writeToXML(saveFile, mySimulationView.getSimulation().getXMLData().getTitle(),
-            mySimulationView.getSimulation().getXMLData().getAuthor(),
-            mySimulationView.getSimulation().getXMLData().getDescription(),
+        xmlUtils.writeToXML(saveFile, mySimulationView.getSimulation().getXmlData().getTitle(),
+            mySimulationView.getSimulation().getXmlData().getAuthor(),
+            mySimulationView.getSimulation().getXmlData().getDescription(),
             mySimulationView.getSimulation());
         showMessage(Alert.AlertType.INFORMATION, myResources.getString("SimulationSaved"));
       } catch (XMLException e) {

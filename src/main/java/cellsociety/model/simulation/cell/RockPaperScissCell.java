@@ -9,7 +9,8 @@ import cellsociety.model.simulation.rules.RockPaperScissRule;
  *
  * @author Jessica Chen
  */
-public class RockPaperScissCell extends Cell<RockPaperScissCell, RockPaperScissRule, RockPaperScissParameters> {
+public class RockPaperScissCell extends
+    Cell<RockPaperScissCell, RockPaperScissRule, RockPaperScissParameters> {
 
   /**
    * Constructs a cell with specified initial state.

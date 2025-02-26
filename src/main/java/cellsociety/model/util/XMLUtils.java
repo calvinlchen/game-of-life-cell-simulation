@@ -181,7 +181,7 @@ public class XMLUtils {
       rootElement.appendChild(metadataElement);
 
       Element typeElement = doc.createElement("type");
-      typeElement.appendChild(doc.createTextNode(simulation.getXMLData().getType().toString()));
+      typeElement.appendChild(doc.createTextNode(simulation.getXmlData().getType().toString()));
       metadataElement.appendChild(typeElement);
 
       Element titleElement = doc.createElement("title");
@@ -193,7 +193,7 @@ public class XMLUtils {
       metadataElement.appendChild(authorElement);
 
       Element languageElement = doc.createElement("language");
-      languageElement.appendChild(doc.createTextNode(simulation.getXMLData().getLanguage()));
+      languageElement.appendChild(doc.createTextNode(simulation.getXmlData().getLanguage()));
       metadataElement.appendChild(languageElement);
 
       Element descriptionElement = doc.createElement("description");
@@ -202,13 +202,13 @@ public class XMLUtils {
 
       // Add grid info
       Element gridElement = doc.createElement("grid");
-      gridElement.setAttribute("rows", String.valueOf(simulation.getXMLData().getGridRowNum()));
-      gridElement.setAttribute("columns", String.valueOf(simulation.getXMLData().getGridColNum()));
+      gridElement.setAttribute("rows", String.valueOf(simulation.getXmlData().getGridRowNum()));
+      gridElement.setAttribute("columns", String.valueOf(simulation.getXmlData().getGridColNum()));
       rootElement.appendChild(gridElement);
 
       // Add cell states
-      ArrayList<String> cellStateList = cellStatesToString(simulation.getXMLData().getGridRowNum(),
-          simulation.getXMLData().getGridColNum(), simulation);
+      ArrayList<String> cellStateList = cellStatesToString(simulation.getXmlData().getGridRowNum(),
+          simulation.getXmlData().getGridColNum(), simulation);
       for (String state : cellStateList) {
         Element cellElement = doc.createElement("cell");
         cellElement.setAttribute("state", state);
@@ -220,7 +220,7 @@ public class XMLUtils {
       rootElement.appendChild(parametersElement);
 
       // Add parameters
-      Map<String, Double> parameters = simulation.getXMLData().getParameters();
+      Map<String, Double> parameters = simulation.getXmlData().getParameters();
       for (Map.Entry<String, Double> entry : parameters.entrySet()) {
         Element paramElement = doc.createElement("parameter");
         paramElement.setAttribute("name", entry.getKey());
@@ -253,7 +253,7 @@ public class XMLUtils {
     ArrayList<String> cellStateList = new ArrayList<>();
 
     // Get the handler for the simulation's cell states
-    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationID(),
+    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationId(),
         simulation.getSimulationType(), simulation.getNumStates());
 
     if (handler == null) {
