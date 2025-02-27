@@ -128,8 +128,14 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * Moves all cells in the simulation backward by one step.
    */
   public void stepBack() {
-    totalIterations--;
-    myGrid.getCells().forEach(Cell::stepBack);
+    boolean success = false;
+    for (Cell cell : myGrid.getCells()) {
+      // all cells have the same success since they should ideally all have the same step history
+      success = cell.stepBack();
+    }
+
+    if (success)
+      totalIterations--;
   }
 
   /**

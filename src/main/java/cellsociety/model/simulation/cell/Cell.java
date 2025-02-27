@@ -93,9 +93,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Moves the cell one step backward to the previous state.
    *
+   * @returns true if succesfully stepBack, false if not enough history to rewind
    * @throws SimulationException if no previous state is available
    */
-  public void stepBack() {
+  public boolean stepBack() {
+    boolean success = false;
+
     // this error should never reach with how stateHistory is set up in initialization
     if (stateHistory.isEmpty()) {
       throw new SimulationException(String.format(myResources.getString("NoHistory")));
@@ -104,10 +107,13 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     int lastState = stateHistory.getLast();
     if (stateHistory.size() > MIN_STATE_HISTORY) {
       stateHistory.removeLast();
+      success = true;
     }
 
     setCurrentState(lastState);
     setNextState(lastState);
+
+    return success;
   }
 
   /**
