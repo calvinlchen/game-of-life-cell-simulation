@@ -63,6 +63,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   private void initializeCell(int state, R rule) {
+    stateLength = 1;
+
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;
@@ -309,7 +311,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     if (nextState == currentState) {
       stateLength++;
     } else {
-      stateLength = 0;
+      // 1 because first time in state
+      stateLength = 1;
     }
   }
 
