@@ -58,7 +58,6 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   private List<List<T>> initializeGrid(int rows, int cols) {
     final List<List<T>> grid;
     if (rows <= 0 || cols <= 0) {
-      System.out.println(myResources.getString("InvalidGridDimensions"));
       throw new SimulationException(myResources.getString("InvalidGridDimensions"));
     }
 

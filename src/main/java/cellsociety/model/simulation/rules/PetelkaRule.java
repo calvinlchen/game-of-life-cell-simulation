@@ -1,5 +1,9 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_MOORE_LOOPS;
+import static cellsociety.model.util.constants.SimulationConstants.NULL_STATE;
+import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
+
 import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.PetelkaParameters;
 import java.util.HashMap;
@@ -63,28 +67,28 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
 
     // Generate state key for the original direction order
     String stateKey = getStateKey(cell, baseDirections);
-    if (stateKey.length() != 9) {
+    if (stateKey.length() != KEYLENGTH_MOORE_LOOPS) {
       return cell.getCurrentState();
     }
 
     // Check all rotations of the directions
     int rotationsState = checkRotations(cell, baseDirections);
-    if (rotationsState != -1) {
+    if (rotationsState != NULL_STATE) {
       return rotationsState;
     }
 
     int reflectionsState = checkReflections(cell);
-    if (reflectionsState != -1) {
+    if (reflectionsState != NULL_STATE) {
       return reflectionsState;
     }
 
-    // If no match is found, return 0
+    // If no match is found, return 0 because that how petelka's work
     return 0;
   }
 
   private int checkRotations(PetelkaCell cell, String[] directions) {
     String stateKey = getStateKey(cell, directions);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_UNIQUE_90_DEG_ROTATIONS; i++) {
       if (RULES_MAP_PETELKA.containsKey(stateKey)) {
         return RULES_MAP_PETELKA.get(stateKey);
       }

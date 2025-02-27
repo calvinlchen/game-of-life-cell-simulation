@@ -36,9 +36,9 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
   }
 
   private int getTotalNumStates(RockPaperScissParameters parameters) {
-    final int totalNumStates;
-    totalNumStates = (int) parameters.getParameter("numStates");
-    return totalNumStates;
+    final int totalStates;
+    totalStates = (int) parameters.getParameter("numStates");
+    return totalStates;
   }
 
   @Override

@@ -1,6 +1,8 @@
 package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
+import static cellsociety.model.util.constants.SimulationConstants.EXPECTED_POSITION_DIMENSION;
+import static cellsociety.model.util.constants.SimulationConstants.MIN_STATE_HISTORY;
 
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
@@ -29,7 +31,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   private int[] position;
   private R rule;
 
-  private LinkedList<Integer> stateHistory;
+  private List<Integer> stateHistory;
 
   private final ResourceBundle myResources;
 
@@ -74,7 +76,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     int maxHistorySize;
 
     maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
-    if (maxHistorySize < 1) {
+    if (maxHistorySize < MIN_STATE_HISTORY) {
       throw new SimulationException(String.format(myResources.getString("InvalidHistorySize")));
     }
 
@@ -96,7 +98,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     }
 
     int lastState = stateHistory.getLast();
-    if (stateHistory.size() > 1) {
+    if (stateHistory.size() > MIN_STATE_HISTORY) {
       stateHistory.removeLast();
     }
 
@@ -196,7 +198,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   public void setPosition(int[] position) {
     if (position == null) {
       throw new SimulationException(String.format(myResources.getString("NoPosition")));
-    } else if (position.length != 2) {
+    } else if (position.length != EXPECTED_POSITION_DIMENSION) {
       throw new SimulationException(
           String.format(myResources.getString("InvalidPosition"), Arrays.toString(position)));
     }
