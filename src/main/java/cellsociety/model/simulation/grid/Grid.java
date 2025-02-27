@@ -2,10 +2,14 @@ package cellsociety.model.simulation.grid;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
+import cellsociety.model.factories.GridFactory;
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
+import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -73,22 +77,36 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public abstract void setNeighbors();
 
   /**
-   * Helper function for abstracted set neighbor.
+   * Helper function to set the neighbors for a given shape in a specified neighborhood.
    *
-   * <p>for each cell, set neighbor in the given directions
+   * <p>This method iterates over each cell in the given shape and sets its neighboring cells
+   * according to the specified directions provided by the neighborhood. It abstracts the
+   * neighbor-setting logic for consistent and reusable functionality.
    *
-   * @param directions - directions to set neighbors
+   * @param shape        The structure or grid representing the cells (e.g., a 2D array or other
+   *                     collection of cells) for which neighbors are to be set.
+   * @param neighborhood An object or collection representing the directions or rules that specify
+   *                     how neighbors should be assigned (e.g., relative coordinates, adjacency
+   *                     lists).
    */
-  public void setNeighbors(int[][] directions) {
+  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood) {
     List<List<T>> grid = getGrid();
     int rows = getRows();
     int cols = getCols();
+
+    Map<String, int[][]> directionsMap = GridFactory.getDirections(shape, neighborhood);
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         T cell = grid.get(i).get(j);
         if (cell != null) {
-          cell.setNeighbors(getValidNeighbors(grid, i, j, directions));
+          if (i % 2 == 0) {
+            cell.setNeighbors(
+                getValidNeighbors(grid, i, j, directionsMap.get("even")));
+          } else {
+            cell.setNeighbors(
+                getValidNeighbors(grid, i, j, directionsMap.get("odd")));
+          }
         }
       }
     }
