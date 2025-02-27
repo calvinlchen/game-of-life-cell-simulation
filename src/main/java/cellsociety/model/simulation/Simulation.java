@@ -161,6 +161,24 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   }
 
   /**
+   * Retrieves the duration for which the cell at the specified position has remained in the same
+   * state.
+   *
+   * @param row - the row index of the cell
+   * @param col - the column index of the cell
+   * @return the state length of the cell at the specified location
+   * @throws SimulationException if the specified position is invalid or an error occurs
+   */
+  public int getStateLength(int row, int col) {
+    try {
+      return myGrid.getCell(row, col).getStateLength();
+    } catch (Exception e) {
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
+    }
+  }
+
+  /**
    * Updates a single simulation parameter dynamically.
    *
    * @param key   - the parameter name
@@ -248,5 +266,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    *
    * @return the total number of iterations completed
    */
-  public int getTotalIterations() { return totalIterations; }
+  public int getTotalIterations() {
+    return totalIterations;
+  }
 }

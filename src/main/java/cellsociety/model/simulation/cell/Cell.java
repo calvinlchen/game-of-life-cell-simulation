@@ -31,6 +31,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   private int[] position;
   private R rule;
 
+  private int stateLength;
+
   private List<Integer> stateHistory;
 
   private final ResourceBundle myResources;
@@ -114,11 +116,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-   * Advances the cell's current state to the next state.
+   * Advances the cell's current state to the next state. Also updates the state length.
    *
    * <p>Assumption: calcNextState() has already been called.
    */
   public void step() {
+    updateStateLength();
     setCurrentState(getNextState());
   }
 
@@ -294,5 +297,28 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
       throw new SimulationException(
           String.format(getMyResources().getString("InvalidState"), state, maxState));
     }
+  }
+
+  /**
+   * Updates the state length of the cell.
+   *
+   * <p>If the current state is the same as the next state, the state length is incremented by one.
+   * Otherwise, the state length is reset to zero.
+   */
+  public void updateStateLength() {
+    if (nextState == currentState) {
+      stateLength++;
+    } else {
+      stateLength = 0;
+    }
+  }
+
+  /**
+   * Returns the duration for which the cell has remained in the same state.
+   *
+   * @return the state length of the cell
+   */
+  public int getStateLength() {
+    return stateLength;
   }
 }
