@@ -31,6 +31,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   private int[] position;
   private R rule;
 
+  private int stateLength;
+
   private List<Integer> stateHistory;
 
   private final ResourceBundle myResources;
@@ -61,6 +63,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   private void initializeCell(int state, R rule) {
+    stateLength = 1;
+
     this.currentState = state;
     this.nextState = state;
     this.rule = rule;
@@ -89,9 +93,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Moves the cell one step backward to the previous state.
    *
+   * @returns true if succesfully stepBack, false if not enough history to rewind
    * @throws SimulationException if no previous state is available
    */
-  public void stepBack() {
+  public boolean stepBack() {
+    boolean success = false;
+
     // this error should never reach with how stateHistory is set up in initialization
     if (stateHistory.isEmpty()) {
       throw new SimulationException(String.format(myResources.getString("NoHistory")));
@@ -100,10 +107,13 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     int lastState = stateHistory.getLast();
     if (stateHistory.size() > MIN_STATE_HISTORY) {
       stateHistory.removeLast();
+      success = true;
     }
 
     setCurrentState(lastState);
     setNextState(lastState);
+
+    return success;
   }
 
   /**
@@ -114,11 +124,12 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-   * Advances the cell's current state to the next state.
+   * Advances the cell's current state to the next state. Also updates the state length.
    *
    * <p>Assumption: calcNextState() has already been called.
    */
   public void step() {
+    updateStateLength();
     setCurrentState(getNextState());
   }
 
@@ -294,5 +305,29 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
       throw new SimulationException(
           String.format(getMyResources().getString("InvalidState"), state, maxState));
     }
+  }
+
+  /**
+   * Updates the state length of the cell.
+   *
+   * <p>If the current state is the same as the next state, the state length is incremented by one.
+   * Otherwise, the state length is reset to zero.
+   */
+  public void updateStateLength() {
+    if (nextState == currentState) {
+      stateLength++;
+    } else {
+      // 1 because first time in state
+      stateLength = 1;
+    }
+  }
+
+  /**
+   * Returns the duration for which the cell has remained in the same state.
+   *
+   * @return the state length of the cell
+   */
+  public int getStateLength() {
+    return stateLength;
   }
 }

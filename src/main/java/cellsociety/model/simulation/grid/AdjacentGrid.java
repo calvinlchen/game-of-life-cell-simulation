@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.grid;
 
+import static cellsociety.model.util.constants.GridTypes.NeighborhoodType.VON_NEUMANN;
+import static cellsociety.model.util.constants.GridTypes.ShapeType.RECTANGLE;
+
 import cellsociety.model.simulation.cell.Cell;
 import java.util.List;
 
@@ -43,8 +46,7 @@ public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    setNeighbors(directions);
+    setNeighbors(RECTANGLE, VON_NEUMANN);
   }
 }
 

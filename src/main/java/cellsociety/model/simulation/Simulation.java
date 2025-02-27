@@ -38,6 +38,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private final ResourceBundle myResources;
   private final String myLanguage;
 
+  private int totalIterations;
+
   /**
    * Initializes a Simulation instance using the provided XML data.
    *
@@ -126,13 +128,21 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * Moves all cells in the simulation backward by one step.
    */
   public void stepBack() {
-    myGrid.getCells().forEach(Cell::stepBack);
+    boolean success = false;
+    for (Cell cell : myGrid.getCells()) {
+      // all cells have the same success since they should ideally all have the same step history
+      success = cell.stepBack();
+    }
+
+    if (success)
+      totalIterations--;
   }
 
   /**
    * Moves all cells in the simulation forward by one step.
    */
   public void step() {
+    totalIterations++;
     myGrid.getCells().forEach(Cell::saveCurrentState);
     myGrid.getCells().forEach(Cell::calcNextState);
     myGrid.getCells().forEach(Cell::step);
@@ -150,6 +160,24 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   public int getCurrentState(int row, int col) {
     try {
       return myGrid.getCell(row, col).getCurrentState();
+    } catch (Exception e) {
+      throw new SimulationException(
+          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
+    }
+  }
+
+  /**
+   * Retrieves the duration for which the cell at the specified position has remained in the same
+   * state.
+   *
+   * @param row - the row index of the cell
+   * @param col - the column index of the cell
+   * @return the state length of the cell at the specified location
+   * @throws SimulationException if the specified position is invalid or an error occurs
+   */
+  public int getStateLength(int row, int col) {
+    try {
+      return myGrid.getCell(row, col).getStateLength();
     } catch (Exception e) {
       throw new SimulationException(
           String.format(myResources.getString("InvalidGridPosition"), row, col), e);
@@ -237,5 +265,14 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    */
   public int getNumStates() {
     return xmlData.getNumStates();
+  }
+
+  /**
+   * Retrieves the total number of iterations completed in the simulation.
+   *
+   * @return the total number of iterations completed
+   */
+  public int getTotalIterations() {
+    return totalIterations;
   }
 }

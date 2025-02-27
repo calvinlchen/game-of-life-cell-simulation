@@ -148,9 +148,13 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
   @Override
   public void step() {
     if (movedFrom != null && movedFrom.isConsumed()) {
+      // basically for this one it was empty, and since fish is consumed its still empty
+      // so can update steps after we know it will always add 1 to stateLength
       setNextState(WATOR_EMPTY);
       setCurrentState(WATOR_EMPTY);
+      updateStateLength();
     } else {
+      updateStateLength();
       setCurrentState(getNextState());
     }
   }

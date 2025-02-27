@@ -1,5 +1,8 @@
 package cellsociety.model.simulation.grid;
 
+import static cellsociety.model.util.constants.GridTypes.NeighborhoodType.MOORE;
+import static cellsociety.model.util.constants.GridTypes.ShapeType.RECTANGLE;
+
 import cellsociety.model.simulation.cell.Cell;
 import java.util.List;
 
@@ -45,7 +48,6 @@ public class RectangularGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
    */
   @Override
   public void setNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
-    setNeighbors(directions);
+    setNeighbors(RECTANGLE, MOORE);
   }
 }
