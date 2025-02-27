@@ -38,6 +38,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private final ResourceBundle myResources;
   private final String myLanguage;
 
+  private int totalIterations;
+
   /**
    * Initializes a Simulation instance using the provided XML data.
    *
@@ -126,6 +128,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * Moves all cells in the simulation backward by one step.
    */
   public void stepBack() {
+    totalIterations--;
     myGrid.getCells().forEach(Cell::stepBack);
   }
 
@@ -133,6 +136,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * Moves all cells in the simulation forward by one step.
    */
   public void step() {
+    totalIterations++;
     myGrid.getCells().forEach(Cell::saveCurrentState);
     myGrid.getCells().forEach(Cell::calcNextState);
     myGrid.getCells().forEach(Cell::step);
@@ -238,4 +242,11 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   public int getNumStates() {
     return xmlData.getNumStates();
   }
+
+  /**
+   * Retrieves the total number of iterations completed in the simulation.
+   *
+   * @return the total number of iterations completed
+   */
+  public int getTotalIterations() { return totalIterations; }
 }
