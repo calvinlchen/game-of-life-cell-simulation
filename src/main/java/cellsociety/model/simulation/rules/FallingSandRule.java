@@ -5,9 +5,7 @@ import static cellsociety.model.util.constants.CellStates.FALLINGSAND_SAND;
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_WATER;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
-import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.FallingSandParameters;
-import cellsociety.model.simulation.parameters.FireParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -51,16 +49,16 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case FALLINGSAND_SAND -> moveDown(cell, "S", List.of("SW", "SE"), FALLINGSAND_SAND,
+      case FALLINGSAND_SAND -> moveDown(cell, List.of("SW", "SE"), FALLINGSAND_SAND,
           List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
       case FALLINGSAND_WATER ->
-          moveDown(cell, "S", List.of("W", "E"), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+          moveDown(cell, List.of("W", "E"), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
       default -> cell.getCurrentState();  // steel and empty
     };
   }
 
-  private int moveDown(FallingSandCell cell, String primaryDirections,
-      List<String> secondaryDirections, int newState, List<Integer> replaceableNeighbors) {
+  private int moveDown(FallingSandCell cell, List<String> secondaryDirections, int newState,
+      List<Integer> replaceableNeighbors) {
 
     for (int replaceableNeighbor : replaceableNeighbors) {
       Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", replaceableNeighbor);

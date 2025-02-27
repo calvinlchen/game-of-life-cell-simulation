@@ -1,7 +1,9 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_VON_NEUMANN_LOOPS;
+import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
+
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,10 +108,10 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
   public int apply(ChouReg2Cell cell) {
     String[] directions = {"N", "E", "S", "W"};
 
-    for (int rotations = 0; rotations < 4; rotations++) {
+    for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
       String stateKey = getStateKey(cell, directions);
 
-      if (stateKey.length() != 5) {
+      if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
         return cell.getCurrentState();
       }
 

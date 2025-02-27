@@ -6,7 +6,6 @@ import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
 
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.FireParameters;
-import java.util.Map;
 
 
 /**
