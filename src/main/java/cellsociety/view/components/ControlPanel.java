@@ -29,7 +29,7 @@ public class ControlPanel {
   private ChoiceBox<String> myThemeChoices;
 
   /**
-   * Contains a column of control buttons for Cell Society
+   * Contains a column of control buttons for Cell Society.
    *
    * @param userView the view controller through which a button initiates its action when clicked
    */
@@ -58,8 +58,7 @@ public class ControlPanel {
     loadButton.setOnAction(e -> {
       if (myUserView.getState() == ViewState.EMPTY || myUserView.getState() == ViewState.ERROR) {
         myUserView.chooseFileAndLoadSimulation();
-      }
-      else {
+      } else {
         Main.startSimulationWindowWithFilePrompt(myUserView.getLanguage());
       }
     });
@@ -134,8 +133,7 @@ public class ControlPanel {
       Text noneText = new Text(myResources.getString("None"));
       themeTitle.getStyleClass().add("bold-text");
       themePanel.getChildren().addAll(noneText);
-    }
-    else {
+    } else {
       myThemeChoices = new ChoiceBox<>();
       myThemeChoices.getItems().addAll(themes);
       myThemeChoices.setValue(themes.getFirst()); // default to first available theme
@@ -150,7 +148,7 @@ public class ControlPanel {
   }
 
   /**
-   * Apply the theme that is currently selected in the dropdown menu
+   * Apply the theme that is currently selected in the dropdown menu.
    */
   public void applyCurrentlySelectedTheme() {
     applyTheme(myThemeChoices.getValue());
@@ -168,7 +166,7 @@ public class ControlPanel {
 
 
   /**
-   * Return the vertical panel of control buttons
+   * Return the vertical panel of control buttons.
    *
    * @return VBox panel view containing all button elements
    */

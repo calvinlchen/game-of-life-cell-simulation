@@ -6,7 +6,7 @@ import cellsociety.model.simulation.parameters.FireParameters;
 import cellsociety.model.simulation.rules.FireRule;
 
 /**
- * Class for representing cell for Spreading of Fire simulation
+ * Class for representing cell for Spreading of Fire simulation.
  *
  * @author Jessica Chen
  */
@@ -26,8 +26,8 @@ public class FireCell extends Cell<FireCell, FireRule, FireParameters> {
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - Spreading of Fire Rule to calculate next state
+   * @param state    - the initial state of the cell
+   * @param rule     - Spreading of Fire Rule to calculate next state
    * @param language - name of language, for error message display
    */
   public FireCell(int state, FireRule rule, String language) {

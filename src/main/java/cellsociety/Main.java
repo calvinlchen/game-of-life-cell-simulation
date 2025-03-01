@@ -8,7 +8,13 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
- * Feel free to completely change this code or delete it entirely.
+ * The main entry point for the CellSociety application.
+ * This class initializes and manages the primary JavaFX stages, including the splash screen
+ * and simulation windows. It provides methods to start new simulation windows either empty,
+ * with a file prompt, or with a randomly generated Game of Life simulation.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT for java docs
  */
 public class Main extends Application {
 
@@ -24,11 +30,17 @@ public class Main extends Application {
   public static final int SIM_WINDOW_HEIGHT = 800;
 
   // positional variables for each generated Stage
-  private static final int STAGE_OFFSET = 30; // determines how far a new stage is offset from the previous
-  private static double nextStageX = 100;  // stores the X position of the next-generated simulation window
-  private static double nextStageY = 100;  // stores the Y position of the next-generated simulation window
+  // determines how far a new stage is offset from the previous
+  private static final int STAGE_OFFSET = 30;
+  // stores the X position of the next-generated simulation window
+  private static double nextStageX = 100;
+  // stores the Y position of the next-generated simulation window
+  private static double nextStageY = 100;
 
   /**
+   * Starts the JavaFX application by displaying the splash screen.
+   *
+   * @param primaryStage the primary stage for this application
    * @see Application#start(Stage)
    */
   @Override
@@ -36,6 +48,12 @@ public class Main extends Application {
     new SplashScreenView(primaryStage);
   }
 
+  /**
+   * Starts an empty simulation window with the given language setting.
+   *
+   * @param language the language to be used in the simulation window
+   * @return a new UserView instance representing the simulation window
+   */
   public static UserView startEmptySimulationWindow(String language) {
     // Create a new window
     Stage newStage = new Stage();
@@ -50,18 +68,28 @@ public class Main extends Application {
     return view;
   }
 
+  /**
+   * Starts a new simulation window and prompts the user to choose a file to load a simulation.
+   *
+   * @param language the language to be used in the simulation window
+   */
   public static void startSimulationWindowWithFilePrompt(String language) {
     startEmptySimulationWindow(language).chooseFileAndLoadSimulation();
   }
 
+  /**
+   * Starts a new simulation window and loads a randomly generated Game of Life simulation.
+   *
+   * @param language the language to be used in the simulation window
+   */
   public static void startSimulationWindowWithRandomGameOfLife(String language) {
     startEmptySimulationWindow(language).loadRandomGameOfLife();
   }
 
   /**
-   * Update nextStageX and nextStageY based on offset value and screen bounds.
-   * Code for fetching screen bounds was advised by ChatGPT.
-   * "How do I get the screen size to ensure that the stage won't be off the screen?"
+   * Update nextStageX and nextStageY based on offset value and screen bounds. Code for fetching
+   * screen bounds was advised by ChatGPT. "How do I get the screen size to ensure that the stage
+   * won't be off the screen?"
    */
   private static void setNextStagePosition() {
     // Get the screen size (excluding taskbars)
@@ -70,23 +98,22 @@ public class Main extends Application {
     // Calculate and store x-position for next window (in case a new window is generated later)
     if (nextStageX + SIM_WINDOW_WIDTH + STAGE_OFFSET > screenBounds.getMaxX()) {
       nextStageX = screenBounds.getMinX() + STAGE_OFFSET;
-    }
-    else {
+    } else {
       nextStageX += STAGE_OFFSET;
     }
 
     // Calculate and store y-position for next window
     if (nextStageY + SIM_WINDOW_HEIGHT + STAGE_OFFSET > screenBounds.getMaxY()) {
       nextStageY = screenBounds.getMinY() + STAGE_OFFSET;
-    }
-    else {
+    } else {
       nextStageY += STAGE_OFFSET;
     }
   }
 
   /**
-   * Start the program, give complete control to JavaFX. Default version of main() is actually
-   * included within JavaFX, so this is not technically necessary!
+   * The main entry point of the program. Launches the JavaFX application.
+   *
+   * @param args command-line arguments passed to the program
    */
   public static void main(String[] args) {
     launch(args);

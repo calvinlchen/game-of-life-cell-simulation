@@ -3,7 +3,7 @@ package cellsociety.model.simulation;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.*;
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ class SimulationTest {
   private Simulation<PercolationCell> percolationSimulation;
   private Simulation<WaTorCell> watorSimulation;
   // eventually a game of life general
-  private XMLData xmlData;
+  private XmlData xmlData;
 
   @BeforeEach
   @DisplayName("Initialize simulations with correct setup")
   void setup_initializeSimulations_correctSetup() {
-    xmlData = new XMLData();
+    xmlData = new XmlData();
     xmlData.setGridRowNum(3);
     xmlData.setGridColNum(3);
     xmlData.setParameters(Map.of());
@@ -119,12 +119,12 @@ class SimulationTest {
 
   @Test
   @DisplayName("Verify XML data is correctly retrieved from simulation")
-  void getXMLData_verifyXMLData_correctDataReturned() {
-    assertNotNull(gameOfLifeSimulation.getXMLData());
-    assertNotNull(segregationSimulation.getXMLData());
-    assertNotNull(fireSimulation.getXMLData());
-    assertNotNull(percolationSimulation.getXMLData());
-    assertNotNull(watorSimulation.getXMLData());
+  void getXMLData_verifyXmlData_correctDataObjectReturned() {
+    assertNotNull(gameOfLifeSimulation.getXmlDataObject());
+    assertNotNull(segregationSimulation.getXmlDataObject());
+    assertNotNull(fireSimulation.getXmlDataObject());
+    assertNotNull(percolationSimulation.getXmlDataObject());
+    assertNotNull(watorSimulation.getXmlDataObject());
   }
 
   @Test
@@ -177,7 +177,7 @@ class SimulationTest {
   @Test
   @DisplayName("Catch exceptions when creating cells dynamically")
   void createCells_invalidSetup_exceptionThrown() {
-    XMLData invalidCellData = new XMLData();
+    XmlData invalidCellData = new XmlData();
     invalidCellData.setGridRowNum(3);
     invalidCellData.setGridColNum(3);
     invalidCellData.setType(SimType.GameOfLife);

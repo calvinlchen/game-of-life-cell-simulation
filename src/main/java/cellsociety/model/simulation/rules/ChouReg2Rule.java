@@ -1,13 +1,16 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_VON_NEUMANN_LOOPS;
+import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
+
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.ChouReg2Parameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class for representing rules for Chou Reg 2 Loop simulation
+ * Class for representing rules for Chou Reg 2 Loop simulation.
  *
  * @author Jessica Chen
  */
@@ -84,7 +87,7 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -93,10 +96,10 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public ChouReg2Rule(ChouReg2Parameters parameters, String language) {
     super(parameters, language);
@@ -104,12 +107,13 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
 
   @Override
   public int apply(ChouReg2Cell cell) {
-    String[] directions = {"N", "E", "S", "W"};
+    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
+        DirectionType.W};
 
-    for (int rotations = 0; rotations < 4; rotations++) {
+    for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
       String stateKey = getStateKey(cell, directions);
 
-      if (stateKey.length() != 5) {
+      if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
         return cell.getCurrentState();
       }
 
@@ -123,8 +127,8 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
     return cell.getCurrentState();
   }
 
-  private String[] rotateClockwise(String[] directions) {
-    return new String[]{directions[3], directions[0], directions[1], directions[2]};
+  private DirectionType[] rotateClockwise(DirectionType[] directions) {
+    return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }

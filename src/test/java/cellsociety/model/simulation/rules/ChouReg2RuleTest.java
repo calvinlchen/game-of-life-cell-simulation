@@ -3,9 +3,13 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
+import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.ChouReg2Parameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,17 +61,23 @@ class ChouReg2RuleTest {
     cell.setPosition(new int[]{2, 2});
 
     List<ChouReg2Cell> neighbors = new ArrayList<>();
+    Map<DirectionType, List<ChouReg2Cell>> directionNeighbors = new HashMap<>();
 
-    int[][] positions = {{2,1}, {3,2}, {2,3}, {1, 2}};
+    int[][] positions = {{2, 1}, {3, 2}, {2, 3}, {1, 2}};
+    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
+        DirectionType.W};
 
     for (int i = 1; i < stateKey.length(); i++) {
       int neighborState = Character.getNumericValue(stateKey.charAt(i));
       ChouReg2Cell neighbor = new ChouReg2Cell(neighborState, rule);
-      neighbor.setPosition(positions[i-1]);
+      neighbor.setPosition(positions[i - 1]);
       neighbors.add(neighbor);
+      directionNeighbors.put(directions[i - 1], List.of(neighbor));
     }
 
     cell.setNeighbors(neighbors);
+    cell.setDirectionalNeighbors(directionNeighbors);
+
     return cell;
   }
 }

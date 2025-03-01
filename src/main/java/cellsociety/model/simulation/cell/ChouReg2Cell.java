@@ -6,11 +6,12 @@ import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import cellsociety.model.simulation.rules.ChouReg2Rule;
 
 /**
- * Class for representing cell for ChouReg2 Langton's Loop simulation
+ * Class for representing cell for ChouReg2 Langton's Loop simulation.
  *
  * @author Jessica Chen
  */
 public class ChouReg2Cell extends Cell<ChouReg2Cell, ChouReg2Rule, ChouReg2Parameters> {
+
   /**
    * Constructs a cell with specified initial state.
    *
@@ -25,8 +26,8 @@ public class ChouReg2Cell extends Cell<ChouReg2Cell, ChouReg2Rule, ChouReg2Param
   /**
    * Constructs a cell with specified initial state.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - the ChouReg2 Langton's Loop rule to calculate the next state
+   * @param state    - the initial state of the cell
+   * @param rule     - the ChouReg2 Langton's Loop rule to calculate the next state
    * @param language - name of language, for error message display
    */
   public ChouReg2Cell(int state, ChouReg2Rule rule, String language) {

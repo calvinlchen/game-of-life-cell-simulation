@@ -2,7 +2,7 @@ package cellsociety.view.components;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
-import cellsociety.model.util.XMLData;
+import cellsociety.model.util.XmlData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.components.cell.CellViewFactory;
@@ -15,7 +15,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
- * Manages the position and display of the simulation's cells. (Pane suggested by ChatGPT.)
+ * SimulationView manages the position and display of the simulation's cells.
+ *
+ * <p>Pane suggested by ChatGPT.
+ *
+ * @author Calvin Chen
+ * @author Jessica Chen and ChatGPT, helped with some of the JavaDocs
  */
 public class SimulationView {
 
@@ -26,7 +31,7 @@ public class SimulationView {
   private double myCellWidth;
   private double myCellHeight;
 
-  private XMLData myXML;
+  private XmlData myXml;
   private Simulation<?> mySimulation;
   private final String myLanguage;
   private final ResourceBundle myErrorResources;
@@ -35,6 +40,13 @@ public class SimulationView {
   private boolean isFlippedHorizontally = false;
   private boolean isFlippedVertically = false;
 
+  /**
+   * Constructs a SimulationView object with specified dimensions and language settings.
+   *
+   * @param width    - the width of the grid display
+   * @param height   - the height of the grid display
+   * @param language - the selected language for the UI
+   */
   public SimulationView(double width, double height, String language) {
     myDisplay = new Pane();
     myGridWidth = width;
@@ -49,7 +61,7 @@ public class SimulationView {
   }
 
   /**
-   * Returns the grid representing the simulation cells, if mySimulation exists
+   * Returns the grid representing the simulation cells, if mySimulation exists.
    *
    * @return Pane containing the cell grid visual
    */
@@ -58,12 +70,12 @@ public class SimulationView {
   }
 
   /**
-   * Prepares a Simulation model and the grid's cell configuration based on an XMLData object
+   * Prepares a Simulation model and the grid's cell configuration based on an XMLData object.
    *
    * @param xmlData XMLData object representing the XML file for a simulation
    */
-  public void configureFromXML(XMLData xmlData) {
-    myXML = xmlData;
+  public void configureFromXml(XmlData xmlData) {
+    myXml = xmlData;
 
     int numRows = xmlData.getGridRowNum();
     int numCols = xmlData.getGridColNum();
@@ -76,7 +88,7 @@ public class SimulationView {
   }
 
   /**
-   * Initializes the grid view of the currently-stored Simulation model
+   * Initializes the grid view of the currently-stored Simulation model.
    */
   public void initializeGridView() {
     // If there is no simulation stored, then a grid cannot be generated
@@ -86,7 +98,7 @@ public class SimulationView {
 
     for (int row = 0; row < myCellViews.length; row++) {
       for (int col = 0; col < myCellViews[0].length; col++) {
-        createCellView(row, col, mySimulation.getCurrentState(row, col), myXML.getType());
+        createCellView(row, col, mySimulation.getCurrentState(row, col), myXml.getType());
       }
     }
   }
@@ -94,7 +106,8 @@ public class SimulationView {
   private void createCellView(int cellRow, int cellCol, int cellState, SimType simType) {
     double[] position = getCellPosition(cellRow, cellCol);
 
-    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight, cellState);
+    CellView cellView = CellViewFactory.createCellView(simType, position, myCellWidth, myCellHeight,
+        cellState);
     if (cellView != null) {
       myCellViews[cellRow][cellCol] = cellView;
       myDisplay.getChildren().add(cellView.getShape());
@@ -102,9 +115,9 @@ public class SimulationView {
   }
 
   /**
-   * Visually flips the entire CellView grid horizontally. For example:
-   * A B  -->  B A
-   * C D       D C
+   * Visually flips the entire CellView grid horizontally.
+   *
+   * <p>For example: A B  -->  B A C D       D C
    */
   public void flipDisplayHorizontally() {
     if (myCellViewsIsEmpty()) {
@@ -112,17 +125,16 @@ public class SimulationView {
     }
     if (isFlippedHorizontally) {
       myDisplay.setScaleX(1);
-    }
-    else {
+    } else {
       myDisplay.setScaleX(-1);
     }
     isFlippedHorizontally = !isFlippedHorizontally;
   }
 
   /**
-   * Visually flips the entire CellView grid vertically. For example:
-   * A B  -->  C D
-   * C D       A B
+   * Visually flips the entire CellView grid vertically.
+   *
+   * <p>For example: A B  -->  C D C D       A B
    */
   public void flipDisplayVertically() {
     if (myCellViewsIsEmpty()) {
@@ -130,8 +142,7 @@ public class SimulationView {
     }
     if (isFlippedVertically) {
       myDisplay.setScaleY(1);
-    }
-    else {
+    } else {
       myDisplay.setScaleY(-1);
     }
     isFlippedVertically = !isFlippedVertically;
@@ -142,7 +153,8 @@ public class SimulationView {
   }
 
   /**
-   * Returns a coordinate position for a cell based on its row and column, as well as grid flip status
+   * Returns a coordinate position for a cell based on its row and column, as well as grid flip
+   * status.
    *
    * @param row    A cell's row in the grid (index starting from 0)
    * @param column A cell's column in the grid (index starting from 0)
@@ -180,6 +192,7 @@ public class SimulationView {
 
   /**
    * Toggles grid lines (AKA cell outlines) for all CellViews in the simulation grid.
+   *
    * @param enable TRUE if enabling gridlines, FALSE if disabling gridlines
    */
   public void toggleGridlines(boolean enable) {
@@ -199,7 +212,7 @@ public class SimulationView {
   }
 
   /**
-   * Get the Simulation model object represented by this view
+   * Get the Simulation model object represented by this view.
    *
    * @return null or Simulation object
    */
@@ -208,7 +221,7 @@ public class SimulationView {
   }
 
   /**
-   * Get all CellView objects that are currently in this simulation
+   * Get all CellView objects that are currently in this simulation.
    */
   public List<CellView> getCellViewList() {
     if (myCellViews == null) {
@@ -223,7 +236,7 @@ public class SimulationView {
   }
 
   /**
-   * Updates a given state to a new color, assuming the color exists
+   * Updates a given state to a new color, assuming the color exists.
    */
   public void updateCellColorsForState(int state, Color newColor) {
     List<CellView> cellList = getCellViewList();
@@ -232,8 +245,9 @@ public class SimulationView {
       return;
     }
     if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(String.format(
-          myErrorResources.getString("InvalidState"), state, cellList.getFirst().getNumStates()-1));
+      throw new IllegalArgumentException(
+          String.format(myErrorResources.getString("InvalidState"), state,
+              cellList.getFirst().getNumStates() - 1));
     }
 
     for (CellView cellView : cellList) {

@@ -5,17 +5,16 @@ import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
 
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.parameters.GameOfLifeParameters;
-import java.util.Map;
 
 /**
- * Class for representing rules for Game of Life simulation
+ * Class for representing rules for Game of Life simulation.
  *
  * @author Jessica Chen
  */
 public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
@@ -24,10 +23,10 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
   }
 
   /**
-   * Constructor for the Rule class
+   * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language - name of language, for error message display
+   * @param language   - name of language, for error message display
    */
   public GameOfLifeRule(GameOfLifeParameters parameters, String language) {
     super(parameters, language);
@@ -50,7 +49,6 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell, GameOfLifeParameters> {
 
   private long countAliveNeighbors(GameOfLifeCell cell) {
     return cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE)
-        .count();
+        .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE).count();
   }
 }

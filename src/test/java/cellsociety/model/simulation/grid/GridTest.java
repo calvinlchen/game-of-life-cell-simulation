@@ -1,5 +1,7 @@
 package cellsociety.model.simulation.grid;
 
+import static cellsociety.model.util.constants.GridTypes.NeighborhoodType.VON_NEUMANN;
+import static cellsociety.model.util.constants.GridTypes.ShapeType.RECTANGLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -156,8 +158,7 @@ class GridTest {
   @Test
   @DisplayName("Test setting neighbors correctly updates cells")
   void setNeighbors_ChecksForCorectness_CorrectlySetsNeighbors() {
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // N, S, W, E
-    grid.setNeighbors(directions);
+    grid.setNeighbors(RECTANGLE, VON_NEUMANN);
     for (TestCell cell : mockCells) {
       verify(cell, atLeastOnce()).setNeighbors(anyList());
     }
