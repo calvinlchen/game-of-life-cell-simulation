@@ -367,6 +367,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public void clearNeighbors() {
     neighbors.clear();
-    directionalNeighbors.clear();
+    directionalNeighbors.values().forEach(List::clear);
   }
 }
