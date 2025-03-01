@@ -6,11 +6,13 @@ import static cellsociety.model.util.constants.SimulationConstants.MIN_STATE_HIS
 
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -26,6 +28,7 @@ import java.util.ResourceBundle;
 public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P extends Parameters> {
 
   private List<C> neighbors;
+  private Map<DirectionType, List<C>> directionalNeighbors;
   private int currentState;
   private int nextState;
   private int[] position;
@@ -69,6 +72,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
     this.nextState = state;
     this.rule = rule;
     neighbors = new ArrayList<>();
+    directionalNeighbors = Map.of();
     stateHistory = new LinkedList<>();
     saveCurrentState();
   }
@@ -93,8 +97,8 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Moves the cell one step backward to the previous state.
    *
-   * @returns true if succesfully stepBack, false if not enough history to rewind
    * @throws SimulationException if no previous state is available
+   * @returns true if succesfully stepBack, false if not enough history to rewind
    */
   public boolean stepBack() {
     boolean success = false;
@@ -329,5 +333,27 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public int getStateLength() {
     return stateLength;
+  }
+
+  /**
+   * Sets the directional neighbors of the cell categorized by direction type.
+   *
+   * @param directionalNeighbors - a map where the key represents the direction type
+   *                                (e.g., N, NE, E, etc.), and the value is a list
+   *                                of neighboring cells in that direction
+   */
+  public void setDirectionalNeighbors(Map<DirectionType, List<C>> directionalNeighbors) {
+    this.directionalNeighbors = directionalNeighbors;
+  }
+
+  /**
+   * Retrieves the list of neighboring cells in a specified directional category.
+   *
+   * @param direction - the directional category from which to retrieve the neighbors
+   * @return a list of neighboring cells in the specified direction; returns an empty list if no
+   * neighbors are found for the given direction
+   */
+  public List<C> getDirectionalNeighbors(DirectionType direction) {
+    return directionalNeighbors.getOrDefault(direction, new ArrayList<>());
   }
 }

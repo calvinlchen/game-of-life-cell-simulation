@@ -2,10 +2,14 @@ package cellsociety.model.simulation.rules;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.model.simulation.cell.ChouReg2Cell;
 import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.PetelkaParameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,17 +62,23 @@ class PetelkaRuleTest {
     cell.setPosition(new int[]{2, 2});
 
     List<PetelkaCell> neighbors = new ArrayList<>();
+    Map<DirectionType, List<PetelkaCell>> directionNeighbors = new HashMap<>();
 
-    int[][] positions = {{2,1}, {3,1}, {3,2}, {3,3}, {2,3}, {1,3}, {1, 2}, {1,1}};
+    int[][] positions = {{2, 1}, {3, 1}, {3, 2}, {3, 3}, {2, 3}, {1, 3}, {1, 2}, {1, 1}};
+    DirectionType[] directions = {DirectionType.N, DirectionType.NE, DirectionType.E,
+        DirectionType.SE, DirectionType.S, DirectionType.SW, DirectionType.W, DirectionType.NW};
 
     for (int i = 1; i < stateKey.length(); i++) {
       int neighborState = Character.getNumericValue(stateKey.charAt(i));
       PetelkaCell neighbor = new PetelkaCell(neighborState, rule);
-      neighbor.setPosition(positions[i-1]);
+      neighbor.setPosition(positions[i - 1]);
       neighbors.add(neighbor);
+      directionNeighbors.put(directions[i - 1], List.of(neighbor));
     }
 
     cell.setNeighbors(neighbors);
+    cell.setDirectionalNeighbors(directionNeighbors);
+
     return cell;
   }
 }

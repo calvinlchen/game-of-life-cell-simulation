@@ -7,15 +7,16 @@ import cellsociety.model.factories.GridFactory;
 import cellsociety.model.factories.edgefactory.EdgeFactory;
 import cellsociety.model.factories.edgefactory.handler.EdgeHandler;
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.ResourceBundle;
 
 /**
@@ -105,9 +106,15 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
         T cell = grid.get(i).get(j);
         if (cell != null) {
           if (i % 2 == 0) {
-            cell.setNeighbors(getValidNeighbors(grid, i, j, directionsMap.get("even"), edge));
+            Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j,
+                directionsMap.get("even"), edge);
+            cell.setDirectionalNeighbors(neighbors);
+            cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
           } else {
-            cell.setNeighbors(getValidNeighbors(grid, i, j, directionsMap.get("odd"), edge));
+            Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j,
+                directionsMap.get("odd"), edge);
+            cell.setDirectionalNeighbors(neighbors);
+            cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
           }
         }
       }
@@ -131,24 +138,55 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     setNeighbors(shape, neighborhood, NONE);
   }
 
-  private List<T> getValidNeighbors(List<List<T>> grid, int row, int col, int[][] directions,
+  private Map<DirectionType, List<T>> getNeighborsForCell(List<List<T>> grid, int row, int col,
+      int[][] directions,
       EdgeType edge) {
     EdgeHandler edgeHandler = EdgeFactory.getHandler(edge);
 
-    List<T> neighbors = new ArrayList<>();
+    Map<DirectionType, List<T>> neighbors = new HashMap<>();
     for (int[] dir : directions) {
       int newRow = row + dir[0];
       int newCol = col + dir[1];
+
+      DirectionType directionType = determineDirection(dir);
+      neighbors.put(directionType,
+          neighbors.getOrDefault(directionType, new ArrayList<>()));
+
       if (isValidPosition(newRow, newCol)) {
-        neighbors.add(grid.get(newRow).get(newCol));
+        neighbors.get(directionType).add(grid.get(newRow).get(newCol));
       } else {
         Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col, myRows,
             myCols, dir);
         replacementCell.ifPresent(
-            integers -> neighbors.add(grid.get(integers.get(0)).get(integers.get(1))));
+            integers ->
+                neighbors.get(directionType).add(grid.get(integers.get(0)).get(integers.get(1))));
       }
     }
     return neighbors;
+  }
+
+  // TODO: for now I have just decided to do neighbors very simply, may change
+  // if its like ones the same as the cell and just one direction it N/S/E/W respectively
+  // if it has a blend then its the blend of both
+  private DirectionType determineDirection(int[] dir) {
+    if (dir[0] < 0 && dir[1] == 0) {
+      return DirectionType.N;
+    } else if (dir[0] < 0 && dir[1] > 0) {
+      return DirectionType.NE;
+    } else if (dir[0] == 0 && dir[1] > 0) {
+      return DirectionType.E;
+    } else if (dir[0] > 0 && dir[1] > 0) {
+      return DirectionType.SE;
+    } else if (dir[0] > 0 && dir[1] == 0) {
+      return DirectionType.S;
+    } else if (dir[0] > 0) {
+      // by this all the direction[1] > 0
+      return DirectionType.SW;
+    } else if (dir[0] == 0) {
+      return DirectionType.W;
+    } else {
+      return DirectionType.NW;
+    }
   }
 
 

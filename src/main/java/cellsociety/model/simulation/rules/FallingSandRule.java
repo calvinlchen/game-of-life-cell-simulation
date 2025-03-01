@@ -3,9 +3,15 @@ package cellsociety.model.simulation.rules;
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_EMPTY;
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_SAND;
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_WATER;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.E;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.S;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.SE;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.W;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.parameters.FallingSandParameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -49,19 +55,19 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case FALLINGSAND_SAND -> moveDown(cell, List.of("SW", "SE"), FALLINGSAND_SAND,
+      case FALLINGSAND_SAND -> moveDown(cell, List.of(SW, SE), FALLINGSAND_SAND,
           List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
       case FALLINGSAND_WATER ->
-          moveDown(cell, List.of("W", "E"), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+          moveDown(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
       default -> cell.getCurrentState();  // steel and empty
     };
   }
 
-  private int moveDown(FallingSandCell cell, List<String> secondaryDirections, int newState,
+  private int moveDown(FallingSandCell cell, List<DirectionType> secondaryDirections, int newState,
       List<Integer> replaceableNeighbors) {
 
     for (int replaceableNeighbor : replaceableNeighbors) {
-      Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, "S", replaceableNeighbor);
+      Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, S, replaceableNeighbor);
       if (neighbor.isPresent()) {
         neighbor.get().setNextState(newState);
         return replaceableNeighbor;
@@ -81,7 +87,8 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
   }
 
 
-  private Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell, String direction,
+  private Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell,
+      DirectionType direction,
       int state) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> matchesDirection(cell, neighbor, direction))

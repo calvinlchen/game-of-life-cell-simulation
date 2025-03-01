@@ -5,8 +5,11 @@ import static cellsociety.model.util.constants.CellStates.*;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.parameters.FallingSandParameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -121,19 +124,25 @@ class FallingSandRuleTest {
     FallingSandCell cell = new FallingSandCell(state, rule);
     cell.setPosition(new int[]{2,2});
     List<FallingSandCell> neighbors = new ArrayList<>();
+    Map<DirectionType,List<FallingSandCell>> directionNeighbors = new HashMap<>();
 
     FallingSandCell below = new FallingSandCell(belowState, rule);
     below.setPosition(new int[]{2,3});
     neighbors.add(below);
+    directionNeighbors.put(DirectionType.S, List.of(below));
 
-    int[][] positions = {{3,2}, {3,3}, {1,2}, {1,3}};
+    int[][] positions = {{3, 2}, {3, 3}, {1, 2}, {1, 3}};
+    DirectionType[] directions = {DirectionType.E, DirectionType.SE, DirectionType.W,
+        DirectionType.SW};
     for (int i = 0; i < sideStates.size(); i++) {
       FallingSandCell side = new FallingSandCell(sideStates.get(i), rule);
       side.setPosition(positions[i]);
       neighbors.add(side);
+      directionNeighbors.put(directions[i], List.of(side));
     }
 
     cell.setNeighbors(neighbors);
+    cell.setDirectionalNeighbors(directionNeighbors);
     return new CellWithNeighbors(cell, neighbors);
   }
 }
