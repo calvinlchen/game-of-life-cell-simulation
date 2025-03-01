@@ -194,24 +194,30 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   // if its like ones the same as the cell and just one direction it N/S/E/W respectively
   // if it has a blend then its the blend of both
   private DirectionType determineDirection(int[] dir) {
-    int x = dir[0], y = dir[1];
+    if (dir.length != 2) {
+      throw new SimulationException(myResources.getString("InvalidDirection"));
+    }
+
+    int x = Integer.compare(dir[0], 0);
+    int y = Integer.compare(dir[1], 0);
 
     if (x == 0 && y == 0) {
       throw new SimulationException(myResources.getString("InvalidDirection"));
     }
 
-    if (x == 0) {
-      return (y > 0) ? DirectionType.E : DirectionType.W;
-    }
-    if (y == 0) {
-      return (x > 0) ? DirectionType.S : DirectionType.N;
-    }
-
-    return (x > 0) ? (y > 0 ? DirectionType.SE : DirectionType.SW)
-        : (y > 0 ? DirectionType.NE : DirectionType.NW);
-
-
+    return switch (x + "," + y) {
+      case "0,1" -> DirectionType.E;
+      case "0,-1" -> DirectionType.W;
+      case "1,0" -> DirectionType.S;
+      case "-1,0" -> DirectionType.N;
+      case "1,1" -> DirectionType.SE;
+      case "1,-1" -> DirectionType.SW;
+      case "-1,1" -> DirectionType.NE;
+      case "-1,-1" -> DirectionType.NW;
+      default -> throw new SimulationException(myResources.getString("InvalidDirection"));
+    };
   }
+
 
 
   /**

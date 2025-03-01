@@ -59,7 +59,7 @@ public class GridFactory {
             {0, -1}, {0, 1}, {0, 2}, {1, -2}, {1, -1}, {1, 0}, {1, 1}, {2, -1}, {2, 0}, {2, 1},});
     hexagonExtendedMoore.put(odd,
         new int[][]{{-2, -1}, {-2, 0}, {-2, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {-1, 2}, {0, -2},
-            {0, -1}, {0, 1}, {0, 2}, {1, -1}, {1, 0}, {1, 1}, {1, 2}, {2, -1}, {2, 0}, {2, 1},});
+            {0, -1}, {0, 1}, {0, 2}, {1, -1}, {1, 0}, {1, 1}, {1, 2}, {2, -1}, {2, 0}, {2, 1}});
     directionMap.put("HEXAGON_EXTENDED_MOORE", hexagonExtendedMoore);
 
     // we index rows from 0 so 0 is technically even

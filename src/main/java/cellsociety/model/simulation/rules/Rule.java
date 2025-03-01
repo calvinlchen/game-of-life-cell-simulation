@@ -6,7 +6,6 @@ import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
