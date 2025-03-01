@@ -52,6 +52,12 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     initializeCells(cells);
   }
 
+  public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
+      EdgeType edgeType) {
+    this(cells, rows, cols);
+    setNeighbors(shape, neighborhoodType, edgeType);
+  }
+
   /**
    * Constructs a Grid with specified dimensions.
    *
@@ -80,7 +86,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
 
   /**
    * Set neighbors for all cells in the grid.
-   *
+   * <p>
    * This should eventually just all be replaced
    */
   @Deprecated
