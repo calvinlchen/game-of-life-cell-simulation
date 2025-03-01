@@ -26,6 +26,23 @@ public class ToroidalEdgeHandler implements EdgeHandler {
     int newRow = currRow + dir[0];
     int newCol = curCol + dir[1];
 
+    // so in this case
+    if (newRow < 0) {
+      // so like you want to set it to m + itself since itself is already negative
+      newRow = totalRow + newRow;
+    } else if (newRow >= totalRow) {
+      // so in this case m becomes 0 so its the difference from newRow - totalRow so
+      // m is 0, m+1 is 1 I think
+      newRow = newRow - totalRow;
+    }
+
+    // should be mirrored
+    if (newCol < 0) {
+      newCol = totalCol + newCol;
+    } else if (newCol >= totalCol) {
+      newCol = newCol - totalCol;
+    }
+
     return Optional.of(List.of(newRow, newCol));
   }
 }
