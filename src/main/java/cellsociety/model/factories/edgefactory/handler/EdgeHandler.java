@@ -17,17 +17,21 @@ import java.util.Optional;
 public interface EdgeHandler {
 
   /**
-   * Handles the edge neighbor for a specific grid cell at the boundaries of the grid. Determines
-   * the appropriate neighbor for a cell depending on the edge behavior implementation and returns
-   * it as a potential list of row and column indices.
+   * Determines the adjusted position of a neighboring cell when the current cell is at the boundary
+   * of the grid. The method accounts for different edge handling behaviors such as none, toroidal
+   * wrapping, or mirroring, based on the specific implementation of the EdgeHandler interface.
    *
-   * @param row - the row index of the current cell
-   * @param col - the column index of the current cell
-   * @param dir - the directional offset array indicating the intended neighbor's relative position
-   * @return an Optional containing a list of row and column indices for the resolved neighbor, or
-   * an empty Optional if no neighbor exists based on the edge handling logic
+   * @param currRow  the row index of the current cell
+   * @param curCol   the column index of the current cell
+   * @param totalRow the total number of rows in the grid
+   * @param totalCol the total number of columns in the grid
+   * @param dir      the directional offset indicating the neighboring cell to be accessed,
+   *                 expressed as an array [rowOffset, colOffset]
+   * @return an Optional containing a list of two integers [neighborRow, neighborCol] representing
+   * the adjusted position of the neighboring cell. If the neighbor cannot be resolved (e.g., for a
+   * "none" edge type), an empty Optional is returned.
    */
-  Optional<List<Integer>> handleEdgeNeighbor(int row, int col,
+  Optional<List<Integer>> handleEdgeNeighbor(int currRow, int curCol, int totalRow, int totalCol,
       int[] dir);
 
 }

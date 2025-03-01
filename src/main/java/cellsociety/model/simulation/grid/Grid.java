@@ -142,8 +142,8 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
       if (isValidPosition(newRow, newCol)) {
         neighbors.add(grid.get(newRow).get(newCol));
       } else {
-        Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col,
-            dir);
+        Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col, myRows,
+            myCols, dir);
         replacementCell.ifPresent(
             integers -> neighbors.add(grid.get(integers.get(0)).get(integers.get(1))));
       }
