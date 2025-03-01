@@ -1,15 +1,21 @@
 package cellsociety.model.simulation.grid;
 
+import static cellsociety.model.util.constants.GridTypes.EdgeType.NONE;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.factories.GridFactory;
+import cellsociety.model.factories.edgefactory.EdgeFactory;
+import cellsociety.model.factories.edgefactory.handler.EdgeHandler;
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.ResourceBundle;
 
 /**
@@ -77,19 +83,17 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   public abstract void setNeighbors();
 
   /**
-   * Helper function to set the neighbors for a given shape in a specified neighborhood.
+   * Sets the neighbors for each cell in the grid based on the specified shape, neighborhood type,
+   * and edge type.
    *
-   * <p>This method iterates over each cell in the given shape and sets its neighboring cells
-   * according to the specified directions provided by the neighborhood. It abstracts the
-   * neighbor-setting logic for consistent and reusable functionality.
-   *
-   * @param shape        The structure or grid representing the cells (e.g., a 2D array or other
-   *                     collection of cells) for which neighbors are to be set.
-   * @param neighborhood An object or collection representing the directions or rules that specify
-   *                     how neighbors should be assigned (e.g., relative coordinates, adjacency
-   *                     lists).
+   * @param shape        - The shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
+   *                     TRIANGLE).
+   * @param neighborhood - The neighborhood type defining how neighbors are determined (e.g., MOORE,
+   *                     VON_NEUMANN, EXTENDED_MOORE).
+   * @param edge         - The edge type specifying the behavior at the boundaries of the grid
+   *                     (e.g., NONE, MIRROR, TOROIDAL).
    */
-  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood) {
+  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
     List<List<T>> grid = getGrid();
     int rows = getRows();
     int cols = getCols();
@@ -101,24 +105,47 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
         T cell = grid.get(i).get(j);
         if (cell != null) {
           if (i % 2 == 0) {
-            cell.setNeighbors(
-                getValidNeighbors(grid, i, j, directionsMap.get("even")));
+            cell.setNeighbors(getValidNeighbors(grid, i, j, directionsMap.get("even"), edge));
           } else {
-            cell.setNeighbors(
-                getValidNeighbors(grid, i, j, directionsMap.get("odd")));
+            cell.setNeighbors(getValidNeighbors(grid, i, j, directionsMap.get("odd"), edge));
           }
         }
       }
     }
   }
 
-  private List<T> getValidNeighbors(List<List<T>> grid, int row, int col, int[][] directions) {
+  /**
+   * Helper function to set the neighbors for a given shape in a specified neighborhood.
+   *
+   * <p>This method iterates over each cell in the given shape and sets its neighboring cells
+   * according to the specified directions provided by the neighborhood. It abstracts the
+   * neighbor-setting logic for consistent and reusable functionality.
+   *
+   * @param shape        - The structure or grid representing the cells (e.g., a 2D array or other
+   *                     collection of cells) for which neighbors are to be set.
+   * @param neighborhood - An object or collection representing the directions or rules that specify
+   *                     how neighbors should be assigned (e.g., relative coordinates, adjacency
+   *                     lists).
+   */
+  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood) {
+    setNeighbors(shape, neighborhood, NONE);
+  }
+
+  private List<T> getValidNeighbors(List<List<T>> grid, int row, int col, int[][] directions,
+      EdgeType edge) {
+    EdgeHandler edgeHandler = EdgeFactory.getHandler(edge);
+
     List<T> neighbors = new ArrayList<>();
     for (int[] dir : directions) {
       int newRow = row + dir[0];
       int newCol = col + dir[1];
       if (isValidPosition(newRow, newCol)) {
         neighbors.add(grid.get(newRow).get(newCol));
+      } else {
+        Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col,
+            dir);
+        replacementCell.ifPresent(
+            integers -> neighbors.add(grid.get(integers.get(0)).get(integers.get(1))));
       }
     }
     return neighbors;
