@@ -3,6 +3,7 @@ package cellsociety.model.simulation.grid;
 import static cellsociety.model.util.constants.GridTypes.EdgeType.NONE;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
+import cellsociety.model.factories.DirectionFactory;
 import cellsociety.model.factories.GridFactory;
 import cellsociety.model.factories.edgefactory.EdgeFactory;
 import cellsociety.model.factories.edgefactory.handler.EdgeHandler;
@@ -137,14 +138,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
       int[][] directions = directionsMap.get(key);
 
       for (int j = 0; j < cols; j++) {
-        T cell = grid.get(i).get(j);
-        if (cell == null) {
-          continue;
-        }
-
-        Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j, directions, edge);
-        cell.setDirectionalNeighbors(neighbors);
-        cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
+        findNeighbors(grid, i, j, directions, edge);
       }
     }
   }
@@ -164,6 +158,17 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    */
   public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood) {
     setNeighbors(shape, neighborhood, NONE);
+  }
+
+  private void findNeighbors(List<List<T>> grid, int i, int j, int[][] directions, EdgeType edge) {
+    T cell = grid.get(i).get(j);
+    if (cell == null) {
+      return;
+    }
+
+    Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j, directions, edge);
+    cell.setDirectionalNeighbors(neighbors);
+    cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
   }
 
   private Map<DirectionType, List<T>> getNeighborsForCell(List<List<T>> grid, int row, int col,
@@ -190,34 +195,17 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     return neighbors;
   }
 
-  // TODO: for now I have just decided to do neighbors very simply, may change
-  // if its like ones the same as the cell and just one direction it N/S/E/W respectively
-  // if it has a blend then its the blend of both
   private DirectionType determineDirection(int[] dir) {
-    if (dir.length != 2) {
-      throw new SimulationException(myResources.getString("InvalidDirection"));
-    }
-
     int x = Integer.compare(dir[0], 0);
     int y = Integer.compare(dir[1], 0);
 
-    if (x == 0 && y == 0) {
-      throw new SimulationException(myResources.getString("InvalidDirection"));
+    Optional<DirectionType> direction = DirectionFactory.getDirection(x + "," + y);
+    if (direction.isPresent()) {
+      return direction.get();
     }
 
-    return switch (x + "," + y) {
-      case "0,1" -> DirectionType.E;
-      case "0,-1" -> DirectionType.W;
-      case "1,0" -> DirectionType.S;
-      case "-1,0" -> DirectionType.N;
-      case "1,1" -> DirectionType.SE;
-      case "1,-1" -> DirectionType.SW;
-      case "-1,1" -> DirectionType.NE;
-      case "-1,-1" -> DirectionType.NW;
-      default -> throw new SimulationException(myResources.getString("InvalidDirection"));
-    };
+    throw new SimulationException(myResources.getString("InvalidDirection"));
   }
-
 
 
   /**
