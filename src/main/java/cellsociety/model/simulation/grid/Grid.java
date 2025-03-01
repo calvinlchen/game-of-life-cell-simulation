@@ -45,6 +45,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param rows  - number of rows in the grid
    * @param cols  - number of columns in the grid
    */
+  @Deprecated
   public Grid(List<T> cells, int rows, int cols) {
     myResources = getErrorSimulationResourceBundle("English");
 
@@ -52,6 +53,21 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     initializeCells(cells);
   }
 
+  /**
+   * Constructs a Grid with specified dimensions, shape type, neighborhood type, and edge type.
+   * Initializes the grid with the given cells and sets the neighbors based on the provided
+   * configuration.
+   *
+   * @param cells            - the list of cells to be added to the grid
+   * @param rows             - the number of rows in the grid
+   * @param cols             - the number of columns in the grid
+   * @param shape            - the shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
+   *                         TRIANGLE)
+   * @param neighborhoodType - the neighborhood type defining how neighbors are determined (e.g.,
+   *                         MOORE, VON_NEUMANN, EXTENDED_MOORE)
+   * @param edgeType         - the edge type specifying the behavior at the boundaries of the grid
+   *                         (e.g., NONE, MIRROR, TOROIDAL)
+   */
   public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
       EdgeType edgeType) {
     this(cells, rows, cols);
@@ -65,6 +81,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param rows  - number of rows in the grid
    * @param cols  - number of columns in the grid
    */
+  @Deprecated
   public Grid(List<T> cells, int rows, int cols, String language) {
     myResources = getErrorSimulationResourceBundle(language);
 
@@ -105,31 +122,29 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    * @param edge         - The edge type specifying the behavior at the boundaries of the grid
    *                     (e.g., NONE, MIRROR, TOROIDAL).
    */
+  // TODO: I pretty sure grid is just my grid
   public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
     getCells().forEach(Cell::clearNeighbors);
 
-    List<List<T>> grid = getGrid();     // TODO: I pretty sure this can just be uh my grid?
+    List<List<T>> grid = getGrid();
     int rows = getRows();
     int cols = getCols();
 
     Map<String, int[][]> directionsMap = GridFactory.getDirections(shape, neighborhood);
 
     for (int i = 0; i < rows; i++) {
+      String key = (i % 2 == 0) ? "even" : "odd";
+      int[][] directions = directionsMap.get(key);
+
       for (int j = 0; j < cols; j++) {
         T cell = grid.get(i).get(j);
-        if (cell != null) {
-          if (i % 2 == 0) {
-            Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j,
-                directionsMap.get("even"), edge);
-            cell.setDirectionalNeighbors(neighbors);
-            cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
-          } else {
-            Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j,
-                directionsMap.get("odd"), edge);
-            cell.setDirectionalNeighbors(neighbors);
-            cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
-          }
+        if (cell == null) {
+          continue;
         }
+
+        Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j, directions, edge);
+        cell.setDirectionalNeighbors(neighbors);
+        cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
       }
     }
   }
@@ -152,8 +167,7 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   }
 
   private Map<DirectionType, List<T>> getNeighborsForCell(List<List<T>> grid, int row, int col,
-      int[][] directions,
-      EdgeType edge) {
+      int[][] directions, EdgeType edge) {
     EdgeHandler edgeHandler = EdgeFactory.getHandler(edge);
 
     Map<DirectionType, List<T>> neighbors = new HashMap<>();
@@ -162,17 +176,15 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
       int newCol = col + dir[1];
 
       DirectionType directionType = determineDirection(dir);
-      neighbors.put(directionType,
-          neighbors.getOrDefault(directionType, new ArrayList<>()));
+      neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
 
       if (isValidPosition(newRow, newCol)) {
         neighbors.get(directionType).add(grid.get(newRow).get(newCol));
       } else {
         Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col, myRows,
             myCols, dir);
-        replacementCell.ifPresent(
-            integers ->
-                neighbors.get(directionType).add(grid.get(integers.get(0)).get(integers.get(1))));
+        replacementCell.ifPresent(integers -> neighbors.get(directionType)
+            .add(grid.get(integers.get(0)).get(integers.get(1))));
       }
     }
     return neighbors;
@@ -182,24 +194,23 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
   // if its like ones the same as the cell and just one direction it N/S/E/W respectively
   // if it has a blend then its the blend of both
   private DirectionType determineDirection(int[] dir) {
-    if (dir[0] < 0 && dir[1] == 0) {
-      return DirectionType.N;
-    } else if (dir[0] < 0 && dir[1] > 0) {
-      return DirectionType.NE;
-    } else if (dir[0] == 0 && dir[1] > 0) {
-      return DirectionType.E;
-    } else if (dir[0] > 0 && dir[1] > 0) {
-      return DirectionType.SE;
-    } else if (dir[0] > 0 && dir[1] == 0) {
-      return DirectionType.S;
-    } else if (dir[0] > 0) {
-      // by this all the direction[1] > 0
-      return DirectionType.SW;
-    } else if (dir[0] == 0) {
-      return DirectionType.W;
-    } else {
-      return DirectionType.NW;
+    int x = dir[0], y = dir[1];
+
+    if (x == 0 && y == 0) {
+      throw new SimulationException(myResources.getString("InvalidDirection"));
     }
+
+    if (x == 0) {
+      return (y > 0) ? DirectionType.E : DirectionType.W;
+    }
+    if (y == 0) {
+      return (x > 0) ? DirectionType.S : DirectionType.N;
+    }
+
+    return (x > 0) ? (y > 0 ? DirectionType.SE : DirectionType.SW)
+        : (y > 0 ? DirectionType.NE : DirectionType.NW);
+
+
   }
 
 

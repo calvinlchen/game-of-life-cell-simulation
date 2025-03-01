@@ -23,9 +23,6 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
   private final ResourceBundle myResources;
-  private static final Map<String, int[]> DIRECTION_MAP = Map.of("S", new int[]{0, 1}, "N",
-      new int[]{0, -1}, "W", new int[]{-1, 0}, "E", new int[]{1, 0}, "NE", new int[]{1, -1}, "NW",
-      new int[]{-1, -1}, "SE", new int[]{1, 1}, "SW", new int[]{-1, 1});
 
   /**
    * Constructor for the Rule class.

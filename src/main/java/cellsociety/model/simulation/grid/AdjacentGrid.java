@@ -12,6 +12,7 @@ import java.util.List;
  * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
+@Deprecated
 public class AdjacentGrid<T extends Cell<T, ?, ?>> extends Grid<T> {
 
   /**

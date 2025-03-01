@@ -262,7 +262,8 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
 
   @Override
   public int apply(LangtonCell cell) {
-    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S, DirectionType.W};
+    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
+        DirectionType.W};
 
     for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
       String stateKey = getStateKey(cell, directions);
