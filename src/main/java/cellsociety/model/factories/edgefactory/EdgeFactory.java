@@ -8,6 +8,18 @@ import cellsociety.model.util.constants.GridTypes.EdgeType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The EdgeFactory class serves as a factory for managing and providing EdgeHandler instances based
+ * on the specific type of edge behavior required. It maintains a mapping between EdgeType enums and
+ * their corresponding EdgeHandler implementations.
+ * <p>
+ * This class supports different edge-handling strategies, such as none, mirror, and toroidal,
+ * allowing grid-based simulations or similar systems to handle edge cases consistently and
+ * flexibly.
+ *
+ * @author Jessica Chen
+ * @author ChatGPT helped with the javadoc
+ */
 public class EdgeFactory {
 
   private static final Map<EdgeType, EdgeHandler> handlerMap = new HashMap<>();

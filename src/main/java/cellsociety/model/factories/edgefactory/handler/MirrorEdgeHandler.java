@@ -3,6 +3,16 @@ package cellsociety.model.factories.edgefactory.handler;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The MirrorEdgeHandler class implements the EdgeHandler interface and provides functionality for
+ * handling grid boundary cases using a "mirroring" approach. When a neighboring cell is requested
+ * beyond the boundaries of the grid, the mirror edge handling logic reflects the position back into
+ * the grid. It ensures boundary-adjacent cells are mirrored, as if the grid is extended beyond its
+ * edges with a symmetric reflection.
+ *
+ * @author Jessica Chen
+ * @author ChatGPT helped with the java doc
+ */
 public class MirrorEdgeHandler implements EdgeHandler {
 
   // TODO: once you know the rules work, can refactor to do cleaner math, this is just my thought
