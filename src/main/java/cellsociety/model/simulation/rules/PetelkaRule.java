@@ -1,11 +1,20 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.GridTypes.DirectionType.E;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.N;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.NE;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.NW;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.S;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.SE;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
+import static cellsociety.model.util.constants.GridTypes.DirectionType.W;
 import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_MOORE_LOOPS;
 import static cellsociety.model.util.constants.SimulationConstants.NULL_STATE;
 import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
 
 import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.PetelkaParameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +72,7 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
 
   @Override
   public int apply(PetelkaCell cell) {
-    String[] baseDirections = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+    DirectionType[] baseDirections = {N, NE, E, SE, S, SW, W, NW};
 
     // Generate state key for the original direction order
     String stateKey = getStateKey(cell, baseDirections);
@@ -86,7 +95,7 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
     return 0;
   }
 
-  private int checkRotations(PetelkaCell cell, String[] directions) {
+  private int checkRotations(PetelkaCell cell, DirectionType[] directions) {
     String stateKey = getStateKey(cell, directions);
     for (int i = 0; i < NUM_UNIQUE_90_DEG_ROTATIONS; i++) {
       if (RULES_MAP_PETELKA.containsKey(stateKey)) {
@@ -101,13 +110,9 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
   }
 
   private int checkReflections(PetelkaCell cell) {
-    String[][] reflectionSet = {
-        {"S", "SE", "E", "NE", "N", "NW", "W", "SW"},
-        {"N", "NW", "W", "SW", "S", "SE", "E", "NE"},
-        {"W", "SW", "S", "SE", "E", "NE", "N", "NW"},
-        {"E", "NE", "N", "NW", "W", "SW", "S", "SE"}
-    };
-    for (String[] directions : reflectionSet) {
+    DirectionType[][] reflectionSet = {{S, SE, E, NE, N, NW, W, SW}, {N, NW, W, SW, S, SE, E, NE},
+        {W, SW, S, SE, E, NE, N, NW}, {E, NE, N, NW, W, SW, S, SE}};
+    for (DirectionType[] directions : reflectionSet) {
       String stateKey = getStateKey(cell, directions);
       if (RULES_MAP_PETELKA.containsKey(stateKey)) {
         return RULES_MAP_PETELKA.get(stateKey);
@@ -117,8 +122,8 @@ public class PetelkaRule extends Rule<PetelkaCell, PetelkaParameters> {
     return -1;
   }
 
-  private String[] rotateArray(String[] array) {
-    String[] rotated = new String[array.length];
+  private DirectionType[] rotateArray(DirectionType[] array) {
+    DirectionType[] rotated = new DirectionType[array.length];
     System.arraycopy(array, 2, rotated, 0, array.length - 2);
     rotated[array.length - 1] = array[1];
     rotated[array.length - 2] = array[0];

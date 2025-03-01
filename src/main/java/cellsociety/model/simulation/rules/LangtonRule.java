@@ -5,6 +5,7 @@ import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90
 
 import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.LangtonParameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -261,7 +262,8 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
 
   @Override
   public int apply(LangtonCell cell) {
-    String[] directions = {"N", "E", "S", "W"};
+    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
+        DirectionType.W};
 
     for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
       String stateKey = getStateKey(cell, directions);
@@ -280,8 +282,8 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
     return cell.getCurrentState();
   }
 
-  private String[] rotateClockwise(String[] directions) {
-    return new String[]{directions[3], directions[0], directions[1], directions[2]};
+  private DirectionType[] rotateClockwise(DirectionType[] directions) {
+    return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }

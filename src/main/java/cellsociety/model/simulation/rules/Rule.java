@@ -4,8 +4,8 @@ import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationRe
 
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.Parameters;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -22,9 +22,6 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
 
   private P parameters;
   private final ResourceBundle myResources;
-  private static final Map<String, int[]> DIRECTION_MAP = Map.of("S", new int[]{0, 1}, "N",
-      new int[]{0, -1}, "W", new int[]{-1, 0}, "E", new int[]{1, 0}, "NE", new int[]{1, -1}, "NW",
-      new int[]{-1, -1}, "SE", new int[]{1, 1}, "SW", new int[]{-1, 1});
 
   /**
    * Constructor for the Rule class.
@@ -80,29 +77,20 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * @param direction - direction to test (N, S, E, W, NE, NW, SE, SW)
    * @return true if the neighbor is the direction neighbor
    */
-  protected boolean matchesDirection(C cell, C neighbor, String direction) {
-    validateMatchDirectionInputs(cell, neighbor, direction);
+  protected boolean matchesDirection(C cell, C neighbor, DirectionType direction) {
 
-    int[] pos = neighbor.getPosition();
-    int[] posCell = cell.getPosition();
+    validateMatchDirectionInputs(cell, neighbor);
 
-    int dx = pos[0] - posCell[0];
-    int dy = pos[1] - posCell[1];
-
-    return DIRECTION_MAP.getOrDefault(direction, new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE})[0]
-        == dx && DIRECTION_MAP.get(direction)[1] == dy;
+    return cell.getDirectionalNeighbors(direction).stream()
+        .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
   }
 
-  private void validateMatchDirectionInputs(C cell, C neighbor, String direction) {
+  private void validateMatchDirectionInputs(C cell, C neighbor) {
     if (cell == null || neighbor == null) {
       throw new SimulationException(String.format(myResources.getString("NullCellOrNeighbor")));
     }
     if (cell.getPosition() == null || neighbor.getPosition() == null) {
       throw new SimulationException(String.format(myResources.getString("NullPosition")));
-    }
-    if (!isValidDirection(direction)) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidDirection"), direction));
     }
   }
 
@@ -111,28 +99,22 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    * in the specified directions.
    *
    * @param cell       - the reference cell for which the state key is generated
-   * @param directions - an array of direction strings (e.g., "N", "S", "E", "W", "NE", "NW", "SE",
+   * @param directions - an array of direction enums (e.g., "N", "S", "E", "W", "NE", "NW", "SE",
    *                   "SW")
    * @return a string representing the state key, which includes the cell's current state followed
    * by the states of its neighbors in the given directions
    */
-  protected String getStateKey(C cell, String[] directions) {
+  protected String getStateKey(C cell, DirectionType[] directions) {
     StringBuilder stateBuilder = new StringBuilder();
 
     stateBuilder.append(cell.getCurrentState());
-    for (String dir : directions) {
+    for (DirectionType dir : directions) {
       cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
           .findFirst().ifPresentOrElse(neighbor -> stateBuilder.append(neighbor.getCurrentState()),
               () -> stateBuilder.append(""));
     }
 
     return stateBuilder.toString();
-  }
-
-  private boolean isValidDirection(String direction) {
-    return direction.equals("N") || direction.equals("S") || direction.equals("E")
-        || direction.equals("W") || direction.equals("NE") || direction.equals("NW")
-        || direction.equals("SE") || direction.equals("SW");
   }
 
   /**

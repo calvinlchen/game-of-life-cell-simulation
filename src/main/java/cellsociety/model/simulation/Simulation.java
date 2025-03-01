@@ -12,6 +12,9 @@ import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
+import cellsociety.model.util.constants.GridTypes.EdgeType;
+import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
+import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -134,8 +137,9 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       success = cell.stepBack();
     }
 
-    if (success)
+    if (success) {
       totalIterations--;
+    }
   }
 
   /**
@@ -274,5 +278,19 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    */
   public int getTotalIterations() {
     return totalIterations;
+  }
+
+  /**
+   * Sets the neighbors for the grid cells based on the specified shape, neighborhood type, and edge
+   * type. This operation clears all previous neighbors for all cells before setting the new
+   * configuration.
+   *
+   * @param shape        The shape type of the cells (e.g., RECTANGLE, HEXAGON, TRIANGLE).
+   * @param neighborhood The neighborhood type defining neighbor relationships (e.g., MOORE,
+   *                     VON_NEUMANN, EXTENDED_MOORE).
+   * @param edge         The edge type specifying boundary behavior (e.g., NONE, MIRROR, TOROIDAL).
+   */
+  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
+    myGrid.setNeighbors(shape, neighborhood, edge);
   }
 }
