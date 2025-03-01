@@ -338,9 +338,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Sets the directional neighbors of the cell categorized by direction type.
    *
-   * @param directionalNeighbors - a map where the key represents the direction type
-   *                                (e.g., N, NE, E, etc.), and the value is a list
-   *                                of neighboring cells in that direction
+   * @param directionalNeighbors - a map where the key represents the direction type (e.g., N, NE,
+   *                             E, etc.), and the value is a list of neighboring cells in that
+   *                             direction
    */
   public void setDirectionalNeighbors(Map<DirectionType, List<C>> directionalNeighbors) {
     this.directionalNeighbors = directionalNeighbors;
@@ -355,5 +355,18 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public List<C> getDirectionalNeighbors(DirectionType direction) {
     return directionalNeighbors.getOrDefault(direction, new ArrayList<>());
+  }
+
+  /**
+   * Clears all neighbors of the cell. This method removes both the primary neighbors and the
+   * directional neighbors associated with the cell.
+   * <p>
+   * Primary neighbors are stored in the `neighbors` list, and directional neighbors are stored in
+   * the `directionalNeighbors` map categorized by specific directions. After this method is called,
+   * both collections will be empty.
+   */
+  public void clearNeighbors() {
+    neighbors.clear();
+    directionalNeighbors.clear();
   }
 }

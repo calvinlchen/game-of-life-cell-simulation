@@ -80,12 +80,17 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
 
   /**
    * Set neighbors for all cells in the grid.
+   *
+   * This should eventually just all be replaced
    */
+  @Deprecated
   public abstract void setNeighbors();
 
   /**
    * Sets the neighbors for each cell in the grid based on the specified shape, neighborhood type,
    * and edge type.
+   *
+   * <p> When using this clears all prior neighbors from all cells
    *
    * @param shape        - The shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
    *                     TRIANGLE).
@@ -95,7 +100,9 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
    *                     (e.g., NONE, MIRROR, TOROIDAL).
    */
   public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
-    List<List<T>> grid = getGrid();
+    getCells().forEach(Cell::clearNeighbors);
+
+    List<List<T>> grid = getGrid();     // TODO: I pretty sure this can just be uh my grid?
     int rows = getRows();
     int cols = getCols();
 
