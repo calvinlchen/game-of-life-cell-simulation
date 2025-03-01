@@ -134,8 +134,9 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       success = cell.stepBack();
     }
 
-    if (success)
+    if (success) {
       totalIterations--;
+    }
   }
 
   /**
