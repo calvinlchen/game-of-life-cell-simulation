@@ -3,10 +3,8 @@ package cellsociety.model.simulation.grid;
 import static cellsociety.model.util.constants.GridTypes.EdgeType.NONE;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
-import cellsociety.model.factories.DirectionFactory;
-import cellsociety.model.factories.GridFactory;
-import cellsociety.model.factories.edgefactory.EdgeFactory;
-import cellsociety.model.factories.edgefactory.handler.EdgeHandler;
+import cellsociety.model.simulation.grid.edgefactory.EdgeFactory;
+import cellsociety.model.simulation.grid.edgefactory.handler.EdgeHandler;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.GridTypes.EdgeType;

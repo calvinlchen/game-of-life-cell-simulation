@@ -1,9 +1,9 @@
-package cellsociety.model.factories.edgefactory;
+package cellsociety.model.simulation.grid.edgefactory;
 
-import cellsociety.model.factories.edgefactory.handler.EdgeHandler;
-import cellsociety.model.factories.edgefactory.handler.MirrorEdgeHandler;
-import cellsociety.model.factories.edgefactory.handler.NoneEdgeHandler;
-import cellsociety.model.factories.edgefactory.handler.ToroidalEdgeHandler;
+import cellsociety.model.simulation.grid.edgefactory.handler.EdgeHandler;
+import cellsociety.model.simulation.grid.edgefactory.handler.MirrorEdgeHandler;
+import cellsociety.model.simulation.grid.edgefactory.handler.NoneEdgeHandler;
+import cellsociety.model.simulation.grid.edgefactory.handler.ToroidalEdgeHandler;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import java.util.HashMap;
 import java.util.Map;

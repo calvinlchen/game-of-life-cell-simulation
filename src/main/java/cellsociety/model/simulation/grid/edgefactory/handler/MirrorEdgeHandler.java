@@ -1,4 +1,4 @@
-package cellsociety.model.factories.edgefactory.handler;
+package cellsociety.model.simulation.grid.edgefactory.handler;
 
 import java.util.List;
 import java.util.Optional;

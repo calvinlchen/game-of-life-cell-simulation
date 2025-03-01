@@ -2,7 +2,6 @@ package cellsociety.model.simulation;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
-import cellsociety.model.factories.RuleFactory;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.grid.AdjacentGrid;

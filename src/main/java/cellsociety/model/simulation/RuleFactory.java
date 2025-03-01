@@ -1,4 +1,4 @@
-package cellsociety.model.factories;
+package cellsociety.model.simulation;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
@@ -13,12 +13,12 @@ import java.util.ResourceBundle;
 /**
  * Creates Rule and Parameters instances dynamically for a simulation.
  *
- * <p> Assumption: For this to work, all the rules and parameters should be named SimTypeRule and
+ * <p>Assumption: For this to work, all the rules and parameters should be named SimTypeRule and
  * SimTypeParameters. Implements robust exception handling for reflection-related issues.
  *
  * @author Jessica Chen
  */
-public class RuleFactory {
+class RuleFactory {
 
   private static final String RULE_PACKAGE = "cellsociety.model.simulation.rules.";
   private static final String PARAMETER_PACKAGE = "cellsociety.model.simulation.parameters.";
@@ -27,9 +27,12 @@ public class RuleFactory {
   /**
    * Update the language of the error messages.
    *
+   * <p>To be deprecated
+   *
    * @param language - update the language of the error messages
    */
-  public static void updateLanguage(String language) {
+  @Deprecated
+  static void updateLanguage(String language) {
     myResources = getErrorSimulationResourceBundle(language);
   }
 
@@ -42,8 +45,8 @@ public class RuleFactory {
    * @return an instance of the Rule with its parameters initialized
    * @throws SimulationException if any reflection error occurs during rule creation
    */
-  public static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters,
-      String language) {
+  static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters, String language) {
+    // TODO: remove this when we change how language works
     updateLanguage(
         language); // errors will display using the given language's resource properties file
 

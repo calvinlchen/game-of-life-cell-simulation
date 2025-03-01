@@ -1,4 +1,4 @@
-package cellsociety.model.factories;
+package cellsociety.model.simulation.grid;
 
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
