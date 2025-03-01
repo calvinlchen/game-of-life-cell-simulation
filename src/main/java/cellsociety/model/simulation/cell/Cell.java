@@ -1,6 +1,5 @@
 package cellsociety.model.simulation.cell;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 import static cellsociety.model.util.constants.SimulationConstants.EXPECTED_POSITION_DIMENSION;
 import static cellsociety.model.util.constants.SimulationConstants.MIN_STATE_HISTORY;
 
@@ -13,7 +12,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Abstract class for representing a general cell.
@@ -38,7 +36,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
 
   private List<Integer> stateHistory;
 
-  private final ResourceBundle myResources;
 
   /**
    * Constructs a cell with a specified initial state.
@@ -47,21 +44,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @param rule  - the rule used to calculate the next state
    */
   public Cell(int state, R rule) {
-    myResources = getErrorSimulationResourceBundle("English");
-
-    initializeCell(state, rule);
-  }
-
-  /**
-   * Constructs a cell with a specified initial state and language setting.
-   *
-   * @param state    - the initial state of the cell
-   * @param rule     - the rule used to calculate the next state
-   * @param language - the language setting for error messages
-   */
-  public Cell(int state, R rule, String language) {
-    myResources = getErrorSimulationResourceBundle(language);
-
     initializeCell(state, rule);
   }
 
@@ -85,7 +67,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
 
     maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
     if (maxHistorySize < MIN_STATE_HISTORY) {
-      throw new SimulationException(String.format(myResources.getString("InvalidHistorySize")));
+      throw new SimulationException("InvalidHistorySize");
     }
 
     stateHistory.addLast(currentState);
@@ -105,7 +87,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
 
     // this error should never reach with how stateHistory is set up in initialization
     if (stateHistory.isEmpty()) {
-      throw new SimulationException(String.format(myResources.getString("NoHistory")));
+      throw new SimulationException("NoHistory");
     }
 
     int lastState = stateHistory.getLast();
@@ -140,7 +122,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Retrieves the current cell instance.
    */
-  protected abstract C getSelf();
+  abstract C getSelf();
 
   /**
    * Resets parameters per step.
@@ -168,7 +150,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @param state - the state to set as the current state
    */
-  public void setCurrentState(int state) {
+  void setCurrentState(int state) {
     currentState = state;
   }
 
@@ -177,7 +159,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @return the next state of the cell
    */
-  public int getNextState() {
+  int getNextState() {
     return nextState;
   }
 
@@ -186,7 +168,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @param state - the state to set as the next state
    */
-  public void setNextState(int state) {
+  void setNextState(int state) {
     nextState = state;
   }
 
@@ -198,7 +180,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public int[] getPosition() {
     if (position == null) {
-      throw new SimulationException(String.format(myResources.getString("PositionNotSet")));
+      throw new SimulationException("PositionNotSet");
     }
     return Arrays.copyOf(position, position.length);
   }
@@ -212,10 +194,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public void setPosition(int[] position) {
     if (position == null) {
-      throw new SimulationException(String.format(myResources.getString("NoPosition")));
+      throw new SimulationException("NoPosition");
     } else if (position.length != EXPECTED_POSITION_DIMENSION) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidPosition"), Arrays.toString(position)));
+      throw new SimulationException("InvalidPosition", Arrays.toString(position));
     }
     this.position = Arrays.copyOf(position, position.length);
   }
@@ -229,8 +210,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   public List<C> getNeighbors() {
     // should never be null because can't set to null
     if (neighbors == null) {
-      throw new SimulationException(
-          String.format(myResources.getString("NeighborsNotInitialized")));
+      throw new SimulationException("NeighborsNotInitialized");
     }
     return neighbors;
   }
@@ -243,7 +223,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    */
   public void setNeighbors(List<C> neighbors) {
     if (neighbors == null) {
-      throw new SimulationException(String.format(myResources.getString("NullNeighborList")));
+      throw new SimulationException("NullNeighborList");
     }
     this.neighbors = neighbors;
   }
@@ -256,11 +236,11 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return true if successfully added, false otherwise
    * @throws SimulationException if the neighbor is null or already exists
    */
-  public boolean addNeighbor(C neighbor) {
+  boolean addNeighbor(C neighbor) {
     if (neighbor == null) {
-      throw new SimulationException(String.format(myResources.getString("NullNeighbor")));
+      throw new SimulationException("NullNeighbor");
     } else if (neighbors.contains(neighbor)) {
-      throw new SimulationException(String.format(myResources.getString("DuplicateNeighbor")));
+      throw new SimulationException("DuplicateNeighbor");
     }
     return neighbors.add(neighbor);
   }
@@ -272,9 +252,9 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * @return true if successfully removed, false otherwise
    * @throws SimulationException if the neighbor is not found
    */
-  public boolean removeNeighbor(C neighbor) {
+  boolean removeNeighbor(C neighbor) {
     if (!neighbors.contains(neighbor)) {
-      throw new SimulationException(String.format(myResources.getString("NeighborNotFound")));
+      throw new SimulationException("NeighborNotFound");
     }
     return neighbors.remove(neighbor);
   }
@@ -289,25 +269,15 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   }
 
   /**
-   * Return resource bundle for error handling.
-   *
-   * @return resource bundle for error handling
-   */
-  ResourceBundle getMyResources() {
-    return myResources;
-  }
-
-  /**
    * Checks if the given state is valid within the allowed range.
    *
    * @param state    - the state to check
    * @param maxState - the maximum valid state value
    * @throws SimulationException if the state is out of range
    */
-  public void validateState(int state, int maxState) {
+  void validateState(int state, int maxState) {
     if (state < 0 || state >= maxState) {
-      throw new SimulationException(
-          String.format(getMyResources().getString("InvalidState"), state, maxState));
+      throw new SimulationException("InvalidState", state, maxState);
     }
   }
 
@@ -317,7 +287,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    * <p>If the current state is the same as the next state, the state length is incremented by one.
    * Otherwise, the state length is reset to zero.
    */
-  public void updateStateLength() {
+  void updateStateLength() {
     if (nextState == currentState) {
       stateLength++;
     } else {

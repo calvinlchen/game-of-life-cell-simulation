@@ -48,9 +48,7 @@ class GridTest {
     public TestGrid(List<TestCell> cells, int rows, int cols) {
       super(cells, rows, cols);
     }
-    @Override
-    public void setNeighbors() {}
-  }
+      }
 
   @BeforeEach
   void setUp() {

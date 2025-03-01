@@ -30,6 +30,29 @@ public class SimulationException extends RuntimeException {
   }
 
   /**
+   * Constructs a SimulationException with a specified error message key and an additional string
+   * parameter.
+   *
+   * @param key - the key used to retrieve the corresponding error message from the resource bundle
+   * @param str - the additional string parameter related to the error context
+   */
+  public SimulationException(String key, String str) {
+    super(String.format(myResources.getString(key), str));
+  }
+
+  /**
+   * Constructs a SimulationException with a specified error message key, two integer parameters.
+   *
+   * @param key   - the key used to retrieve the corresponding error message from the resource
+   *              bundle
+   * @param i     - the first integer parameter related to the error context
+   * @param j     - the second integer parameter related to the error context
+   */
+  public SimulationException(String key, int i, int j) {
+    super(String.format(myResources.getString(key), i, j));
+  }
+
+  /**
    * Constructs a SimulationException with a specified error message key and a cause.
    *
    * @param key   - the key used to retrieve the corresponding error message from the resource
