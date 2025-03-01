@@ -1,14 +1,11 @@
 package cellsociety.model.simulation;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Creates Rule and Parameters instances dynamically for a simulation.
@@ -22,50 +19,32 @@ class RuleFactory {
 
   private static final String RULE_PACKAGE = "cellsociety.model.simulation.rules.";
   private static final String PARAMETER_PACKAGE = "cellsociety.model.simulation.parameters.";
-  private static ResourceBundle myResources = getErrorSimulationResourceBundle("English");
-
-  /**
-   * Update the language of the error messages.
-   *
-   * <p>To be deprecated
-   *
-   * @param language - update the language of the error messages
-   */
-  @Deprecated
-  static void updateLanguage(String language) {
-    myResources = getErrorSimulationResourceBundle(language);
-  }
 
   /**
    * Creates a Rule and its corresponding Parameters instance dynamically.
    *
    * @param ruleType   - The name of the simulation type
    * @param parameters - Map of parameters to initialize the rule
-   * @param language   - Name of intended display language, used for error-reporting
    * @return an instance of the Rule with its parameters initialized
    * @throws SimulationException if any reflection error occurs during rule creation
    */
-  static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters, String language) {
-    // TODO: remove this when we change how language works
-    updateLanguage(
-        language); // errors will display using the given language's resource properties file
-
+  static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters) {
     try {
       // create the Parameters class
       String paramClassName = PARAMETER_PACKAGE + ruleType.replace("Rule", "Parameters");
       Class<?> parameterClass = Class.forName(paramClassName);
-      Constructor<?> paramConstructor = parameterClass.getConstructor(String.class);
-      Parameters paramInstance = (Parameters) paramConstructor.newInstance(language);
+      Constructor<?> paramConstructor = parameterClass.getConstructor();
+      Parameters paramInstance = (Parameters) paramConstructor.newInstance();
       paramInstance.setParameters(parameters);
 
       // create the Rule class hopefully
       String ruleClassName = RULE_PACKAGE + ruleType;
       Class<?> ruleClass = Class.forName(ruleClassName);
-      Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass, String.class);
-      return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance, language);
+      Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass);
+      return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance);
 
     } catch (Exception e) {
-      throw new SimulationException(myResources.getString("UnknownRuleCreationError"), e);
+      throw new SimulationException("UnknownRuleCreationError", e);
     }
   }
 }

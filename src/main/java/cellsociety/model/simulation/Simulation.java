@@ -1,11 +1,7 @@
 package cellsociety.model.simulation;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.grid.Grid;
-import cellsociety.model.simulation.grid.AdjacentGrid;
-import cellsociety.model.simulation.grid.RectangularGrid;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -19,7 +15,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Simulation class, creates the grid from the given XML data, provides public methods for the
@@ -37,8 +32,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   private static final String CELL_PACKAGE = "cellsociety.model.simulation.cell.";
 
-  private final ResourceBundle myResources;
-  private final String myLanguage;
 
   private int totalIterations;
 
@@ -49,8 +42,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @throws SimulationException if the XML data is null
    */
   public Simulation(XmlData data) {
-    myResources = getErrorSimulationResourceBundle("English");
-    myLanguage = "English";
     xmlData = getXmlData(data);
     setUpSimulation();
   }
@@ -64,8 +55,6 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @throws SimulationException if the XML data is null
    */
   public Simulation(XmlData data, String language) {
-    myResources = getErrorSimulationResourceBundle(language);
-    myLanguage = language;
     xmlData = getXmlData(data);
     setUpSimulation();
   }
@@ -73,7 +62,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private XmlData getXmlData(XmlData data) {
     final XmlData xmlData;
     if (data == null) {
-      throw new SimulationException(myResources.getString("NullXMLData"));
+      throw new SimulationException("NullXMLData");
     }
 
     xmlData = data;
@@ -85,19 +74,18 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       SimType simType = xmlData.getType();
       Map<String, Double> params = xmlData.getParameters();
 
-      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params,
-          myLanguage);
+      Rule<T, ?> rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params);
       parameters = rule.getParameters();
 
-      List<Cell<T, ?, ?>> cellList = createCells(simType, rule, myLanguage);
+      List<Cell<T, ?, ?>> cellList = createCells(simType, rule);
 
       setUpGridStructure(cellList, simType);
     } catch (Exception e) {
-      throw new SimulationException(myResources.getString("SimulationSetupFailed"), e);
+      throw new SimulationException("SimulationSetupFailed", e);
     }
   }
 
-  private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule, String language) {
+  private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule) {
     List<Cell<T, ?, ?>> cellList = new ArrayList<>();
 
     try {
@@ -106,11 +94,10 @@ public class Simulation<T extends Cell<T, ?, ?>> {
           String.class);
 
       for (Integer state : xmlData.getCellStateList()) {
-        cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule, language));
+        cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
-      throw new SimulationException(
-          String.format(myResources.getString("CellCreationFailed"), simType), e);
+      throw new SimulationException("CellCreationFailed", simType, e);
     }
 
     return cellList;
@@ -118,11 +105,11 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
   private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
     if (simType.isDefaultRectangularGrid()) {
-      myGrid = new RectangularGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-          myLanguage);
+      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.NONE);
     } else {
-      myGrid = new AdjacentGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-          myLanguage);
+      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          ShapeType.RECTANGLE, NeighborhoodType.VON_NEUMANN, EdgeType.NONE);
     }
   }
 
@@ -164,8 +151,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return myGrid.getCell(row, col).getCurrentState();
     } catch (Exception e) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
+      throw new SimulationException("InvalidGridPosition", row, col, e);
     }
   }
 
@@ -182,8 +168,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return myGrid.getCell(row, col).getStateLength();
     } catch (Exception e) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col), e);
+      throw new SimulationException("InvalidGridPosition", row, col, e);
     }
   }
 
@@ -198,8 +183,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       parameters.setParameter(key, value);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
-          e);
+      throw new SimulationException("ParameterNotFound", key, e);
     }
   }
 
@@ -214,8 +198,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return parameters.getParameter(key);
     } catch (Exception e) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key),
-          e);
+      throw new SimulationException("ParameterNotFound", key, e);
     }
   }
 

@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  * @param <T> - the type of cell in the grid, must extend Cell
  * @author Jessica Chen
  */
-public abstract class Grid<T extends Cell<T, ?, ?>> {
+public class Grid<T extends Cell<T, ?, ?>> {
 
   private final List<List<T>> myGrid;
   private int myRows;
@@ -99,14 +99,6 @@ public abstract class Grid<T extends Cell<T, ?, ?>> {
     grid = new ArrayList<>();
     return grid;
   }
-
-  /**
-   * Set neighbors for all cells in the grid.
-   * <p>
-   * This should eventually just all be replaced
-   */
-  @Deprecated
-  public abstract void setNeighbors();
 
   /**
    * Sets the neighbors for each cell in the grid based on the specified shape, neighborhood type,
