@@ -1,55 +1,63 @@
 package cellsociety.model.simulation.rules;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import java.util.ResourceBundle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Abstract class for representing a simulation rules.
+ * The {@code Rule} class defines the logic governing cell state transitions in a simulation.
  *
- * <p> Rules take in a map of parameters and apply them when calculating the next step of the
- * simulation
+ * <p>Each simulation implements its own rule subclass, defining how cell states evolve based
+ * on their neighbors and associated parameters.</p>
  *
- * @param <C> - the type of cell, must be a subclass of Cell
+ * <h2>Key Responsibilities:</h2>
+ * <ul>
+ *   <li>Apply simulation rules to compute the next state of a cell.</li>
+ *   <li>Store and manage rule parameters using {@link GenericParameters}.</li>
+ *   <li>Provide shared helper methods for the rule subclasses.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * GenericParameters params = new GenericParameters(SimType.GameOfLife);
+ * Rule&lt;GameOfLifeCell&gt; rule = new GameOfLifeRule(params);
+ * int nextState = rule.apply(cell);
+ * </pre>
+ *
+ * @param <C> The type of cell, must extend {@link Cell}.
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public abstract class Rule<C extends Cell<C, ?>> {
 
+  private static final Logger logger = LogManager.getLogger(Rule.class);
   private GenericParameters parameters;
-  private final ResourceBundle myResources;
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code Rule} object and initializes it with the provided parameters. The
+   * parameters are checked and set to ensure validity.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing the configuration and
+   *                   settings required for the rule. Must not be {@code null}.
+   * @throws SimulationException if the parameters are {@code null}.
    */
   public Rule(GenericParameters parameters) {
-    myResources = getErrorSimulationResourceBundle("English");
-
     checkAndSetParams(parameters);
   }
 
-  /**
-   * Constructor for the Rule class.
-   *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   */
-  public Rule(GenericParameters parameters, String language) {
-    myResources = getErrorSimulationResourceBundle(language);
-
-    checkAndSetParams(parameters);
-  }
 
   private void checkAndSetParams(GenericParameters parameters) {
     if (parameters == null) {
-      throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
+      logger.error("Rule initialization failed: Parameters cannot be null.");
+      throw new SimulationException("NullRuleParameters");
     }
     this.parameters = parameters;
   }
+
+  // Abstract Methods ------
 
   /**
    * Apply the rules to determine the next state of a cell.
@@ -59,69 +67,98 @@ public abstract class Rule<C extends Cell<C, ?>> {
    */
   public abstract int apply(C cell);
 
+  // Start of Rules setters and getters ------
+
   /**
-   * Get the parameters for this rule set.
+   * Retrieves the current configuration and settings associated with this rule.
    *
-   * @return parameters
+   * @return a {@code GenericParameters} object containing the parameters for this rule.
    */
   public GenericParameters getParameters() {
     return parameters;
   }
 
-  /**
-   * returns true if the cell matches a direction.
-   *
-   * @param cell      - the cell
-   * @param neighbor  - neighbor of a cell
-   * @param direction - direction to test (N, S, E, W, NE, NW, SE, SW)
-   * @return true if the neighbor is the direction neighbor
-   */
-  protected boolean matchesDirection(C cell, C neighbor, DirectionType direction) {
-
-    validateMatchDirectionInputs(cell, neighbor);
-
-    return cell.getDirectionalNeighbors(direction).stream()
-        .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
-  }
-
-  private void validateMatchDirectionInputs(C cell, C neighbor) {
-    if (cell == null || neighbor == null) {
-      throw new SimulationException(String.format(myResources.getString("NullCellOrNeighbor")));
-    }
-    if (cell.getPosition() == null || neighbor.getPosition() == null) {
-      throw new SimulationException(String.format(myResources.getString("NullPosition")));
-    }
-  }
+  // Start of Shared Helper methods for rules ------
 
   /**
-   * Constructs a state key based on the current state of the cell and the states of its neighbors
-   * in the specified directions.
+   * Generates a state key for a given cell by concatenating the current state of the cell and the
+   * states of its neighboring cells in the specified directions.
    *
-   * @param cell       - the reference cell for which the state key is generated
-   * @param directions - an array of direction enums (e.g., "N", "S", "E", "W", "NE", "NW", "SE",
-   *                   "SW")
-   * @return a string representing the state key, which includes the cell's current state followed
-   * by the states of its neighbors in the given directions
+   * <p>This method is useful for rules that require encoding neighbor states into a single
+   * key, such as for Langton's Loops.</p>
+   *
+   * <p><b>Example Output:</b> If a cell's state is 1 and its neighbors have states in the
+   * order [2,3,0], the generated key would be {@code "1230"}.</p>
+   *
+   * <p><b>Example Usage:</b></p>
+   * <pre>
+   * String stateKey =
+   * rule.getStateKey(cell, new DirectionType[]{DirectionType.N, DirectionType.E});
+   * </pre>
+   *
+   * @param cell       the cell for which the state key is generated
+   * @param directions an array of DirectionType representing the directions to consider when
+   *                   retrieving the states of neighboring cells
+   * @return a string representing the state key, containing the cell's current state followed by
+   *     the states of the neighbors in the specified directions. If no neighbor exists in a given
+   *     direction, an empty string is appended for that direction.
    */
-  protected String getStateKey(C cell, DirectionType[] directions) {
+  String getStateKey(C cell, DirectionType[] directions) {
     StringBuilder stateBuilder = new StringBuilder();
 
     stateBuilder.append(cell.getCurrentState());
     for (DirectionType dir : directions) {
       cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst().ifPresentOrElse(neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> stateBuilder.append(""));
+          .findFirst()
+          .ifPresentOrElse(
+              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
+              () -> logger.warn("No neighbor found in direction {} for cell at {}.", dir,
+                  cell.getPosition()));
     }
 
     return stateBuilder.toString();
   }
 
   /**
-   * return resource bundle associated for exceptions.
+   * Checks if a given cell has a specified neighbor in the given direction.
    *
-   * @return resource bundle associated for exception
+   * <p>This method verifies whether the provided neighbor exists among the directional neighbors
+   * of
+   * the specified cell in the given direction.
+   *
+   * @param cell      the cell for which the check is performed; must not be null
+   * @param neighbor  the neighbor cell to check for; must not be null
+   * @param direction the direction in which the neighbor is expected to be located
+   * @return true if the given neighbor exists in the directional neighbors of the cell in the
+   *     specified direction; false otherwise
+   * @throws SimulationException if the input cell or neighbor is null
    */
-  public ResourceBundle getResources() {
-    return myResources;
+  boolean matchesDirection(C cell, C neighbor, DirectionType direction) {
+    if (cell == null || neighbor == null) {
+      logger.error("Direction match failed: Null cell or neighbor.");
+      throw new SimulationException("NullCellOrNeighbor");
+    }
+
+    // no need to check for positions now that we have directional neighbors
+    // since directional neighbors returns an empty list if that key doesn't exist we good here
+
+    return cell.getDirectionalNeighbors(direction).stream()
+        .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
   }
+
+  /**
+   * Rotates an array of {@code DirectionType} elements clockwise.
+   *
+   * <p>The main use for this one is to rotate the directional elements for Langton's Loops
+   * related rules.</p>
+   *
+   * @param directions an array of {@code DirectionType} representing the original directions.
+   *                   Must contain exactly four elements.
+   * @return a new array of {@code DirectionType} representing the rotated directions, where
+   *         the original elements are shifted one position in a clockwise order.
+   */
+  DirectionType[] rotateClockwise(DirectionType[] directions) {
+    return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};
+  }
+
 }

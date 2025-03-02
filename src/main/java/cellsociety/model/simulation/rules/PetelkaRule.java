@@ -17,15 +17,39 @@ import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Class for representing rules for Petelka Loop simulation.
+ * The {@code PetelkaRule} class defines the state transition rules for the Petelka Langton's Loop
+ * simulation.
+ *
+ * <p>This rule determines the next state of a {@link PetelkaCell} based on a predefined lookup
+ * table that maps state keys to output states. The Petelka system follows Moore neighborhood-based
+ * transitions with full rotational and reflectional symmetry.</p>
+ *
+ * <p><b>Warning:</b> This rule is only for rectangular grids with Moore neighborhoods.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Uses an 8-direction Moore neighborhood for state lookups.</li>
+ *   <li>Applies both rotational and reflectional symmetry for rule matching.</li>
+ *   <li>If no valid rule is found, returns 0 (Petelka's default behavior).</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * PetelkaRule rule = new PetelkaRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public class PetelkaRule extends Rule<PetelkaCell> {
 
   private static final Map<String, Integer> RULES_MAP_PETELKA = new HashMap<>();
+  private static final Logger logger = LogManager.getLogger(PetelkaRule.class);
 
   static {
     RULES_MAP_PETELKA.put("014000000", 1);
@@ -52,24 +76,30 @@ public class PetelkaRule extends Rule<PetelkaCell> {
   }
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code PetelkaRule} object and initializes it with the provided parameters. This
+   * rule is used to define behavior specific to the Petelka simulation.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing the configuration and
+   *                   settings required for the rule. Must not be {@code null}.
    */
   public PetelkaRule(GenericParameters parameters) {
     super(parameters);
   }
 
   /**
-   * Constructor for the Rule class.
+   * Applies the Petelka Langton’s Loop transition rules to determine the next state of a cell.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
+   * <p>The method:</p>
+   * <ol>
+   *   <li>Generates a state key based on the cell’s current state and its neighbors.</li>
+   *   <li>Checks all four 90-degree rotational symmetries for a match.</li>
+   *   <li>If no rotation matches, it checks all four mirror-reflected configurations.</li>
+   *   <li>If no valid rule is found, returns 0 (default Petelka behavior).</li>
+   * </ol>
+   *
+   * @param cell the cell whose state transition is computed.
+   * @return the next state of the cell.
    */
-  public PetelkaRule(GenericParameters parameters, String language) {
-    super(parameters, language);
-  }
-
   @Override
   public int apply(PetelkaCell cell) {
     DirectionType[] baseDirections = {N, NE, E, SE, S, SW, W, NW};
@@ -77,6 +107,8 @@ public class PetelkaRule extends Rule<PetelkaCell> {
     // Generate state key for the original direction order
     String stateKey = getStateKey(cell, baseDirections);
     if (stateKey.length() != KEYLENGTH_MOORE_LOOPS) {
+      logger.warn("[PetelkaRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
+          stateKey);
       return cell.getCurrentState();
     }
 

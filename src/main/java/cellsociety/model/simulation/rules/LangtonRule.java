@@ -8,15 +8,40 @@ import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Class for representing rules for Langton's Loop simulation.
+ * The {@code LangtonRule} class defines the state transition rules for the Langton's Loop
+ * simulation.
+ *
+ * <p>This rule determines the next state of a {@link LangtonCell} based on a predefined lookup
+ * table that maps state keys to output states. Additionally, the simulation supports four 90-degree
+ * rotational symmetries.</p>
+ *
+ * <p>Warning: This rule is designed for rectangular grids with Von Neumann neighborhoods.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Uses a predefined state transition table {@code RULES_MAP_LANGTON}.</li>
+ *   <li>Supports Von Neumann neighborhood-based lookups.</li>
+ *   <li>Rotates the neighbor configuration up to 4 times for 90-degree symmetry.</li>
+ *   <li>Applies the first valid rule it finds; otherwise, retains the current state.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * LangtonRule rule = new LangtonRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public class LangtonRule extends Rule<LangtonCell> {
 
   private static final Map<String, Integer> RULES_MAP_LANGTON = new HashMap<>();
+  private static final Logger logger = LogManager.getLogger(LangtonRule.class);
 
   static {
     RULES_MAP_LANGTON.put("00000", 0);
@@ -240,26 +265,32 @@ public class LangtonRule extends Rule<LangtonCell> {
     RULES_MAP_LANGTON.put("70272", 0);
   }
 
-
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code LangtonRule} object and initializes it with the provided simulation
+   * parameters. The parameters dictate the configuration and logic needed to apply the Langton's
+   * Loop cellular automaton rules.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing the configuration and
+   *                   settings required for the Langton's Loop rule. Must not be {@code null}.
    */
   public LangtonRule(GenericParameters parameters) {
     super(parameters);
   }
 
   /**
-   * Constructor for the Rule class.
+   * Applies the Langton’s Loop transition rules to determine the next state of a cell.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
+   * <p>The method:</p>
+   * <ol>
+   *   <li>Generates a state key based on the cell’s current state and its neighbors.</li>
+   *   <li>Rotates the neighbor configuration up to four times to check for symmetry.</li>
+   *   <li>Returns the new state based on the first matching key in {@code RULES_MAP_LANGTON}.</li>
+   *   <li>If no match is found, the cell retains its current state.</li>
+   * </ol>
+   *
+   * @param cell the cell whose state transition is computed.
+   * @return the next state of the cell.
    */
-  public LangtonRule(GenericParameters parameters, String language) {
-    super(parameters, language);
-  }
-
   @Override
   public int apply(LangtonCell cell) {
     DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
@@ -269,6 +300,8 @@ public class LangtonRule extends Rule<LangtonCell> {
       String stateKey = getStateKey(cell, directions);
 
       if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
+        logger.warn("[LangtonRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
+            stateKey);
         return cell.getCurrentState();
       }
 
@@ -276,14 +309,12 @@ public class LangtonRule extends Rule<LangtonCell> {
         return RULES_MAP_LANGTON.get(stateKey);
       }
 
+      logger.warn("[LangtonRule] No valid rule found, retaining current state for cell at {}",
+          cell.getPosition());
       directions = rotateClockwise(directions);
     }
 
     return cell.getCurrentState();
-  }
-
-  private DirectionType[] rotateClockwise(DirectionType[] directions) {
-    return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }
