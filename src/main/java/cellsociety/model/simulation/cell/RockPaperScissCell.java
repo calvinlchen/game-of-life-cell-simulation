@@ -1,7 +1,6 @@
 package cellsociety.model.simulation.cell;
 
 
-import cellsociety.model.simulation.parameters.RockPaperScissParameters;
 import cellsociety.model.simulation.rules.RockPaperScissRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.RockPaperScissRule;
  * @author Jessica Chen
  */
 public class RockPaperScissCell extends
-    Cell<RockPaperScissCell, RockPaperScissRule, RockPaperScissParameters> {
+    Cell<RockPaperScissCell, RockPaperScissRule> {
 
   /**
    * Constructs a cell with specified initial state.

@@ -4,7 +4,7 @@ import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_VON
 import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.parameters.ChouReg2Parameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
+public class ChouReg2Rule extends Rule<ChouReg2Cell> {
 
   private static final Map<String, Integer> RULES_MAP_CHOUREG2 = new HashMap<>();
 
@@ -91,7 +91,7 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public ChouReg2Rule(ChouReg2Parameters parameters) {
+  public ChouReg2Rule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -101,7 +101,7 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public ChouReg2Rule(ChouReg2Parameters parameters, String language) {
+  public ChouReg2Rule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

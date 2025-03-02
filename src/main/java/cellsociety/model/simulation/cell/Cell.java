@@ -20,10 +20,9 @@ import java.util.Map;
  *
  * @param <C> - the type of cell, must be a subclass of Cell
  * @param <R> - the rule type of the cell, must be a subclass of Rule
- * @param <P> - the parameter type of the cell, must be a subclass of Parameter
  * @author Jessica Chen
  */
-public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P extends Parameters> {
+public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
   private List<C> neighbors;
   private Map<DirectionType, List<C>> directionalNeighbors;

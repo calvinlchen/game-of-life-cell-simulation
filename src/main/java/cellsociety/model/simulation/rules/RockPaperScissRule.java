@@ -1,14 +1,14 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.RockPaperScissCell;
-import cellsociety.model.simulation.parameters.RockPaperScissParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 
 /**
  * Class for representing rules for Rock Paper Scissor simulation.
  *
  * @author Jessica Chen
  */
-public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissParameters> {
+public class RockPaperScissRule extends Rule<RockPaperScissCell> {
 
   private final int totalNumStates; // this is the one parameter that should not change
 
@@ -17,7 +17,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public RockPaperScissRule(RockPaperScissParameters parameters) {
+  public RockPaperScissRule(GenericParameters parameters) {
     super(parameters);
 
     totalNumStates = getTotalNumStates(parameters);
@@ -29,13 +29,13 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public RockPaperScissRule(RockPaperScissParameters parameters, String language) {
+  public RockPaperScissRule(GenericParameters parameters, String language) {
     super(parameters, language);
 
     totalNumStates = getTotalNumStates(parameters);
   }
 
-  private int getTotalNumStates(RockPaperScissParameters parameters) {
+  private int getTotalNumStates(GenericParameters parameters) {
     final int totalStates;
     totalStates = (int) parameters.getParameter("numStates");
     return totalStates;

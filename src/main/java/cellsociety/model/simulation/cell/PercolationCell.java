@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.PERCOLATION_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.PercolationParameters;
 import cellsociety.model.simulation.rules.PercolationRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.PercolationRule;
  *
  * @author Jessica Chen
  */
-public class PercolationCell extends Cell<PercolationCell, PercolationRule, PercolationParameters> {
+public class PercolationCell extends Cell<PercolationCell, PercolationRule> {
 
   /**
    * Constructs a cell with specified initial state.

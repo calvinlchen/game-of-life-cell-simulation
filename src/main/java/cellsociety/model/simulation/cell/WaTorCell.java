@@ -4,7 +4,6 @@ import static cellsociety.model.util.constants.CellStates.WATOR_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
-import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 
 /**
@@ -12,7 +11,7 @@ import cellsociety.model.simulation.rules.WaTorRule;
  *
  * @author Jessica Chen
  */
-public class WaTorCell extends Cell<WaTorCell, WaTorRule, WaTorParameters> {
+public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
 
   private int myStepsSurvived;
   private int myEnergy;

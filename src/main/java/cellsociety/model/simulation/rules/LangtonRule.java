@@ -4,7 +4,7 @@ import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_VON
 import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
 
 import cellsociety.model.simulation.cell.LangtonCell;
-import cellsociety.model.simulation.parameters.LangtonParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author Jessica Chen
  */
-public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
+public class LangtonRule extends Rule<LangtonCell> {
 
   private static final Map<String, Integer> RULES_MAP_LANGTON = new HashMap<>();
 
@@ -246,7 +246,7 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public LangtonRule(LangtonParameters parameters) {
+  public LangtonRule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -256,7 +256,7 @@ public class LangtonRule extends Rule<LangtonCell, LangtonParameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public LangtonRule(LangtonParameters parameters, String language) {
+  public LangtonRule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.GameOfLifeParameters;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.GameOfLifeRule;
  *
  * @author Jessica Chen
  */
-public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule, GameOfLifeParameters> {
+public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule> {
 
   /**
    * Constructs a Game of Life cell with a specified initial state and rule.

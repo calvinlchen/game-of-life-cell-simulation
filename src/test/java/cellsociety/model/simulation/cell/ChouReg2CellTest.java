@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static cellsociety.model.util.constants.CellStates.CHOUREG2_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import cellsociety.model.simulation.rules.ChouReg2Rule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import org.junit.jupiter.api.BeforeEach;

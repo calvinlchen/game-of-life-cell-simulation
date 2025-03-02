@@ -64,7 +64,7 @@ public class InformationBox {
     infoText.append(myResources.getString("GridSizeHeader")).append(data.getGridRowNum())
         .append(" x ").append(data.getGridColNum()).append("\n");
     infoText.append(myResources.getString("ParametersHeader"));
-    for (Map.Entry<String, Double> entry : data.getParameters().entrySet()) {
+    for (Map.Entry<String, Object> entry : data.getParameters().entrySet()) {
       infoText.append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
     }
     infoText.append("\n");

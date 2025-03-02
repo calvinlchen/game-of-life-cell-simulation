@@ -105,7 +105,7 @@ public class XmlUtils {
               .item(0);
           if (parametersElement != null) {
             NodeList paramList = parametersElement.getElementsByTagName("parameter");
-            Map<String, Double> params = parameterToMap(paramList, xmlObject.getType());
+            Map<String, Object> params = parameterToMap(paramList, xmlObject.getType());
             xmlObject.setParameters(params);
           } else {
             xmlObject.setParameters(new HashMap<>());  // Prevent parameters from being null
@@ -228,8 +228,8 @@ public class XmlUtils {
       rootElement.appendChild(parametersElement);
 
       // Add parameters
-      Map<String, Double> parameters = simulation.getXmlDataObject().getParameters();
-      for (Map.Entry<String, Double> entry : parameters.entrySet()) {
+      Map<String, Object> parameters = simulation.getXmlDataObject().getParameters();
+      for (Map.Entry<String, Object> entry : parameters.entrySet()) {
         Element paramElement = doc.createElement("parameter");
         paramElement.setAttribute("name", entry.getKey());
         paramElement.setAttribute("value", String.valueOf(entry.getValue()));
@@ -348,8 +348,8 @@ public class XmlUtils {
    * @param simulationType the type of the simulation
    * @return a map of parameter names to their corresponding values
    */
-  private Map<String, Double> parameterToMap(NodeList paramList, Enum<?> simulationType) {
-    Map<String, Double> parameters = new HashMap<>();
+  private Map<String, Object> parameterToMap(NodeList paramList, Enum<?> simulationType) {
+    Map<String, Object> parameters = new HashMap<>();
 
     for (int i = 0; i < paramList.getLength(); i++) {
       Element paramElement = (Element) paramList.item(i);

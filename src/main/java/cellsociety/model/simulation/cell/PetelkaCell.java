@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.PETELKA_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.PetelkaParameters;
 import cellsociety.model.simulation.rules.PetelkaRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.PetelkaRule;
  *
  * @author Jessica Chen
  */
-public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule, PetelkaParameters> {
+public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule> {
 
   /**
    * Constructs a cell with specified initial state.

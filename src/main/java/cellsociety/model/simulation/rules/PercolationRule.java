@@ -4,21 +4,21 @@ import static cellsociety.model.util.constants.CellStates.PERCOLATION_OPEN;
 import static cellsociety.model.util.constants.CellStates.PERCOLATION_PERCOLATED;
 
 import cellsociety.model.simulation.cell.PercolationCell;
-import cellsociety.model.simulation.parameters.PercolationParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 
 /**
  * Class for representing rules for Percolation simulation.
  *
  * @author Jessica Chen
  */
-public class PercolationRule extends Rule<PercolationCell, PercolationParameters> {
+public class PercolationRule extends Rule<PercolationCell> {
 
   /**
    * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public PercolationRule(PercolationParameters parameters) {
+  public PercolationRule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -28,7 +28,7 @@ public class PercolationRule extends Rule<PercolationCell, PercolationParameters
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public PercolationRule(PercolationParameters parameters, String language) {
+  public PercolationRule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

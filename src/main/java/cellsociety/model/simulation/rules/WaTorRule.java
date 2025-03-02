@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.CellStates.WATOR_FISH;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
 import cellsociety.model.simulation.cell.WaTorCell;
-import cellsociety.model.simulation.parameters.WaTorParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -15,7 +15,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
+public class WaTorRule extends Rule<WaTorCell> {
 
   private final Random random = new Random();
   private int fishReproductionTime;
@@ -27,7 +27,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public WaTorRule(WaTorParameters parameters) {
+  public WaTorRule(GenericParameters parameters) {
     super(parameters);
     setMyParams();
   }
@@ -38,7 +38,7 @@ public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public WaTorRule(WaTorParameters parameters, String language) {
+  public WaTorRule(GenericParameters parameters, String language) {
     super(parameters, language);
     setMyParams();
   }

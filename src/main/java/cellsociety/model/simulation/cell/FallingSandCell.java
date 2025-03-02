@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.simulation.rules.FallingSandRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.FallingSandRule;
  *
  * @author Jessica Chen
  */
-public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, FallingSandParameters> {
+public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule> {
 
   /**
    * Constructs a cell with specified initial state.

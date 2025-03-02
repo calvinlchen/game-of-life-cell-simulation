@@ -18,9 +18,6 @@ class ParametersTest {
     public TestParameters() {
       super();
     }
-    public TestParameters(String language) {
-      super(language);
-    }
   }
 
   @BeforeEach
@@ -69,13 +66,6 @@ class ParametersTest {
     List<String> keys = parameters.getParameterKeys();
     assertTrue(keys.contains("maxHistorySize"));
     assertTrue(keys.contains("newParam"));
-  }
-
-  @Test
-  @DisplayName("Valid key check returns correct results")
-  void isValidKey_CheckValidAndInvalidKeys_ReturnsCorrectBoolean() {
-    assertTrue(parameters.isValidKey("maxHistorySize"));
-    assertFalse(parameters.isValidKey("invalidKey"));
   }
 
   @Test

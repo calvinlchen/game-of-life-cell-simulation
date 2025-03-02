@@ -3,8 +3,6 @@ package cellsociety.model.simulation.rules;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.cell.LangtonCell;
-import cellsociety.model.simulation.parameters.ChouReg2Parameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.ArrayList;
 import java.util.HashMap;

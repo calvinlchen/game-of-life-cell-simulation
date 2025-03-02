@@ -2,11 +2,13 @@ package cellsociety.model.simulation;
 
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.grid.Grid;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,13 +44,13 @@ import java.util.Map;
  * @author Jessica Chen
  * @author ChatGPT, helped with some of the JavaDocs
  */
-public class Simulation<T extends Cell<T, ?, ?>> {
+public class Simulation<T extends Cell<T, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Simulation.class);
 
   private final XmlData xmlData;
   private Grid<T> myGrid;
-  private Parameters parameters;
+  private GenericParameters parameters;
 
   private static final String CELL_PACKAGE = "cellsociety.model.simulation.cell.";
 
@@ -105,8 +107,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       SimType simType = xmlData.getType();
 
-      Rule<T, ?> rule = setUpRules(simType);
-      List<Cell<T, ?, ?>> cellList = createCells(simType, rule);
+      Rule<T> rule = setUpRules(simType);
+      List<Cell<T, ?>> cellList = createCells(simType, rule);
       // TODO: replace the current one with the commented out line
       setUpGridStructure(cellList, simType);
       // setUpGridStructure(cellList);
@@ -117,24 +119,36 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Sets up the rules for the simulation based on the provided simulation type. Additionally, it
-   * stores the parameters associated with these rules in the simulation class.
+   * Configures the simulation rules and parameters based on the provided simulation type.
    *
-   * <p>This method retrieves parameters from the XML data, creates a rule based on the simulation
-   * with the help of the rule factory and assigns the parameters to the rule. If any step fails, a
-   * SimulationException is thrown.
+   * <p>This method performs the following actions:</p>
+   * <ul>
+   *   <li>Retrieves parameter values from the XML data.</li>
+   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.</li>
+   *   <li>Assigns the retrieved parameters to the rule, ensuring that both numerical and
+   *       non-numerical parameters are handled correctly.</li>
+   * </ul>
    *
-   * @param simType - the type of simulation for which the rules are being set up
-   * @return the configured Rule object for the specified simulation type
-   * @throws SimulationException if there is an error during rule creation or parameter retrieval
+   * <h2>Error Handling</h2>
+   * <p>If any step in the rule setup process fails, a {@link SimulationException} is thrown,
+   * ensuring that the simulation does not proceed with invalid configurations.</p>
+   *
+   * <h2>Example Usage</h2>
+   * <pre>
+   * Rule<?> fireRule = setUpRules(SimType.Fire);
+   * </pre>
+   *
+   * @param simType The type of simulation for which the rules are being set up.
+   * @return The configured {@link Rule} instance for the specified simulation type.
+   * @throws SimulationException If rule creation or parameter retrieval fails.
    */
-  private Rule<T, ?> setUpRules(SimType simType) {
-    Rule<T, ?> rule;
+  private Rule<T> setUpRules(SimType simType) {
+    Rule<T> rule;
 
     try {
-      Map<String, Double> params = xmlData.getParameters();
+      Map<String, Object> params = xmlData.getParameters();
 
-      rule = (Rule<T, ?>) RuleFactory.createRule(simType.name() + "Rule", params);
+      rule = (Rule<T>) RuleFactory.createRule(simType, params);
       parameters = rule.getParameters();
 
     } catch (Exception e) {
@@ -155,8 +169,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @return a list of cells created based on the provided simulation type and rule
    * @throws SimulationException if cell creation fails due to reflection issues or other errors
    */
-  private List<Cell<T, ?, ?>> createCells(SimType simType, Rule<T, ?> rule) {
-    List<Cell<T, ?, ?>> cellList = new ArrayList<>();
+  private List<Cell<T, ?>> createCells(SimType simType, Rule<T> rule) {
+    List<Cell<T, ?>> cellList = new ArrayList<>();
 
     try {
       // use reflections to find the type of cell to create
@@ -165,7 +179,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
 
       // for all the states, create cell with the correct state and rule of that specific typ
       for (Integer state : xmlData.getCellStateList()) {
-        cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule));
+        cellList.add((Cell<T, ?>) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
       logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
@@ -178,7 +192,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   }
 
   @Deprecated
-  private void setUpGridStructure(List<Cell<T, ?, ?>> cellList, SimType simType) {
+  private void setUpGridStructure(List<Cell<T, ?>> cellList, SimType simType) {
     if (simType.isDefaultRectangularGrid()) {
       myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
           ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.NONE);
@@ -195,7 +209,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    *
    * @param cellList a list of cells that will make up the grid structure
    */
-  private void setUpGridStructure(List<Cell<T, ?, ?>> cellList) {
+  private void setUpGridStructure(List<Cell<T, ?>> cellList) {
     // TODO: once XML is changed, delete above and uncomment out this line of code
     //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
     //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
@@ -391,6 +405,81 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       logger.error("Failed to retrieve parameter: {}", key, e);
       throw new SimulationException("ParameterNotFound", key, e);
     }
+  }
+
+  /**
+   * Retrieves all additional parameter keys in the simulation.
+   *
+   * <p><b>Intended Use:</b> This method provides access to all additional parameters of the
+   * simulation that are not stored as standard double values.
+   *
+   * <p>These parameters may include non-numeric configurations, such as lists of values
+   * (e.g., survival rules in Game of Life).</p>
+   *
+   * <p><b>Example Usage:</b>
+   * <pre>
+   * List<String> additionalKeys = sim.getAdditionalParameterKeys();
+   * System.out.println("Additional parameters: " + additionalKeys);
+   * </pre>
+   *
+   * @return a list of additional parameter keys
+   */
+  public List<String> getAdditionalParameterKeys() {
+    return parameters.getAdditionalParameterKeys();
+  }
+
+  /**
+   * Updates a single additional simulation parameter dynamically.
+   *
+   * <p><b>Intended Use:</b> This method is used to modify **non-double** simulation parameters
+   * dynamically, such as lists or categorical settings.</p>
+   *
+   * <p><b>Important:</b> While standard parameters are type-safe (stored as double values),
+   * additional parameters allow flexibility but should be used with caution. If a parameter type
+   * does not match expectations, an error will be logged.</p>
+   *
+   * <p><b>Example Usage:</b>
+   * <pre>
+   * sim.updateAdditionalParameter("ruleList", List.of(2, 3, 4));
+   * </pre>
+   *
+   * @param key   - the parameter name
+   * @param value - the new value for the parameter (can be List, String, Integer, etc.)
+   * @throws SimulationException if an error occurs while updating the parameter
+   */
+  public void updateAdditionalParameter(String key, Object value) {
+    try {
+      parameters.setAdditionalParameter(key, value);
+    } catch (Exception e) {
+      logger.error("Failed to update parameter: {} to {}", key, value, e);
+      throw new SimulationException("ParameterNotFound", key, e);
+    }
+  }
+
+  /**
+   * Retrieves the current value of an additional parameter.
+   *
+   * <p><b>Intended Use:</b> This method provides safe access to additional parameters that are
+   * **not** stored as doubles. It ensures type safety by allowing the caller to specify the
+   * expected return type.</p>
+   *
+   * <p><b>Important:</b> If the parameter does not exist or is of the wrong type, an empty
+   * {@code Optional} is returned, and a warning is logged.</p>
+   *
+   * <p><b>Example Usage:</b>
+   * <pre>
+   * Optional<List<Integer>> survivalRules = sim.getAdditionalParameter("survivalThreshold", List.class);
+   * survivalRules.ifPresent(rules -> System.out.println("Survival Rules: " + rules));
+   * </pre>
+   *
+   * @param key  - the parameter name
+   * @param type - the expected class type (e.g., List.class, String.class)
+   * @param <T>  - the expected return type
+   * @return an {@code Optional<T>} containing the parameter value if found and correctly typed, or
+   * an empty {@code Optional} if not found or mismatched.
+   */
+  public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
+    return parameters.getAdditionalParameter(key, type);
   }
 
   // Grid Topology Related

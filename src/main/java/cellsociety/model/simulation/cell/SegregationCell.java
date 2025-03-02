@@ -3,7 +3,6 @@ package cellsociety.model.simulation.cell;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
-import cellsociety.model.simulation.parameters.SegregationParameters;
 import cellsociety.model.simulation.rules.SegregationRule;
 
 
@@ -12,7 +11,7 @@ import cellsociety.model.simulation.rules.SegregationRule;
  *
  * @author Jessica Chen
  */
-public class SegregationCell extends Cell<SegregationCell, SegregationRule, SegregationParameters> {
+public class SegregationCell extends Cell<SegregationCell, SegregationRule> {
 
   /**
    * Constructs a cell with specified initial state.

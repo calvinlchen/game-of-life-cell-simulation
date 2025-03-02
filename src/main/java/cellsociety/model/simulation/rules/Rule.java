@@ -3,7 +3,7 @@ package cellsociety.model.simulation.rules;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.simulation.cell.Cell;
-import cellsociety.model.simulation.parameters.Parameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ResourceBundle;
@@ -15,12 +15,11 @@ import java.util.ResourceBundle;
  * simulation
  *
  * @param <C> - the type of cell, must be a subclass of Cell
- * @param <P> - the type of the parameter, must be a subclass of Rules
  * @author Jessica Chen
  */
-public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
+public abstract class Rule<C extends Cell<C, ?>> {
 
-  private P parameters;
+  private GenericParameters parameters;
   private final ResourceBundle myResources;
 
   /**
@@ -28,7 +27,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public Rule(P parameters) {
+  public Rule(GenericParameters parameters) {
     myResources = getErrorSimulationResourceBundle("English");
 
     checkAndSetParams(parameters);
@@ -39,13 +38,13 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public Rule(P parameters, String language) {
+  public Rule(GenericParameters parameters, String language) {
     myResources = getErrorSimulationResourceBundle(language);
 
     checkAndSetParams(parameters);
   }
 
-  private void checkAndSetParams(P parameters) {
+  private void checkAndSetParams(GenericParameters parameters) {
     if (parameters == null) {
       throw new SimulationException(String.format(myResources.getString("NullRuleParameters")));
     }
@@ -65,7 +64,7 @@ public abstract class Rule<C extends Cell<C, ?, ?>, P extends Parameters> {
    *
    * @return parameters
    */
-  public P getParameters() {
+  public GenericParameters getParameters() {
     return parameters;
   }
 

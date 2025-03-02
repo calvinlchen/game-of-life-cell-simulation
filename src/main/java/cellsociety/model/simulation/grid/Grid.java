@@ -43,7 +43,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jessica Chen
  * @author ChatGPT helped with JavaDocs
  */
-public class Grid<T extends Cell<T, ?, ?>> {
+public class Grid<T extends Cell<T, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Grid.class);
 

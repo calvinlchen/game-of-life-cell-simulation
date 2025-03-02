@@ -3,7 +3,6 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.simulation.parameters.SegregationParameters;
 import cellsociety.model.simulation.rules.SegregationRule;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

@@ -44,7 +44,7 @@ public class RandomSimulationGenerator {
     randomXmlData.setCellStateList(cellStateList);
 
     // Set default parameters (Game of Life does not require any, but included for completeness)
-    Map<String, Double> parameters = new HashMap<>();
+    Map<String, Object> parameters = new HashMap<>();
     randomXmlData.setParameters(parameters);
 
     return randomXmlData;

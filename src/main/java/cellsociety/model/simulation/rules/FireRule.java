@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.CellStates.FIRE_EMPTY;
 import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
 
 import cellsociety.model.simulation.cell.FireCell;
-import cellsociety.model.simulation.parameters.FireParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 
 
 /**
@@ -13,14 +13,14 @@ import cellsociety.model.simulation.parameters.FireParameters;
  *
  * @author Jessica Chen
  */
-public class FireRule extends Rule<FireCell, FireParameters> {
+public class FireRule extends Rule<FireCell> {
 
   /**
    * Constructor for the Rule class.
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public FireRule(FireParameters parameters) {
+  public FireRule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -30,7 +30,7 @@ public class FireRule extends Rule<FireCell, FireParameters> {
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public FireRule(FireParameters parameters, String language) {
+  public FireRule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

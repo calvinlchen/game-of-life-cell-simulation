@@ -10,7 +10,7 @@ import static cellsociety.model.util.constants.GridTypes.DirectionType.W;
 import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
-import cellsociety.model.simulation.parameters.FallingSandParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters> {
+public class FallingSandRule extends Rule<FallingSandCell> {
 
   private final Random random = new Random();
 
@@ -31,7 +31,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public FallingSandRule(FallingSandParameters parameters) {
+  public FallingSandRule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -41,7 +41,7 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public FallingSandRule(FallingSandParameters parameters, String language) {
+  public FallingSandRule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

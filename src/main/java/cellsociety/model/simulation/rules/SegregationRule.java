@@ -3,7 +3,7 @@ package cellsociety.model.simulation.rules;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.cell.SegregationCell;
-import cellsociety.model.simulation.parameters.SegregationParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -13,7 +13,7 @@ import java.util.Random;
  *
  * @author Jessica Chen
  */
-public class SegregationRule extends Rule<SegregationCell, SegregationParameters> {
+public class SegregationRule extends Rule<SegregationCell> {
 
   private final Random random = new Random();
 
@@ -22,7 +22,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
    *
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    */
-  public SegregationRule(SegregationParameters parameters) {
+  public SegregationRule(GenericParameters parameters) {
     super(parameters);
   }
 
@@ -32,7 +32,7 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
    * @param parameters - map of parameters (String to Double) for adjusting rules from default.
    * @param language   - name of language, for error message display
    */
-  public SegregationRule(SegregationParameters parameters, String language) {
+  public SegregationRule(GenericParameters parameters, String language) {
     super(parameters, language);
   }
 

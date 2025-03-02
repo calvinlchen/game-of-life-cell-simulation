@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.LANGTON_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.LangtonParameters;
 import cellsociety.model.simulation.rules.LangtonRule;
 
 /**
@@ -10,7 +9,7 @@ import cellsociety.model.simulation.rules.LangtonRule;
  *
  * @author Jessica Chen
  */
-public class LangtonCell extends Cell<LangtonCell, LangtonRule, LangtonParameters> {
+public class LangtonCell extends Cell<LangtonCell, LangtonRule> {
 
   /**
    * Constructs a cell with specified initial state.
