@@ -61,7 +61,9 @@ public class GenericParameters extends Parameters {
   private static final Logger logger = LogManager.getLogger(GenericParameters.class);
 
   private static final Map<SimType, Map<String, Double>> DEFAULT_VALUES = new HashMap<>();
-  private static final Map<SimType, Map<String, Object>> DEFAULT_ADDITIONAL_VALUES = new HashMap<>();
+  private static final Map<SimType, Map<String, Object>> DEFAULT_ADDITIONAL_VALUES =
+      new HashMap<>();
+  private static final Map<SimType, List<String>> UNMODIFIABLE_PARAMS = new HashMap<>();
 
   static {
     DEFAULT_VALUES.put(SimType.RockPaperSciss, Map.of("numStates", 3.0, "percentageToWin", 0.5));
@@ -74,9 +76,12 @@ public class GenericParameters extends Parameters {
 
     DEFAULT_ADDITIONAL_VALUES.put(SimType.GameOfLife,
         Map.of("S", new ArrayList<>(Arrays.asList(2, 3)), "B", new ArrayList<>(List.of(3))));
+
+    UNMODIFIABLE_PARAMS.put(SimType.RockPaperSciss, List.of("numStates"));
   }
 
   private final Map<String, Object> additionalParams;
+  private final List<String> unmodifiableParams = new ArrayList<>();
 
   /**
    * Initializes {@code GenericParameters} with default values for the given simulation type.
@@ -88,13 +93,27 @@ public class GenericParameters extends Parameters {
   public GenericParameters(SimType simType) {
     super();
     if (DEFAULT_VALUES.containsKey(simType)) {
-      setParameters(DEFAULT_VALUES.get(simType));
+      super.setParameters(DEFAULT_VALUES.get(simType));
     }
+
     if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
       additionalParams = new HashMap<>(DEFAULT_ADDITIONAL_VALUES.get(simType));
     } else {
       additionalParams = new HashMap<>();
     }
+
+    if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
+      unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
+    }
+  }
+
+  @Override
+  public void setParameter(String key, double value) {
+    if (unmodifiableParams.contains(key)) {
+      logger.warn("Parameter {} is unmodifiable", key);
+      return;
+    }
+    super.setParameter(key, value);
   }
 
   /**
