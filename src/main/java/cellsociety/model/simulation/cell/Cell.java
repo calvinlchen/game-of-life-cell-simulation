@@ -234,7 +234,8 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   protected void validateState(int state, int maxState) {
     if (state < 0 || state >= maxState) {
       logger.error("Invalid state assigned: {} (Max: {})", state, maxState);
-      throw new SimulationException("InvalidState", state, maxState);
+      throw new SimulationException("InvalidState",
+          List.of(String.valueOf(state), String.valueOf(maxState)));
     }
   }
 
@@ -287,7 +288,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * Retrieves a copy of the current position of the cell.
    *
    * @return an array representing the position of the cell. The array is a copy of the cell's
-   *     internal position to ensure immutability.
+   * internal position to ensure immutability.
    * @throws SimulationException if the position has not been set.
    */
   public int[] getPosition() {
@@ -307,8 +308,10 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   public void setPosition(int[] position) {
     if (position == null || position.length != EXPECTED_POSITION_DIMENSION) {
-      logger.error("Invalid position attempted to be set: {}", Arrays.toString(position));
-      throw new SimulationException("InvalidPosition", Arrays.toString(position));
+      String positionString = Arrays.toString(position); // Convert array to a single string
+      logger.error("Invalid position attempted to be set: {}", positionString);
+      throw new SimulationException("InvalidPosition",
+          List.of(positionString)); // Pass as a single-element list
     }
     this.position = Arrays.copyOf(position, position.length);
   }
@@ -378,7 +381,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @param direction the direction for which the neighbors are to be retrieved. This parameter
    *                  should be one of the predefined values in the {@link DirectionType} enum.
    * @return a list of neighboring cells in the specified direction. If no neighbors exist in the
-   *     direction, an empty list is returned.
+   * direction, an empty list is returned.
    */
   public List<C> getDirectionalNeighbors(DirectionType direction) {
     return directionalNeighbors.getOrDefault(direction, new ArrayList<>());

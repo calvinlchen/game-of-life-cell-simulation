@@ -114,7 +114,8 @@ public class Grid<T extends Cell<T, ?>> {
       logger.error(
           "Grid initialization failed: Mismatched number of {} cells for expected size of {}x{}.",
           cells.size(), myRows, myCols);
-      throw new SimulationException("MismatchedCellCount", cells.size(), myRows * myCols);
+      throw new SimulationException("MismatchedCellCount",
+          List.of(String.valueOf(cells.size()), String.valueOf(myRows * myCols)));
     }
   }
 
@@ -160,8 +161,10 @@ public class Grid<T extends Cell<T, ?>> {
       Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
 
       if (directions.isEmpty()) {
-        logger.error("Invalid shape/neighborhood combination: {} {}", shape, neighborhood);
-        throw new SimulationException("InvalidGridShapeNeighborhood", shape, neighborhood);
+        logger.error("Invalid shape/neighborhood combination: {} {}", shape.name(),
+            neighborhood.name());
+        throw new SimulationException("InvalidGridShapeNeighborhood",
+            List.of(shape.name(), neighborhood.name()));
       }
 
       for (int j = 0; j < myCols; j++) {
@@ -205,7 +208,7 @@ public class Grid<T extends Cell<T, ?>> {
     Optional<EdgeHandler> edgeHandler = EdgeFactory.getHandler(edge);
     if (edgeHandler.isEmpty()) {
       logger.error("Invalid edge type: {}", edge);
-      throw new SimulationException("InvalidEdgeType", edge);
+      throw new SimulationException("InvalidEdgeType", List.of(edge.name()));
     }
 
     Map<DirectionType, List<T>> neighbors = new HashMap<>();
@@ -273,7 +276,8 @@ public class Grid<T extends Cell<T, ?>> {
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
       logger.error("InvalidGridPosition: {} {}", row, col);
-      throw new SimulationException("InvalidGridPosition", row, col);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col)));
     }
     return myGrid.get(row).get(col);
   }
@@ -289,7 +293,8 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException("InvalidGridPosition", row, col);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col)));
     }
     if (cell == null) {
       throw new SimulationException("NullCell");

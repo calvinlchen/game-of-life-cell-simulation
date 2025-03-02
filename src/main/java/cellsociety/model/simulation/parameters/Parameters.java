@@ -110,7 +110,7 @@ public abstract class Parameters {
     }
     if (!parameters.containsKey(key)) {
       logger.error("Attempted to retrieve parameter with key {} that does not exist.", key);
-      throw new SimulationException("ParameterNotFound", key);
+      throw new SimulationException("ParameterNotFound", List.of(key));
     }
 
     return parameters.getOrDefault(key, 0.0);

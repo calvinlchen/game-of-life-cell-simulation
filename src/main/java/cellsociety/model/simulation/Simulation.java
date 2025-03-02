@@ -185,7 +185,7 @@ public class Simulation<T extends Cell<T, ?>> {
       logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
           xmlData.getCellStateList().stream().map(Object::toString)
               .collect(Collectors.joining(", ")), e);
-      throw new SimulationException("CellCreationFailed", simType, e);
+      throw new SimulationException("CellCreationFailed", List.of(simType.name()), e);
     }
 
     return cellList;
@@ -288,7 +288,8 @@ public class Simulation<T extends Cell<T, ?>> {
       return myGrid.getCell(row, col).getCurrentState();
     } catch (Exception e) {
       logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition", row, col, e);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col)), e);
     }
   }
 
@@ -315,7 +316,8 @@ public class Simulation<T extends Cell<T, ?>> {
       return myGrid.getCell(row, col).getStateLength();
     } catch (Exception e) {
       logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition", row, col, e);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col)), e);
     }
   }
 
@@ -378,7 +380,7 @@ public class Simulation<T extends Cell<T, ?>> {
     } catch (Exception e) {
       logger.error("Failed to update parameter: {} from value: {} to {}", key,
           parameters.getParameter(key), value, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+      throw new SimulationException("ParameterNotFound", List.of(key), e);
     }
   }
 
@@ -403,7 +405,7 @@ public class Simulation<T extends Cell<T, ?>> {
       return parameters.getParameter(key);
     } catch (Exception e) {
       logger.error("Failed to retrieve parameter: {}", key, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+      throw new SimulationException("ParameterNotFound", List.of(key), e);
     }
   }
 
@@ -452,7 +454,7 @@ public class Simulation<T extends Cell<T, ?>> {
       parameters.setAdditionalParameter(key, value);
     } catch (Exception e) {
       logger.error("Failed to update parameter: {} to {}", key, value, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+      throw new SimulationException("ParameterNotFound", List.of(key), e);
     }
   }
 
