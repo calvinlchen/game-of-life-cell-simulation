@@ -86,7 +86,7 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell> {
     List<?> parameterList = getParameters().getAdditionalParameter(key, List.class)
         .orElse(List.of());
 
-    if (parameterList.stream().allMatch(e -> e instanceof Integer)) {
+    if (parameterList.stream().allMatch(e -> e instanceof Number)) {
       return parameterList.stream().map(e -> (Integer) e).toList();
     } else {
       logger.error("Invalid parameter format: '{}' must be a list of integers. Found: {}", key,

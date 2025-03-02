@@ -6,6 +6,7 @@ import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90
 import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -300,7 +301,8 @@ public class LangtonRule extends Rule<LangtonCell> {
       String stateKey = getStateKey(cell, directions);
 
       if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
-        logger.warn("[LangtonRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
+        logger.warn("[LangtonRule] Invalid state key length for cell at {}: {}",
+            cell.getPosition(),
             stateKey);
         return cell.getCurrentState();
       }
@@ -316,5 +318,4 @@ public class LangtonRule extends Rule<LangtonCell> {
 
     return cell.getCurrentState();
   }
-
 }

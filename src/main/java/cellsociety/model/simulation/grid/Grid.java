@@ -90,7 +90,8 @@ public class Grid<T extends Cell<T, ?>> {
     final List<List<T>> grid;
     if (rows <= 0 || cols <= 0) {
       logger.error("Grid initialization failed: Invalid dimensions {}x{}", rows, cols);
-      throw new SimulationException("InvalidGridDimensions");
+      throw new SimulationException("InvalidGridDimensions",
+          List.of(String.valueOf(rows), String.valueOf(cols)));
     }
 
     myRows = rows;
@@ -108,7 +109,8 @@ public class Grid<T extends Cell<T, ?>> {
   private void validateCells(List<T> cells) {
     if (cells == null) {
       logger.error("Grid initialization failed: Cannot create grid with null cells list.");
-      throw new SimulationException("NullCellsList");
+      throw new SimulationException("NullParameter",
+          List.of("cells", "Grid()"));
     }
     if (cells.size() != myRows * myCols) {
       logger.error(
@@ -250,7 +252,8 @@ public class Grid<T extends Cell<T, ?>> {
     }
 
     logger.error("Invalid direction vector: {} {} from dir {}", x, y, dir[0] + "," + dir[1]);
-    throw new SimulationException("InvalidDirection");
+    throw new SimulationException("InvalidDirectionVector",
+        List.of(String.valueOf(x), String.valueOf(y), dir[0] + "," + dir[1]));
   }
 
   // Start of Getters and Setters for Grid ------
@@ -275,9 +278,10 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
-      logger.error("InvalidGridPosition: {} {}", row, col);
+      logger.error("Cannot get cell at: {} {}", row, col);
       throw new SimulationException("InvalidGridPosition",
-          List.of(String.valueOf(row), String.valueOf(col)));
+          List.of(String.valueOf(row), String.valueOf(col),
+              String.valueOf(myRows), String.valueOf(myCols)));
     }
     return myGrid.get(row).get(col);
   }
@@ -293,11 +297,15 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
+      logger.error("Cannot set cell at: {} {}", row, col);
       throw new SimulationException("InvalidGridPosition",
-          List.of(String.valueOf(row), String.valueOf(col)));
+          List.of(String.valueOf(row), String.valueOf(col),
+              String.valueOf(myRows), String.valueOf(myCols)));
     }
     if (cell == null) {
-      throw new SimulationException("NullCell");
+      logger.error("Cannot set cell to null");
+      throw new SimulationException("NullParameter",
+          List.of("cell", "setCell(int, int, T)"));
     }
     myGrid.get(row).set(col, cell);
   }

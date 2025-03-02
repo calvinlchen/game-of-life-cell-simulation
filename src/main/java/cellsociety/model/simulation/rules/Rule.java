@@ -4,6 +4,7 @@ import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,14 +46,10 @@ public abstract class Rule<C extends Cell<C, ?>> {
    * @throws SimulationException if the parameters are {@code null}.
    */
   public Rule(GenericParameters parameters) {
-    checkAndSetParams(parameters);
-  }
-
-
-  private void checkAndSetParams(GenericParameters parameters) {
     if (parameters == null) {
-      logger.error("Rule initialization failed: Parameters cannot be null.");
-      throw new SimulationException("NullRuleParameters");
+      logger.warn("Rule initialization failed: Parameters cannot be null.");
+      throw new SimulationException("NullParameters",
+          List.of("parameters", "Rule"));
     }
     this.parameters = parameters;
   }
@@ -60,17 +57,35 @@ public abstract class Rule<C extends Cell<C, ?>> {
   // Abstract Methods ------
 
   /**
+   * Applies a template to a given cell by invoking the {@code apply} method and handling any
+   * simulation-related exceptions that may occur.
+   *
+   * @param cell the cell to which the template will be applied
+   * @return the resulting state after applying the template to the cell
+   * @throws SimulationException if an error occurs during the application of the template
+   */
+  public int applyTemplate(C cell) {
+    try {
+      return apply(cell);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  /**
    * Apply the rules to determine the next state of a cell.
    *
    * @param cell - cell to apply the rules to
    * @return next state of the cell
    */
-  public abstract int apply(C cell);
+  protected abstract int apply(C cell);
 
   // Start of Rules setters and getters ------
 
   /**
    * Retrieves the current configuration and settings associated with this rule.
+   *
+   * <p>Will never be null since cannot initialize rule with null parameters.</p>
    *
    * @return a {@code GenericParameters} object containing the parameters for this rule.
    */
@@ -96,47 +111,53 @@ public abstract class Rule<C extends Cell<C, ?>> {
    * rule.getStateKey(cell, new DirectionType[]{DirectionType.N, DirectionType.E});
    * </pre>
    *
-   * @param cell       the cell for which the state key is generated
-   * @param directions an array of DirectionType representing the directions to consider when
-   *                   retrieving the states of neighboring cells
-   * @return a string representing the state key, containing the cell's current state followed by
-   *     the states of the neighbors in the specified directions. If no neighbor exists in a given
-   *     direction, an empty string is appended for that direction.
+   * @param cell       the cell whose state and neighbors' states are used to generate the state
+   *                   key; must not be null
+   * @param directions an array of {@code DirectionType} values representing the directions in which
+   *                   to look for neighbors; must not be null
+   * @return a {@code String} representation of the state key consisting of the cell's state and its
+   * neighbors' states in the specified directions
+   * @throws SimulationException if an error occurs while retrieving the state or neighbors of the
+   *                             cell
    */
   String getStateKey(C cell, DirectionType[] directions) {
-    StringBuilder stateBuilder = new StringBuilder();
+    try {
+      StringBuilder stateBuilder = new StringBuilder();
 
-    stateBuilder.append(cell.getCurrentState());
-    for (DirectionType dir : directions) {
-      cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
-          .findFirst()
-          .ifPresentOrElse(
-              neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-              () -> logger.warn("No neighbor found in direction {} for cell at {}.", dir,
-                  cell.getPosition()));
+      stateBuilder.append(cell.getCurrentState());
+      for (DirectionType dir : directions) {
+        cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
+            .findFirst()
+            .ifPresentOrElse(
+                neighbor -> stateBuilder.append(neighbor.getCurrentState()),
+                () -> logger.warn("No neighbor found in direction {} for cell at {}.", dir,
+                    cell.getPosition()));
+      }
+
+      return stateBuilder.toString();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    return stateBuilder.toString();
   }
 
   /**
    * Checks if a given cell has a specified neighbor in the given direction.
    *
    * <p>This method verifies whether the provided neighbor exists among the directional neighbors
-   * of
-   * the specified cell in the given direction.
+   * of the specified cell in the given direction.
    *
    * @param cell      the cell for which the check is performed; must not be null
    * @param neighbor  the neighbor cell to check for; must not be null
    * @param direction the direction in which the neighbor is expected to be located
    * @return true if the given neighbor exists in the directional neighbors of the cell in the
-   *     specified direction; false otherwise
+   * specified direction; false otherwise
    * @throws SimulationException if the input cell or neighbor is null
    */
   boolean matchesDirection(C cell, C neighbor, DirectionType direction) {
     if (cell == null || neighbor == null) {
       logger.error("Direction match failed: Null cell or neighbor.");
-      throw new SimulationException("NullCellOrNeighbor");
+      throw new SimulationException("NullParameter",
+          List.of("cell, neighbor", "matchesDirection()"));
     }
 
     // no need to check for positions now that we have directional neighbors
@@ -152,10 +173,10 @@ public abstract class Rule<C extends Cell<C, ?>> {
    * <p>The main use for this one is to rotate the directional elements for Langton's Loops
    * related rules.</p>
    *
-   * @param directions an array of {@code DirectionType} representing the original directions.
-   *                   Must contain exactly four elements.
-   * @return a new array of {@code DirectionType} representing the rotated directions, where
-   *         the original elements are shifted one position in a clockwise order.
+   * @param directions an array of {@code DirectionType} representing the original directions. Must
+   *                   contain exactly four elements.
+   * @return a new array of {@code DirectionType} representing the rotated directions, where the
+   * original elements are shifted one position in a clockwise order.
    */
   DirectionType[] rotateClockwise(DirectionType[] directions) {
     return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};

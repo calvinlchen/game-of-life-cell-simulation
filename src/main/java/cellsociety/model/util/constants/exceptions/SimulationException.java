@@ -64,4 +64,16 @@ public class SimulationException extends RuntimeException {
   public SimulationException(String key, List<String> additionalInfo, Throwable cause) {
     super(String.format(myResources.getString(key), additionalInfo.toArray()), cause);
   }
+
+  /**
+   * Constructs a SimulationException with the specified underlying exception as its cause.
+   *
+   * <p>The intended use for this is just to propagate a custom exception thrown from
+   * another class</p>
+   *
+   * @param e the underlying exception that caused this SimulationException
+   */
+  public SimulationException(Exception e) {
+    super(e);
+  }
 }

@@ -90,7 +90,8 @@ public abstract class Parameters {
   public void setParameters(Map<String, Double> newParams) {
     if (newParams == null) {
       logger.error("Attempted to update parameters with a null map.");
-      throw new SimulationException("NullParameterMap");
+      throw new SimulationException("NullParameter",
+          List.of("newParams", "setParameters() in Parameters"));
     }
 
     parameters.putAll(newParams);
@@ -104,16 +105,17 @@ public abstract class Parameters {
    * @throws SimulationException if the key is null, empty, or not found in the parameters map
    */
   public double getParameter(String key) {
-    if (key == null || key.isEmpty()) {
-      logger.error("Attempted to retrieve parameter with null or empty key.");
-      throw new SimulationException("EmptyParameterKey");
+    if (key == null) {
+      logger.error("Attempted to retrieve parameter with null.");
+      throw new SimulationException("NullParameter",
+          List.of("key", "getParameter() in Parameters"));
     }
     if (!parameters.containsKey(key)) {
       logger.error("Attempted to retrieve parameter with key {} that does not exist.", key);
       throw new SimulationException("ParameterNotFound", List.of(key));
     }
 
-    return parameters.getOrDefault(key, 0.0);
+    return parameters.get(key);
   }
 
   /**
@@ -124,9 +126,10 @@ public abstract class Parameters {
    * @throws SimulationException if the provided key is null or empty
    */
   public void setParameter(String key, double value) {
-    if (key == null || key.isEmpty()) {
-      logger.error("Attempted to set parameter with null or empty key.");
-      throw new SimulationException("EmptyParameterKey");
+    if (key == null) {
+      logger.error("Attempted to set parameter with null.");
+      throw new SimulationException("NullParameter",
+          List.of("key", "setParameter() in Parameters"));
     }
 
     parameters.put(key, value);

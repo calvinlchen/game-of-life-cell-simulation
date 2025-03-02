@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
  * </ul>
  *
  * <h2>📌 Why One Main Subclass?</h2>
+ *
  * <p>Previously, each simulation had its own parameter subclass (e.g., `FireParameters`,
  * `SegregationParameters`). This approach was:</p>
  * <ul>
@@ -37,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
  * </ul>
  *
  * <h2>⚠️ Handling Non-Double Parameters</h2>
+ *
  * <p>While most parameters are stored as doubles, some simulations require lists or other objects.
  * To minimize unsafe usage of objects:</p>
  * <ul>
@@ -51,7 +53,7 @@ import org.apache.logging.log4j.LogManager;
  * double reproductionTime = params.getParameter("fishReproductionTime");
  *
  * params.setAdditionalParameter("customSetting", List.of(1, 2, 3));
- * List<Integer> setting = params.getAdditionalParameter("customSetting", List.class);
+ * List&lt;Integer&gt; setting = params.getAdditionalParameter("customSetting", List.class);
  * </pre>
  *
  * @author Jessica Chen
@@ -85,16 +87,24 @@ public class GenericParameters extends Parameters {
   private final List<String> unmodifiableParams = new ArrayList<>();
 
   /**
-   * Initializes {@code GenericParameters} with default values for the given simulation type.
+   * Constructs a new instance of GenericParameters with default parameter values
+   * initialized based on the specified simulation type.
    *
    * <p>If the simulation type has predefined parameter defaults, they are set automatically.</p>
    *
-   * @param simType The simulation type whose parameters should be initialized.
+   * @param simType the type of simulation for which to configure parameters
+   *                (e.g., GameOfLife, Percolation, etc.)
+   * @throws SimulationException if there is an error applying the default parameters
    */
   public GenericParameters(SimType simType) {
     super();
     if (DEFAULT_VALUES.containsKey(simType)) {
-      super.setParameters(DEFAULT_VALUES.get(simType));
+      try {
+        super.setParameters(DEFAULT_VALUES.get(simType));
+
+      } catch (SimulationException e) {
+        throw new SimulationException(e);
+      }
     }
 
     if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
@@ -114,7 +124,7 @@ public class GenericParameters extends Parameters {
       // I throwing an error so user knows can't change, but its a warning not an error in
       // terms of functionality
       logger.warn("Parameter {} is unmodifiable", key);
-      throw new SimulationException("UNMODIFIABLE_PARAMETER", List.of(key));
+      throw new SimulationException("UnmodifiableParameter", List.of(key));
     }
     super.setParameter(key, value);
   }
@@ -141,7 +151,7 @@ public class GenericParameters extends Parameters {
    * @param type the expected class type of the parameter's value
    * @param <T>  the type of the parameter's value
    * @return an {@code Optional} containing the value of the additional parameter cast to the
-   * specified type, or empty if not found or not of the expected type
+   *     specified type, or empty if not found or not of the expected type
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     Object value = additionalParams.get(key);
