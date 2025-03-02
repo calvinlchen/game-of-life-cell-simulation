@@ -23,18 +23,6 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
     validateState(state, FALLINGSAND_MAXSTATE);
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param rule     - Falling Sand Rule to calculate next state
-   * @param language - name of language, for error message display
-   */
-  public FallingSandCell(int state, FallingSandRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, FALLINGSAND_MAXSTATE);
-  }
-
   @Override
   public void calcNextState() {
     if (getCurrentState() == getNextState()) {

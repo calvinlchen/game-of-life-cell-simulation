@@ -25,18 +25,6 @@ public class SegregationCell extends Cell<SegregationCell, SegregationRule, Segr
     validateState(state, SEGREGATION_MAXSTATE);
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param rule     - Schelling's Model of Segregation Rule to calculate next state
-   * @param language - name of language, for error message display
-   */
-  public SegregationCell(int state, SegregationRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, SEGREGATION_MAXSTATE);
-  }
-
   @Override
   public void calcNextState() {
     // check to make sure you aren't overriding already calculated stuff

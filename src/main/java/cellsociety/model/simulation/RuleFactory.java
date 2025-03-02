@@ -4,6 +4,9 @@ import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
@@ -35,6 +38,8 @@ import java.util.Map;
  */
 class RuleFactory {
 
+  private static final Logger logger = LogManager.getLogger(RuleFactory.class);
+
   private static final String RULE_PACKAGE = "cellsociety.model.simulation.rules.";
   private static final String PARAMETER_PACKAGE = "cellsociety.model.simulation.parameters.";
 
@@ -61,7 +66,6 @@ class RuleFactory {
    */
   static Rule<?, ?> createRule(String ruleType, Map<String, Double> parameters) {
     try {
-      // create the Parameters class
       String paramClassName = PARAMETER_PACKAGE + ruleType.replace("Rule", "Parameters");
       Class<?> parameterClass = Class.forName(paramClassName);
       Constructor<?> paramConstructor = parameterClass.getConstructor();
@@ -72,9 +76,10 @@ class RuleFactory {
       String ruleClassName = RULE_PACKAGE + ruleType;
       Class<?> ruleClass = Class.forName(ruleClassName);
       Constructor<?> ruleConstructor = ruleClass.getConstructor(parameterClass);
-      return (Rule<?, ?>) ruleConstructor.newInstance(paramInstance);
-
+      Rule<?, ?> ruleInstance = (Rule<?, ?>) ruleConstructor.newInstance(paramInstance);
+      return ruleInstance;
     } catch (Exception e) {
+      logger.error("Error creating rule: {}", ruleType, e);
       throw new SimulationException("UnknownRuleCreationError", e);
     }
   }

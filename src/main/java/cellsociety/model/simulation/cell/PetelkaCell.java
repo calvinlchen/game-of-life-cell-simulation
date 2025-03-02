@@ -23,18 +23,6 @@ public class PetelkaCell extends Cell<PetelkaCell, PetelkaRule, PetelkaParameter
     validateState(state, PETELKA_MAXSTATE);
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param rule     - the Petelka's Loop rule to calculate the next state
-   * @param language - name of language, for error message display
-   */
-  public PetelkaCell(int state, PetelkaRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, PETELKA_MAXSTATE);
-  }
-
   @Override
   protected PetelkaCell getSelf() {
     return this;

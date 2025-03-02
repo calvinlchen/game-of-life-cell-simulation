@@ -7,6 +7,9 @@ import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
@@ -40,6 +43,8 @@ import java.util.Map;
  */
 public class Simulation<T extends Cell<T, ?, ?>> {
 
+  private static final Logger logger = LogManager.getLogger(Simulation.class);
+
   private final XmlData xmlData;
   private Grid<T> myGrid;
   private Parameters parameters;
@@ -70,6 +75,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   private XmlData getXmlData(XmlData data) {
     final XmlData xmlData;
     if (data == null) {
+      logger.error("Simulation initialization failed: Null XML data");
       throw new SimulationException("NullXMLData");
     }
 
@@ -104,6 +110,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       setUpGridStructure(cellList, simType);
       // setUpGridStructure(cellList);
     } catch (Exception e) {
+      logger.error("Simulation setup failed", e);
       throw new SimulationException("SimulationSetupFailed", e);
     }
   }
@@ -130,6 +137,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
       parameters = rule.getParameters();
 
     } catch (Exception e) {
+      logger.error("Failed to set up rules for simulation type: {}", simType, e);
       throw new SimulationException("SimulationSetupFailed", e);
     }
 
@@ -152,14 +160,14 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       // use reflections to find the type of cell to create
       Class<?> cellClass = Class.forName(CELL_PACKAGE + simType.name() + "Cell");
-      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass(),
-          String.class);
+      Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass());
 
       // for all the states, create cell with the correct state and rule of that specific typ
       for (Integer state : xmlData.getCellStateList()) {
         cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
+      logger.error("Failed to set up create cells for simulation type: {}", simType, e);
       throw new SimulationException("CellCreationFailed", simType, e);
     }
 
@@ -214,6 +222,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
   public void stepBack() {
     if (myGrid.getCells().stream().allMatch(Cell::stepBack)) {
       totalIterations--;
+    } else {
+      logger.warn("Step back not possible, simulation remains at the current state");
     }
   }
 
@@ -260,6 +270,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return myGrid.getCell(row, col).getCurrentState();
     } catch (Exception e) {
+      logger.error("Invalid grid position: ({}, {})", row, col, e);
       throw new SimulationException("InvalidGridPosition", row, col, e);
     }
   }
@@ -286,6 +297,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return myGrid.getCell(row, col).getStateLength();
     } catch (Exception e) {
+      logger.error("Invalid grid position: ({}, {})", row, col, e);
       throw new SimulationException("InvalidGridPosition", row, col, e);
     }
   }
@@ -347,6 +359,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       parameters.setParameter(key, value);
     } catch (Exception e) {
+      logger.error("Failed to update parameter: {} {}", key, value, e);
       throw new SimulationException("ParameterNotFound", key, e);
     }
   }
@@ -371,6 +384,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       return parameters.getParameter(key);
     } catch (Exception e) {
+      logger.error("Failed to retrieve parameter: {}", key, e);
       throw new SimulationException("ParameterNotFound", key, e);
     }
   }

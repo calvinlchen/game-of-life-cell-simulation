@@ -23,18 +23,6 @@ public class RockPaperScissCell extends
     validateState(state, rule.getMaxState());
   }
 
-  /**
-   * Constructs a cell with specified initial state.
-   *
-   * @param state    - the initial state of the cell
-   * @param rule     - the Rock Paper Scissors rule to calculate the next state
-   * @param language - name of language, for error message display
-   */
-  public RockPaperScissCell(int state, RockPaperScissRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, rule.getMaxState());
-  }
-
   @Override
   protected RockPaperScissCell getSelf() {
     return this;

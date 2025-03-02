@@ -150,7 +150,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @param state - the state to set as the current state
    */
-  void setCurrentState(int state) {
+  public void setCurrentState(int state) {
     currentState = state;
   }
 
@@ -159,7 +159,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @return the next state of the cell
    */
-  int getNextState() {
+  public int getNextState() {
     return nextState;
   }
 
@@ -168,7 +168,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
    *
    * @param state - the state to set as the next state
    */
-  void setNextState(int state) {
+  public void setNextState(int state) {
     nextState = state;
   }
 
@@ -226,37 +226,6 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
       throw new SimulationException("NullNeighborList");
     }
     this.neighbors = neighbors;
-  }
-
-
-  /**
-   * Adds a specific cell to the list of neighbors.
-   *
-   * @param neighbor - the cell to be added as a neighbor
-   * @return true if successfully added, false otherwise
-   * @throws SimulationException if the neighbor is null or already exists
-   */
-  boolean addNeighbor(C neighbor) {
-    if (neighbor == null) {
-      throw new SimulationException("NullNeighbor");
-    } else if (neighbors.contains(neighbor)) {
-      throw new SimulationException("DuplicateNeighbor");
-    }
-    return neighbors.add(neighbor);
-  }
-
-  /**
-   * Removes a specific cell from the list of neighbors.
-   *
-   * @param neighbor - the cell to be removed from neighbors
-   * @return true if successfully removed, false otherwise
-   * @throws SimulationException if the neighbor is not found
-   */
-  boolean removeNeighbor(C neighbor) {
-    if (!neighbors.contains(neighbor)) {
-      throw new SimulationException("NeighborNotFound");
-    }
-    return neighbors.remove(neighbor);
   }
 
   /**
