@@ -84,7 +84,7 @@ public class SimulationView {
 
     myCellViews = new CellView[numRows][numCols];
 
-    mySimulation = new Simulation(xmlData, myLanguage);
+    mySimulation = new Simulation(xmlData);
   }
 
   /**

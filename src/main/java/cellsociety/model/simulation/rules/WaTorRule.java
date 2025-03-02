@@ -5,50 +5,76 @@ import static cellsociety.model.util.constants.CellStates.WATOR_FISH;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
 import cellsociety.model.simulation.cell.WaTorCell;
-import cellsociety.model.simulation.parameters.WaTorParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 /**
- * Class for representing rules for WaTor World simulation.
+ * The {@code WaTorRule} class defines the behavior of fish and sharks in the Wa-Tor world
+ * simulation.
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li><b>Fish:</b> Move randomly to an adjacent empty cell.</li>
+ *   <li><b>Sharks:</b> Move towards fish if available, otherwise move randomly.</li>
+ *   <li><b>Reproduction:</b> Both fish and sharks reproduce after surviving a set number of
+ *   steps.</li>
+ *   <li><b>Energy Depletion:</b> Sharks lose energy each step and die if it reaches zero.</li>
+ * </ul>
+ *
+ * <h2>Simulation Parameters:</h2>
+ * <ul>
+ *   <li>{@code fishReproductionTime} → Steps before a fish reproduces.</li>
+ *   <li>{@code sharkEnergyGain} → Energy gained when a shark eats a fish.</li>
+ *   <li>{@code sharkReproductionTime} → Steps before a shark reproduces.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * WaTorRule rule = new WaTorRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class WaTorRule extends Rule<WaTorCell, WaTorParameters> {
+public class WaTorRule extends Rule<WaTorCell> {
 
   private final Random random = new Random();
-  private int fishReproductionTime;
-  private int sharkEnergyGain;
-  private int sharkReproductionTime;
+  private final int fishReproductionTime;
+  private final int sharkEnergyGain;
+  private final int sharkReproductionTime;
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code WaTorRule} object and initializes it with the provided parameters. The
+   * parameters are used to configure the behavior of the Wa-Tor simulation, including reproduction
+   * and energy gain characteristics for fish and sharks.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing the configuration and
+   *                   settings required for the Wa-Tor simulation. Must not be {@code null}.
    */
-  public WaTorRule(WaTorParameters parameters) {
+  public WaTorRule(GenericParameters parameters) {
     super(parameters);
-    setMyParams();
-  }
 
-  /**
-   * Constructor for the Rule class.
-   *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
-   */
-  public WaTorRule(WaTorParameters parameters, String language) {
-    super(parameters, language);
-    setMyParams();
-  }
-
-  private void setMyParams() {
     fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
     sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
     sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
   }
 
+  /**
+   * Applies the Wa-Tor world simulation rules to determine the next state of a cell.
+   *
+   * <h2>State Transition Logic:</h2>
+   * <ul>
+   *   <li><b>Fish:</b> Move to an empty cell, reproducing if their age meets the threshold.</li>
+   *   <li><b>Sharks:</b> Prioritize moving towards fish, gaining energy if they eat one.</li>
+   *   <li><b>Energy Loss:</b> Sharks lose energy each step and die if energy reaches zero.</li>
+   * </ul>
+   *
+   * @param cell The {@code WaTorCell} being evaluated.
+   * @return The next state of the cell.
+   */
   @Override
   public int apply(WaTorCell cell) {
     int currentState = cell.getCurrentState();

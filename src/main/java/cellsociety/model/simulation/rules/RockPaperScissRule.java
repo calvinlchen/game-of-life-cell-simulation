@@ -1,46 +1,81 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.RockPaperScissCell;
-import cellsociety.model.simulation.parameters.RockPaperScissParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 
 /**
- * Class for representing rules for Rock Paper Scissor simulation.
+ * The {@code RockPaperScissRule} class implements the Rock-Paper-Scissors simulation rule.
+ *
+ * <p>Each cell represents one of the possible states in an extended Rock-Paper-Scissors model.
+ * Cells compete with their neighbors, and if a sufficient proportion of neighbors have the
+ * "winning" state, the cell transitions to that state.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>A cell's state is determined by the majority rule of neighboring "winning" states.</li>
+ *   <li>The "winning" state is calculated as {@code (currentState + 1) % numStates}.</li>
+ *   <li>If enough neighbors have the winning state (determined by {@code percentageToWin}),
+ *   the cell adopts the new state.</li>
+ * </ul>
+ *
+ * <h2>Simulation Parameters:</h2>
+ * <ul>
+ *   <li>{@code numStates} → Total number of possible states. This state is not changeable
+ *   after rule creation</li>
+ *   <li>{@code percentageToWin} → Minimum fraction of neighbors needed to change state.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * RockPaperScissRule rule = new RockPaperScissRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissParameters> {
+public class RockPaperScissRule extends Rule<RockPaperScissCell> {
 
   private final int totalNumStates; // this is the one parameter that should not change
 
   /**
-   * Constructor for the Rule class.
+   * Initializes a new instance of the {@code RockPaperScissRule} with the specified parameters.
+   * This constructor extracts the total number of states from the parameters and ensures it remains
+   * constant throughout the simulation.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * <p><b>Note:</b> The number of states ({@code numStates}) is set once and cannot be
+   * changed.</p>
+   *
+   * @param parameters a {@code GenericParameters} object containing the configuration and settings
+   *                   for the simulation, including the total number of states ("numStates").
    */
-  public RockPaperScissRule(RockPaperScissParameters parameters) {
+  public RockPaperScissRule(GenericParameters parameters) {
     super(parameters);
 
     totalNumStates = getTotalNumStates(parameters);
   }
 
-  /**
-   * Constructor for the Rule class.
-   *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
-   */
-  public RockPaperScissRule(RockPaperScissParameters parameters, String language) {
-    super(parameters, language);
-
-    totalNumStates = getTotalNumStates(parameters);
-  }
-
-  private int getTotalNumStates(RockPaperScissParameters parameters) {
+  private int getTotalNumStates(GenericParameters parameters) {
     final int totalStates;
     totalStates = (int) parameters.getParameter("numStates");
     return totalStates;
   }
 
+  /**
+   * Applies the Rock-Paper-Scissors rule to determine the next state of a given cell.
+   *
+   * <h2>State Transition Logic:</h2>
+   * <ul>
+   *   <li>A cell competes with its neighbors.</li>
+   *   <li>The "winning" state is calculated as {@code (currentState + 1) % numStates}.</li>
+   *   <li>If enough neighbors have the winning state (determined by {@code percentageToWin}),
+   *   the cell adopts the new state.</li>
+   *   <li>Otherwise, the cell retains its current state.</li>
+   * </ul>
+   *
+   * @param cell The {@code RockPaperScissCell} being evaluated.
+   * @return The next state of the cell.
+   */
   @Override
   public int apply(RockPaperScissCell cell) {
     // so like with 3 0 -> 1 -> 2 -> 0 (bc 2 + 1 = 3 % 3 = 0)
@@ -60,9 +95,9 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell, RockPaperScissP
   }
 
   /**
-   * return max state for this RPS rule.
+   * Returns the total number of possible states in the Rock-Paper-Scissors simulation.
    *
-   * @return max state for this RPS rule
+   * @return The total number of states.
    */
   public int getMaxState() {
     return totalNumStates;

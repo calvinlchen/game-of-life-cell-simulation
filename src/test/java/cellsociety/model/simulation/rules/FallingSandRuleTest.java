@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static cellsociety.model.util.constants.CellStates.*;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
-import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.ArrayList;
 import java.util.HashMap;

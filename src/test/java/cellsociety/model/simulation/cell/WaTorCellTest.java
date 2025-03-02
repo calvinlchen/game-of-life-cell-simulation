@@ -2,10 +2,8 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.simulation.parameters.WaTorParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

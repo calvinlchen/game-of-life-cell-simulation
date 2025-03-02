@@ -3,22 +3,48 @@ package cellsociety.model.simulation.cell;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
-import cellsociety.model.simulation.parameters.SegregationParameters;
 import cellsociety.model.simulation.rules.SegregationRule;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 
 
 /**
- * Class for representing cell for Schelling's Model of Segregation simulation.
+ * The {@code SegregationCell} class represents an agent in Schelling's Model of Segregation.
+ *
+ * <p>In this simulation, agents move if they are not satisfied with their neighborhood.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Uses {@link SegregationRule} to determine movement based on satisfaction.</li>
+ *   <li>Prevents overriding prior moves to avoid conflicts.</li>
+ *   <li>Implements Template Method hooks to control state updates.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * SegregationRule rule = new SegregationRule(parameters);
+ * SegregationCell cell = new SegregationCell(1, rule);
+ * cell.calcNextState();
+ * cell.step();
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class SegregationCell extends Cell<SegregationCell, SegregationRule, SegregationParameters> {
+public class SegregationCell extends Cell<SegregationCell, SegregationRule> {
 
   /**
-   * Constructs a cell with specified initial state.
+   * Constructs a {@code SegregationCell} object with the specified initial state and behavior
+   * rule.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - Schelling's Model of Segregation Rule to calculate next state
+   * <p>This constructor initializes the cell with its current and next states, validates the state
+   * against the maximum allowable state for the segregation simulation, and assigns the specified
+   * segregation rule.
+   *
+   * @param state the initial state of the cell, which represents the type of agent or an empty
+   *              space. Must be within the valid range of states.
+   * @param rule  the {@code SegregationRule} that governs the behavior of the cell, determining
+   *              transitions and satisfaction in the simulation. Must not be null.
+   * @throws SimulationException if the state is out of the valid range.
    */
   public SegregationCell(int state, SegregationRule rule) {
     super(state, rule);
@@ -26,25 +52,15 @@ public class SegregationCell extends Cell<SegregationCell, SegregationRule, Segr
   }
 
   /**
-   * Constructs a cell with specified initial state.
+   * Determines whether the state calculation should be skipped.
    *
-   * @param state    - the initial state of the cell
-   * @param rule     - Schelling's Model of Segregation Rule to calculate next state
-   * @param language - name of language, for error message display
+   * <p>Prevents reassigning state if an agent has already moved into an empty space.</p>
+   *
+   * @return {@code true} if the calculation should be skipped, {@code false} otherwise.
    */
-  public SegregationCell(int state, SegregationRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, SEGREGATION_MAXSTATE);
-  }
-
   @Override
-  public void calcNextState() {
-    // check to make sure you aren't overriding already calculated stuff
-    // namely in a prior thing you were empty and then someone moved into you because
-    // they weren't satisfied
-    if (!(getCurrentState() == SEGREGATION_EMPTY && getNextState() != SEGREGATION_EMPTY)) {
-      super.calcNextState();
-    }
+  protected boolean shouldSkipCalculation() {
+    return getCurrentState() == SEGREGATION_EMPTY && getNextState() != SEGREGATION_EMPTY;
   }
 
   @Override
@@ -53,14 +69,7 @@ public class SegregationCell extends Cell<SegregationCell, SegregationRule, Segr
   }
 
   @Override
-  public void setCurrentState(int state) {
-    validateState(state, SEGREGATION_MAXSTATE);
-    super.setCurrentState(state);
-  }
-
-  @Override
-  public void setNextState(int state) {
-    validateState(state, SEGREGATION_MAXSTATE);
-    super.setNextState(state);
+  protected int getMaxState() {
+    return SEGREGATION_MAXSTATE;
   }
 }

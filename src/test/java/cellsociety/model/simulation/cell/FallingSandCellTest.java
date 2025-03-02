@@ -3,7 +3,6 @@ package cellsociety.model.simulation.cell;
 import static org.junit.jupiter.api.Assertions.*;
 import static cellsociety.model.util.constants.CellStates.*;
 
-import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.simulation.rules.FallingSandRule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import org.junit.jupiter.api.BeforeEach;

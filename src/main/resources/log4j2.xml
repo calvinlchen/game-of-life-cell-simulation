@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--done with the help of chatgpt for file rolling over-->
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://logging.apache.org/xml/ns">
+
+  <Appenders>
+    <!-- Console Appender -->
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout>
+        <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
+      </PatternLayout>
+    </Console>
+
+    <!-- Rolling File Appender for General Logs -->
+    <RollingFile name="GeneralLog" fileName="log/general.log"
+      filePattern="log/general-%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>  <!-- Rolls over when file reaches 10MB -->
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/> <!-- Rolls daily -->
+      </Policies>
+      <DefaultRolloverStrategy max="7"/> <!-- Keep last 7 log files -->
+    </RollingFile>
+
+    <!-- Error Log File (captures only ERROR and FATAL messages) -->
+    <File name="ErrorLog" fileName="log/error.log" immediateFlush="true" append="true">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+      <Filters>
+        <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+    </File>
+  </Appenders>
+
+  <Loggers>
+    <!-- Single Logger for Everything -->
+    <Logger name="cellsociety" level="debug" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="GeneralLog"/>
+      <AppenderRef ref="ErrorLog"/>  <!-- Only ERROR+ logs will go here -->
+    </Logger>
+
+    <Root level="debug">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="GeneralLog"/>
+      <AppenderRef ref="ErrorLog"/>
+    </Root>
+  </Loggers>
+</Configuration>

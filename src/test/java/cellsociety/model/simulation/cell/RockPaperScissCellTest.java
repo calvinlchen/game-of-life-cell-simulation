@@ -2,7 +2,6 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.simulation.parameters.RockPaperScissParameters;
 import cellsociety.model.simulation.rules.RockPaperScissRule;
 import java.util.ArrayList;
 import java.util.List;

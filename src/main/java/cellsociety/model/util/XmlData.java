@@ -34,7 +34,7 @@ public class XmlData {
   private int gridColNum; //number of columns in grid.
   //a list of each cell's state in the grid. size unknown
   private List<Integer> cellStateList = new ArrayList<>();
-  private Map<String, Double> parameters; //<parameter name as string, value>
+  private Map<String, Object> parameters; //<parameter name as string, value>
   private int id;
   public static int totalSimulations;
 
@@ -194,7 +194,7 @@ public class XmlData {
    *
    * @return a map of parameter names and their values
    */
-  public Map<String, Double> getParameters() {
+  public Map<String, Object> getParameters() {
     return parameters;
   }
 
@@ -203,7 +203,7 @@ public class XmlData {
    *
    * @param parameters - the new map of parameter names and values
    */
-  public void setParameters(Map<String, Double> parameters) {
+  public void setParameters(Map<String, Object> parameters) {
     this.parameters = parameters;
   }
 
@@ -308,12 +308,22 @@ public class XmlData {
       throw new IllegalStateException(myErrorResources.getString("NullParameterMap"));
     }
 
-    Double numStates = parameters.getOrDefault("numStates", 0.0);
-    if (numStates == null) {
-      throw new IllegalStateException(
-          String.format(myErrorResources.getString("NullParameterMap"), "numStates"));
+    double numStates = 0.0; // Default value
+
+    Object value = parameters.get("numStates");
+
+    if (value instanceof Number) {
+      numStates = ((Number) value).doubleValue(); // Safely convert any number type to Double
+    } else if (value instanceof String) {
+      try {
+        numStates = Double.parseDouble((String) value); // Convert from String if needed
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException(myErrorResources.getString("InvalidNumStates"));
+      }
     }
 
-    return numStates.intValue();
+    System.out.println("numStates: " + numStates);
+
+    return (int) numStates;
   }
 }

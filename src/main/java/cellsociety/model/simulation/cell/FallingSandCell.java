@@ -2,21 +2,38 @@ package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.CellStates.FALLINGSAND_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.FallingSandParameters;
 import cellsociety.model.simulation.rules.FallingSandRule;
 
 /**
- * Class for representing cell for Falling Sand/Water simulation.
+ * The {@code FallingSandCell} class represents a cell in the Falling Sand/Water simulation.
+ *
+ * <p>This cell follows gravity-like behavior, where sand falls downward and water spreads laterally
+ * when obstructed.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Utilizes the {@link FallingSandRule} to determine movement.</li>
+ *   <li>Overrides the template method to avoid redundant calculations.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * FallingSandRule rule = new FallingSandRule(parameters);
+ * FallingSandCell cell = new FallingSandCell(1, rule);
+ * cell.calcNextState();
+ * cell.step();
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, FallingSandParameters> {
+public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule> {
 
   /**
-   * Constructs a cell with specified initial state.
+   * Constructs a {@code FallingSandCell} with the specified initial state and simulation rule.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - Falling Sand Rule to calculate next state
+   * @param state the initial state of the cell.
+   * @param rule  the {@code FallingSandRule} governing cell behavior.
    */
   public FallingSandCell(int state, FallingSandRule rule) {
     super(state, rule);
@@ -24,22 +41,15 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
   }
 
   /**
-   * Constructs a cell with specified initial state.
+   * Determines whether the state calculation should be skipped.
    *
-   * @param state    - the initial state of the cell
-   * @param rule     - Falling Sand Rule to calculate next state
-   * @param language - name of language, for error message display
+   * <p>Falling sand should only update if its current and next states are identical.</p>
+   *
+   * @return {@code true} if the state calculation should be skipped, {@code false} otherwise.
    */
-  public FallingSandCell(int state, FallingSandRule rule, String language) {
-    super(state, rule, language);
-    validateState(state, FALLINGSAND_MAXSTATE);
-  }
-
   @Override
-  public void calcNextState() {
-    if (getCurrentState() == getNextState()) {
-      super.calcNextState();
-    }
+  protected boolean shouldSkipCalculation() {
+    return getCurrentState() != getNextState();
   }
 
   @Override
@@ -48,14 +58,7 @@ public class FallingSandCell extends Cell<FallingSandCell, FallingSandRule, Fall
   }
 
   @Override
-  public void setCurrentState(int state) {
-    validateState(state, FALLINGSAND_MAXSTATE);
-    super.setCurrentState(state);
-  }
-
-  @Override
-  public void setNextState(int state) {
-    validateState(state, FALLINGSAND_MAXSTATE);
-    super.setNextState(state);
+  protected int getMaxState() {
+    return FALLINGSAND_MAXSTATE;
   }
 }

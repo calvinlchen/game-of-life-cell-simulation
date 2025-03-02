@@ -4,8 +4,8 @@ import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationRe
 import static cellsociety.view.interfaces.CellView.DEFAULT_OUTLINE_CLASS;
 
 import cellsociety.Main;
-import cellsociety.model.factories.statefactory.CellStateFactory;
-import cellsociety.model.factories.statefactory.handler.CellStateHandler;
+import cellsociety.model.statefactory.CellStateFactory;
+import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 import cellsociety.view.components.cell.CellViewFactory;

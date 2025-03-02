@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static cellsociety.model.util.constants.CellStates.PETELKA_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.PetelkaParameters;
 import cellsociety.model.simulation.rules.PetelkaRule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import org.junit.jupiter.api.BeforeEach;

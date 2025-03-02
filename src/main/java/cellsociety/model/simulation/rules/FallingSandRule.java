@@ -10,7 +10,7 @@ import static cellsociety.model.util.constants.GridTypes.DirectionType.W;
 import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
-import cellsociety.model.simulation.parameters.FallingSandParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.List;
 import java.util.Optional;
@@ -18,64 +18,94 @@ import java.util.Random;
 
 
 /**
- * Class for representing rules for Falling Sand simulation.
+ * The {@code FallingSandRule} class defines the behavior of sand and water particles in a Falling
+ * Sand simulation.
+ *
+ * <p>This rule determines how sand and water move based on their current state and the
+ * states of their surrounding neighbors.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Sand falls straight down if possible; otherwise, it tries to fall diagonally.</li>
+ *   <li>Water flows sideways if it cannot fall directly downward.</li>
+ *   <li>Movement prioritizes randomness when multiple choices are available.</li>
+ *   <li>Prevents movement if a neighboring cell is occupied.</li>
+ * </ul>
+ *
+ * <h2>Assumptions:</h2>
+ * <ul>
+ *   <li>Rules are applied from left to right and top to bottom for correct
+ *   sand-water interactions.</li>
+ *   <li>Only empty or water cells are valid movement targets for sand.</li>
+ *   <li>Only empty cells are valid movement targets for water.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * FallingSandRule rule = new FallingSandRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters> {
+public class FallingSandRule extends Rule<FallingSandCell> {
 
   private final Random random = new Random();
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code FallingSandRule} object, initializing it with the specified simulation
+   * parameters. This rule is designed to simulate the behavior of falling sand in a grid-based
+   * environment, such as handling interactions between sand, water, and empty spaces.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} containing the configuration and settings
+   *                   required for the falling sand simulation. Must not be {@code null}.
    */
-  public FallingSandRule(FallingSandParameters parameters) {
+  public FallingSandRule(GenericParameters parameters) {
     super(parameters);
   }
 
   /**
-   * Constructor for the Rule class.
+   * Applies the Falling Sand rule to determine the next state of a given cell based on its current
+   * state and the states of its surrounding neighbors.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
-   */
-  public FallingSandRule(FallingSandParameters parameters, String language) {
-    super(parameters, language);
-  }
-
-  /**
-   * ASSUMPTION: traverse calc from left to right and top to bottom.
-   * <p> this is because of sand and water gravity rules.
+   * <p>ASSUMPTION: this rule assumes that the apply method is traversed from left to right and top
+   * to bottom so that the interaction between sand and water rules are done correctly
    *
-   * @param cell - cell to apply the rules to
-   * @return int next state of the current cell
+   * <p>Behavior:</p>
+   * <ul>
+   *   <li>Sand attempts to fall straight down, then diagonally if obstructed.</li>
+   *   <li>Water flows sideways if it cannot fall straight down.</li>
+   *   <li>Movements are applied only if the destination is empty (or water in sand's case).</li>
+   * </ul>
+   *
+   * @param cell The {@code FallingSandCell} to which the rule is being applied.
+   * @return The next state of the cell after applying the rule.
    */
   @Override
   public int apply(FallingSandCell cell) {
     return switch (cell.getCurrentState()) {
-      case FALLINGSAND_SAND -> moveDown(cell, List.of(SW, SE), FALLINGSAND_SAND,
+      case FALLINGSAND_SAND -> attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
           List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
       case FALLINGSAND_WATER ->
-          moveDown(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+          attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
       default -> cell.getCurrentState();  // steel and empty
     };
   }
 
-  private int moveDown(FallingSandCell cell, List<DirectionType> secondaryDirections, int newState,
-      List<Integer> replaceableNeighbors) {
+  private int attemptMovement(FallingSandCell cell, List<DirectionType> secondaryDirections,
+      int newState, List<Integer> replaceableNeighbors) {
 
     for (int replaceableNeighbor : replaceableNeighbors) {
-      Optional<FallingSandCell> neighbor = findNeighborInDirection(cell, S, replaceableNeighbor);
+      Optional<FallingSandCell> neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
       if (neighbor.isPresent()) {
         neighbor.get().setNextState(newState);
         return replaceableNeighbor;
       }
 
       List<FallingSandCell> possibleMoves = secondaryDirections.stream()
-          .map(dir -> findNeighborInDirection(cell, dir, replaceableNeighbor))
-          .flatMap(Optional::stream).toList();
+          .map(dir -> findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
+          .toList();
       // chose random secondary
       if (!possibleMoves.isEmpty()) {
         FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
@@ -86,15 +116,12 @@ public class FallingSandRule extends Rule<FallingSandCell, FallingSandParameters
     return cell.getCurrentState();
   }
 
-
-  private Optional<FallingSandCell> findNeighborInDirection(FallingSandCell cell,
-      DirectionType direction,
+  private Optional<FallingSandCell> findValidNeighbor(FallingSandCell cell, DirectionType direction,
       int state) {
     return cell.getNeighbors().stream()
         .filter(neighbor -> matchesDirection(cell, neighbor, direction))
         .filter(neighbor -> neighbor.getCurrentState() == state && neighbor.getNextState() == state)
         .findFirst();
   }
-
 
 }

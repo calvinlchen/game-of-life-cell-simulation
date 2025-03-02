@@ -4,19 +4,44 @@ import static cellsociety.model.util.constants.SimulationConstants.KEYLENGTH_VON
 import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90_DEG_ROTATIONS;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.parameters.ChouReg2Parameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Class for representing rules for Chou Reg 2 Loop simulation.
+ * The {@code ChouReg2Rule} class defines the state transition rules for the Chou Reg 2 Langton's
+ * Loop simulation.
+ *
+ * <p>This rule determines the next state of a {@link ChouReg2Cell} based on a predefined
+ * lookup table that maps state keys to output states. These states also additionally follow 4
+ * rotational symmetry.</p>
+ *
+ * <p>Warning: This will only work properly with rectangular grids with von neumann neighborhoods.
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Uses a predefined state transition table {@code RULES_MAP_CHOUREG2}.</li>
+ *   <li>Supports Von Neumann neighborhood-based lookups.</li>
+ *   <li>Rotates the neighbor configuration up to 4 times for 90-degree symmetry.</li>
+ *   <li>Applies the first valid rule it finds; otherwise, keeps the current state.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * ChouReg2Rule rule = new ChouReg2Rule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
+public class ChouReg2Rule extends Rule<ChouReg2Cell> {
 
   private static final Map<String, Integer> RULES_MAP_CHOUREG2 = new HashMap<>();
+  private static final Logger logger = LogManager.getLogger(ChouReg2Rule.class);
 
   static {
     RULES_MAP_CHOUREG2.put("00000", 0);
@@ -87,24 +112,32 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
   }
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code ChouReg2Rule} object with the specified parameters. This class extends the
+   * {@code Rule} class and inherits its functionality. The provided {@code GenericParameters}
+   * object is used to configure the rule's behavior in the simulation.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing settings for the rule. Must
+   *                   not be {@code null}.
    */
-  public ChouReg2Rule(ChouReg2Parameters parameters) {
+  public ChouReg2Rule(GenericParameters parameters) {
     super(parameters);
   }
 
   /**
-   * Constructor for the Rule class.
+   * Applies the Chou Reg 2 Langton’s Loop transition rules to determine the next state of a cell.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
+   * <p>The method:
+   * <ol>
+   *   <li>Generates a state key based on the cell’s current state and its neighbors.</li>
+   *   <li>Rotates the neighbor configuration up to four times to check for symmetry.</li>
+   *   <li>Returns the new state based on the first matching key in {@code RULES_MAP_CHOUREG2}.</li>
+   *   <li>If no match is found, the cell retains its current state.</li>
+   * </ol>
+   * </p>
+   *
+   * @param cell the cell whose state transition is computed.
+   * @return the next state of the cell.
    */
-  public ChouReg2Rule(ChouReg2Parameters parameters, String language) {
-    super(parameters, language);
-  }
-
   @Override
   public int apply(ChouReg2Cell cell) {
     DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
@@ -114,6 +147,8 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
       String stateKey = getStateKey(cell, directions);
 
       if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
+        logger.warn("[ChouReg2Rule] Invalid state key length for cell at {}: {}",
+            cell.getPosition(), stateKey);
         return cell.getCurrentState();
       }
 
@@ -124,11 +159,9 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell, ChouReg2Parameters> {
       directions = rotateClockwise(directions);
     }
 
+    logger.warn("[ChouReg2Rule] No valid rule found, retaining current state for cell at {}",
+        cell.getPosition());
     return cell.getCurrentState();
-  }
-
-  private DirectionType[] rotateClockwise(DirectionType[] directions) {
-    return new DirectionType[]{directions[3], directions[0], directions[1], directions[2]};
   }
 
 }

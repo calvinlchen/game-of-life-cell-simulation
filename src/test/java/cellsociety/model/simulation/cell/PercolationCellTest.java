@@ -2,11 +2,9 @@ package cellsociety.model.simulation.cell;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.simulation.parameters.PercolationParameters;
 import cellsociety.model.simulation.rules.PercolationRule;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

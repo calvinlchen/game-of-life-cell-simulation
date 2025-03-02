@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,7 @@ class GridTest {
     public TestGrid(List<TestCell> cells, int rows, int cols) {
       super(cells, rows, cols);
     }
-    @Override
-    public void setNeighbors() {}
-  }
+      }
 
   @BeforeEach
   void setUp() {
@@ -157,8 +156,8 @@ class GridTest {
 
   @Test
   @DisplayName("Test setting neighbors correctly updates cells")
-  void setNeighbors_ChecksForCorectness_CorrectlySetsNeighbors() {
-    grid.setNeighbors(RECTANGLE, VON_NEUMANN);
+  void setNeighbors_ChecksForCorectness_CorrectlySetsNeighborsAllCells() {
+    grid.setNeighborsAllCells(RECTANGLE, VON_NEUMANN, EdgeType.NONE);
     for (TestCell cell : mockCells) {
       verify(cell, atLeastOnce()).setNeighbors(anyList());
     }

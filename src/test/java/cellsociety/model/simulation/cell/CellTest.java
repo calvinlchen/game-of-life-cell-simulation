@@ -183,89 +183,9 @@ class CellTest {
   }
 
   @Test
-  @DisplayName("Correctly returns neighbors")
-  void getNeighbors_TestGetNeighbors_ReturnNeighbors() {
-    assertEquals(0, testCell.getNeighbors().size());
-
-    TestCell neighbor1 = new TestCell(2, mockRule);
-    TestCell neighbor2 = new TestCell(3, mockRule);
-    TestCell nonNeighbor = new TestCell(4, mockRule);
-
-    testCell.addNeighbor(neighbor1);
-    testCell.addNeighbor(neighbor2);
-
-    assertEquals(2, testCell.getNeighbors().size());
-    assertTrue(testCell.getNeighbors().contains(neighbor1));
-    assertTrue(testCell.getNeighbors().contains(neighbor2));
-    assertFalse(testCell.getNeighbors().contains(nonNeighbor));
-  }
-
-  @Test
-  @DisplayName("Correctly can set neighbors")
-  void setNeighbors_TestSetNeighbors_SetNeighbors() {
-    TestCell neighbor1 = new TestCell(2, mockRule);
-    TestCell neighbor2 = new TestCell(3, mockRule);
-    TestCell nonNeighbor = new TestCell(4, mockRule);
-
-    testCell.addNeighbor(neighbor1);
-    testCell.addNeighbor(neighbor2);
-
-    assertEquals(2, testCell.getNeighbors().size());
-    assertTrue(testCell.getNeighbors().contains(neighbor1));
-    assertTrue(testCell.getNeighbors().contains(neighbor2));
-    assertFalse(testCell.getNeighbors().contains(nonNeighbor));
-
-    testCell.setNeighbors(List.of(nonNeighbor));
-    assertEquals(1, testCell.getNeighbors().size());
-    assertFalse(testCell.getNeighbors().contains(neighbor1));
-    assertFalse(testCell.getNeighbors().contains(neighbor2));
-    assertTrue(testCell.getNeighbors().contains(nonNeighbor));
-  }
-
-  @Test
   @DisplayName("Throws simulation exception if you try to set neighbors to null")
   void setNeighbors_TestIllegalParameters_ThrowsSimulationExceptionIfNullNeighbors() {
     assertThrows(SimulationException.class, () -> testCell.setNeighbors(null));
-  }
-
-  @Test
-  @DisplayName("Throws simulation exception if you try to add null neighbor")
-  void addNeighbor_TestAddIllegalNeighbor_ThrowsSimulationExceptionIfNullNeighbor() {
-    assertThrows(SimulationException.class, () -> testCell.addNeighbor(null));
-  }
-
-  @Test
-  @DisplayName("Throws simulation exception if you try to add a neighbor already in the list")
-  void addNeighbor_TestAddIllegalNeighbor_ThrowsSimulationExceptionIfNeighborAlreadyInList() {
-    TestCell neighbor = new TestCell(1, mockRule);
-    testCell.addNeighbor(neighbor);
-    assertThrows(SimulationException.class, () -> testCell.addNeighbor(neighbor));
-  }
-
-  @Test
-  @DisplayName("Test that remove neighbors properly removes neighbors")
-  void removeNeighbors_TestRemoveNeighbors_RemoveNeighbor2() {
-    TestCell neighbor1 = new TestCell(2, mockRule);
-    TestCell neighbor2 = new TestCell(3, mockRule);
-
-    testCell.addNeighbor(neighbor1);
-    testCell.addNeighbor(neighbor2);
-
-    assertEquals(2, testCell.getNeighbors().size());
-    assertTrue(testCell.getNeighbors().contains(neighbor1));
-    assertTrue(testCell.getNeighbors().contains(neighbor2));
-
-    testCell.removeNeighbor(neighbor2);
-    assertEquals(1, testCell.getNeighbors().size());
-    assertTrue(testCell.getNeighbors().contains(neighbor1));
-    assertFalse(testCell.getNeighbors().contains(neighbor2));
-  }
-
-  @Test
-  @DisplayName("Throws Simulation Exception if try to remove cell that is not a neighbor")
-  void removeNeighbor_TestRemoveNeighborInvalidParameter_ThrowsSimulationExceptionIfCellIsNotANeighbor() {
-    assertThrows(SimulationException.class,
-        () -> testCell.removeNeighbor(new TestCell(1, mockRule)));
   }
 
   @Test

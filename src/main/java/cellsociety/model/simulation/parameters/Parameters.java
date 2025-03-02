@@ -1,43 +1,62 @@
 package cellsociety.model.simulation.parameters;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Abstract class for representing a rules for a simulation.
+ * The {@code Parameters} class serves as the **base class** for storing and managing simulation
+ * parameters, primarily in a **String → Double** format.
+ *
+ * <p>Its primary functions include:</p>
+ * <ul>
+ *   <li>Storing and retrieving **double-based** parameters efficiently.</li>
+ *   <li>Providing methods to **update, validate, and retrieve** parameter values.</li>
+ *   <li>Ensuring type safety by restricting parameters to doubles, except for explicit subclasses.</li>
+ *   <li>Using **{@link ResourceBundle}** for localized error messages.</li>
+ *   <li>Logging warnings/errors when invalid keys or values are encountered.</li>
+ * </ul>
+ *
+ * <h2>🔑 Why Restrict to Double Parameters?</h2>
+ *
+ * <p>While some simulations (like Game of Life) require **lists or custom types**, most only
+ * use doubles for efficiency and safety.</p>
+ * <ul>
+ *   <li>🟢 Double parameters are **safe and predictable**.</li>
+ *   <li>🟡 Allowing **arbitrary objects** (Object type) can lead to runtime errors.</li>
+ *   <li>🔴 To avoid unsafe code, only specialized subclasses handle **non-double parameters**.</li>
+ * </ul>
+ *
+ * <p>For cases requiring non-double parameters, see {@link GenericParameters}.</p>
+ *
+ * <h2>📌 Example Usage</h2>
+ * <pre>
+ * Parameters params = new GenericParameters(SimType.Fire);
+ * params.setParameter("spreadRate", 0.5);
+ * double rate = params.getParameter("spreadRate");
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs hence again with the emojis, we might just be living with
+ * these nows
  */
 public abstract class Parameters {
 
+  private static final Logger logger = LogManager.getLogger(Parameters.class);
+
   private final Map<String, Double> parameters;
-  private ResourceBundle myResources;
 
   /**
-   * Constructor for simulations.
+   * Default constructor for the Parameters class.
    *
-   * <p> starts all simulations with a max history size with default of size 10
+   * <p>Initializes the parameter map with a default value for history size.</p>
    */
   public Parameters() {
     parameters = createParamMap();
-
-    myResources = getErrorSimulationResourceBundle("English");
-  }
-
-  /**
-   * Constructor for simulations.
-   *
-   * <p> starts all simulations with a max history size with default of size 10
-   */
-  public Parameters(String language) {
-    parameters = createParamMap();
-
-    myResources = getErrorSimulationResourceBundle(language);
   }
 
   private Map<String, Double> createParamMap() {
@@ -46,6 +65,8 @@ public abstract class Parameters {
     parameters.put("maxHistorySize", 10.0);
     return parameters;
   }
+
+  // Start of Parameters setters and getters ------
 
   /**
    * Return the parameters.
@@ -57,48 +78,59 @@ public abstract class Parameters {
   }
 
   /**
-   * updates all parameters with the new parameters, while maintaining original parameters if
-   * unchanged.
+   * Updates the parameter map with the provided new parameter values.
    *
-   * @param newParams - new parameters to add to rules / update with
+   * <p>For extensibility, subclasses can add on to this method to also denote errors if they try
+   * to modify a parameter that is read only.
+   *
+   * @param newParams - a map of parameter names (keys) and their associated values to be added or
+   *                  updated in the existing parameter map.
+   * @throws SimulationException if the provided parameter map is null.
    */
   public void setParameters(Map<String, Double> newParams) {
     if (newParams == null) {
-      throw new SimulationException(String.format(myResources.getString("NullParameterMap")));
+      logger.error("Attempted to update parameters with a null map.");
+      throw new SimulationException("NullParameterMap");
     }
 
     parameters.putAll(newParams);
   }
 
   /**
-   * gets the parameter value of the passed in rule.
+   * Retrieves the parameter value associated with the specified key.
    *
-   * @param key - value to look up the rule for
-   * @return value associated with the rule
+   * @param key - the name of the parameter to retrieve; must not be null or empty
+   * @return the value of the parameter if it exists
+   * @throws SimulationException if the key is null, empty, or not found in the parameters map
    */
   public double getParameter(String key) {
     if (key == null || key.isEmpty()) {
-      throw new SimulationException(String.format(myResources.getString("EmptyParameterKey")));
+      logger.error("Attempted to retrieve parameter with null or empty key.");
+      throw new SimulationException("EmptyParameterKey");
     }
     if (!parameters.containsKey(key)) {
-      throw new SimulationException(String.format(myResources.getString("ParameterNotFound"), key));
+      logger.error("Attempted to retrieve parameter with key {} that does not exist.", key);
+      throw new SimulationException("ParameterNotFound", key);
     }
 
     return parameters.getOrDefault(key, 0.0);
   }
 
   /**
-   * set the value for the given rule.
+   * Sets a parameter identified by a string key to a specified double value.
    *
-   * @param key   - rule to modify
-   * @param value - value to update the rule too
+   * @param key   - the name of the parameter to set; must not be null or empty
+   * @param value - the value to associate with the specified key
+   * @throws SimulationException if the provided key is null or empty
    */
   public void setParameter(String key, double value) {
     if (key == null || key.isEmpty()) {
-      throw new SimulationException(String.format(myResources.getString("EmptyParameterKey")));
+      logger.error("Attempted to set parameter with null or empty key.");
+      throw new SimulationException("EmptyParameterKey");
     }
 
     parameters.put(key, value);
+    logger.debug("Updated parameter: {} = {}", key, value);
   }
 
   /**
@@ -109,24 +141,4 @@ public abstract class Parameters {
   public List<String> getParameterKeys() {
     return List.copyOf(parameters.keySet());
   }
-
-  /**
-   * returns whether key is a valid key in the state.
-   *
-   * @param key - key to check if it is in rules
-   * @return true if it is valid, false otherwise
-   */
-  public boolean isValidKey(String key) {
-    return parameters.containsKey(key);
-  }
-
-  /**
-   * return resource bundle associated for exceptions.
-   *
-   * @return resource bundle associated for exception
-   */
-  public ResourceBundle getResources() {
-    return myResources;
-  }
-
 }

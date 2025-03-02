@@ -3,44 +3,74 @@ package cellsociety.model.simulation.rules;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.cell.SegregationCell;
-import cellsociety.model.simulation.parameters.SegregationParameters;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Class for representing rules for Segregation simulation.
+ * The {@code SegregationRule} class defines the state transition logic for the Segregation
+ * simulation.
+ *
+ * <p>This rule models social segregation by determining whether a cell (representing an
+ * individual) is "satisfied" with its surroundings. If not satisfied, the cell moves to an empty
+ * adjacent location.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Each individual (cell) prefers to be surrounded by at least a certain fraction of
+ *       similar neighbors.</li>
+ *   <li>If a cell is unsatisfied, it moves to a nearby empty space.</li>
+ *   <li>Empty spaces are chosen randomly when multiple options exist.</li>
+ * </ul>
+ *
+ * <h2>Simulation Parameters:</h2>
+ * <ul>
+ *   <li>{@code toleranceThreshold} → Minimum fraction of similar neighbors required for
+ *   satisfaction.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * SegregationRule rule = new SegregationRule(parameters);
+ * int nextState = rule.apply(cell);
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
-public class SegregationRule extends Rule<SegregationCell, SegregationParameters> {
+public class SegregationRule extends Rule<SegregationCell> {
+
+  private static final Logger logger = LogManager.getLogger(SegregationRule.class);
 
   private final Random random = new Random();
 
   /**
-   * Constructor for the Rule class.
+   * Constructs a {@code SegregationRule} object, initializing the segregation simulation parameters
+   * required for determining individual satisfaction and movement rules.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
+   * @param parameters the {@code GenericParameters} object containing simulation configuration,
+   *                   such as tolerance thresholds. Must not be {@code null}.
    */
-  public SegregationRule(SegregationParameters parameters) {
+  public SegregationRule(GenericParameters parameters) {
     super(parameters);
   }
 
   /**
-   * Constructor for the Rule class.
+   * Applies the segregation rule to determine the next state of a given cell.
    *
-   * @param parameters - map of parameters (String to Double) for adjusting rules from default.
-   * @param language   - name of language, for error message display
-   */
-  public SegregationRule(SegregationParameters parameters, String language) {
-    super(parameters, language);
-  }
-
-  /**
-   * If cell is not satisfied, will attempt to move to an empty adjacent space.
+   * <h2>State Transition Logic:</h2>
+   * <ul>
+   *   <li><b>Empty cells remain empty.</b></li>
+   *   <li><b>Satisfied individuals remain in place.</b></li>
+   *   <li><b>Unsatisfied individuals attempt to move to a adjacent empty space.</b></li>
+   *   <li><b>If no empty space is available, the individual stays in place.</b></li>
+   * </ul>
    *
-   * @param cell - cell to apply the rules to
-   * @return next state for cell to go to on step
+   * @param cell The {@code SegregationCell} being evaluated.
+   * @return The next state of the cell.
    */
   @Override
   public int apply(SegregationCell cell) {
@@ -53,32 +83,37 @@ public class SegregationRule extends Rule<SegregationCell, SegregationParameters
       return cell.getCurrentState();
     }
 
-    Optional<SegregationCell> emptyCell = findEmptyCell(cell);
+    Optional<SegregationCell> emptyCell = findAdjacentEmptyCell(cell);
 
     if (emptyCell.isPresent()) {
       emptyCell.get().setNextState(cell.getCurrentState());
       return SEGREGATION_EMPTY;
     }
 
+    logger.debug("[SegregationRule] No empty cells available for cell at {} to move.",
+        cell.getPosition());
     return cell.getCurrentState();
   }
 
   private boolean isSatisfied(SegregationCell cell, double threshold) {
     List<SegregationCell> neighbors = cell.getNeighbors();
-    long totalNeighbors = neighbors.size();
-
-    if (totalNeighbors == 0) {
-      return true;
+    if (neighbors.isEmpty()) {
+      return true; // Cells with no neighbors are always satisfied.
     }
 
-    long similarNeighbors = neighbors.stream()
-        .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState()).count();
-
-    double similarityRatio = (double) similarNeighbors / totalNeighbors;
+    double similarityRatio = calculateSimilarityRatio(cell, neighbors);
     return similarityRatio >= threshold;
   }
 
-  private Optional<SegregationCell> findEmptyCell(SegregationCell cell) {
+  private double calculateSimilarityRatio(SegregationCell cell, List<SegregationCell> neighbors) {
+    long similarNeighbors = neighbors.stream()
+        .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState())
+        .count();
+
+    return (double) similarNeighbors / neighbors.size();
+  }
+
+  private Optional<SegregationCell> findAdjacentEmptyCell(SegregationCell cell) {
     List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream().filter(
         neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
             && neighbor.getNextState() == SEGREGATION_EMPTY).toList();

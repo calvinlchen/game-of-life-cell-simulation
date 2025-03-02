@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static cellsociety.model.util.constants.CellStates.LANGTON_MAXSTATE;
 
-import cellsociety.model.simulation.parameters.LangtonParameters;
 import cellsociety.model.simulation.rules.LangtonRule;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import org.junit.jupiter.api.BeforeEach;
