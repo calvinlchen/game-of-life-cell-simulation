@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.parameters;
 
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,8 +111,10 @@ public class GenericParameters extends Parameters {
   @Override
   public void setParameter(String key, double value) {
     if (unmodifiableParams.contains(key)) {
+      // I throwing an error so user knows can't change, but its a warning not an error in
+      // terms of functionality
       logger.warn("Parameter {} is unmodifiable", key);
-      return;
+      throw new SimulationException("UNMODIFIABLE_PARAMETER", List.of(key));
     }
     super.setParameter(key, value);
   }
