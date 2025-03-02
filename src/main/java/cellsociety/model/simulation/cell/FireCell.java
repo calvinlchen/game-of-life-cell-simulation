@@ -5,17 +5,32 @@ import static cellsociety.model.util.constants.CellStates.FIRE_MAXSTATE;
 import cellsociety.model.simulation.rules.FireRule;
 
 /**
- * Class for representing cell for Spreading of Fire simulation.
+ * The {@code FireCell} class represents a cell in the Spreading Fire simulation.
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Utilizes the {@link FireRule} to determine fire spread behavior.</li>
+ *   <li>Overrides the template method to allow probability-based transitions.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * FireRule rule = new FireRule(parameters);
+ * FireCell cell = new FireCell(FIRE_TREE, rule);
+ * cell.calcNextState();
+ * cell.step();
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public class FireCell extends Cell<FireCell, FireRule> {
 
   /**
-   * Constructs a cell with specified initial state.
+   * Constructs a {@code FireCell} with the specified initial state and simulation rule.
    *
-   * @param state - the initial state of the cell
-   * @param rule  - Spreading of Fire Rule to calculate next state
+   * @param state the initial state of the cell.
+   * @param rule  the {@code FireRule} governing fire spread behavior.
    */
   public FireCell(int state, FireRule rule) {
     super(state, rule);
@@ -28,14 +43,7 @@ public class FireCell extends Cell<FireCell, FireRule> {
   }
 
   @Override
-  public void setCurrentState(int state) {
-    validateState(state, FIRE_MAXSTATE);
-    super.setCurrentState(state);
-  }
-
-  @Override
-  public void setNextState(int state) {
-    validateState(state, FIRE_MAXSTATE);
-    super.setNextState(state);
+  protected int getMaxState() {
+    return FIRE_MAXSTATE;
   }
 }

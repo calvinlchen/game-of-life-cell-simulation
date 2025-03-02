@@ -1,6 +1,7 @@
 package cellsociety.model.factories.statefactory.handler;
 
-import cellsociety.model.factories.statefactory.exceptions.CellStateFactoryException;
+import cellsociety.model.statefactory.exceptions.CellStateFactoryException;
+import cellsociety.model.statefactory.handler.CellStateHandlerStatic;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

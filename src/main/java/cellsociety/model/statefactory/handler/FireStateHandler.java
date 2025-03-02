@@ -1,4 +1,4 @@
-package cellsociety.model.factories.statefactory.handler;
+package cellsociety.model.statefactory.handler;
 
 import cellsociety.model.util.constants.CellStates;
 import java.util.HashMap;

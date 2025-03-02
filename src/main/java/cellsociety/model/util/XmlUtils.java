@@ -1,7 +1,7 @@
 package cellsociety.model.util;
 
-import cellsociety.model.factories.statefactory.CellStateFactory;
-import cellsociety.model.factories.statefactory.handler.CellStateHandler;
+import cellsociety.model.statefactory.CellStateFactory;
+import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.XmlException;

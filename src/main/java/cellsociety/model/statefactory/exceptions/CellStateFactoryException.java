@@ -1,4 +1,4 @@
-package cellsociety.model.factories.statefactory.exceptions;
+package cellsociety.model.statefactory.exceptions;
 
 /**
  * Exception class for errors related to the CellStateFactory.

@@ -5,23 +5,41 @@ import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_MAXSTATE;
 import cellsociety.model.simulation.rules.GameOfLifeRule;
 
 /**
- * Class for representing cell for Game of Life simulation.
+ * The {@code GameOfLifeCell} class represents a cell in the Conway's Game of Life simulation.
+ *
+ * <p>This class follows the {@link Cell} template and interacts with the {@link GameOfLifeRule}
+ * to determine its next state.</p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *   <li>Follows standard Game of Life state transitions (alive/dead).</li>
+ *   <li>Utilizes the {@link GameOfLifeRule} for determining cell evolution.</li>
+ *   <li>Inherits template-based state updates and history tracking from {@link Cell}.</li>
+ * </ul>
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>
+ * GameOfLifeRule rule = new GameOfLifeRule(parameters);
+ * GameOfLifeCell cell = new GameOfLifeCell(GAMEOFLIFE_ALIVE, rule);
+ * cell.calcNextState();
+ * cell.step();
+ * </pre>
  *
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule> {
 
   /**
-   * Constructs a Game of Life cell with a specified initial state and rule.
+   * Constructs a {@code GameOfLifeCell} with the specified initial state and rule.
    *
-   * @param state - the initial state of the cell (must be a state from GameOfLifeStates)
-   * @param rule  - the Game of Life rule to calculate the next state
+   * @param state the initial state of the cell (must be a valid Game of Life state).
+   * @param rule  the {@code GameOfLifeRule} governing cell behavior.
    */
   public GameOfLifeCell(int state, GameOfLifeRule rule) {
     super(state, rule);
     validateState(state, GAMEOFLIFE_MAXSTATE);
   }
-
 
   @Override
   protected GameOfLifeCell getSelf() {
@@ -29,14 +47,7 @@ public class GameOfLifeCell extends Cell<GameOfLifeCell, GameOfLifeRule> {
   }
 
   @Override
-  public void setCurrentState(int state) {
-    validateState(state, GAMEOFLIFE_MAXSTATE);
-    super.setCurrentState(state);
-  }
-
-  @Override
-  public void setNextState(int state) {
-    validateState(state, GAMEOFLIFE_MAXSTATE);
-    super.setNextState(state);
+  protected int getMaxState() {
+    return GAMEOFLIFE_MAXSTATE;
   }
 }

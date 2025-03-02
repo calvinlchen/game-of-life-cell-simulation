@@ -1,6 +1,6 @@
-package cellsociety.model.factories.statefactory.handler;
+package cellsociety.model.statefactory.handler;
 
-import cellsociety.model.factories.statefactory.exceptions.CellStateFactoryException;
+import cellsociety.model.statefactory.exceptions.CellStateFactoryException;
 
 import java.util.List;
 import java.util.Map;
