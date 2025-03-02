@@ -7,6 +7,7 @@ import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -167,7 +168,9 @@ public class Simulation<T extends Cell<T, ?, ?>> {
         cellList.add((Cell<T, ?, ?>) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
-      logger.error("Failed to set up create cells for simulation type: {}", simType, e);
+      logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
+          xmlData.getCellStateList().stream().map(Object::toString)
+              .collect(Collectors.joining(", ")), e);
       throw new SimulationException("CellCreationFailed", simType, e);
     }
 
@@ -359,7 +362,8 @@ public class Simulation<T extends Cell<T, ?, ?>> {
     try {
       parameters.setParameter(key, value);
     } catch (Exception e) {
-      logger.error("Failed to update parameter: {} {}", key, value, e);
+      logger.error("Failed to update parameter: {} from value: {} to {}", key,
+          parameters.getParameter(key), value, e);
       throw new SimulationException("ParameterNotFound", key, e);
     }
   }
@@ -410,7 +414,7 @@ public class Simulation<T extends Cell<T, ?, ?>> {
    * @param edge         The edge type specifying boundary behavior (e.g., NONE, MIRROR, TOROIDAL).
    */
   public void changeTopology(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
-    myGrid.setNeighbors(shape, neighborhood, edge);
+    myGrid.setNeighborsAllCells(shape, neighborhood, edge);
   }
 
   // API Calls for use in saving simulation information ---

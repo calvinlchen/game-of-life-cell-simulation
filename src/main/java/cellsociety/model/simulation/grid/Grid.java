@@ -1,11 +1,7 @@
 package cellsociety.model.simulation.grid;
 
-import static cellsociety.model.util.constants.GridTypes.EdgeType.NONE;
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
-import cellsociety.model.simulation.grid.edgefactory.EdgeFactory;
-import cellsociety.model.simulation.grid.edgefactory.handler.EdgeHandler;
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.grid.edgehandler.EdgeHandler;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
@@ -17,25 +13,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Abstract class for general grid.
+ * The {@code Grid} class represents a 2D grid structure containing cells of type {@link Cell}.
  *
- * <p> Grid configures cells to the given pattern and sets the neighbors for the cells, the purpose
- * is to abstract away creation of neighbors for a given cell
+ * <p>This class is responsible for:
+ * <ul>
+ *   <li>Managing grid dimensions and cell placement.</li>
+ *   <li>Setting neighbors for cells based on shape, neighborhood, and edge behavior.</li>
+ *   <li>Providing access and modification methods for cells.</li>
+ *   <li>Uses {@link DirectionRegistry} to determine directionality of neighbors.</li>
+ *   <li>Uses {@link EdgeFactory} and {@link GridDirectionRegistry} to handle the different
+ *   grid topologies.</li>
+ * </ul>
  *
- * <p> Reference for generics: https://www.geeksforgeeks.org/generics-in-java/
+ * <p>The main purpose for this class is to abstract the implementation of the grid and thier
+ * neighbors while providing other classes access to the cells.
  *
- * @param <T> - the type of cell in the grid, must extend Cell
+ * <p><b>Example Usage:</b></p>
+ * <pre>
+ * Grid<Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.TOROIDAL);
+ * Cell cell = grid.getCell(3, 5);
+ * List<Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
+ * </pre>
+ *
+ * @param <T> The type of cell used in the grid, must extend {@link Cell}.
  * @author Jessica Chen
+ * @author ChatGPT helped with JavaDocs
  */
 public class Grid<T extends Cell<T, ?, ?>> {
+
+  private static final Logger logger = LogManager.getLogger(Grid.class);
 
   private final List<List<T>> myGrid;
   private int myRows;
   private int myCols;
-
-  private final ResourceBundle myResources;
 
   /**
    * Constructs a Grid with specified dimensions.
@@ -44,10 +58,7 @@ public class Grid<T extends Cell<T, ?, ?>> {
    * @param rows  - number of rows in the grid
    * @param cols  - number of columns in the grid
    */
-  @Deprecated
   public Grid(List<T> cells, int rows, int cols) {
-    myResources = getErrorSimulationResourceBundle("English");
-
     myGrid = initializeGrid(rows, cols);
     initializeCells(cells);
   }
@@ -70,28 +81,16 @@ public class Grid<T extends Cell<T, ?, ?>> {
   public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
       EdgeType edgeType) {
     this(cells, rows, cols);
-    setNeighbors(shape, neighborhoodType, edgeType);
+    setNeighborsAllCells(shape, neighborhoodType, edgeType);
   }
 
-  /**
-   * Constructs a Grid with specified dimensions.
-   *
-   * @param cells - cells to be added
-   * @param rows  - number of rows in the grid
-   * @param cols  - number of columns in the grid
-   */
-  @Deprecated
-  public Grid(List<T> cells, int rows, int cols, String language) {
-    myResources = getErrorSimulationResourceBundle(language);
-
-    myGrid = initializeGrid(rows, cols);
-    initializeCells(cells);
-  }
+  // Start of Initialize Grid and Cells in Grid ------
 
   private List<List<T>> initializeGrid(int rows, int cols) {
     final List<List<T>> grid;
     if (rows <= 0 || cols <= 0) {
-      throw new SimulationException(myResources.getString("InvalidGridDimensions"));
+      logger.error("Grid initialization failed: Invalid dimensions {}x{}", rows, cols);
+      throw new SimulationException("InvalidGridDimensions");
     }
 
     myRows = rows;
@@ -100,110 +99,7 @@ public class Grid<T extends Cell<T, ?, ?>> {
     return grid;
   }
 
-  /**
-   * Sets the neighbors for each cell in the grid based on the specified shape, neighborhood type,
-   * and edge type.
-   *
-   * <p> When using this clears all prior neighbors from all cells
-   *
-   * @param shape        - The shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
-   *                     TRIANGLE).
-   * @param neighborhood - The neighborhood type defining how neighbors are determined (e.g., MOORE,
-   *                     VON_NEUMANN, EXTENDED_MOORE).
-   * @param edge         - The edge type specifying the behavior at the boundaries of the grid
-   *                     (e.g., NONE, MIRROR, TOROIDAL).
-   */
-  // TODO: I pretty sure grid is just my grid
-  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
-    getCells().forEach(Cell::clearNeighbors);
-
-    List<List<T>> grid = getGrid();
-    int rows = getRows();
-    int cols = getCols();
-
-    Map<String, int[][]> directionsMap = GridFactory.getDirections(shape, neighborhood);
-
-    for (int i = 0; i < rows; i++) {
-      String key = (i % 2 == 0) ? "even" : "odd";
-      int[][] directions = directionsMap.get(key);
-
-      for (int j = 0; j < cols; j++) {
-        findNeighbors(grid, i, j, directions, edge);
-      }
-    }
-  }
-
-  /**
-   * Helper function to set the neighbors for a given shape in a specified neighborhood.
-   *
-   * <p>This method iterates over each cell in the given shape and sets its neighboring cells
-   * according to the specified directions provided by the neighborhood. It abstracts the
-   * neighbor-setting logic for consistent and reusable functionality.
-   *
-   * @param shape        - The structure or grid representing the cells (e.g., a 2D array or other
-   *                     collection of cells) for which neighbors are to be set.
-   * @param neighborhood - An object or collection representing the directions or rules that specify
-   *                     how neighbors should be assigned (e.g., relative coordinates, adjacency
-   *                     lists).
-   */
-  public void setNeighbors(ShapeType shape, NeighborhoodType neighborhood) {
-    setNeighbors(shape, neighborhood, NONE);
-  }
-
-  private void findNeighbors(List<List<T>> grid, int i, int j, int[][] directions, EdgeType edge) {
-    T cell = grid.get(i).get(j);
-    if (cell == null) {
-      return;
-    }
-
-    Map<DirectionType, List<T>> neighbors = getNeighborsForCell(grid, i, j, directions, edge);
-    cell.setDirectionalNeighbors(neighbors);
-    cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
-  }
-
-  private Map<DirectionType, List<T>> getNeighborsForCell(List<List<T>> grid, int row, int col,
-      int[][] directions, EdgeType edge) {
-    EdgeHandler edgeHandler = EdgeFactory.getHandler(edge);
-
-    Map<DirectionType, List<T>> neighbors = new HashMap<>();
-    for (int[] dir : directions) {
-      int newRow = row + dir[0];
-      int newCol = col + dir[1];
-
-      DirectionType directionType = determineDirection(dir);
-      neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
-
-      if (isValidPosition(newRow, newCol)) {
-        neighbors.get(directionType).add(grid.get(newRow).get(newCol));
-      } else {
-        Optional<List<Integer>> replacementCell = edgeHandler.handleEdgeNeighbor(row, col, myRows,
-            myCols, dir);
-        replacementCell.ifPresent(integers -> neighbors.get(directionType)
-            .add(grid.get(integers.get(0)).get(integers.get(1))));
-      }
-    }
-    return neighbors;
-  }
-
-  private DirectionType determineDirection(int[] dir) {
-    int x = Integer.compare(dir[0], 0);
-    int y = Integer.compare(dir[1], 0);
-
-    Optional<DirectionType> direction = DirectionFactory.getDirection(x + "," + y);
-    if (direction.isPresent()) {
-      return direction.get();
-    }
-
-    throw new SimulationException(myResources.getString("InvalidDirection"));
-  }
-
-
-  /**
-   * Initialize the grid with correct cells.
-   *
-   * @param cells - cells to be added
-   */
-  public void initializeCells(List<T> cells) {
+  private void initializeCells(List<T> cells) {
     validateCells(cells);
     myGrid.clear();
     fillGridWithCells(cells);
@@ -211,12 +107,14 @@ public class Grid<T extends Cell<T, ?, ?>> {
 
   private void validateCells(List<T> cells) {
     if (cells == null) {
-      throw new SimulationException(myResources.getString("NullCellsList"));
+      logger.error("Grid initialization failed: Cannot create grid with null cells list.");
+      throw new SimulationException("NullCellsList");
     }
     if (cells.size() != myRows * myCols) {
-      throw new SimulationException(
-          String.format(myResources.getString("MismatchedCellCount"), cells.size(),
-              myRows * myCols));
+      logger.error(
+          "Grid initialization failed: Mismatched number of {} cells for expected size of {}x{}.",
+          cells.size(), myRows, myCols);
+      throw new SimulationException("MismatchedCellCount", cells.size(), myRows * myCols);
     }
   }
 
@@ -239,6 +137,120 @@ public class Grid<T extends Cell<T, ?, ?>> {
     return row;
   }
 
+  // Start of Neighborhood Calculations ------
+
+  /**
+   * Sets the neighbors for each cell in the grid based on the specified shape, neighborhood type,
+   * and edge type.
+   *
+   * <p>Simplification: even if the shape and neighborhood remains the same, clears current
+   * neighbors and just recalculates them again.
+   *
+   * @param shape        - The shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
+   *                     TRIANGLE).
+   * @param neighborhood - The neighborhood type defining how neighbors are determined (e.g., MOORE,
+   *                     VON_NEUMANN, EXTENDED_MOORE).
+   * @param edge         - The edge type specifying the behavior at the boundaries of the grid
+   *                     (e.g., NONE, MIRROR, TOROIDAL).
+   */
+  public void setNeighborsAllCells(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
+    getCells().forEach(Cell::clearNeighbors);
+
+    for (int i = 0; i < myRows; i++) {
+      Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
+
+      if (directions.isEmpty()) {
+        logger.error("Invalid shape/neighborhood combination: {} {}", shape, neighborhood);
+        throw new SimulationException("InvalidGridShapeNeighborhood", shape, neighborhood);
+      }
+
+      for (int j = 0; j < myCols; j++) {
+        setNeighbors(i, j, directions.get(), edge);
+      }
+    }
+  }
+
+  /**
+   * Finds the neighbors for a specific cell in the grid based on its position, allowed directions,
+   * and edge behavior, and assigns these neighbors to the cell.
+   *
+   * @param i          - the row index of the cell
+   * @param j          - the column index of the cell
+   * @param directions - a 2D array defining the
+   */
+  private void setNeighbors(int i, int j, int[][] directions, EdgeType edge) {
+    T cell = myGrid.get(i).get(j);
+    if (cell == null) {
+      return;
+    }
+
+    Map<DirectionType, List<T>> neighbors = findNeighbors(i, j, directions, edge);
+    cell.setDirectionalNeighbors(neighbors);
+    cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
+  }
+
+  /**
+   * Finds the neighbors for a specific cell in the grid based on its position, allowed directions,
+   * and edge behavior.
+   *
+   * @param i          - the row index of the target cell
+   * @param j          - the column index of the target cell
+   * @param directions - a 2D array defining the relative directions to check for neighbors
+   * @param edge       - the edge type specifying the behavior at grid boundaries
+   * @return a map containing the neighbors categorized by their direction type
+   * @throws SimulationException if the provided edge type is invalid
+   */
+  private Map<DirectionType, List<T>> findNeighbors(int i, int j, int[][] directions,
+      EdgeType edge) {
+    Optional<EdgeHandler> edgeHandler = EdgeFactory.getHandler(edge);
+    if (edgeHandler.isEmpty()) {
+      logger.error("Invalid edge type: {}", edge);
+      throw new SimulationException("InvalidEdgeType", edge);
+    }
+
+    Map<DirectionType, List<T>> neighbors = new HashMap<>();
+    for (int[] dir : directions) {
+      int newRow = i + dir[0];
+      int newCol = j + dir[1];
+
+      DirectionType directionType = determineDirection(dir);
+      neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
+
+      if (isValidPosition(newRow, newCol)) {
+        neighbors.get(directionType).add(myGrid.get(newRow).get(newCol));
+      } else {
+        Optional<List<Integer>> replacementCell = edgeHandler.get()
+            .handleEdgeNeighbor(i, j, myRows, myCols, dir);
+        replacementCell.ifPresent(integers -> neighbors.get(directionType)
+            .add(myGrid.get(integers.get(0)).get(integers.get(1))));
+      }
+    }
+    return neighbors;
+  }
+
+  /**
+   * Determines the direction type based on the provided directional vector.
+   *
+   * @param dir - an array of two integers representing the directional vector where dir[0] is the
+   *            x-component and dir[1] is the y-component.
+   * @return the corresponding {@code DirectionType} for the given directional vector.
+   * @throws SimulationException if the direction vector does not map to a valid
+   *                             {@code DirectionType}.
+   */
+  private DirectionType determineDirection(int[] dir) {
+    int x = Integer.compare(dir[0], 0);
+    int y = Integer.compare(dir[1], 0);
+
+    Optional<DirectionType> direction = DirectionRegistry.getDirection(x + "," + y);
+    if (direction.isPresent()) {
+      return direction.get();
+    }
+
+    logger.error("Invalid direction vector: {} {} from dir {}", x, y, dir[0] + "," + dir[1]);
+    throw new SimulationException("InvalidDirection");
+  }
+
+  // Start of Getters and Setters for Grid ------
 
   /**
    * Get neighbors of a specific cell.
@@ -251,90 +263,75 @@ public class Grid<T extends Cell<T, ?, ?>> {
   }
 
   /**
-   * Checks if the given row and column are within grid bounds.
+   * Retrieves the cell at the specified position in the grid.
    *
-   * @param row - x row to check if within bounds
-   * @param col - y col to check if within bounds
-   */
-  public boolean isValidPosition(int row, int col) {
-    return row >= 0 && row < myRows && col >= 0 && col < myCols;
-  }
-
-  /**
-   * Gets a cell from the grid.
-   *
-   * @param row - x row to get cell from
-   * @param col - y col to get cell from
-   * @return the cell in a given place or null if no cell there but valid position
+   * @param row - the row index of the cell to retrieve
+   * @param col - the column index of the cell to retrieve
+   * @return the cell at the specified (row, col) position
+   * @throws SimulationException if the specified position is invalid
    */
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col));
+      logger.error("InvalidGridPosition: {} {}", row, col);
+      throw new SimulationException("InvalidGridPosition", row, col);
     }
     return myGrid.get(row).get(col);
   }
 
   /**
-   * Sets a cell in the grid.
+   * Sets the specified cell at the given row and column position in the grid.
    *
-   * @param row  - row index
-   * @param col  - column index
-   * @param cell - cell to be placed
+   * @param row  - the row index of the cell to set
+   * @param col  - the column index of the cell to set
+   * @param cell - the cell object to place at the specified position
+   * @throws SimulationException if the position (row, col) is invalid or if the cell object is
+   *                             null
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException(
-          String.format(myResources.getString("InvalidGridPosition"), row, col));
+      throw new SimulationException("InvalidGridPosition", row, col);
     }
     if (cell == null) {
-      throw new SimulationException(myResources.getString("NullCell"));
+      throw new SimulationException("NullCell");
     }
     myGrid.get(row).set(col, cell);
   }
 
   /**
-   * Gets the number of rows in the grid.
+   * Get all cells in the grid as a list.
    *
-   * @return number of rows
-   */
-  public int getRows() {
-    return myRows;
-  }
-
-  /**
-   * Gets the number of columns in the grid.
+   * <p>Hides implementation details ias it just returns all cells regardless of order.
    *
-   * @return number of columns
-   */
-  public int getCols() {
-    return myCols;
-  }
-
-  /**
-   * Gets the entire grid.
-   *
-   * @return the grid as a list of lists
-   */
-  public List<List<T>> getGrid() {
-    return myGrid;
-  }
-
-  /**
-   * Get all cells in the grid as a flattened list.
-   *
-   * @return A list of all cells in the grid as a flattened grid
+   * @return A list of all cells in the grid as a list.
    */
   public List<T> getCells() {
     return myGrid.stream().flatMap(List::stream).toList();
   }
 
+  // Start of Misc ------
+
   /**
-   * return resource bundle associated for exceptions.
+   * Checks if the given position specified by row and column indices is within the valid bounds of
+   * the grid. A position is considered valid if it is within the range of 0 (inclusive) to the
+   * total number of rows and columns (exclusive).
    *
-   * @return resource bundle associated for exception
+   * @param row the row index of the position to check
+   * @param col the column index of the position to check
+   * @return true if the position (row, col) is within the bounds of the grid; false otherwise
    */
-  public ResourceBundle getResources() {
-    return myResources;
+  boolean isValidPosition(int row, int col) {
+    return row >= 0 && row < myRows && col >= 0 && col < myCols;
+  }
+
+  int getRows() {
+    return myRows;
+  }
+
+  int getCols() {
+    return myCols;
+  }
+
+  List<List<T>> getGrid() {
+    return myGrid;
   }
 }

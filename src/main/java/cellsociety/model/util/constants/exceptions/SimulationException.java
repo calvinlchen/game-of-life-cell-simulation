@@ -3,6 +3,9 @@ package cellsociety.model.util.constants.exceptions;
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.GridTypes.EdgeType;
+import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
+import cellsociety.model.util.constants.GridTypes.ShapeType;
 import java.util.ResourceBundle;
 
 /**
@@ -43,13 +46,36 @@ public class SimulationException extends RuntimeException {
   /**
    * Constructs a SimulationException with a specified error message key, two integer parameters.
    *
-   * @param key   - the key used to retrieve the corresponding error message from the resource
-   *              bundle
-   * @param i     - the first integer parameter related to the error context
-   * @param j     - the second integer parameter related to the error context
+   * @param key - the key used to retrieve the corresponding error message from the resource bundle
+   * @param i   - the first integer parameter related to the error context
+   * @param j   - the second integer parameter related to the error context
    */
   public SimulationException(String key, int i, int j) {
     super(String.format(myResources.getString(key), i, j));
+  }
+
+  /**
+   * Constructs a SimulationException with a specified error message key, shape type, and
+   * neighborhood type.
+   *
+   * @param key              - the key used to retrieve the corresponding error message from the
+   *                         resource bundle
+   * @param shapeType        - the type of shape where the exception occurred
+   * @param neighborhoodType - the type of neighborhood where the exception occurred
+   */
+  public SimulationException(String key, ShapeType shapeType, NeighborhoodType neighborhoodType) {
+    super(String.format(myResources.getString(key), shapeType.name(), neighborhoodType.name()));
+  }
+
+  /**
+   * Constructs a SimulationException with a specified error message key and edge type.
+   *
+   * @param key      - the key used to retrieve the corresponding error message from the resource
+   *                 bundle
+   * @param edgeType - the type of edge where the exception occurred
+   */
+  public SimulationException(String key, EdgeType edgeType) {
+    super(String.format(myResources.getString(key), edgeType.name()));
   }
 
   /**

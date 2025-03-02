@@ -122,7 +122,7 @@ public abstract class Cell<C extends Cell<C, R, P>, R extends Rule<C, P>, P exte
   /**
    * Retrieves the current cell instance.
    */
-  abstract C getSelf();
+  protected abstract C getSelf();
 
   /**
    * Resets parameters per step.
