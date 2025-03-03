@@ -5,6 +5,7 @@ import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 
+import java.util.HashMap;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -117,21 +118,27 @@ class RuleFactory {
       Map<String, Object> parameters) {
     // Create parameters instance with defaults
     try {
-      GenericParameters paramInstance = new GenericParameters(simType);
+      Map<String, Double> genericParams = new HashMap<>();
+      Map<String, Object> additionalParams = new HashMap<>();
 
-      // Iterate through all provided parameters
       for (Map.Entry<String, Object> entry : parameters.entrySet()) {
         String key = entry.getKey();
         Object value = entry.getValue();
 
-        // Store numerical values in setParameter(), others in setAdditionalParameter()
         if (value instanceof Number) {
-          paramInstance.setParameter(key, ((Number) value).doubleValue());
+          genericParams.put(key, ((Number) value).doubleValue());
         } else {
-          paramInstance.setAdditionalParameter(key, value);
-          logger.warn("Stored additional parameter '{}' as non-double: {}", key, value);
+          additionalParams.put(key, value);
         }
       }
+
+      // bypass restricted settings
+      GenericParameters paramInstance = new GenericParameters(simType, genericParams);
+      for (Map.Entry<String, Object> entry : additionalParams.entrySet()) {
+        paramInstance.setAdditionalParameter(entry.getKey(), entry.getValue());
+        logger.warn("Stored additional parameter '{}' as non-double: {}", entry.getKey(), entry.getValue());
+      }
+
       return paramInstance;
     } catch (SimulationException e) {
       throw new SimulationException(e);

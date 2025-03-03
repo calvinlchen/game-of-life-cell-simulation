@@ -73,7 +73,7 @@ class XmlDataTest {
 
     @Test
     void testGetAndSetParameters() {
-        Map<String, Double> expectedParameters = new HashMap<>();
+        Map<String, Object> expectedParameters = new HashMap<>();
         expectedParameters.put("probability", 0.5);
         expectedParameters.put("threshold", 0.75);
         xmlData.setParameters(expectedParameters);

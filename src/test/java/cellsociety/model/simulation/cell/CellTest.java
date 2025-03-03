@@ -1,214 +1,205 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.SimulationTypes.SimType.Langton;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import cellsociety.model.simulation.parameters.Parameters;
-import cellsociety.model.simulation.rules.Rule;
+import cellsociety.model.simulation.parameters.GenericParameters;
+import cellsociety.model.simulation.rules.LangtonRule;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
+public class CellTest {
 
-class CellTest {
-
-  private TestCell testCell;
-  private TestRule mockRule;
-  private Parameters mockParameters;
-
-  // Mockito set up done with the help of chatGPT,
-  // although edited to fit the actual generic structure
-  static class TestCell extends Cell<TestCell, TestRule, Parameters> {
-
-    public TestCell(int state, TestRule rule) {
-      super(state, rule);
-    }
-
-    @Override
-    protected TestCell getSelf() {
-      return this;
-    }
-  }
-
-  static class TestRule extends Rule<TestCell, Parameters> {
-
-    public TestRule(Parameters parameters) {
-      super(parameters);
-    }
-
-    @Override
-    public int apply(TestCell cell) {
-      return 0;
-    }
-  }
-
+  private GenericParameters parameters;
+  private LangtonRule rule;
+  private LangtonCell cell;
 
   @BeforeEach
   void setUp() {
-    mockRule = Mockito.mock(TestRule.class);
-    mockParameters = Mockito.mock(Parameters.class);
-    when(mockRule.getParameters()).thenReturn(mockParameters);
-    when(mockParameters.getParameter("maxHistorySize")).thenReturn(3.);
-
-    testCell = new TestCell(1, mockRule);
+    // for simplicity just going to use Langton's as it does not override any of the rules method beyond the abstract one
+    parameters = new GenericParameters(Langton);
+    rule = new LangtonRule(parameters);
+    cell = new LangtonCell(0, rule);
   }
 
   @Test
-  @DisplayName("Initial state is set correctly")
-  void cell_TestInitializedState_ReturnInitialCorrectStates() {
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(1, testCell.getNextState());
-    assertEquals(0, testCell.getNeighbors().size());
+  @DisplayName("Cell constructor properly initializes defaults. "
+      + "Also does positive checks on several getters, set states, and step back")
+  void cell_DefaultConstructor_HasDefaultValues() {
+    assertEquals(1, cell.getStateLength());
+    assertTrue(cell.getNeighbors().isEmpty());
+    assertTrue(cell.getDirectionalNeighbors(DirectionType.N).isEmpty());
 
-    testCell.stepBack();
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(1, testCell.getNextState());
+    cell.setCurrentState(1);
+    cell.setNextState(1);
+    cell.stepBack();
+    assertEquals(0, cell.getCurrentState());
+    assertEquals(0, cell.getNextState());
   }
 
   @Test
-  @DisplayName("Save current state saves current state")
-  void saveCurrentState_TestSaveState_SaveCurrentState() {
-    testCell.setCurrentState(3);
-
-    testCell.stepBack();
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(1, testCell.getNextState());
-
-    testCell.setCurrentState(3);
-    testCell.saveCurrentState();
-    testCell.setCurrentState(2);
-    testCell.stepBack();
-    assertEquals(3, testCell.getCurrentState());
-    assertEquals(3, testCell.getNextState());
+  @DisplayName("Cell constructor throws exception if rules are null")
+  void cell_NullRules_ThrowsException() {
+    assertThrows(SimulationException.class, () -> new LangtonCell(0, null));
   }
 
   @Test
-  @DisplayName("Save only up to history amount of steps")
-  void saveCurrentState_TestSaveOnlyUpToHistoryAmountOfSteps_SaveLast3States() {
-    // 1
-    testCell.setCurrentState(2);
-    testCell.saveCurrentState();  // 1 -> 2
-
-    testCell.setCurrentState(3);
-    testCell.saveCurrentState();  // 1 -> 2 -> 3
-
-    testCell.setCurrentState(4);
-    testCell.saveCurrentState();  // 2 -> 3 -> 4
-
-    testCell.setCurrentState(5);
-
-    testCell.stepBack();
-    assertEquals(4, testCell.getCurrentState());
-    assertEquals(4, testCell.getNextState());
-
-    testCell.stepBack();
-    assertEquals(3, testCell.getCurrentState());
-    assertEquals(3, testCell.getNextState());
-
-    testCell.stepBack();
-    assertEquals(2, testCell.getCurrentState());
-    assertEquals(2, testCell.getNextState());
-
-    testCell.stepBack();
-    assertEquals(2, testCell.getCurrentState());
-    assertEquals(2, testCell.getNextState());
+  @DisplayName("Cell constructor throws exception if state is invalid")
+  void cell_InvalidState_ThrowsException() {
+    assertThrows(SimulationException.class, () -> new LangtonCell(99, rule));
   }
 
   @Test
-  @DisplayName("Throw error if maxHistorySize is invalid")
-  void saveCurrentState_InvalidMaxHistorySize_ThrowSimulationException() {
-    TestRule mockRule2 = Mockito.mock(TestRule.class);
-    Parameters mockParameters2 = Mockito.mock(Parameters.class);
-    when(mockRule2.getParameters()).thenReturn(mockParameters2);
-    when(mockParameters2.getParameter("maxHistorySize")).thenReturn(-3.);
-
-    assertThrows(SimulationException.class, () -> new TestCell(1, mockRule2));
+  @DisplayName("SaveCurrentState throws exception if maxHistory size is invalid")
+  void saveCurrentState_InvalidMaxHistorySize_ThrowsException() {
+    cell.getRule().getParameters().setParameter("maxHistorySize", -1.0);
+    assertThrows(SimulationException.class, () -> cell.saveCurrentState());
   }
 
   @Test
-  @DisplayName("Test calculate next state")
-  void calcNextState_TestCalcNextState_SetNextStateToRuleApply() {
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(1, testCell.getNextState());
+  @DisplayName("SaveCurrentState correctly removes additional items if over maxHistory")
+  void saveCurrentState_OverMaxHistory_RemovesEarliest() {
+    cell.getRule().getParameters().setParameter("maxHistorySize", 2.0);
 
-    testCell.calcNextState();
+    // by default saves 0
+    cell.setCurrentState(1);
+    cell.saveCurrentState(); // 0 -> 1
 
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(0, testCell.getNextState());
+    cell.setCurrentState(2);
+    cell.saveCurrentState(); // 1 -> 2
+
+    cell.setCurrentState(3);
+
+    cell.stepBack();
+    assertEquals(2, cell.getCurrentState());
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
+    cell.stepBack();
+    assertEquals(1, cell.getCurrentState());
   }
 
   @Test
-  @DisplayName("Test step updates to next step")
-  void step_TestStep_SetCurrentStateToNextStep() {
-    assertEquals(1, testCell.getCurrentState());
-    assertEquals(1, testCell.getNextState());
-
-    testCell.setNextState(2);
-    assertEquals(1, testCell.getCurrentState());
-
-    testCell.step();
-    assertEquals(2, testCell.getCurrentState());
+  @DisplayName("CalcNextState throws error if any of the internal steps has a simulation error")
+  void calcNextState_RuleApplyThrowsSimulationError_ThrowsException() {
+    assertThrows(SimulationException.class, () -> cell.calcNextState() );
   }
 
   @Test
-  @DisplayName("Test get position of cell returns current position")
-  void getPosition_TestGetPosition_ReturnCurrentPosition() {
-    int[] position = new int[]{1, 2};
-    testCell.setPosition(position);
-    int[] result = testCell.getPosition();
-    assertEquals(position.length, result.length);
-    assertEquals(position[0], result[0]);
-    assertEquals(position[1], result[1]);
+  @DisplayName("Step correctly updates new state length and current state if valid next state")
+  void step_ValidNextState_UpdatesStateLengthAndCurrentState() {
+    cell.setNextState(2);
+    assertEquals(1, cell.getStateLength());
+    assertEquals(0, cell.getCurrentState());
+
+    cell.step();
+    assertEquals(1, cell.getStateLength());
+    assertEquals(2, cell.getCurrentState());
   }
 
   @Test
-  @DisplayName("Get position throws error if cell does not have position")
-  void getPosition_TestGetPosition_ThrowsSimulationExceptionIfNullPosition() {
-    assertThrows(SimulationException.class, () -> testCell.getPosition());
+  @DisplayName("UpdateStateLength correctly increases statelenght if state remains the same")
+  void updateStateLength_SameState_IncreasesStateLength() {
+    cell.setNextState(0);
+    assertEquals(1, cell.getStateLength());
+
+    cell.updateStateLength();
+    assertEquals(2, cell.getStateLength());
   }
 
   @Test
-  @DisplayName("Set position throws simulation exception if trying to set position to null")
-  void setPosition_TestSetPosition_ThrowsSimulationExceptionIfNullPosition() {
-    assertThrows(SimulationException.class, () -> testCell.setPosition(null));
+  @DisplayName("SetPosition correctly sets position for valid position. "
+      + "Also checks for positive getPosition functionality.")
+  void setPosition_ValidPosition_SetsPositionCorrectly() {
+    int[] position = {1, 2};
+    cell.setPosition(position);
+    assertEquals(position[0], cell.getPosition()[0]);
+    assertEquals(position[1], cell.getPosition()[1]);
   }
 
   @Test
-  @DisplayName("Set position throws simulation exception if trying to set position to invalid length")
-  void setPosition_TestSetPosition_ThrowsSimulationExceptionIfInvalidLength() {
-    assertThrows(SimulationException.class, () -> testCell.setPosition(new int[]{1}));
+  @DisplayName("SetPosition throws exception if passed in position is null")
+  void setPosition_NullPosition_ThrowsException() {
+    assertThrows(SimulationException.class, () -> cell.setPosition(null));
   }
 
   @Test
-  @DisplayName("Throws simulation exception if you try to set neighbors to null")
-  void setNeighbors_TestIllegalParameters_ThrowsSimulationExceptionIfNullNeighbors() {
-    assertThrows(SimulationException.class, () -> testCell.setNeighbors(null));
+  @DisplayName("SetPosition throws exception if passed in position is in the wrong dimension")
+  void setPosition_WrongDimension_ThrowsException() {
+    int[] position = {1, 2, 3};
+    assertThrows(SimulationException.class, () -> cell.setPosition(position));
   }
 
   @Test
-  @DisplayName("Returns rule correctly")
-  void getRule_TestGetRule_ReturnRule() {
-    assertEquals(mockRule, testCell.getRule());
+  @DisplayName("SetNeighbors throws exception if attempts to set neighbors to null")
+  void setNeighbors_NullNeighbors_ThrowsException() {
+    assertThrows(SimulationException.class, () -> cell.setNeighbors(null));
   }
 
   @Test
-  @DisplayName("No error if passed in state is valid")
-  void validateState_TestIsValidState_NoError() {
-    testCell.validateState(2, 3);
+  @DisplayName("SetDirectionalNeighbors throws exception if attempts to set directional neighbors to null")
+  void setDirectionalNeighbors_NullDirectionalNeighbors_ThrowsException() {
+    assertThrows(SimulationException.class, () -> cell.setDirectionalNeighbors(null));
   }
 
   @Test
-  @DisplayName("error if passed in state is negative")
-  void validateState_TestIsNegativeState_ThrowSimulationException() {
-    assertThrows(SimulationException.class, () -> testCell.validateState(-1, 3));
+  @DisplayName("ClearNeighbors properly clears all neighbors and directional neighbors")
+  void clearNeighbors_ClearsAllNeighbors_ClearsNeighbors() {
+    cell.setNeighbors(List.of(new LangtonCell(0, rule)));
+    cell.setDirectionalNeighbors(Map.of(DirectionType.N, List.of(new LangtonCell(1, rule))));
+
+    cell.clearNeighbors();
+
+    assertTrue(cell.getNeighbors().isEmpty());
+    assertTrue(cell.getDirectionalNeighbors(DirectionType.N).isEmpty());
   }
 
-  @Test
-  @DisplayName("error if passed in cell is greater than max")
-  void validateState_TestIsGreaterMaxState_ThrowSimulationException() {
-    assertThrows(SimulationException.class, () -> testCell.validateState(1, 1));
+  @Nested
+  @DisplayName("Tests for calculating steps with mocked rules")
+  class CellTestMockRules {
+
+    private GenericParameters parameters;
+    private LangtonRule rule;
+    private LangtonCell cell;
+
+    @BeforeEach
+    void setUp() {
+      // for simplicity just going to use Langton's as it does not override any of the rules method beyond the abstract one
+      parameters = new GenericParameters(Langton);
+      rule = mock(LangtonRule.class);
+      when(rule.getParameters()).thenReturn(parameters);
+      cell = new LangtonCell(0, rule);
+    }
+
+    // ChatGpt helped get the initial mocking structure to be sert up
+    @Test
+    @DisplayName("calcNextState correctly sets next state based on rule.apply() result. "
+        + "This uses nonoverriden shouldSkipCalculation and postProcessNextState")
+    void calcNextState_DefaultWithCorrectStateFromRule_SetsNextStateCorrectly() {
+      // Mock rule.apply() to return 2
+      when(rule.apply(any(LangtonCell.class))).thenReturn(2);
+
+      // Call method under test
+      cell.calcNextState();
+
+      // Assert that the next state was updated
+      assertEquals(2, cell.getNextState());
+    }
+
+    @Test
+    @DisplayName("CalcNextState throws exception because next state is invalid")
+    void calcNextState_WithInvalidStateFromRule_ThrowsException () {
+      when(rule.apply(any(LangtonCell.class))).thenReturn(-1);
+
+      assertThrows(SimulationException.class, () -> cell.calcNextState());
+    }
   }
 }

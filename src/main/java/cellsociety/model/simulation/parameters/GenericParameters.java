@@ -98,6 +98,7 @@ public class GenericParameters extends Parameters {
    */
   public GenericParameters(SimType simType) {
     super();
+
     if (DEFAULT_VALUES.containsKey(simType)) {
       try {
         super.setParameters(DEFAULT_VALUES.get(simType));
@@ -116,6 +117,45 @@ public class GenericParameters extends Parameters {
     if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
       unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
     }
+  }
+
+  /**
+   * Constructs a new instance of GenericParameters with default parameter values initialized based
+   * on the specified simulation type and additional parameter map.
+   *
+   * <p>If the simulation type has predefined default parameter values, they are set automatically.
+   * Default additional parameters and unmodifiable parameter lists are also initialized if
+   * available for the given simulation type.
+   *
+   * @param simType   the type of simulation for which to configure parameters (e.g., GameOfLife,
+   *                  Percolation, etc.)
+   * @param newParams a map containing parameter names as keys and their associated values as
+   *                  doubles to override or extend existing default parameters
+   * @throws SimulationException if there is an error applying the default parameters
+   */
+  public GenericParameters(SimType simType, Map<String, Double> newParams) {
+    super();
+
+    if (DEFAULT_VALUES.containsKey(simType)) {
+      try {
+        super.setParameters(DEFAULT_VALUES.get(simType));
+
+      } catch (SimulationException e) {
+        throw new SimulationException(e);
+      }
+    }
+
+    if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
+      additionalParams = new HashMap<>(DEFAULT_ADDITIONAL_VALUES.get(simType));
+    } else {
+      additionalParams = new HashMap<>();
+    }
+
+    if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
+      unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
+    }
+
+    super.setParameters(newParams);
   }
 
   @Override
