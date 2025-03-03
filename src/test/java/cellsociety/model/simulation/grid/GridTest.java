@@ -580,286 +580,291 @@ public class GridTest {
       assertTrue(cell.getDirectionalNeighbors(DirectionType.S).isEmpty());
     }
 
-//    @Test
-//    @DisplayName("Grid Hexagon, ExtendedMoore, None is set up properly if not enough cells for full neighborhood")
-//    void grid_HexagonExtendedMooreNoneIncompleteNeighborhood_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule),
-//          new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
-//          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule),
-//          new RockPaperScissCell(8, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
-//          NeighborhoodType.EXTENDED_MOORE, EdgeType.NONE);
-//
-//      // should behave like moore
-//      assertEquals(8, grid.getNeighbors(1, 1).size());
-//      assertEquals(8, grid.getNeighbors(0, 0).size());
-//      assertEquals(8, grid.getNeighbors(0, 1).size());
-//
-//
-//      RockPaperScissCell cell = grid.getCell(1, 1);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(2)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(7)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(8)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, ExtendedMoore, None is set up properly")
-//    void grid_HexagonExtendedMooreNonCompleteNeighborhood_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
-//          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule),
-//          new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule),
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
-//          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
-//          NeighborhoodType.EXTENDED_MOORE, EdgeType.NONE);
-//
-//      assertEquals(24, grid.getNeighbors(2, 2).size()); // full neighborhood
-//      assertEquals(8, grid.getNeighbors(0, 0).size());  // corner
-//      assertEquals(11, grid.getNeighbors(0, 1).size()); // edge corner
-//      assertEquals(15, grid.getNeighbors(1, 1).size()); // corner diagonal
-//      assertEquals(14, grid.getNeighbors(0, 2).size()); // edge edge
-//      assertEquals(19, grid.getNeighbors(1, 2).size()); // edge edge + 1
-//
-//      RockPaperScissCell cell = grid.getCell(2, 2);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(2)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(4)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(7)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(8)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(9)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(10)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(11)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(13)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(14)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(15)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(16)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(17)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(18)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(19)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(20)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(21)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(22)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(23)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(24)));
-//    }
-//
-//
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, Moore, Toroidal is set up properly")
-//    void grid_HexagonMooreToroidal_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
-//          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
-//          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
-//          NeighborhoodType.MOORE, EdgeType.TOROIDAL);
-//
-//      // all cells should have complete neighborhoods
-//      assertEquals(8, grid.getNeighbors(1, 1).size());
-//      assertEquals(8, grid.getNeighbors(0, 0).size());
-//      assertEquals(8, grid.getNeighbors(0, 1).size());
-//
-//      // going to do corner since that should capture the most behavior
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(8)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(7)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(2)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(4)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, VonNeumann, Toroidal is set up properly")
-//    void grid_HexagonVonNeumannToroidal_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
-//          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
-//          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
-//          NeighborhoodType.VON_NEUMANN, EdgeType.TOROIDAL);
-//
-//      // all cells should have complete neighborhoods
-//      assertEquals(4, grid.getNeighbors(1, 1).size());
-//      assertEquals(4, grid.getNeighbors(0, 0).size());
-//      assertEquals(4, grid.getNeighbors(0, 1).size());
-//
-//      // going to do corner since that should capture the most behavior
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(2)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, ExtendedMoore, Toroidal is set up properly")
-//    void grid_HexagonExtendedMooreToroidal_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
-//          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule), new RockPaperScissCell(9, rule),
-//          new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule), new RockPaperScissCell(12, rule), new RockPaperScissCell(13, rule), new RockPaperScissCell(14, rule),
-//          new RockPaperScissCell(15, rule), new RockPaperScissCell(16, rule), new RockPaperScissCell(17, rule), new RockPaperScissCell(18, rule), new RockPaperScissCell(19, rule),
-//          new RockPaperScissCell(20, rule), new RockPaperScissCell(21, rule), new RockPaperScissCell(22, rule), new RockPaperScissCell(23, rule), new RockPaperScissCell(24, rule)
-//      );
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
-//          NeighborhoodType.EXTENDED_MOORE, EdgeType.TOROIDAL);
-//
-//      assertEquals(24, grid.getNeighbors(2, 2).size()); // full neighborhood
-//      assertEquals(24, grid.getNeighbors(0, 0).size());  // corner
-//      assertEquals(24, grid.getNeighbors(0, 1).size()); // edge corner
-//      assertEquals(24, grid.getNeighbors(1, 1).size()); // corner diagonal
-//      assertEquals(24, grid.getNeighbors(0, 2).size()); // edge edge
-//      assertEquals(24, grid.getNeighbors(1, 2).size()); // edge edge + 1
-//
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(18)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(19)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(15)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(16)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(17)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(23)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(24)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(20)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(21)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(22)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(4)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(2)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(8)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(9)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(7)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(13)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(14)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(10)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(11)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(12)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, Moore, Mirror is set up properly")
-//    void grid_HexagonMooreMirror_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
-//          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
-//          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
-//          NeighborhoodType.MOORE, EdgeType.MIRROR);
-//
-//      // all cells should have complete neighborhoods
-//      assertEquals(8, grid.getNeighbors(1, 1).size());
-//      assertEquals(8, grid.getNeighbors(0, 0).size());
-//      assertEquals(8, grid.getNeighbors(0, 1).size());
-//
-//      // going to do corner since that should capture the most behavior
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(4)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, VonNeumann, Mirror is set up properly")
-//    void grid_HexagonVonNeumannMirror_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
-//          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
-//          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule));
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
-//          NeighborhoodType.VON_NEUMANN, EdgeType.MIRROR);
-//
-//      // all cells should have complete neighborhoods
-//      assertEquals(4, grid.getNeighbors(1, 1).size());
-//      assertEquals(4, grid.getNeighbors(0, 0).size());
-//      assertEquals(4, grid.getNeighbors(0, 1).size());
-//
-//      // going to do corner since that should capture the most behavior
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
-//    }
-//
-//    @Test
-//    @DisplayName("Grid Hexagon, ExtendedMoore, Mirror is set up properly")
-//    void grid_HexagonExtendedMooreMirror_SetsUpNeighborsCorrectly() {
-//      List<RockPaperScissCell> cells = List.of(
-//          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
-//          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule), new RockPaperScissCell(9, rule),
-//          new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule), new RockPaperScissCell(12, rule), new RockPaperScissCell(13, rule), new RockPaperScissCell(14, rule),
-//          new RockPaperScissCell(15, rule), new RockPaperScissCell(16, rule), new RockPaperScissCell(17, rule), new RockPaperScissCell(18, rule), new RockPaperScissCell(19, rule),
-//          new RockPaperScissCell(20, rule), new RockPaperScissCell(21, rule), new RockPaperScissCell(22, rule), new RockPaperScissCell(23, rule), new RockPaperScissCell(24, rule)
-//      );
-//      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
-//          NeighborhoodType.EXTENDED_MOORE, EdgeType.MIRROR);
-//
-//      assertEquals(24, grid.getNeighbors(2, 2).size()); // full neighborhood
-//      assertEquals(24, grid.getNeighbors(0, 0).size());  // corner
-//      assertEquals(24, grid.getNeighbors(0, 1).size()); // edge corner
-//      assertEquals(24, grid.getNeighbors(1, 1).size()); // corner diagonal
-//      assertEquals(24, grid.getNeighbors(0, 2).size()); // edge edge
-//      assertEquals(24, grid.getNeighbors(1, 2).size()); // edge edge + 1
-//
-//      RockPaperScissCell cell = grid.getCell(0, 0);
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(7)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(2)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(2)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(5)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(6)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(7)));
-//
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(11)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(10)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(10)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(11)));
-//      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(12)));
-//    }
+    @Test
+    @DisplayName("Grid Hexagon, ExtendedMoore, None is set up properly")
+    void grid_HexagonExtendedMooreNone_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(
+          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
+          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule), new RockPaperScissCell(9, rule),
+          new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule), new RockPaperScissCell(12, rule), new RockPaperScissCell(13, rule), new RockPaperScissCell(14, rule),
+          new RockPaperScissCell(15, rule), new RockPaperScissCell(16, rule), new RockPaperScissCell(17, rule), new RockPaperScissCell(18, rule), new RockPaperScissCell(18, rule),
+          new RockPaperScissCell(20, rule), new RockPaperScissCell(21, rule), new RockPaperScissCell(22, rule), new RockPaperScissCell(23, rule), new RockPaperScissCell(24, rule)
+      );
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
+          NeighborhoodType.EXTENDED_MOORE, EdgeType.NONE);
+
+      // should behave like moore
+      assertEquals(18, grid.getNeighbors(2, 2).size());  // center
+      assertEquals(6, grid.getNeighbors(0, 0).size());  // even left corner
+      assertEquals(9, grid.getNeighbors(0, 1).size());  // top/bottom edge
+      assertEquals(7, grid.getNeighbors(0,4).size());   // even right corner
+      assertEquals(10, grid.getNeighbors(1,0).size());   // odd side edge
+      assertEquals(10, grid.getNeighbors(2,0).size());   // even side edge
+      assertEquals(6, grid.getNeighbors(4, 0).size());  // odd left corner
+      assertEquals(7, grid.getNeighbors(4,4).size());   // odd right corner
+
+      RockPaperScissCell cell = grid.getCell(2, 2);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(1)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(2)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(3)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(6)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(7)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(8)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(10)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(11)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(13)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(14)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(15)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(16)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(17)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(18)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(21)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(22)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(23)));
+    }
+
+    @Test
+    @DisplayName("Grid Hexagon, Moore, Toroidal is set up properly")
+    void grid_HexagonMooreToroidal_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
+          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
+          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule),
+          new RockPaperScissCell(9, rule), new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule));
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 4, 3, ShapeType.HEXAGON,
+          NeighborhoodType.MOORE, EdgeType.TOROIDAL);
+
+      // check set neighborhoods
+      assertEquals(6, grid.getNeighbors(1, 1).size());
+      assertEquals(6, grid.getNeighbors(0, 0).size());
+      assertEquals(6, grid.getNeighbors(0, 1).size());
+
+      // corner behavior + even
+      RockPaperScissCell cell = grid.getCell(0,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(11)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(9)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).isEmpty());
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(2)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).isEmpty());
+
+
+      // just to also check odd edge
+      cell = grid.getCell(3,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).isEmpty());
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(6)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(7)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(11)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(10)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).isEmpty());
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(1)));
+    }
+
+    @Test
+    @DisplayName("Grid Hexagon, VonNeumann, Toroidal is set up properly")
+    void grid_HexagonVonNeumannToroidal_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
+          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
+          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule)
+          );
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
+          NeighborhoodType.VON_NEUMANN, EdgeType.TOROIDAL);
+
+      // check set neighborhoods
+      assertEquals(2, grid.getNeighbors(1, 1).size());
+      assertEquals(2, grid.getNeighbors(0, 0).size());
+      assertEquals(2, grid.getNeighbors(0, 1).size());
+
+      // corner behavior + even
+      RockPaperScissCell cell = grid.getCell(0,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(2)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+
+      cell = grid.getCell(1,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(4)));
+    }
+
+    @Test
+    @DisplayName("Grid Hexagon, ExtendedMoore, Toroidal is set up properly")
+    void grid_HexagonExtendedMooreToroidal_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(
+          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
+          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule), new RockPaperScissCell(9, rule),
+          new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule), new RockPaperScissCell(12, rule), new RockPaperScissCell(13, rule), new RockPaperScissCell(14, rule),
+          new RockPaperScissCell(15, rule), new RockPaperScissCell(16, rule), new RockPaperScissCell(17, rule), new RockPaperScissCell(18, rule), new RockPaperScissCell(19, rule),
+          new RockPaperScissCell(20, rule), new RockPaperScissCell(21, rule), new RockPaperScissCell(22, rule), new RockPaperScissCell(23, rule), new RockPaperScissCell(24, rule)
+      );
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
+          NeighborhoodType.EXTENDED_MOORE, EdgeType.TOROIDAL);
+
+      // should behave like moore
+      assertEquals(18, grid.getNeighbors(2, 2).size());  // center
+      assertEquals(18, grid.getNeighbors(0, 0).size());  // even left corner
+      assertEquals(18, grid.getNeighbors(0, 1).size());  // top/bottom edge
+      assertEquals(18, grid.getNeighbors(0,4).size());   // even right corner
+      assertEquals(18, grid.getNeighbors(1,0).size());   // odd side edge
+      assertEquals(18, grid.getNeighbors(2,0).size());   // even side edge
+      assertEquals(18, grid.getNeighbors(4, 0).size());  // odd left corner
+      assertEquals(18, grid.getNeighbors(4,4).size());   // odd right corner
+
+      RockPaperScissCell cell = grid.getCell(0, 0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(19)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(15)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(16)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(23)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(24)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(20)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(21)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(3)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(4)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(2)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(8)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(9)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(6)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(14)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(10)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(11)));
+
+      // you only going to get one out of me for this
+    }
+
+
+
+    @Test
+    @DisplayName("Grid Hexagon, Moore, Mirror is set up properly")
+    void grid_HexagonMooreMirror_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
+          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
+          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule),
+          new RockPaperScissCell(9, rule), new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule));
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 4, 3, ShapeType.HEXAGON,
+          NeighborhoodType.MOORE, EdgeType.MIRROR);
+
+      // check set neighborhoods
+      assertEquals(6, grid.getNeighbors(1, 1).size());
+      assertEquals(6, grid.getNeighbors(0, 0).size());
+      assertEquals(6, grid.getNeighbors(0, 1).size());
+
+      // corner behavior + even
+      RockPaperScissCell cell = grid.getCell(0,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).isEmpty());
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(3)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(3)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).isEmpty());
+
+
+      // just to also check odd edge
+      cell = grid.getCell(3,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).isEmpty());
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(6)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(7)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(9)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(10)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).isEmpty());
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(9)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(10)));
+    }
+
+    @Test
+    @DisplayName("Grid Hexagon, VonNeumann, Mirror is set up properly")
+    void grid_HexagonVonNeumannMirror_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule),
+          new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule), new RockPaperScissCell(5, rule),
+          new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule)
+      );
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 3, 3, ShapeType.HEXAGON,
+          NeighborhoodType.VON_NEUMANN, EdgeType.MIRROR);
+
+      // check set neighborhoods
+      assertEquals(2, grid.getNeighbors(1, 1).size());
+      assertEquals(2, grid.getNeighbors(0, 0).size());
+      assertEquals(2, grid.getNeighbors(0, 1).size());
+
+      // corner behavior + even
+      RockPaperScissCell cell = grid.getCell(0,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+
+      cell = grid.getCell(1,0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(3)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(4)));
+    }
+
+    @Test
+    @DisplayName("Grid Hexagon, ExtendedMoore, Mirror is set up properly")
+    void grid_HexagonExtendedMooreMirror_SetsUpNeighborsCorrectly() {
+      List<RockPaperScissCell> cells = List.of(
+          new RockPaperScissCell(0, rule), new RockPaperScissCell(1, rule), new RockPaperScissCell(2, rule), new RockPaperScissCell(3, rule), new RockPaperScissCell(4, rule),
+          new RockPaperScissCell(5, rule), new RockPaperScissCell(6, rule), new RockPaperScissCell(7, rule), new RockPaperScissCell(8, rule), new RockPaperScissCell(9, rule),
+          new RockPaperScissCell(10, rule), new RockPaperScissCell(11, rule), new RockPaperScissCell(12, rule), new RockPaperScissCell(13, rule), new RockPaperScissCell(14, rule),
+          new RockPaperScissCell(15, rule), new RockPaperScissCell(16, rule), new RockPaperScissCell(17, rule), new RockPaperScissCell(18, rule), new RockPaperScissCell(19, rule),
+          new RockPaperScissCell(20, rule), new RockPaperScissCell(21, rule), new RockPaperScissCell(22, rule), new RockPaperScissCell(23, rule), new RockPaperScissCell(24, rule)
+      );
+      Grid<RockPaperScissCell> grid = new Grid<RockPaperScissCell>(cells, 5, 5, ShapeType.HEXAGON,
+          NeighborhoodType.EXTENDED_MOORE, EdgeType.MIRROR);
+
+      // should behave like moore
+      assertEquals(18, grid.getNeighbors(2, 2).size());  // center
+      assertEquals(18, grid.getNeighbors(0, 0).size());  // even left corner
+      assertEquals(18, grid.getNeighbors(0, 1).size());  // top/bottom edge
+      assertEquals(18, grid.getNeighbors(0,4).size());   // even right corner
+      assertEquals(18, grid.getNeighbors(1,0).size());   // odd side edge
+      assertEquals(18, grid.getNeighbors(2,0).size());   // even side edge
+      assertEquals(18, grid.getNeighbors(4, 0).size());  // odd left corner
+      assertEquals(18, grid.getNeighbors(4,4).size());   // odd right corner
+
+      RockPaperScissCell cell = grid.getCell(0, 0);
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(6)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(1)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NW).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.NE).contains(cells.get(1)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(1)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(0)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(1)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(2)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(6)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(5)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(6)));
+
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(10)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(10)));
+      assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(11)));
+
+      // you only going to get one out of me for this
+    }
   }
 
 }
