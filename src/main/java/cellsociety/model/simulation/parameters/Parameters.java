@@ -70,15 +70,6 @@ public abstract class Parameters {
   // Start of Parameters setters and getters ------
 
   /**
-   * Return the parameters.
-   *
-   * @return returns the parameter map
-   */
-  public Map<String, Double> getParameters() {
-    return parameters;
-  }
-
-  /**
    * Updates the parameter map with the provided new parameter values.
    *
    * <p>For extensibility, subclasses can add on to this method to also denote errors if they try

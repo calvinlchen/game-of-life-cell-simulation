@@ -98,6 +98,7 @@ public class GenericParameters extends Parameters {
    */
   public GenericParameters(SimType simType) {
     super();
+
     if (DEFAULT_VALUES.containsKey(simType)) {
       try {
         super.setParameters(DEFAULT_VALUES.get(simType));
