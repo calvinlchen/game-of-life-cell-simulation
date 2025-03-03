@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.parameters;
 
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
  * </ul>
  *
  * <h2>📌 Why One Main Subclass?</h2>
+ *
  * <p>Previously, each simulation had its own parameter subclass (e.g., `FireParameters`,
  * `SegregationParameters`). This approach was:</p>
  * <ul>
@@ -36,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
  * </ul>
  *
  * <h2>⚠️ Handling Non-Double Parameters</h2>
+ *
  * <p>While most parameters are stored as doubles, some simulations require lists or other objects.
  * To minimize unsafe usage of objects:</p>
  * <ul>
@@ -50,7 +53,7 @@ import org.apache.logging.log4j.LogManager;
  * double reproductionTime = params.getParameter("fishReproductionTime");
  *
  * params.setAdditionalParameter("customSetting", List.of(1, 2, 3));
- * List<Integer> setting = params.getAdditionalParameter("customSetting", List.class);
+ * List&lt;Integer&gt; setting = params.getAdditionalParameter("customSetting", List.class);
  * </pre>
  *
  * @author Jessica Chen
@@ -61,7 +64,9 @@ public class GenericParameters extends Parameters {
   private static final Logger logger = LogManager.getLogger(GenericParameters.class);
 
   private static final Map<SimType, Map<String, Double>> DEFAULT_VALUES = new HashMap<>();
-  private static final Map<SimType, Map<String, Object>> DEFAULT_ADDITIONAL_VALUES = new HashMap<>();
+  private static final Map<SimType, Map<String, Object>> DEFAULT_ADDITIONAL_VALUES =
+      new HashMap<>();
+  private static final Map<SimType, List<String>> UNMODIFIABLE_PARAMS = new HashMap<>();
 
   static {
     DEFAULT_VALUES.put(SimType.RockPaperSciss, Map.of("numStates", 3.0, "percentageToWin", 0.5));
@@ -74,26 +79,58 @@ public class GenericParameters extends Parameters {
 
     DEFAULT_ADDITIONAL_VALUES.put(SimType.GameOfLife,
         Map.of("S", new ArrayList<>(Arrays.asList(2, 3)), "B", new ArrayList<>(List.of(3))));
+
+    UNMODIFIABLE_PARAMS.put(SimType.RockPaperSciss, List.of("numStates"));
   }
 
   private final Map<String, Object> additionalParams;
+  private final List<String> unmodifiableParams = new ArrayList<>();
 
   /**
-   * Initializes {@code GenericParameters} with default values for the given simulation type.
+   * Constructs a new instance of GenericParameters with default parameter values initialized based
+   * on the specified simulation type.
    *
    * <p>If the simulation type has predefined parameter defaults, they are set automatically.</p>
    *
-   * @param simType The simulation type whose parameters should be initialized.
+   * @param simType the type of simulation for which to configure parameters (e.g., GameOfLife,
+   *                Percolation, etc.)
+   * @throws SimulationException if there is an error applying the default parameters
    */
   public GenericParameters(SimType simType) {
     super();
     if (DEFAULT_VALUES.containsKey(simType)) {
-      setParameters(DEFAULT_VALUES.get(simType));
+      try {
+        super.setParameters(DEFAULT_VALUES.get(simType));
+
+      } catch (SimulationException e) {
+        throw new SimulationException(e);
+      }
     }
+
     if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
       additionalParams = new HashMap<>(DEFAULT_ADDITIONAL_VALUES.get(simType));
     } else {
       additionalParams = new HashMap<>();
+    }
+
+    if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
+      unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
+    }
+  }
+
+  @Override
+  public void setParameter(String key, double value) {
+    if (unmodifiableParams.contains(key)) {
+      // I throwing an error so user knows can't change, but its a warning not an error in
+      // terms of functionality
+      logger.warn("Parameter {} is unmodifiable", key);
+      throw new SimulationException("UnmodifiableParameter", List.of(key));
+    }
+
+    try {
+      super.setParameter(key, value);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -130,6 +167,11 @@ public class GenericParameters extends Parameters {
     return Optional.of(type.cast(value));
   }
 
+  /**
+   * Retrieves a list of all keys associated with the additional parameters.
+   *
+   * @return a list of all keys in the additional parameters map, returned as an unmodifiable copy.
+   */
   public List<String> getAdditionalParameterKeys() {
     return List.copyOf(additionalParams.keySet());
   }

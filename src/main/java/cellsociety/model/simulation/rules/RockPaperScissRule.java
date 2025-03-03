@@ -2,6 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.RockPaperScissCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 
 /**
  * The {@code RockPaperScissRule} class implements the Rock-Paper-Scissors simulation rule.
@@ -51,14 +52,11 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell> {
    */
   public RockPaperScissRule(GenericParameters parameters) {
     super(parameters);
-
-    totalNumStates = getTotalNumStates(parameters);
-  }
-
-  private int getTotalNumStates(GenericParameters parameters) {
-    final int totalStates;
-    totalStates = (int) parameters.getParameter("numStates");
-    return totalStates;
+    try {
+      totalNumStates = (int) parameters.getParameter("numStates");
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -78,20 +76,24 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell> {
    */
   @Override
   public int apply(RockPaperScissCell cell) {
-    // so like with 3 0 -> 1 -> 2 -> 0 (bc 2 + 1 = 3 % 3 = 0)
-    int winningState = (cell.getCurrentState() + 1) % totalNumStates;
+    try {
+      // so like with 3 0 -> 1 -> 2 -> 0 (bc 2 + 1 = 3 % 3 = 0)
+      int winningState = (cell.getCurrentState() + 1) % totalNumStates;
 
-    // count how many neighbors have winning state
-    long winningNeighborsCount = cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == winningState).count();
+      // count how many neighbors have winning state
+      long winningNeighborsCount = cell.getNeighbors().stream()
+          .filter(neighbor -> neighbor.getCurrentState() == winningState).count();
 
-    if ((double) winningNeighborsCount / cell.getNeighbors().size() > getParameters().getParameter(
-        "percentageToWin")) {
-      return winningState;
+      if ((double) winningNeighborsCount / cell.getNeighbors().size()
+          > getParameters().getParameter("percentageToWin")) {
+        return winningState;
+      }
+
+      // update current cell only, current cell only updates based on neighbors current state
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    // update current cell only, current cell only updates based on neighbors current state
-    return cell.getCurrentState();
   }
 
   /**

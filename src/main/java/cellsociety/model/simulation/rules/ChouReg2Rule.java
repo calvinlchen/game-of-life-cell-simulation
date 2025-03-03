@@ -6,6 +6,7 @@ import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90
 import cellsociety.model.simulation.cell.ChouReg2Cell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -140,28 +141,32 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell> {
    */
   @Override
   public int apply(ChouReg2Cell cell) {
-    DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
-        DirectionType.W};
+    try {
+      DirectionType[] directions = {DirectionType.N, DirectionType.E, DirectionType.S,
+          DirectionType.W};
 
-    for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
-      String stateKey = getStateKey(cell, directions);
+      for (int rotations = 0; rotations < NUM_UNIQUE_90_DEG_ROTATIONS; rotations++) {
+        String stateKey = getStateKey(cell, directions);
 
-      if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
-        logger.warn("[ChouReg2Rule] Invalid state key length for cell at {}: {}",
-            cell.getPosition(), stateKey);
-        return cell.getCurrentState();
+        if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
+          logger.warn("[ChouReg2Rule] Invalid state key length for cell at {}: {}",
+              cell.getPosition(), stateKey);
+          return cell.getCurrentState();
+        }
+
+        if (RULES_MAP_CHOUREG2.containsKey(stateKey)) {
+          return RULES_MAP_CHOUREG2.get(stateKey);
+        }
+
+        directions = rotateClockwise(directions);
       }
 
-      if (RULES_MAP_CHOUREG2.containsKey(stateKey)) {
-        return RULES_MAP_CHOUREG2.get(stateKey);
-      }
-
-      directions = rotateClockwise(directions);
+      logger.warn("[ChouReg2Rule] No valid rule found, retaining current state for cell at {}",
+          cell.getPosition());
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    logger.warn("[ChouReg2Rule] No valid rule found, retaining current state for cell at {}",
-        cell.getPosition());
-    return cell.getCurrentState();
   }
 
 }

@@ -21,12 +21,12 @@ import java.util.Optional;
  * <p><b>Example:</b></p>
  * <pre>
  * NoneEdgeHandler handler = new NoneEdgeHandler();
- * Optional<List<Integer>> neighbor = handler.handleEdgeNeighbor(0, 0, 5, 5, new int[]{-1, 0});
+ * Optional&lt;List&lt;Integer>> neighbor = handler.handleEdgeNeighbor(0, 0, 5, 5, new int[]{-1, 0});
  * System.out.println(neighbor.isPresent()); // Output: false
  * </pre>
  *
  * @author Jessica Chen
- * @author ChatGPT- helped with the JavaDoc
+ * @author ChatGPT - helped with the JavaDoc
  */
 public class NoneEdgeHandler implements EdgeHandler {
 

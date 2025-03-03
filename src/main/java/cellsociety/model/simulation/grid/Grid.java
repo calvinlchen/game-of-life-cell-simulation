@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,9 +33,10 @@ import org.apache.logging.log4j.Logger;
  *
  * <p><b>Example Usage:</b></p>
  * <pre>
- * Grid<Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.TOROIDAL);
+ * Grid&lt;Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE,
+ * EdgeType.TOROIDAL);
  * Cell cell = grid.getCell(3, 5);
- * List<Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
+ * List&lt;Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
  * </pre>
  *
  * @param <T> The type of cell used in the grid, must extend {@link Cell}.
@@ -50,18 +50,6 @@ public class Grid<T extends Cell<T, ?>> {
   private final List<List<T>> myGrid;
   private int myRows;
   private int myCols;
-
-  /**
-   * Constructs a Grid with specified dimensions.
-   *
-   * @param cells - cells to be added
-   * @param rows  - number of rows in the grid
-   * @param cols  - number of columns in the grid
-   */
-  public Grid(List<T> cells, int rows, int cols) {
-    myGrid = initializeGrid(rows, cols);
-    initializeCells(cells);
-  }
 
   /**
    * Constructs a Grid with specified dimensions, shape type, neighborhood type, and edge type.
@@ -80,8 +68,13 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
       EdgeType edgeType) {
-    this(cells, rows, cols);
-    setNeighborsAllCells(shape, neighborhoodType, edgeType);
+    try {
+      myGrid = initializeGrid(rows, cols);
+      initializeCells(cells);
+      setNeighborsAllCells(shape, neighborhoodType, edgeType);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of Initialize Grid and Cells in Grid ------
@@ -90,7 +83,8 @@ public class Grid<T extends Cell<T, ?>> {
     final List<List<T>> grid;
     if (rows <= 0 || cols <= 0) {
       logger.error("Grid initialization failed: Invalid dimensions {}x{}", rows, cols);
-      throw new SimulationException("InvalidGridDimensions");
+      throw new SimulationException("InvalidGridDimensions",
+          List.of(String.valueOf(rows), String.valueOf(cols)));
     }
 
     myRows = rows;
@@ -100,41 +94,55 @@ public class Grid<T extends Cell<T, ?>> {
   }
 
   private void initializeCells(List<T> cells) {
-    validateCells(cells);
-    myGrid.clear();
-    fillGridWithCells(cells);
+    try {
+      validateCells(cells);
+      myGrid.clear();
+      fillGridWithCells(cells);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private void validateCells(List<T> cells) {
     if (cells == null) {
       logger.error("Grid initialization failed: Cannot create grid with null cells list.");
-      throw new SimulationException("NullCellsList");
+      throw new SimulationException("NullParameter",
+          List.of("cells", "Grid()"));
     }
     if (cells.size() != myRows * myCols) {
       logger.error(
           "Grid initialization failed: Mismatched number of {} cells for expected size of {}x{}.",
           cells.size(), myRows, myCols);
-      throw new SimulationException("MismatchedCellCount", cells.size(), myRows * myCols);
+      throw new SimulationException("MismatchedCellCount",
+          List.of(String.valueOf(cells.size()), String.valueOf(myRows * myCols)));
     }
   }
 
   private void fillGridWithCells(List<T> cells) {
-    int index = 0;
-    for (int i = 0; i < myRows; i++) {
-      myGrid.add(createRow(cells, i, index));
-      index += myCols;
+    try {
+      int index = 0;
+      for (int i = 0; i < myRows; i++) {
+        myGrid.add(createRow(cells, i, index));
+        index += myCols;
+      }
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
   private List<T> createRow(List<T> cells, int rowIndex, int startIndex) {
-    List<T> row = new ArrayList<>();
-    int endIndex = Math.min(startIndex + myCols, cells.size());
-    for (int j = startIndex; j < endIndex; j++) {
-      T cell = cells.get(j);
-      cell.setPosition(new int[]{(j - startIndex), rowIndex});
-      row.add(cell);
+    try {
+      List<T> row = new ArrayList<>();
+      int endIndex = Math.min(startIndex + myCols, cells.size());
+      for (int j = startIndex; j < endIndex; j++) {
+        T cell = cells.get(j);
+        cell.setPosition(new int[]{(j - startIndex), rowIndex});
+        row.add(cell);
+      }
+      return row;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return row;
   }
 
   // Start of Neighborhood Calculations ------
@@ -154,19 +162,25 @@ public class Grid<T extends Cell<T, ?>> {
    *                     (e.g., NONE, MIRROR, TOROIDAL).
    */
   public void setNeighborsAllCells(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
-    getCells().forEach(Cell::clearNeighbors);
+    try {
+      getCells().forEach(Cell::clearNeighbors);
 
-    for (int i = 0; i < myRows; i++) {
-      Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
+      for (int i = 0; i < myRows; i++) {
+        Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
 
-      if (directions.isEmpty()) {
-        logger.error("Invalid shape/neighborhood combination: {} {}", shape, neighborhood);
-        throw new SimulationException("InvalidGridShapeNeighborhood", shape, neighborhood);
+        if (directions.isEmpty()) {
+          logger.error("Invalid shape/neighborhood combination: {} {}", shape.name(),
+              neighborhood.name());
+          throw new SimulationException("InvalidGridShapeNeighborhood",
+              List.of(shape.name(), neighborhood.name()));
+        }
+
+        for (int j = 0; j < myCols; j++) {
+          setNeighbors(i, j, directions.get(), edge);
+        }
       }
-
-      for (int j = 0; j < myCols; j++) {
-        setNeighbors(i, j, directions.get(), edge);
-      }
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -179,14 +193,18 @@ public class Grid<T extends Cell<T, ?>> {
    * @param directions - a 2D array defining the
    */
   private void setNeighbors(int i, int j, int[][] directions, EdgeType edge) {
-    T cell = myGrid.get(i).get(j);
-    if (cell == null) {
-      return;
-    }
+    try {
+      T cell = myGrid.get(i).get(j);
+      if (cell == null) {
+        return;
+      }
 
-    Map<DirectionType, List<T>> neighbors = findNeighbors(i, j, directions, edge);
-    cell.setDirectionalNeighbors(neighbors);
-    cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
+      Map<DirectionType, List<T>> neighbors = findNeighbors(i, j, directions, edge);
+      cell.setDirectionalNeighbors(neighbors);
+      cell.setNeighbors(neighbors.values().stream().flatMap(List::stream).toList());
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -202,30 +220,34 @@ public class Grid<T extends Cell<T, ?>> {
    */
   private Map<DirectionType, List<T>> findNeighbors(int i, int j, int[][] directions,
       EdgeType edge) {
-    Optional<EdgeHandler> edgeHandler = EdgeFactory.getHandler(edge);
-    if (edgeHandler.isEmpty()) {
-      logger.error("Invalid edge type: {}", edge);
-      throw new SimulationException("InvalidEdgeType", edge);
-    }
-
-    Map<DirectionType, List<T>> neighbors = new HashMap<>();
-    for (int[] dir : directions) {
-      int newRow = i + dir[0];
-      int newCol = j + dir[1];
-
-      DirectionType directionType = determineDirection(dir);
-      neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
-
-      if (isValidPosition(newRow, newCol)) {
-        neighbors.get(directionType).add(myGrid.get(newRow).get(newCol));
-      } else {
-        Optional<List<Integer>> replacementCell = edgeHandler.get()
-            .handleEdgeNeighbor(i, j, myRows, myCols, dir);
-        replacementCell.ifPresent(integers -> neighbors.get(directionType)
-            .add(myGrid.get(integers.get(0)).get(integers.get(1))));
+    try {
+      Optional<EdgeHandler> edgeHandler = EdgeFactory.getHandler(edge);
+      if (edgeHandler.isEmpty()) {
+        logger.error("Invalid edge type: {}", edge);
+        throw new SimulationException("InvalidEdgeType", List.of(edge.name()));
       }
+
+      Map<DirectionType, List<T>> neighbors = new HashMap<>();
+      for (int[] dir : directions) {
+        int newRow = i + dir[0];
+        int newCol = j + dir[1];
+
+        DirectionType directionType = determineDirection(dir);
+        neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
+
+        if (isValidPosition(newRow, newCol)) {
+          neighbors.get(directionType).add(myGrid.get(newRow).get(newCol));
+        } else {
+          Optional<List<Integer>> replacementCell = edgeHandler.get()
+              .handleEdgeNeighbor(i, j, myRows, myCols, dir);
+          replacementCell.ifPresent(integers -> neighbors.get(directionType)
+              .add(myGrid.get(integers.get(0)).get(integers.get(1))));
+        }
+      }
+      return neighbors;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return neighbors;
   }
 
   /**
@@ -247,7 +269,8 @@ public class Grid<T extends Cell<T, ?>> {
     }
 
     logger.error("Invalid direction vector: {} {} from dir {}", x, y, dir[0] + "," + dir[1]);
-    throw new SimulationException("InvalidDirection");
+    throw new SimulationException("InvalidDirectionVector",
+        List.of(String.valueOf(x), String.valueOf(y), dir[0] + "," + dir[1]));
   }
 
   // Start of Getters and Setters for Grid ------
@@ -258,8 +281,12 @@ public class Grid<T extends Cell<T, ?>> {
    * @param position - position of a cell given in (row, col) pair
    * @return - list of neighboring cells
    */
-  public List<T> getNeighbors(int[] position) {
-    return getCell(position[0], position[1]).getNeighbors();
+  List<T> getNeighbors(int[] position) {
+    try {
+      return getCell(position[0], position[1]).getNeighbors();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -272,8 +299,10 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public T getCell(int row, int col) {
     if (!isValidPosition(row, col)) {
-      logger.error("InvalidGridPosition: {} {}", row, col);
-      throw new SimulationException("InvalidGridPosition", row, col);
+      logger.error("Cannot get cell at: {} {}", row, col);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col),
+              String.valueOf(myRows), String.valueOf(myCols)));
     }
     return myGrid.get(row).get(col);
   }
@@ -289,10 +318,15 @@ public class Grid<T extends Cell<T, ?>> {
    */
   public void setCell(int row, int col, T cell) {
     if (!isValidPosition(row, col)) {
-      throw new SimulationException("InvalidGridPosition", row, col);
+      logger.error("Cannot set cell at: {} {}", row, col);
+      throw new SimulationException("InvalidGridPosition",
+          List.of(String.valueOf(row), String.valueOf(col),
+              String.valueOf(myRows), String.valueOf(myCols)));
     }
     if (cell == null) {
-      throw new SimulationException("NullCell");
+      logger.error("Cannot set cell to null");
+      throw new SimulationException("NullParameter",
+          List.of("cell", "setCell(int, int, T)"));
     }
     myGrid.get(row).set(col, cell);
   }

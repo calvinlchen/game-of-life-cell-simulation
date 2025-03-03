@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
  *
  * <p><b>Overview:</b></p>
  * <ul>
- *   <li>Implements the Strategy Pattern via {@link GridDirectionStrategy}, allowing different movement
- *       rules for different grid structures.</li>
+ *   <li>Implements the Strategy Pattern via {@link GridDirectionStrategy}, allowing different
+ *       movement rules for different grid structures.</li>
  *   <li>Supports even-odd row parity handling for hexagonal and triangular grids, where movement
  *       patterns differ based on row index.</li>
  *   <li>Provides fast lookup of movement directions via a static registry.</li>
@@ -34,7 +34,8 @@ import org.apache.logging.log4j.Logger;
  *
  * <p><b>Example Usage:</b></p>
  * <pre>
- * Optional&lt;int[][]&gt; directions = GridDirectionRegistry.getDirections(ShapeType.HEXAGON, NeighborhoodType.MOORE, 3);
+ * Optional&lt;int[][]&gt; directions =
+ * GridDirectionRegistry.getDirections(ShapeType.HEXAGON, NeighborhoodType.MOORE, 3);
  * directions.ifPresent(dir -> System.out.println(Arrays.deepToString(dir)));
  * </pre>
  *
@@ -100,7 +101,7 @@ class GridDirectionRegistry {
    * @param row          The row index (only relevant for hexagonal and triangular
    *                     grids).
    * @return An {@code Optional<int[][]>} containing the movement offsets, or
-   * {@code Optional.empty()} if no matching strategy exists.
+   *     {@code Optional.empty()} if no matching strategy exists.
    */
   static Optional<int[][]> getDirections(ShapeType shape, NeighborhoodType neighborhood, int row) {
     String key = shape.name() + "_" + neighborhood.name();

@@ -44,6 +44,10 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
+  // to avoid repeated literals
+  private static final String NOT_SET = "NotSet";
+  private static final String SET_NEIGHBORS = "setNeighbors()";
+
   private static final Logger logger = LogManager.getLogger(Cell.class);
 
   private List<C> neighbors;
@@ -66,7 +70,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public Cell(int state, R rule) {
     if (rule == null) {
       logger.error("Cell initialization failed: Rule cannot be null.");
-      throw new SimulationException("NullRuleForCell");
+      throw new SimulationException("NullParameter", List.of("rule", "Cell"));
     }
 
     stateLength = 1;
@@ -76,7 +80,12 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
     neighbors = new ArrayList<>();
     directionalNeighbors = Map.of();
     stateHistory = new LinkedList<>();
-    saveCurrentState();
+
+    try {
+      saveCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of API for Calculating and Stepping Through Simulatiojn ------
@@ -97,18 +106,24 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @throws SimulationException if the
    */
   public void saveCurrentState() {
-    int maxHistorySize;
+    try {
+      int maxHistorySize;
+      maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
+      if (maxHistorySize < MIN_STATE_HISTORY) {
+        logger.error("Invalid maxHistorySize parameter: {}", maxHistorySize);
+        throw new SimulationException("InvalidHistorySize",
+            List.of(String.valueOf(maxHistorySize), String.valueOf(MIN_STATE_HISTORY)));
+      }
 
-    maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
-    if (maxHistorySize < MIN_STATE_HISTORY) {
-      logger.error("Invalid maxHistorySize parameter: {}", maxHistorySize);
-      throw new SimulationException("InvalidHistorySize");
+      stateHistory.addLast(currentState);
+      if (stateHistory.size() > maxHistorySize) {
+        stateHistory.removeFirst();
+      }
+
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
 
-    stateHistory.addLast(currentState);
-    if (stateHistory.size() > maxHistorySize) {
-      stateHistory.removeFirst();
-    }
   }
 
   /**
@@ -123,11 +138,15 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
       throw new SimulationException("NoHistory");
     }
 
-    if (stateHistory.size() > MIN_STATE_HISTORY) {
-      stateHistory.removeLast();
-      setCurrentState(stateHistory.getLast());
-      setNextState(stateHistory.getLast());
-      return true;
+    try {
+      if (stateHistory.size() > MIN_STATE_HISTORY) {
+        stateHistory.removeLast();
+        setCurrentState(stateHistory.getLast());
+        setNextState(stateHistory.getLast());
+        return true;
+      }
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
 
     return false;
@@ -144,11 +163,15 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * </ul>
    */
   public void calcNextState() {
-    if (shouldSkipCalculation()) {
-      return;
+    try {
+      if (shouldSkipCalculation()) {
+        return;
+      }
+      int newState = rule.apply(getSelf());
+      postProcessNextState(newState);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    int newState = rule.apply(getSelf());
-    postProcessNextState(newState);
   }
 
   /**
@@ -172,15 +195,23 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @param newState The newly computed state.
    */
   protected void postProcessNextState(int newState) {
-    setNextState(newState);
+    try {
+      setNextState(newState);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
    * Advances the cell's state to the next state and updates state length tracking.
    */
   public void step() {
-    updateStateLength();
-    setCurrentState(getNextState());
+    try {
+      updateStateLength();
+      setCurrentState(getNextState());
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -234,7 +265,8 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   protected void validateState(int state, int maxState) {
     if (state < 0 || state >= maxState) {
       logger.error("Invalid state assigned: {} (Max: {})", state, maxState);
-      throw new SimulationException("InvalidState", state, maxState);
+      throw new SimulationException("InvalidState",
+          List.of(String.valueOf(state), String.valueOf(maxState)));
     }
   }
 
@@ -258,8 +290,12 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @throws SimulationException if the specified state is out of the valid range.
    */
   public void setCurrentState(int state) {
-    validateState(state, getMaxState());
-    currentState = state;
+    try {
+      validateState(state, getMaxState());
+      currentState = state;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -279,21 +315,25 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @throws SimulationException if the provided state is out of the valid range
    */
   public void setNextState(int state) {
-    validateState(state, getMaxState());
-    nextState = state;
+    try {
+      validateState(state, getMaxState());
+      nextState = state;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
    * Retrieves a copy of the current position of the cell.
    *
    * @return an array representing the position of the cell. The array is a copy of the cell's
-   *     internal position to ensure immutability.
+   * internal position to ensure immutability.
    * @throws SimulationException if the position has not been set.
    */
   public int[] getPosition() {
     if (position == null) {
       logger.error("Attempted to retrieve position before setting it.");
-      throw new SimulationException("PositionNotSet");
+      throw new SimulationException(NOT_SET, List.of("position", "setPosition()"));
     }
     return Arrays.copyOf(position, position.length);
   }
@@ -307,8 +347,10 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   public void setPosition(int[] position) {
     if (position == null || position.length != EXPECTED_POSITION_DIMENSION) {
-      logger.error("Invalid position attempted to be set: {}", Arrays.toString(position));
-      throw new SimulationException("InvalidPosition", Arrays.toString(position));
+      String positionString = Arrays.toString(position); // Convert array to a single string
+      logger.error("Invalid position attempted to be set: {}", positionString);
+      throw new SimulationException("InvalidPosition",
+          List.of(positionString, String.valueOf(EXPECTED_POSITION_DIMENSION)));
     }
     this.position = Arrays.copyOf(position, position.length);
   }
@@ -322,8 +364,9 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public List<C> getNeighbors() {
     // should never be null because can't set to null
     if (neighbors == null) {
-      logger.error("Neighbors list has not yet been initialized. Call setNeighbors() first.");
-      throw new SimulationException("NeighborsNotInitialized");
+      logger.error(
+          "Neighbors list has not yet been initialized. Call " + SET_NEIGHBORS + " first.");
+      throw new SimulationException(NOT_SET, List.of("neighbors", SET_NEIGHBORS));
     }
     return neighbors;
   }
@@ -337,7 +380,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public void setNeighbors(List<C> neighbors) {
     if (neighbors == null) {
       logger.error("Attempted to set null neighbor list.");
-      throw new SimulationException("NullNeighborList");
+      throw new SimulationException("NullParameters", List.of("neighbors", SET_NEIGHBORS));
     }
     this.neighbors = neighbors;
   }
@@ -352,6 +395,26 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   }
 
   /**
+   * Retrieves the list of neighboring cells associated with a specific direction. This method
+   * returns the neighbors that are categorized under the provided direction type. If no neighbors
+   * exist for the specified direction, an empty list is returned.
+   *
+   * @param direction the direction for which the neighbors are to be retrieved. This parameter
+   *                  should be one of the predefined values in the {@link DirectionType} enum.
+   * @return a list of neighboring cells in the specified direction. If no neighbors exist in the
+   * direction, an empty list is returned.
+   */
+  public List<C> getDirectionalNeighbors(DirectionType direction) {
+    if (directionalNeighbors == null) {
+      logger.error(
+          "Directional neighbors have not yet been initialized. Call " + SET_NEIGHBORS + " first.");
+      throw new SimulationException(NOT_SET, List.of("directionalNeighbors", SET_NEIGHBORS));
+    }
+    return directionalNeighbors.getOrDefault(direction, new ArrayList<>());
+  }
+
+
+  /**
    * Sets the directional neighbors of the cell. Directional neighbors are organized in a map where
    * the keys represent specific directions and the values are lists of cells corresponding to those
    * directions.
@@ -362,26 +425,12 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   public void setDirectionalNeighbors(Map<DirectionType, List<C>> directionalNeighbors) {
     if (directionalNeighbors == null) {
-      logger.error(
-          "Attempted to set directional neighbors to null, if want to clear, "
-              + "use clearNeighbors() instead.");
-      throw new SimulationException("NullNeighborList");
+      logger.error("Attempted to set directional neighbors to null, if want to clear, "
+          + "use clearNeighbors() instead.");
+      throw new SimulationException("NullParameters",
+          List.of("directionalNeighbors", "setDirectionalNeighbors()"));
     }
     this.directionalNeighbors = directionalNeighbors;
-  }
-
-  /**
-   * Retrieves the list of neighboring cells associated with a specific direction. This method
-   * returns the neighbors that are categorized under the provided direction type. If no neighbors
-   * exist for the specified direction, an empty list is returned.
-   *
-   * @param direction the direction for which the neighbors are to be retrieved. This parameter
-   *                  should be one of the predefined values in the {@link DirectionType} enum.
-   * @return a list of neighboring cells in the specified direction. If no neighbors exist in the
-   *     direction, an empty list is returned.
-   */
-  public List<C> getDirectionalNeighbors(DirectionType direction) {
-    return directionalNeighbors.getOrDefault(direction, new ArrayList<>());
   }
 
   /**

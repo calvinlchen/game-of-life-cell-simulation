@@ -5,6 +5,7 @@ import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
 import cellsociety.model.simulation.rules.WaTorRule;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,17 +56,24 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
   public WaTorCell(int state, WaTorRule rule) {
     super(state, rule);
 
-    initializeDefaultVariables(state);
+    try {
+      initializeDefaultVariables(state);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private void initializeDefaultVariables(int state) {
     validateState(state, WATOR_MAXSTATE);
 
     myStepsSurvived = 0;
-    myEnergy =
-        state == WATOR_SHARK ? (int) getRule().getParameters().getParameter("sharkInitialEnergy")
-            : 0;
-
+    try {
+      myEnergy =
+          state == WATOR_SHARK ? (int) getRule().getParameters().getParameter("sharkInitialEnergy")
+              : 0;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
     myNextStepsSurvived = 0;
     myNextEnergy = 0;
 
@@ -95,12 +103,16 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
    */
   @Override
   protected void postProcessNextState(int newState) {
-    if (newState != -1) {
-      setNextState(newState);
+    try {
+      if (newState != -1) {
+        setNextState(newState);
 
-      myNextStepsSurvived = 0;
-      myNextEnergy = newState == WATOR_SHARK ? (int) getRule().getParameters()
-          .getParameter("sharkInitialEnergy") : 0;
+        myNextStepsSurvived = 0;
+        myNextEnergy = newState == WATOR_SHARK ? (int) getRule().getParameters()
+            .getParameter("sharkInitialEnergy") : 0;
+      }
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -112,16 +124,21 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
    */
   @Override
   public void step() {
-    if (movedFrom != null && movedFrom.isConsumed()) {
-      // basically for this one it was empty, and since fish is consumed its still empty
-      // so can update steps after we know it will always add 1 to stateLength
-      logger.debug("Cell at {} was moved from a consumed cell, resetting to EMPTY.", getPosition());
-      setNextState(WATOR_EMPTY);
-      setCurrentState(WATOR_EMPTY);
-      updateStateLength();
-    } else {
-      updateStateLength();
-      setCurrentState(getNextState());
+    try {
+      if (movedFrom != null && movedFrom.isConsumed()) {
+        // basically for this one it was empty, and since fish is consumed its still empty
+        // so can update steps after we know it will always add 1 to stateLength
+        logger.debug("Cell at {} was moved from a consumed cell, resetting to EMPTY.",
+            getPosition());
+        setNextState(WATOR_EMPTY);
+        setCurrentState(WATOR_EMPTY);
+        updateStateLength();
+      } else {
+        updateStateLength();
+        setCurrentState(getNextState());
+      }
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -151,10 +168,14 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
    * @param energy        - the amount of energy the next state of the cell should have
    */
   public void setNextState(int state, int stepsSurvived, int energy) {
-    setNextState(state);
+    try {
+      setNextState(state);
 
-    myNextStepsSurvived = stepsSurvived;
-    myNextEnergy = energy;
+      myNextStepsSurvived = stepsSurvived;
+      myNextEnergy = energy;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -167,8 +188,12 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
    * @param movedFrom     - where the new state moved from, basically the old cell that state was
    */
   public void setNextState(int state, int stepsSurvived, int energy, WaTorCell movedFrom) {
-    this.movedFrom = movedFrom;
-    setNextState(state, stepsSurvived, energy);
+    try {
+      this.movedFrom = movedFrom;
+      setNextState(state, stepsSurvived, energy);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of Setters and Getters ------

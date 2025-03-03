@@ -4,7 +4,6 @@ import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
-import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
@@ -79,7 +78,8 @@ public class Simulation<T extends Cell<T, ?>> {
     final XmlData xmlData;
     if (data == null) {
       logger.error("Simulation initialization failed: Null XML data");
-      throw new SimulationException("NullXMLData");
+      throw new SimulationException("NullParameter",
+          List.of("XmlData", "Simulation()"));
     }
 
     xmlData = data;
@@ -112,9 +112,9 @@ public class Simulation<T extends Cell<T, ?>> {
       // TODO: replace the current one with the commented out line
       setUpGridStructure(cellList, simType);
       // setUpGridStructure(cellList);
-    } catch (Exception e) {
-      logger.error("Simulation setup failed", e);
-      throw new SimulationException("SimulationSetupFailed", e);
+    } catch (SimulationException e) {
+      logger.error("Failed to set up simulation: ", e);
+      throw new SimulationException(e);
     }
   }
 
@@ -124,12 +124,14 @@ public class Simulation<T extends Cell<T, ?>> {
    * <p>This method performs the following actions:</p>
    * <ul>
    *   <li>Retrieves parameter values from the XML data.</li>
-   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.</li>
+   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.
+   *   </li>
    *   <li>Assigns the retrieved parameters to the rule, ensuring that both numerical and
    *       non-numerical parameters are handled correctly.</li>
    * </ul>
    *
    * <h2>Error Handling</h2>
+   *
    * <p>If any step in the rule setup process fails, a {@link SimulationException} is thrown,
    * ensuring that the simulation does not proceed with invalid configurations.</p>
    *
@@ -151,7 +153,7 @@ public class Simulation<T extends Cell<T, ?>> {
       rule = (Rule<T>) RuleFactory.createRule(simType, params);
       parameters = rule.getParameters();
 
-    } catch (Exception e) {
+    } catch (SimulationException e) {
       logger.error("Failed to set up rules for simulation type: {}", simType, e);
       throw new SimulationException("SimulationSetupFailed", e);
     }
@@ -185,7 +187,7 @@ public class Simulation<T extends Cell<T, ?>> {
       logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
           xmlData.getCellStateList().stream().map(Object::toString)
               .collect(Collectors.joining(", ")), e);
-      throw new SimulationException("CellCreationFailed", simType, e);
+      throw new SimulationException("CellCreationFailed", List.of(simType.name()), e);
     }
 
     return cellList;
@@ -210,9 +212,13 @@ public class Simulation<T extends Cell<T, ?>> {
    * @param cellList a list of cells that will make up the grid structure
    */
   private void setUpGridStructure(List<Cell<T, ?>> cellList) {
-    // TODO: once XML is changed, delete above and uncomment out this line of code
-    //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-    //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
+    try {
+      // TODO: once XML is changed, delete above and uncomment out this line of code
+      //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+      //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());}
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of Public API calls for Simulation ------
@@ -257,11 +263,15 @@ public class Simulation<T extends Cell<T, ?>> {
    * </pre>
    */
   public void step() {
-    totalIterations++;
-    myGrid.getCells().forEach(Cell::saveCurrentState);
-    myGrid.getCells().forEach(Cell::calcNextState);
-    myGrid.getCells().forEach(Cell::step);
-    myGrid.getCells().forEach(Cell::resetParameters);
+    try {
+      totalIterations++;
+      myGrid.getCells().forEach(Cell::saveCurrentState);
+      myGrid.getCells().forEach(Cell::calcNextState);
+      myGrid.getCells().forEach(Cell::step);
+      myGrid.getCells().forEach(Cell::resetParameters);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Metadata Related
@@ -286,9 +296,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public int getCurrentState(int row, int col) {
     try {
       return myGrid.getCell(row, col).getCurrentState();
-    } catch (Exception e) {
-      logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition", row, col, e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -313,9 +322,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public int getStateLength(int row, int col) {
     try {
       return myGrid.getCell(row, col).getStateLength();
-    } catch (Exception e) {
-      logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition", row, col, e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -347,7 +355,7 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * List<String> keys = sim.getParameterKeys();
+   * List&lt;String> keys = sim.getParameterKeys();
    * System.out.println("Available parameters: " + keys);
    * </pre>
    *
@@ -375,10 +383,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public void updateParameter(String key, double value) {
     try {
       parameters.setParameter(key, value);
-    } catch (Exception e) {
-      logger.error("Failed to update parameter: {} from value: {} to {}", key,
-          parameters.getParameter(key), value, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -401,9 +407,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public double getParameter(String key) {
     try {
       return parameters.getParameter(key);
-    } catch (Exception e) {
-      logger.error("Failed to retrieve parameter: {}", key, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -418,7 +423,7 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * List<String> additionalKeys = sim.getAdditionalParameterKeys();
+   * List&lt;String> additionalKeys = sim.getAdditionalParameterKeys();
    * System.out.println("Additional parameters: " + additionalKeys);
    * </pre>
    *
@@ -450,9 +455,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public void updateAdditionalParameter(String key, Object value) {
     try {
       parameters.setAdditionalParameter(key, value);
-    } catch (Exception e) {
-      logger.error("Failed to update parameter: {} to {}", key, value, e);
-      throw new SimulationException("ParameterNotFound", key, e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -468,7 +472,8 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * Optional<List<Integer>> survivalRules = sim.getAdditionalParameter("survivalThreshold", List.class);
+   * Optional&lt;List&lt;Integer>> survivalRules =
+   * sim.getAdditionalParameter("survivalThreshold", List.class);
    * survivalRules.ifPresent(rules -> System.out.println("Survival Rules: " + rules));
    * </pre>
    *
@@ -476,7 +481,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @param type - the expected class type (e.g., List.class, String.class)
    * @param <T>  - the expected return type
    * @return an {@code Optional<T>} containing the parameter value if found and correctly typed, or
-   * an empty {@code Optional} if not found or mismatched.
+   *     an empty {@code Optional} if not found or mismatched.
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     return parameters.getAdditionalParameter(key, type);

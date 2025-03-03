@@ -26,7 +26,7 @@ import java.util.Optional;
  * <p><b>Example:</b></p>
  * <pre>
  * ToroidalEdgeHandler handler = new ToroidalEdgeHandler();
- * Optional<List<Integer>> wrapped = handler.handleEdgeNeighbor(0, 4, 5, 5, new int[]{-1, 0});
+ * Optional&lt;List&lt;Integer>> wrapped = handler.handleEdgeNeighbor(0, 4, 5, 5, new int[]{-1, 0});
  * wrapped.ifPresent(pos -> System.out.println("Wrapped position: " + pos));
  * // Output: Wrapped position: [4, 4] (since row 0 wraps to row 4)
  * </pre>

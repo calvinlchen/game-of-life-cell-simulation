@@ -5,6 +5,7 @@ import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +23,8 @@ import java.util.Map;
  * <p><b>Key Responsibilities:</b></p>
  * <ul>
  *   <li>Creates and initializes a {@link Rule} instance dynamically.</li>
- *   <li>Automatically maps parameters to either numeric values or additional object-based values.</li>
+ *   <li>Automatically maps parameters to either numeric values or additional object-based values.
+ *   </li>
  *   <li>Uses reflection to instantiate the corresponding rule class.</li>
  * </ul>
  *
@@ -34,6 +36,7 @@ import java.util.Map;
  * </ul>
  *
  * <h2>Expected Naming Conventions</h2>
+ *
  * <p>This factory assumes the following naming conventions for dynamically locating classes:</p>
  * <ul>
  *   <li>Rule classes follow the format: <b>{@code SimTypeRule}}</b> (e.g., {@code FireRule}).</li>
@@ -42,8 +45,8 @@ import java.util.Map;
  *
  * <h2>Example Usage</h2>
  * <pre>
- * Map<String, Object> params = Map.of("ignitionLikelihood", 0.1, "treeSpawnLikelihood", 0.01);
- * Rule<?> fireRule = RuleFactory.createRule(SimType.Fire, params);
+ * Map&lt;String, Object> params = Map.of("ignitionLikelihood", 0.1, "treeSpawnLikelihood", 0.01);
+ * Rule&lt;?> fireRule = RuleFactory.createRule(SimType.Fire, params);
  * </pre>
  *
  * @author Jessica Chen
@@ -69,7 +72,7 @@ class RuleFactory {
    *
    * <p><b>Example Usage:</b></p>
    * <pre>
-   * Map<String, Object> params = Map.of("fishReproductionTime", 3, "sharkEnergyGain", 2);
+   * Map&lt;String, Object> params = Map.of("fishReproductionTime", 3, "sharkEnergyGain", 2);
    * Rule<?> watorRule = RuleFactory.createRule(SimType.WaTor, params);
    * </pre>
    *
@@ -82,10 +85,10 @@ class RuleFactory {
   static Rule<?> createRule(SimType simType, Map<String, Object> parameters) {
     try {
       GenericParameters paramInstance = createParameters(simType, parameters);
-      return createRule(simType, paramInstance);
+      return createRuleInstance(simType, paramInstance);
     } catch (Exception e) {
       logger.error("Error creating rule for simulation type {}: {}", simType, e);
-      throw new SimulationException("UnknownRuleCreationError", e);
+      throw new SimulationException("CreationError", List.of(simType.name()), e);
     }
   }
 
@@ -102,7 +105,7 @@ class RuleFactory {
    *
    * <p>Example:</p>
    * <pre>
-   * Map<String, Object> params = Map.of("B", List.of(3), "S", List.of(2, 3));
+   * Map&lt;String, Object> params = Map.of("B", List.of(3), "S", List.of(2, 3));
    * GenericParameters gameOfLifeParams = createParameters(SimType.GameOfLife, params);
    * </pre>
    *
@@ -113,22 +116,26 @@ class RuleFactory {
   private static GenericParameters createParameters(SimType simType,
       Map<String, Object> parameters) {
     // Create parameters instance with defaults
-    GenericParameters paramInstance = new GenericParameters(simType);
+    try {
+      GenericParameters paramInstance = new GenericParameters(simType);
 
-    // Iterate through all provided parameters
-    for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-      String key = entry.getKey();
-      Object value = entry.getValue();
+      // Iterate through all provided parameters
+      for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+        String key = entry.getKey();
+        Object value = entry.getValue();
 
-      // Store numerical values in setParameter(), others in setAdditionalParameter()
-      if (value instanceof Number) {
-        paramInstance.setParameter(key, ((Number) value).doubleValue());
-      } else {
-        paramInstance.setAdditionalParameter(key, value);
-        logger.warn("Stored additional parameter '{}' as non-double: {}", key, value);
+        // Store numerical values in setParameter(), others in setAdditionalParameter()
+        if (value instanceof Number) {
+          paramInstance.setParameter(key, ((Number) value).doubleValue());
+        } else {
+          paramInstance.setAdditionalParameter(key, value);
+          logger.warn("Stored additional parameter '{}' as non-double: {}", key, value);
+        }
       }
+      return paramInstance;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return paramInstance;
   }
 
   /**
@@ -147,7 +154,7 @@ class RuleFactory {
    * @return A newly instantiated {@link Rule} object.
    * @throws SimulationException If the rule class is missing or cannot be instantiated.
    */
-  private static Rule<?> createRule(SimType simType, GenericParameters paramInstance) {
+  private static Rule<?> createRuleInstance(SimType simType, GenericParameters paramInstance) {
     try {
       String ruleClassName = RULE_PACKAGE + simType.name() + "Rule";
       Class<?> ruleClass = Class.forName(ruleClassName);
@@ -155,7 +162,7 @@ class RuleFactory {
       return (Rule<?>) ruleConstructor.newInstance(paramInstance);
     } catch (Exception e) {
       logger.error("Error creating rule: {}", simType, e);
-      throw new SimulationException("UnknownRuleCreationError", e);
+      throw new SimulationException("CreationError", List.of(simType.name()), e);
     }
   }
 }

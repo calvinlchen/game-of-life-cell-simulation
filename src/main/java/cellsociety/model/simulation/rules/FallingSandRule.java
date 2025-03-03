@@ -12,6 +12,7 @@ import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -84,44 +85,56 @@ public class FallingSandRule extends Rule<FallingSandCell> {
    */
   @Override
   public int apply(FallingSandCell cell) {
-    return switch (cell.getCurrentState()) {
-      case FALLINGSAND_SAND -> attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
-          List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
-      case FALLINGSAND_WATER ->
-          attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
-      default -> cell.getCurrentState();  // steel and empty
-    };
+    try {
+      return switch (cell.getCurrentState()) {
+        case FALLINGSAND_SAND -> attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
+            List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
+        case FALLINGSAND_WATER ->
+            attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+        default -> cell.getCurrentState();  // steel and empty
+      };
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private int attemptMovement(FallingSandCell cell, List<DirectionType> secondaryDirections,
       int newState, List<Integer> replaceableNeighbors) {
+    try {
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        Optional<FallingSandCell> neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
+        if (neighbor.isPresent()) {
+          neighbor.get().setNextState(newState);
+          return replaceableNeighbor;
+        }
 
-    for (int replaceableNeighbor : replaceableNeighbors) {
-      Optional<FallingSandCell> neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
-      if (neighbor.isPresent()) {
-        neighbor.get().setNextState(newState);
-        return replaceableNeighbor;
+        List<FallingSandCell> possibleMoves = secondaryDirections.stream()
+            .map(dir -> findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
+            .toList();
+        // chose random secondary
+        if (!possibleMoves.isEmpty()) {
+          FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+          chosenMove.setNextState(newState);
+          return replaceableNeighbor;
+        }
       }
-
-      List<FallingSandCell> possibleMoves = secondaryDirections.stream()
-          .map(dir -> findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
-          .toList();
-      // chose random secondary
-      if (!possibleMoves.isEmpty()) {
-        FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
-        chosenMove.setNextState(newState);
-        return replaceableNeighbor;
-      }
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return cell.getCurrentState();
   }
 
   private Optional<FallingSandCell> findValidNeighbor(FallingSandCell cell, DirectionType direction,
       int state) {
-    return cell.getNeighbors().stream()
-        .filter(neighbor -> matchesDirection(cell, neighbor, direction))
-        .filter(neighbor -> neighbor.getCurrentState() == state && neighbor.getNextState() == state)
-        .findFirst();
+    try {
+      return cell.getNeighbors().stream()
+          .filter(neighbor -> matchesDirection(cell, neighbor, direction))
+          .filter(
+              neighbor -> neighbor.getCurrentState() == state && neighbor.getNextState() == state)
+          .findFirst();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
 }

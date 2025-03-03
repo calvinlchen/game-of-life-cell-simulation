@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  *
  * <p><b>Example Usage:</b></p>
  * <pre>
- * Optional<EdgeHandler> handler = EdgeFactory.getHandler(EdgeType.TOROIDAL);
+ * Optional&lt;EdgeHandler&gt; handler = EdgeFactory.getHandler(EdgeType.TOROIDAL);
  * handler.ifPresent(h -> System.out.println("Handler retrieved: " + h.getClass().getSimpleName()));
  * </pre>
  *

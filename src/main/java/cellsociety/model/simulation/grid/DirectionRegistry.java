@@ -22,7 +22,7 @@ import java.util.Optional;
  *
  * <p><b>Example Usage:</b></p>
  * <pre>
- * Optional<DirectionType> direction = DirectionRegistry.getDirection("0,1");
+ * Optional&lt;DirectionType&lt; direction = DirectionRegistry.getDirection("0,1");
  * direction.ifPresent(d -> System.out.println("Mapped direction: " + d));
  * // Output: Mapped direction: E
  * </pre>
