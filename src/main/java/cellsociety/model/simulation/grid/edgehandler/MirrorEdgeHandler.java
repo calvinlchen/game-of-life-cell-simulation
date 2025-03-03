@@ -25,7 +25,8 @@ import java.util.Optional;
  * <p><b>Example:</b></p>
  * <pre>
  * MirrorEdgeHandler handler = new MirrorEdgeHandler();
- * Optional<List<Integer>> mirrored = handler.handleEdgeNeighbor(-1, 2, 5, 5, new int[]{-1, 0});
+ * Optional&lt;List&lt;Integer&gt;&gt; mirrored =
+ * handler.handleEdgeNeighbor(-1, 2, 5, 5, new int[]{-1, 0});
  * mirrored.ifPresent(pos -> System.out.println("Mirrored position: " + pos));
  * // Output: Mirrored position: [0,2] (since -1 reflects to 0)
  * </pre>

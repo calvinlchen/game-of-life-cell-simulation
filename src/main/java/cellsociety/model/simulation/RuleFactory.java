@@ -23,7 +23,8 @@ import java.util.Map;
  * <p><b>Key Responsibilities:</b></p>
  * <ul>
  *   <li>Creates and initializes a {@link Rule} instance dynamically.</li>
- *   <li>Automatically maps parameters to either numeric values or additional object-based values.</li>
+ *   <li>Automatically maps parameters to either numeric values or additional object-based values.
+ *   </li>
  *   <li>Uses reflection to instantiate the corresponding rule class.</li>
  * </ul>
  *
@@ -35,6 +36,7 @@ import java.util.Map;
  * </ul>
  *
  * <h2>Expected Naming Conventions</h2>
+ *
  * <p>This factory assumes the following naming conventions for dynamically locating classes:</p>
  * <ul>
  *   <li>Rule classes follow the format: <b>{@code SimTypeRule}}</b> (e.g., {@code FireRule}).</li>
@@ -43,8 +45,8 @@ import java.util.Map;
  *
  * <h2>Example Usage</h2>
  * <pre>
- * Map<String, Object> params = Map.of("ignitionLikelihood", 0.1, "treeSpawnLikelihood", 0.01);
- * Rule<?> fireRule = RuleFactory.createRule(SimType.Fire, params);
+ * Map&lt;String, Object> params = Map.of("ignitionLikelihood", 0.1, "treeSpawnLikelihood", 0.01);
+ * Rule&lt;?> fireRule = RuleFactory.createRule(SimType.Fire, params);
  * </pre>
  *
  * @author Jessica Chen
@@ -70,7 +72,7 @@ class RuleFactory {
    *
    * <p><b>Example Usage:</b></p>
    * <pre>
-   * Map<String, Object> params = Map.of("fishReproductionTime", 3, "sharkEnergyGain", 2);
+   * Map&lt;String, Object> params = Map.of("fishReproductionTime", 3, "sharkEnergyGain", 2);
    * Rule<?> watorRule = RuleFactory.createRule(SimType.WaTor, params);
    * </pre>
    *
@@ -103,7 +105,7 @@ class RuleFactory {
    *
    * <p>Example:</p>
    * <pre>
-   * Map<String, Object> params = Map.of("B", List.of(3), "S", List.of(2, 3));
+   * Map&lt;String, Object> params = Map.of("B", List.of(3), "S", List.of(2, 3));
    * GenericParameters gameOfLifeParams = createParameters(SimType.GameOfLife, params);
    * </pre>
    *

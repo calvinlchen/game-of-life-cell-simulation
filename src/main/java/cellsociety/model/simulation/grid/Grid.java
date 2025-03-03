@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,9 +33,10 @@ import org.apache.logging.log4j.Logger;
  *
  * <p><b>Example Usage:</b></p>
  * <pre>
- * Grid<Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.TOROIDAL);
+ * Grid&lt;Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE,
+ * EdgeType.TOROIDAL);
  * Cell cell = grid.getCell(3, 5);
- * List<Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
+ * List&lt;Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
  * </pre>
  *
  * @param <T> The type of cell used in the grid, must extend {@link Cell}.

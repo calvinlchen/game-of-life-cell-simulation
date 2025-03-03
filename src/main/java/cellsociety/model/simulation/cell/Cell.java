@@ -44,6 +44,10 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
+  // to avoid repeated literals
+  private static final String NOT_SET = "NotSet";
+  private static final String SET_NEIGHBORS = "setNeighbors()";
+
   private static final Logger logger = LogManager.getLogger(Cell.class);
 
   private List<C> neighbors;
@@ -329,7 +333,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public int[] getPosition() {
     if (position == null) {
       logger.error("Attempted to retrieve position before setting it.");
-      throw new SimulationException("NotSet", List.of("position", "setPosition()"));
+      throw new SimulationException(NOT_SET, List.of("position", "setPosition()"));
     }
     return Arrays.copyOf(position, position.length);
   }
@@ -360,8 +364,9 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public List<C> getNeighbors() {
     // should never be null because can't set to null
     if (neighbors == null) {
-      logger.error("Neighbors list has not yet been initialized. Call setNeighbors() first.");
-      throw new SimulationException("NotSet", List.of("neighbors", "setNeighbors()"));
+      logger.error(
+          "Neighbors list has not yet been initialized. Call " + SET_NEIGHBORS + " first.");
+      throw new SimulationException(NOT_SET, List.of("neighbors", SET_NEIGHBORS));
     }
     return neighbors;
   }
@@ -375,7 +380,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public void setNeighbors(List<C> neighbors) {
     if (neighbors == null) {
       logger.error("Attempted to set null neighbor list.");
-      throw new SimulationException("NullParameters", List.of("neighbors", "setNeighbors()"));
+      throw new SimulationException("NullParameters", List.of("neighbors", SET_NEIGHBORS));
     }
     this.neighbors = neighbors;
   }
@@ -402,8 +407,8 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   public List<C> getDirectionalNeighbors(DirectionType direction) {
     if (directionalNeighbors == null) {
       logger.error(
-          "Directional neighbors have not yet been initialized. Call setNeighbors() first.");
-      throw new SimulationException("NotSet", List.of("directionalNeighbors", "setNeighbors()"));
+          "Directional neighbors have not yet been initialized. Call " + SET_NEIGHBORS + " first.");
+      throw new SimulationException(NOT_SET, List.of("directionalNeighbors", SET_NEIGHBORS));
     }
     return directionalNeighbors.getOrDefault(direction, new ArrayList<>());
   }

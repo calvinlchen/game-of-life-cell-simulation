@@ -38,7 +38,7 @@ public class NoEvenOddParityGridDirectionStrategy implements GridDirectionStrate
    * @param predefinedDirections A 2D array representing the movement offsets for the grid.
    */
   public NoEvenOddParityGridDirectionStrategy(int[][] predefinedDirections) {
-    this.directions = predefinedDirections;
+    this.directions = copyArray(predefinedDirections);
   }
 
   /**
@@ -57,6 +57,17 @@ public class NoEvenOddParityGridDirectionStrategy implements GridDirectionStrate
    */
   @Override
   public int[][] getDirections(int row) {
-    return directions;
+    return copyArray(directions);
+  }
+
+  private int[][] copyArray(int[][] original) {
+    if (original == null) {
+      return null;
+    }
+    int[][] copy = new int[original.length][];
+    for (int i = 0; i < original.length; i++) {
+      copy[i] = original[i].clone();
+    }
+    return copy;
   }
 }

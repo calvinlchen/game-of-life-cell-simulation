@@ -4,7 +4,6 @@ import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
-import cellsociety.model.simulation.parameters.Parameters;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 
@@ -125,12 +124,14 @@ public class Simulation<T extends Cell<T, ?>> {
    * <p>This method performs the following actions:</p>
    * <ul>
    *   <li>Retrieves parameter values from the XML data.</li>
-   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.</li>
+   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.
+   *   </li>
    *   <li>Assigns the retrieved parameters to the rule, ensuring that both numerical and
    *       non-numerical parameters are handled correctly.</li>
    * </ul>
    *
    * <h2>Error Handling</h2>
+   *
    * <p>If any step in the rule setup process fails, a {@link SimulationException} is thrown,
    * ensuring that the simulation does not proceed with invalid configurations.</p>
    *
@@ -354,7 +355,7 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * List<String> keys = sim.getParameterKeys();
+   * List&lt;String> keys = sim.getParameterKeys();
    * System.out.println("Available parameters: " + keys);
    * </pre>
    *
@@ -422,7 +423,7 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * List<String> additionalKeys = sim.getAdditionalParameterKeys();
+   * List&lt;String> additionalKeys = sim.getAdditionalParameterKeys();
    * System.out.println("Additional parameters: " + additionalKeys);
    * </pre>
    *
@@ -471,7 +472,8 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p><b>Example Usage:</b>
    * <pre>
-   * Optional<List<Integer>> survivalRules = sim.getAdditionalParameter("survivalThreshold", List.class);
+   * Optional&lt;List&lt;Integer>> survivalRules =
+   * sim.getAdditionalParameter("survivalThreshold", List.class);
    * survivalRules.ifPresent(rules -> System.out.println("Survival Rules: " + rules));
    * </pre>
    *
@@ -479,7 +481,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @param type - the expected class type (e.g., List.class, String.class)
    * @param <T>  - the expected return type
    * @return an {@code Optional<T>} containing the parameter value if found and correctly typed, or
-   * an empty {@code Optional} if not found or mismatched.
+   *     an empty {@code Optional} if not found or mismatched.
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     return parameters.getAdditionalParameter(key, type);

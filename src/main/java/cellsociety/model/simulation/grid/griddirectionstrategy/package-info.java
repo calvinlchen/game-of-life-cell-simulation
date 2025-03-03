@@ -11,10 +11,12 @@
  * <ul>
  *   <li>{@link cellsociety.model.simulation.grid.griddirectionstrategy.GridDirectionStrategy}
  *   - Interface defining the contract for choosing neighbors strategies.</li>
- *   <li>{@link cellsociety.model.simulation.grid.griddirectionstrategy.NoEvenOddParityGridDirectionStrategy}
+ *   <li>{@link
+ *   cellsociety.model.simulation.grid.griddirectionstrategy.NoEvenOddParityGridDirectionStrategy}
  *   - Simple strategy where choosing neighbors does not depend on row parity (e.g., rectangular
  *   grids).</li>
- *   <li>{@link cellsociety.model.simulation.grid.griddirectionstrategy.EvenOddParityGridDirectionStrategy}
+ *   <li>{@link
+ *   cellsociety.model.simulation.grid.griddirectionstrategy.EvenOddParityGridDirectionStrategy}
  *   - Strategy that assigns different choosing neighbors directions based on whether a row index
  *   is even or odd (e.g., hexagonal and triangular grids).</li>
  * </ul>

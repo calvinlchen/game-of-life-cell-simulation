@@ -59,7 +59,8 @@ public class FireRule extends Rule<FireCell> {
    * <h2>State Transition Logic:</h2>
    * <ul>
    *   <li><b>Burning Tree → Empty:</b> Fire consumes the tree, leaving an empty cell.</li>
-   *   <li><b>Tree → Burning:</b> A tree ignites if a neighbor is burning or via spontaneous ignition.</li>
+   *   <li><b>Tree → Burning:</b> A tree ignites if a neighbor is burning or via spontaneous
+   *   ignition.</li>
    *   <li><b>Empty → Tree:</b> An empty cell regrows into a tree based on probability.</li>
    * </ul>
    *

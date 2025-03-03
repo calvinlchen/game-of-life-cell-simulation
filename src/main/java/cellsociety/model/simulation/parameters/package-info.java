@@ -13,6 +13,7 @@
  * </ul>
  *
  * <h2>📌 Why This Package?</h2>
+ *
  * <p>Simulations require different rules and settings. Instead of hardcoding individual
  * configurations, this package provides **centralized, flexible storage** of simulation
  * parameters.</p>
@@ -22,10 +23,12 @@
  *   <li>🔹 **Automatic default parameter initialization** based on simulation type.</li>
  *   <li>🔹 **Efficient key-value storage**, reducing the need for multiple subclasses.</li>
  *   <li>🔹 **Logging and error handling** for invalid or missing parameters.</li>
- *   <li>🔹 **Reflection-friendly design**, making it easy to integrate with dynamic rule creation.</li>
+ *   <li>🔹 **Reflection-friendly design**, making it easy to integrate with dynamic rule creation.
+ *   </li>
  * </ul>
  *
  * <h2>🚀 How It Works</h2>
+ *
  * <p>Parameters are stored in two ways:</p>
  * <ul>
  *   <li>**Double-based parameters** – Stored in {@code Parameters}, ensuring type safety.</li>
@@ -39,7 +42,7 @@
  * double reproductionTime = params.getParameter("fishReproductionTime");
  *
  * params.setAdditionalParameter("customSetting", List.of(1, 2, 3));
- * List<Integer> setting = params.getAdditionalParameter("customSetting", List.class);
+ * List&lt;Integer> setting = params.getAdditionalParameter("customSetting", List.class);
  * </pre>
  *
  * <h2>📌 Package Classes</h2>
@@ -51,11 +54,13 @@
  * </ul>
  *
  * <h2>📌 Design Considerations</h2>
+ *
  * <p>This package initially contained **one subclass per simulation**, but was refactored for:</p>
  * <ul>
  *   <li>✅ **Scalability** – New simulations no longer require separate subclasses.</li>
  *   <li>✅ **Simplified Maintenance** – Avoids redundant classes with minimal duplication.</li>
- *   <li>✅ **Better Type Safety** – Only exceptional cases (like Game of Life) allow non-double parameters.</li>
+ *   <li>✅ **Better Type Safety** – Only exceptional cases (like Game of Life) allow non-double
+ *   parameters.</li>
  * </ul>
  *
  * <p>By structuring parameter handling in a **flexible yet controlled** manner, this package

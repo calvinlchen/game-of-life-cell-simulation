@@ -11,7 +11,8 @@
  *   <li>Boundary handling through {@link cellsociety.model.simulation.grid.EdgeFactory}
  *       and its associated {@link cellsociety.model.simulation.grid.edgehandler.EdgeHandler}
  *       implementations.</li>
- *   <li>Mapping direction types from {@link cellsociety.model.simulation.grid.DirectionRegistry}.</li>
+ *   <li>Mapping direction types from {@link
+ *   cellsociety.model.simulation.grid.DirectionRegistry}.</li>
  * </ul>
  *
  * <h2>Package Overview</h2>
@@ -28,7 +29,8 @@
  *   <li><b>Strategy Pattern</b>:
  *     <ul>
  *       <li>{@link cellsociety.model.simulation.grid.GridDirectionRegistry}
- *       - Uses {@link cellsociety.model.simulation.grid.griddirectionstrategy.GridDirectionStrategy}
+ *       - Uses {@link
+ *       cellsociety.model.simulation.grid.griddirectionstrategy.GridDirectionStrategy}
  *       implementations to determine neighbor directions for different grid topology.</li>
  *     </ul>
  *   </li>
@@ -36,10 +38,11 @@
  *
  * <h2>Usage Example</h2>
  * <pre>
- * List<Cell> cells = ...;  // Initialize list of cells
- * Grid<Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.NONE);
+ * List&lt;Cell> cells = ...;  // Initialize list of cells
+ * Grid&lt;Cell> grid = new Grid(cells, 10, 10, ShapeType.RECTANGLE,
+ * NeighborhoodType.MOORE, EdgeType.NONE);
  * Cell cell = grid.getCell(3, 5);
- * List<Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
+ * List&lt;Cell> neighbors = grid.getNeighbors(new int[]{3, 5});
  * </pre>
  *
  * <h2>Key Classes</h2>

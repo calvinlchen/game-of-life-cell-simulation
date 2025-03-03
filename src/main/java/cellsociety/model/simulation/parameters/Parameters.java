@@ -46,6 +46,7 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class Parameters {
 
+  private static final String NULL_PARAMETER = "NullParameter";
   private static final Logger logger = LogManager.getLogger(Parameters.class);
 
   private final Map<String, Double> parameters;
@@ -90,7 +91,7 @@ public abstract class Parameters {
   public void setParameters(Map<String, Double> newParams) {
     if (newParams == null) {
       logger.error("Attempted to update parameters with a null map.");
-      throw new SimulationException("NullParameter",
+      throw new SimulationException(NULL_PARAMETER,
           List.of("newParams", "setParameters() in Parameters"));
     }
 
@@ -107,7 +108,7 @@ public abstract class Parameters {
   public double getParameter(String key) {
     if (key == null) {
       logger.error("Attempted to retrieve parameter with null.");
-      throw new SimulationException("NullParameter",
+      throw new SimulationException(NULL_PARAMETER,
           List.of("key", "getParameter() in Parameters"));
     }
     if (!parameters.containsKey(key)) {
@@ -128,7 +129,7 @@ public abstract class Parameters {
   public void setParameter(String key, double value) {
     if (key == null) {
       logger.error("Attempted to set parameter with null.");
-      throw new SimulationException("NullParameter",
+      throw new SimulationException(NULL_PARAMETER,
           List.of("key", "setParameter() in Parameters"));
     }
 

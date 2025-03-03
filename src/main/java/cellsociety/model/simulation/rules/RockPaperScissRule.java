@@ -85,8 +85,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell> {
           .filter(neighbor -> neighbor.getCurrentState() == winningState).count();
 
       if ((double) winningNeighborsCount / cell.getNeighbors().size()
-          > getParameters().getParameter(
-          "percentageToWin")) {
+          > getParameters().getParameter("percentageToWin")) {
         return winningState;
       }
 

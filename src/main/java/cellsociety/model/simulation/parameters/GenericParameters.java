@@ -167,6 +167,11 @@ public class GenericParameters extends Parameters {
     return Optional.of(type.cast(value));
   }
 
+  /**
+   * Retrieves a list of all keys associated with the additional parameters.
+   *
+   * @return a list of all keys in the additional parameters map, returned as an unmodifiable copy.
+   */
   public List<String> getAdditionalParameterKeys() {
     return List.copyOf(additionalParams.keySet());
   }

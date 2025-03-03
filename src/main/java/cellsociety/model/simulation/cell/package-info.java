@@ -18,7 +18,8 @@
  *       logic, making state management and retrieval efficient.</li>
  *   <li><b>Flexible State Transitions:</b> Cells interact with their corresponding {@code Rule}
  *       to determine their next state, promoting separation of concerns.</li>
- *   <li><b>History Tracking:</b> Supports state rollback for debugging and step-back functionality.</li>
+ *   <li><b>History Tracking:</b> Supports state rollback for debugging and step-back
+ *   functionality.</li>
  * </ul>
  *
  * <h2>📌 SOLID Principles in Design:</h2>
@@ -47,8 +48,8 @@
  * }
  * </pre>
  * <ul>
- *   <li><b>Hook Methods:</b> Subclasses override `shouldSkipCalculation()` and `postProcessNextState()`
- *       to introduce custom behaviors without modifying core logic.</li>
+ *   <li><b>Hook Methods:</b> Subclasses override `shouldSkipCalculation()` and
+ *       `postProcessNextState()` to introduce custom behaviors without modifying core logic.</li>
  *   <li><b>Encapsulation:</b> The core update logic is encapsulated, preventing direct manipulation
  *       of simulation state.</li>
  * </ul>
@@ -61,12 +62,12 @@
  *     super(state, rule);
  *   }
  *
- *   @Override
+ *   Override
  *   protected MyCustomCell getSelf() {
  *     return this;
  *   }
  *
- *   @Override
+ *   Override
  *   protected int getMaxState() {
  *     return MY_CUSTOM_MAX_STATE;
  *   }
@@ -75,10 +76,19 @@
  *
  * <h2>🔹 Key Classes:</h2>
  * <ul>
- *   <li>{@link cellsociety.model.simulation.cell.Cell} - The abstract base class for all simulation cells.</li>
- *   <li>{@link cellsociety.model.simulation.cell.ChouReg2Cell}, {@link cellsociety.model.simulation.cell.LangtonCell}, {@link cellsociety.model.simulation.cell.PetelkaCell} - Cells for Langton-style loop simulations.</li>
- *   <li>{@link cellsociety.model.simulation.cell.FireCell}, {@link cellsociety.model.simulation.cell.FallingSandCell} - Cells simulating natural processes like fire and sand dynamics.</li>
- *   <li>{@link cellsociety.model.simulation.cell.SegregationCell}, {@link cellsociety.model.simulation.cell.WaTorCell}, {@link cellsociety.model.simulation.cell.RockPaperScissCell} - Cells for social and ecological simulations.</li>
+ *   <li>{@link cellsociety.model.simulation.cell.Cell} - The abstract base class for all
+ *   simulation cells.</li>
+ *   <li>{@link cellsociety.model.simulation.cell.ChouReg2Cell},
+ *   {@link cellsociety.model.simulation.cell.LangtonCell},
+ *   {@link cellsociety.model.simulation.cell.PetelkaCell}
+ *   - Cells for Langton-style loop simulations.</li>
+ *   <li>{@link cellsociety.model.simulation.cell.FireCell},
+ *   {@link cellsociety.model.simulation.cell.FallingSandCell}
+ *   - Cells simulating natural processes like fire and sand dynamics.</li>
+ *   <li>{@link cellsociety.model.simulation.cell.SegregationCell},
+ *   {@link cellsociety.model.simulation.cell.WaTorCell},
+ *   {@link cellsociety.model.simulation.cell.RockPaperScissCell}
+ *   - Cells for social and ecological simulations.</li>
  * </ul>
  *
  * <h2>🔹 Extending the System:</h2>
@@ -88,7 +98,8 @@
  *   <li>Create a corresponding {@code Cell} subclass implementing the template methods.</li>
  *   <li>Override hooks like `shouldSkipCalculation()` for optimized updates.</li>
  * </ol>
- * <p>
- * This structured approach ensures the simulation framework remains **extensible, maintainable, and efficient.** 🚀
+ *
+ * <p>This structured approach ensures the simulation framework remains **extensible, maintainable,
+ * and efficient.** 🚀
  */
 package cellsociety.model.simulation.cell;
