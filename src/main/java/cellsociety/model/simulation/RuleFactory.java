@@ -5,6 +5,7 @@ import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,10 +83,10 @@ class RuleFactory {
   static Rule<?> createRule(SimType simType, Map<String, Object> parameters) {
     try {
       GenericParameters paramInstance = createParameters(simType, parameters);
-      return createRule(simType, paramInstance);
+      return createRuleInstance(simType, paramInstance);
     } catch (Exception e) {
       logger.error("Error creating rule for simulation type {}: {}", simType, e);
-      throw new SimulationException("UnknownRuleCreationError", e);
+      throw new SimulationException("CreationError", List.of(simType.name()), e);
     }
   }
 
@@ -113,22 +114,26 @@ class RuleFactory {
   private static GenericParameters createParameters(SimType simType,
       Map<String, Object> parameters) {
     // Create parameters instance with defaults
-    GenericParameters paramInstance = new GenericParameters(simType);
+    try {
+      GenericParameters paramInstance = new GenericParameters(simType);
 
-    // Iterate through all provided parameters
-    for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-      String key = entry.getKey();
-      Object value = entry.getValue();
+      // Iterate through all provided parameters
+      for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+        String key = entry.getKey();
+        Object value = entry.getValue();
 
-      // Store numerical values in setParameter(), others in setAdditionalParameter()
-      if (value instanceof Number) {
-        paramInstance.setParameter(key, ((Number) value).doubleValue());
-      } else {
-        paramInstance.setAdditionalParameter(key, value);
-        logger.warn("Stored additional parameter '{}' as non-double: {}", key, value);
+        // Store numerical values in setParameter(), others in setAdditionalParameter()
+        if (value instanceof Number) {
+          paramInstance.setParameter(key, ((Number) value).doubleValue());
+        } else {
+          paramInstance.setAdditionalParameter(key, value);
+          logger.warn("Stored additional parameter '{}' as non-double: {}", key, value);
+        }
       }
+      return paramInstance;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return paramInstance;
   }
 
   /**
@@ -147,7 +152,7 @@ class RuleFactory {
    * @return A newly instantiated {@link Rule} object.
    * @throws SimulationException If the rule class is missing or cannot be instantiated.
    */
-  private static Rule<?> createRule(SimType simType, GenericParameters paramInstance) {
+  private static Rule<?> createRuleInstance(SimType simType, GenericParameters paramInstance) {
     try {
       String ruleClassName = RULE_PACKAGE + simType.name() + "Rule";
       Class<?> ruleClass = Class.forName(ruleClassName);
@@ -155,7 +160,7 @@ class RuleFactory {
       return (Rule<?>) ruleConstructor.newInstance(paramInstance);
     } catch (Exception e) {
       logger.error("Error creating rule: {}", simType, e);
-      throw new SimulationException("UnknownRuleCreationError", e);
+      throw new SimulationException("CreationError", List.of(simType.name()), e);
     }
   }
 }

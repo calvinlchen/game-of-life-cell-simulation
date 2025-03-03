@@ -63,23 +63,32 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell> {
    */
   @Override
   public int apply(GameOfLifeCell cell) {
-    long aliveNeighbors = countAliveNeighbors(cell);
+    try {
+      long aliveNeighbors = countAliveNeighbors(cell);
 
-    List<Integer> survive = retrieveParameterList("S");
-    List<Integer> birth = retrieveParameterList("B");
+      List<Integer> survive = retrieveParameterList("S");
+      List<Integer> birth = retrieveParameterList("B");
 
-    if (cell.getCurrentState() == GAMEOFLIFE_ALIVE && !survive.contains((int) aliveNeighbors)) {
-      return GAMEOFLIFE_DEAD;
-    } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && birth.contains((int) aliveNeighbors)) {
-      return GAMEOFLIFE_ALIVE;
+      if (cell.getCurrentState() == GAMEOFLIFE_ALIVE && !survive.contains((int) aliveNeighbors)) {
+        return GAMEOFLIFE_DEAD;
+      } else if (cell.getCurrentState() == GAMEOFLIFE_DEAD && birth.contains(
+          (int) aliveNeighbors)) {
+        return GAMEOFLIFE_ALIVE;
+      }
+
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    return cell.getCurrentState();
   }
 
   private long countAliveNeighbors(GameOfLifeCell cell) {
-    return cell.getNeighbors().stream()
-        .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE).count();
+    try {
+      return cell.getNeighbors().stream()
+          .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE).count();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private List<Integer> retrieveParameterList(String key) {

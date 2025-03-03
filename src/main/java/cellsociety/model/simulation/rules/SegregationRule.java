@@ -4,6 +4,7 @@ import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -74,43 +75,55 @@ public class SegregationRule extends Rule<SegregationCell> {
    */
   @Override
   public int apply(SegregationCell cell) {
-    if (cell.getCurrentState() == SEGREGATION_EMPTY) {
-      return SEGREGATION_EMPTY;
-    }
+    try {
+      if (cell.getCurrentState() == SEGREGATION_EMPTY) {
+        return SEGREGATION_EMPTY;
+      }
 
-    double satisfactionThreshold = getParameters().getParameter("toleranceThreshold");
-    if (isSatisfied(cell, satisfactionThreshold)) {
+      double satisfactionThreshold = getParameters().getParameter("toleranceThreshold");
+      if (isSatisfied(cell, satisfactionThreshold)) {
+        return cell.getCurrentState();
+      }
+
+      Optional<SegregationCell> emptyCell = findAdjacentEmptyCell(cell);
+
+      if (emptyCell.isPresent()) {
+        emptyCell.get().setNextState(cell.getCurrentState());
+        return SEGREGATION_EMPTY;
+      }
+
+      logger.debug("[SegregationRule] No empty cells available for cell at {} to move.",
+          cell.getPosition());
       return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    Optional<SegregationCell> emptyCell = findAdjacentEmptyCell(cell);
-
-    if (emptyCell.isPresent()) {
-      emptyCell.get().setNextState(cell.getCurrentState());
-      return SEGREGATION_EMPTY;
-    }
-
-    logger.debug("[SegregationRule] No empty cells available for cell at {} to move.",
-        cell.getPosition());
-    return cell.getCurrentState();
   }
 
   private boolean isSatisfied(SegregationCell cell, double threshold) {
-    List<SegregationCell> neighbors = cell.getNeighbors();
-    if (neighbors.isEmpty()) {
-      return true; // Cells with no neighbors are always satisfied.
-    }
+    try {
+      List<SegregationCell> neighbors = cell.getNeighbors();
+      if (neighbors.isEmpty()) {
+        return true; // Cells with no neighbors are always satisfied.
+      }
 
-    double similarityRatio = calculateSimilarityRatio(cell, neighbors);
-    return similarityRatio >= threshold;
+      double similarityRatio = calculateSimilarityRatio(cell, neighbors);
+      return similarityRatio >= threshold;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private double calculateSimilarityRatio(SegregationCell cell, List<SegregationCell> neighbors) {
-    long similarNeighbors = neighbors.stream()
-        .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState())
-        .count();
+    try {
+      long similarNeighbors = neighbors.stream()
+          .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState())
+          .count();
 
-    return (double) similarNeighbors / neighbors.size();
+      return (double) similarNeighbors / neighbors.size();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private Optional<SegregationCell> findAdjacentEmptyCell(SegregationCell cell) {

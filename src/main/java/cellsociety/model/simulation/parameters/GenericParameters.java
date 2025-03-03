@@ -87,13 +87,13 @@ public class GenericParameters extends Parameters {
   private final List<String> unmodifiableParams = new ArrayList<>();
 
   /**
-   * Constructs a new instance of GenericParameters with default parameter values
-   * initialized based on the specified simulation type.
+   * Constructs a new instance of GenericParameters with default parameter values initialized based
+   * on the specified simulation type.
    *
    * <p>If the simulation type has predefined parameter defaults, they are set automatically.</p>
    *
-   * @param simType the type of simulation for which to configure parameters
-   *                (e.g., GameOfLife, Percolation, etc.)
+   * @param simType the type of simulation for which to configure parameters (e.g., GameOfLife,
+   *                Percolation, etc.)
    * @throws SimulationException if there is an error applying the default parameters
    */
   public GenericParameters(SimType simType) {
@@ -126,7 +126,12 @@ public class GenericParameters extends Parameters {
       logger.warn("Parameter {} is unmodifiable", key);
       throw new SimulationException("UnmodifiableParameter", List.of(key));
     }
-    super.setParameter(key, value);
+
+    try {
+      super.setParameter(key, value);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -151,7 +156,7 @@ public class GenericParameters extends Parameters {
    * @param type the expected class type of the parameter's value
    * @param <T>  the type of the parameter's value
    * @return an {@code Optional} containing the value of the additional parameter cast to the
-   *     specified type, or empty if not found or not of the expected type
+   * specified type, or empty if not found or not of the expected type
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     Object value = additionalParams.get(key);

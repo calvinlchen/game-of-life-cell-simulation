@@ -5,6 +5,7 @@ import static cellsociety.model.util.constants.CellStates.PERCOLATION_PERCOLATED
 
 import cellsociety.model.simulation.cell.PercolationCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 
 /**
  * The {@code PercolationRule} class defines the behavior of percolation in a grid-based
@@ -57,15 +58,23 @@ public class PercolationRule extends Rule<PercolationCell> {
    */
   @Override
   public int apply(PercolationCell cell) {
-    if (cell.getCurrentState() == PERCOLATION_OPEN && neighborIsPercolated(cell)) {
-      return PERCOLATION_PERCOLATED;
-    }
+    try {
+      if (cell.getCurrentState() == PERCOLATION_OPEN && neighborIsPercolated(cell)) {
+        return PERCOLATION_PERCOLATED;
+      }
 
-    return cell.getCurrentState();
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private boolean neighborIsPercolated(PercolationCell cell) {
-    return cell.getNeighbors().stream()
-        .anyMatch(neighbor -> neighbor.getCurrentState() == PERCOLATION_PERCOLATED);
+    try {
+      return cell.getNeighbors().stream()
+          .anyMatch(neighbor -> neighbor.getCurrentState() == PERCOLATION_PERCOLATED);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 }

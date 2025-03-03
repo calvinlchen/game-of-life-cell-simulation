@@ -6,6 +6,7 @@ import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
 
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 
 
 /**
@@ -67,33 +68,45 @@ public class FireRule extends Rule<FireCell> {
    */
   @Override
   public int apply(FireCell cell) {
-    return switch (cell.getCurrentState()) {
-      case FIRE_BURNING -> FIRE_EMPTY;
-      case FIRE_TREE -> evaluateTreeState(cell);
-      case FIRE_EMPTY -> evaluateEmptyState(cell);
-      default -> cell.getCurrentState();
-    };
+    try {
+      return switch (cell.getCurrentState()) {
+        case FIRE_BURNING -> FIRE_EMPTY;
+        case FIRE_TREE -> evaluateTreeState(cell);
+        case FIRE_EMPTY -> evaluateEmptyState(cell);
+        default -> cell.getCurrentState();
+      };
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private int evaluateTreeState(FireCell cell) {
-    if (hasBurningNeighbor(cell)) {
-      return FIRE_BURNING;
-    }
+    try {
+      if (hasBurningNeighbor(cell)) {
+        return FIRE_BURNING;
+      }
 
-    double ignitionLikelihood = getParameters().getParameter("ignitionLikelihood");
-    if (Math.random() < ignitionLikelihood) {
-      return FIRE_BURNING;
-    }
+      double ignitionLikelihood = getParameters().getParameter("ignitionLikelihood");
+      if (Math.random() < ignitionLikelihood) {
+        return FIRE_BURNING;
+      }
 
-    return cell.getCurrentState();
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   private int evaluateEmptyState(FireCell cell) {
-    double treeSpawnLikelihood = getParameters().getParameter("treeSpawnLikelihood");
-    if (Math.random() < treeSpawnLikelihood) {
-      return FIRE_TREE;
+    try {
+      double treeSpawnLikelihood = getParameters().getParameter("treeSpawnLikelihood");
+      if (Math.random() < treeSpawnLikelihood) {
+        return FIRE_TREE;
+      }
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-    return cell.getCurrentState();
   }
 
   private boolean hasBurningNeighbor(FireCell cell) {

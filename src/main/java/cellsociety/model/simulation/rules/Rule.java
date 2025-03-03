@@ -57,28 +57,12 @@ public abstract class Rule<C extends Cell<C, ?>> {
   // Abstract Methods ------
 
   /**
-   * Applies a template to a given cell by invoking the {@code apply} method and handling any
-   * simulation-related exceptions that may occur.
-   *
-   * @param cell the cell to which the template will be applied
-   * @return the resulting state after applying the template to the cell
-   * @throws SimulationException if an error occurs during the application of the template
-   */
-  public int applyTemplate(C cell) {
-    try {
-      return apply(cell);
-    } catch (SimulationException e) {
-      throw new SimulationException(e);
-    }
-  }
-
-  /**
    * Apply the rules to determine the next state of a cell.
    *
    * @param cell - cell to apply the rules to
    * @return next state of the cell
    */
-  protected abstract int apply(C cell);
+  public abstract int apply(C cell);
 
   // Start of Rules setters and getters ------
 
@@ -159,12 +143,12 @@ public abstract class Rule<C extends Cell<C, ?>> {
       throw new SimulationException("NullParameter",
           List.of("cell, neighbor", "matchesDirection()"));
     }
-
-    // no need to check for positions now that we have directional neighbors
-    // since directional neighbors returns an empty list if that key doesn't exist we good here
-
-    return cell.getDirectionalNeighbors(direction).stream()
-        .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
+    try {
+      return cell.getDirectionalNeighbors(direction).stream()
+          .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**

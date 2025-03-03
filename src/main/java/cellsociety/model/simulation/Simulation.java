@@ -79,7 +79,8 @@ public class Simulation<T extends Cell<T, ?>> {
     final XmlData xmlData;
     if (data == null) {
       logger.error("Simulation initialization failed: Null XML data");
-      throw new SimulationException("NullXMLData");
+      throw new SimulationException("NullParameter",
+          List.of("XmlData", "Simulation()"));
     }
 
     xmlData = data;
@@ -112,9 +113,9 @@ public class Simulation<T extends Cell<T, ?>> {
       // TODO: replace the current one with the commented out line
       setUpGridStructure(cellList, simType);
       // setUpGridStructure(cellList);
-    } catch (Exception e) {
-      logger.error("Simulation setup failed", e);
-      throw new SimulationException("SimulationSetupFailed", e);
+    } catch (SimulationException e) {
+      logger.error("Failed to set up simulation: ", e);
+      throw new SimulationException(e);
     }
   }
 
@@ -151,7 +152,7 @@ public class Simulation<T extends Cell<T, ?>> {
       rule = (Rule<T>) RuleFactory.createRule(simType, params);
       parameters = rule.getParameters();
 
-    } catch (Exception e) {
+    } catch (SimulationException e) {
       logger.error("Failed to set up rules for simulation type: {}", simType, e);
       throw new SimulationException("SimulationSetupFailed", e);
     }
@@ -210,9 +211,13 @@ public class Simulation<T extends Cell<T, ?>> {
    * @param cellList a list of cells that will make up the grid structure
    */
   private void setUpGridStructure(List<Cell<T, ?>> cellList) {
-    // TODO: once XML is changed, delete above and uncomment out this line of code
-    //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-    //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
+    try {
+      // TODO: once XML is changed, delete above and uncomment out this line of code
+      //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+      //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());}
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of Public API calls for Simulation ------
@@ -257,11 +262,15 @@ public class Simulation<T extends Cell<T, ?>> {
    * </pre>
    */
   public void step() {
-    totalIterations++;
-    myGrid.getCells().forEach(Cell::saveCurrentState);
-    myGrid.getCells().forEach(Cell::calcNextState);
-    myGrid.getCells().forEach(Cell::step);
-    myGrid.getCells().forEach(Cell::resetParameters);
+    try {
+      totalIterations++;
+      myGrid.getCells().forEach(Cell::saveCurrentState);
+      myGrid.getCells().forEach(Cell::calcNextState);
+      myGrid.getCells().forEach(Cell::step);
+      myGrid.getCells().forEach(Cell::resetParameters);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Metadata Related
@@ -286,10 +295,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public int getCurrentState(int row, int col) {
     try {
       return myGrid.getCell(row, col).getCurrentState();
-    } catch (Exception e) {
-      logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition",
-          List.of(String.valueOf(row), String.valueOf(col)), e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -314,10 +321,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public int getStateLength(int row, int col) {
     try {
       return myGrid.getCell(row, col).getStateLength();
-    } catch (Exception e) {
-      logger.error("Invalid grid position: ({}, {})", row, col, e);
-      throw new SimulationException("InvalidGridPosition",
-          List.of(String.valueOf(row), String.valueOf(col)), e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -377,10 +382,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public void updateParameter(String key, double value) {
     try {
       parameters.setParameter(key, value);
-    } catch (Exception e) {
-      logger.error("Failed to update parameter: {} from value: {} to {}", key,
-          parameters.getParameter(key), value, e);
-      throw new SimulationException("ParameterNotFound", List.of(key), e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -403,9 +406,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public double getParameter(String key) {
     try {
       return parameters.getParameter(key);
-    } catch (Exception e) {
-      logger.error("Failed to retrieve parameter: {}", key, e);
-      throw new SimulationException("ParameterNotFound", List.of(key), e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 
@@ -452,9 +454,8 @@ public class Simulation<T extends Cell<T, ?>> {
   public void updateAdditionalParameter(String key, Object value) {
     try {
       parameters.setAdditionalParameter(key, value);
-    } catch (Exception e) {
-      logger.error("Failed to update parameter: {} to {}", key, value, e);
-      throw new SimulationException("ParameterNotFound", List.of(key), e);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
   }
 

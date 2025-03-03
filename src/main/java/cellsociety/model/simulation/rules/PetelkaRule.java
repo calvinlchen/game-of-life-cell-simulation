@@ -15,6 +15,7 @@ import static cellsociety.model.util.constants.SimulationConstants.NUM_UNIQUE_90
 import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
+import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -102,29 +103,33 @@ public class PetelkaRule extends Rule<PetelkaCell> {
    */
   @Override
   public int apply(PetelkaCell cell) {
-    DirectionType[] baseDirections = {N, NE, E, SE, S, SW, W, NW};
+    try {
+      DirectionType[] baseDirections = {N, NE, E, SE, S, SW, W, NW};
 
-    // Generate state key for the original direction order
-    String stateKey = getStateKey(cell, baseDirections);
-    if (stateKey.length() != KEYLENGTH_MOORE_LOOPS) {
-      logger.warn("[PetelkaRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
-          stateKey);
-      return cell.getCurrentState();
+      // Generate state key for the original direction order
+      String stateKey = getStateKey(cell, baseDirections);
+      if (stateKey.length() != KEYLENGTH_MOORE_LOOPS) {
+        logger.warn("[PetelkaRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
+            stateKey);
+        return cell.getCurrentState();
+      }
+
+      // Check all rotations of the directions
+      int rotationsState = checkRotations(cell, baseDirections);
+      if (rotationsState != NULL_STATE) {
+        return rotationsState;
+      }
+
+      int reflectionsState = checkReflections(cell);
+      if (reflectionsState != NULL_STATE) {
+        return reflectionsState;
+      }
+
+      // If no match is found, return 0 because that how petelka's work
+      return 0;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
     }
-
-    // Check all rotations of the directions
-    int rotationsState = checkRotations(cell, baseDirections);
-    if (rotationsState != NULL_STATE) {
-      return rotationsState;
-    }
-
-    int reflectionsState = checkReflections(cell);
-    if (reflectionsState != NULL_STATE) {
-      return reflectionsState;
-    }
-
-    // If no match is found, return 0 because that how petelka's work
-    return 0;
   }
 
   private int checkRotations(PetelkaCell cell, DirectionType[] directions) {
