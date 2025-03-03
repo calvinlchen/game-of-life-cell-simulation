@@ -25,14 +25,19 @@
     </RollingFile>
 
     <!-- Error Log File (captures only ERROR and FATAL messages) -->
-    <File name="ErrorLog" fileName="log/error.log" immediateFlush="true" append="true">
+    <RollingFile name="ErrorLog" fileName="log/error.log" filePattern="log/error-%d{yyyy-MM-dd}-%i.log.gz">
       <PatternLayout>
         <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
       </PatternLayout>
       <Filters>
         <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
       </Filters>
-    </File>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>  <!-- Rolls over when file reaches 10MB -->
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/> <!-- Rolls daily -->
+      </Policies>
+      <DefaultRolloverStrategy max="7"/> <!-- Keep last 7 log files -->
+    </RollingFile>
   </Appenders>
 
   <Loggers>
