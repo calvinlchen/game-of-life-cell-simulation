@@ -169,17 +169,18 @@ public class Grid<T extends Cell<T, ?>> {
       getCells().forEach(Cell::clearNeighbors);
 
       for (int i = 0; i < myRows; i++) {
-        Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
-
-        if (directions.isEmpty()) {
-          // because of enums should usually never hit this case
-          logger.error("Invalid shape/neighborhood combination: {} {}", shape.name(),
-              neighborhood.name());
-          throw new SimulationException("InvalidGridShapeNeighborhood",
-              List.of(shape.name(), neighborhood.name()));
-        }
-
         for (int j = 0; j < myCols; j++) {
+          Optional<int[][]> directions =
+              GridDirectionRegistry.getDirections(shape, neighborhood, i, j);
+
+          if (directions.isEmpty()) {
+            // because of enums should usually never hit this case
+            logger.error("Invalid shape/neighborhood combination: {} {}", shape.name(),
+                neighborhood.name());
+            throw new SimulationException("InvalidGridShapeNeighborhood",
+                List.of(shape.name(), neighborhood.name()));
+          }
+
           setNeighbors(i, j, directions.get(), edge);
         }
       }
@@ -241,12 +242,17 @@ public class Grid<T extends Cell<T, ?>> {
         neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
 
         if (isValidPosition(newRow, newCol)) {
+          logger.debug("Found neighbor for cell {}, {}: {}, {} {} ", i, j, directionType.name(),
+              newRow, newCol);
           neighbors.get(directionType).add(myGrid.get(newRow).get(newCol));
         } else {
           Optional<List<Integer>> replacementCell = edgeHandler.get()
               .handleEdgeNeighbor(i, j, myRows, myCols, dir);
-          replacementCell.ifPresent(integers -> neighbors.get(directionType)
-              .add(myGrid.get(integers.get(0)).get(integers.get(1))));
+          replacementCell.ifPresent(integers -> {
+            neighbors.get(directionType).add(myGrid.get(integers.get(0)).get(integers.get(1)));
+            logger.debug("Found neighbor for replacement cell {}, {}: {}, {} {}", i, j,
+                directionType.name(), integers.get(0), integers.get(1));
+          });
         }
       }
       return neighbors;

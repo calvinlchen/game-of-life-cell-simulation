@@ -2,10 +2,10 @@ package cellsociety.model.simulation.grid.griddirectionstrategy;
 
 /**
  * The {@code NoEvenOddParityGridDirectionStrategy} class implements the
- * {@link GridDirectionStrategy} interface for grids where movement directions are independent of
+ * {@link GridDirectionStrategy} interface for grids where neighbor directions are independent of
  * row parity.
  *
- * <p>This strategy is typically used for **rectangular grids**, where movement rules remain the
+ * <p>This strategy is typically used for **rectangular grids**, where neighbor rules remain the
  * same regardless of whether the row index is even or odd.</p>
  *
  * <p><b>Design Pattern:</b> Implements the <b>Strategy Pattern</b>, allowing a flexible and
@@ -13,7 +13,7 @@ package cellsociety.model.simulation.grid.griddirectionstrategy;
  *
  * <p><b>Intended Use:</b></p>
  * <ul>
- *     <li>For grids that do **not** require different movement rules for even vs. odd rows.</li>
+ *     <li>For grids that do **not** require different neighbor rules for even vs. odd rows.</li>
  *     <li>Ideal for rectangular grids using **Moore**, **Von Neumann**,
  *     or **Extended Moore** neighborhoods.</li>
  * </ul>
@@ -33,16 +33,16 @@ public class NoEvenOddParityGridDirectionStrategy implements GridDirectionStrate
   private final int[][] directions;
 
   /**
-   * Constructs a {@code NoEvenOddParityGridDirectionStrategy} with predefined movement directions.
+   * Constructs a {@code NoEvenOddParityGridDirectionStrategy} with predefined neighbor directions.
    *
-   * @param predefinedDirections A 2D array representing the movement offsets for the grid.
+   * @param predefinedDirections A 2D array representing the neighbor offsets for the grid.
    */
   public NoEvenOddParityGridDirectionStrategy(int[][] predefinedDirections) {
     this.directions = copyArray(predefinedDirections);
   }
 
   /**
-   * Retrieves the movement directions for the given row index.
+   * Retrieves the neighbor directions for the given row index.
    *
    * <p>Since this strategy does not consider row parity, the same set of directions is returned
    * for any row index.</p>
@@ -53,10 +53,11 @@ public class NoEvenOddParityGridDirectionStrategy implements GridDirectionStrate
    * </pre>
    *
    * @param row The row index (ignored in this implementation).
-   * @return A 2D array representing movement offsets.
+   * @param col The col index (ignored in this implementation).
+   * @return A 2D array representing neighbor offsets.
    */
   @Override
-  public int[][] getDirections(int row) {
+  public int[][] getDirections(int row, int col) {
     return copyArray(directions);
   }
 

@@ -3,6 +3,7 @@ package cellsociety.model.simulation.grid;
 import cellsociety.model.simulation.grid.griddirectionstrategy.EvenOddParityGridDirectionStrategy;
 import cellsociety.model.simulation.grid.griddirectionstrategy.GridDirectionStrategy;
 import cellsociety.model.simulation.grid.griddirectionstrategy.NoEvenOddParityGridDirectionStrategy;
+import cellsociety.model.simulation.grid.griddirectionstrategy.RowAndColGridDirectionStrategy;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
 import java.util.HashMap;
@@ -77,15 +78,15 @@ class GridDirectionRegistry {
         false, new int[][]{{-2, -1}, {-2, 0}, {-2, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {-1, 2}, {0, -2},
             {0, -1}, {0, 1}, {0, 2}, {1, -1}, {1, 0}, {1, 1}, {1, 2}, {2, -1}, {2, 0}, {2, 1}})));
 
-    strategyMap.put("TRIANGLE_MOORE", new EvenOddParityGridDirectionStrategy(Map.of(true,
+    strategyMap.put("TRIANGLE_MOORE", new RowAndColGridDirectionStrategy(Map.of(true,
         new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -2}, {0, -1}, {0, 1}, {0, 2}, {1, -2}, {1, -1},
             {1, 0}, {1, 1}, {1, 2}}, false,
         new int[][]{{-1, -2}, {-1, -1}, {-1, 0}, {-1, 1}, {-1, 2}, {0, -2}, {0, -1}, {0, 1}, {0, 2},
             {1, -1}, {1, 0}, {1, 1}})));
-    strategyMap.put("TRIANGLE_VON_NEUMANN", new EvenOddParityGridDirectionStrategy(
-        Map.of(true, new int[][]{{-1, 0}, {0, -1}, {0, 1}}, false,
+    strategyMap.put("TRIANGLE_VON_NEUMANN", new RowAndColGridDirectionStrategy(
+        Map.of(false, new int[][]{{-1, 0}, {0, -1}, {0, 1}}, true,
             new int[][]{{0, -1}, {0, 1}, {1, 0}})));
-    strategyMap.put("TRIANGLE_EXTENDED_MOORE", new EvenOddParityGridDirectionStrategy(Map.of(true,
+    strategyMap.put("TRIANGLE_EXTENDED_MOORE", new RowAndColGridDirectionStrategy(Map.of(true,
         new int[][]{{-2, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {-2, 2}, {-1, -3}, {-1, -2}, {-1, -1},
             {-1, 0}, {-1, 1}, {-1, 2}, {-1, 3}, {0, -4}, {0, -3}, {0, -2}, {0, -1}, {0, 1}, {0, 2},
             {0, 3}, {0, 4}, {1, -4}, {1, -3}, {1, -2}, {1, -1}, {1, 0}, {1, 1}, {1, 2}, {1, 3},
@@ -106,14 +107,16 @@ class GridDirectionRegistry {
    * @param neighborhood The neighborhood pattern defining movement rules (e.g., MOORE,
    *                     VON_NEUMANN).
    * @param row          The row index (only relevant for hexagonal and triangular grids).
+   * @param col          The col index (only relevant for triangular grids).
    * @return An {@code Optional<int[][]>} containing the movement offsets, or
-   * {@code Optional.empty()} if no matching strategy exists.
+   *     {@code Optional.empty()} if no matching strategy exists.
    */
-  static Optional<int[][]> getDirections(ShapeType shape, NeighborhoodType neighborhood, int row) {
+  static Optional<int[][]> getDirections(ShapeType shape, NeighborhoodType neighborhood, int row,
+      int col) {
     String key = shape.name() + "_" + neighborhood.name();
 
     return Optional.ofNullable(strategyMap.get(key))
-        .map(strategy -> Optional.ofNullable(strategy.getDirections(row))).orElseGet(() -> {
+        .map(strategy -> Optional.ofNullable(strategy.getDirections(row, col))).orElseGet(() -> {
           logger.warn("No strategy found for: {}", key);
           return Optional.empty();
         });

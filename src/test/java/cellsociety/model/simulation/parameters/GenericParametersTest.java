@@ -141,6 +141,7 @@ public class GenericParametersTest {
   @Nested
   @DisplayName("Tests for simulations with normal double default parameters")
   class DefaultParametersAndUnmodifiableParametersTest {
+
     private GenericParameters parameters;
 
     @BeforeEach
@@ -162,6 +163,12 @@ public class GenericParametersTest {
       assertThrows(SimulationException.class, () -> parameters.setParameter("numStates", 6.0));
       assertEquals(3.0, parameters.getParameter("numStates"));
     }
+  }
 
+  @Test
+  @DisplayName("GenericParameters bypass unmodifiableparam through initalization")
+  void genericParameters_UnmodifiableParameterKey_BypassesUnmodifiableParameter() {
+    GenericParameters parameters = new GenericParameters(RockPaperSciss, Map.of("numStates", 10.0));
+    assertEquals(10.0, parameters.getParameter("numStates"));
   }
 }
