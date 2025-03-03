@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
 public abstract class Rule<C extends Cell<C, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Rule.class);
-  private GenericParameters parameters;
+  private final GenericParameters parameters;
 
   /**
    * Constructs a {@code Rule} object and initializes it with the provided parameters. The
@@ -48,7 +48,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
   public Rule(GenericParameters parameters) {
     if (parameters == null) {
       logger.warn("Rule initialization failed: Parameters cannot be null.");
-      throw new SimulationException("NullParameters",
+      throw new SimulationException("NullParameter",
           List.of("parameters", "Rule"));
     }
     this.parameters = parameters;
@@ -106,6 +106,12 @@ public abstract class Rule<C extends Cell<C, ?>> {
    */
   String getStateKey(C cell, DirectionType[] directions) {
     try {
+      if (cell == null) {
+        logger.error("Direction match failed: Null cell.");
+        throw new SimulationException("NullParameter",
+            List.of("cell", "matchesDirection()"));
+      }
+
       StringBuilder stateBuilder = new StringBuilder();
 
       stateBuilder.append(cell.getCurrentState());
@@ -114,8 +120,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
             .findFirst()
             .ifPresentOrElse(
                 neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-                () -> logger.warn("No neighbor found in direction {} for cell at {}.", dir,
-                    cell.getPosition()));
+                () -> logger.warn("No neighbor found in direction {}.", dir));
       }
 
       return stateBuilder.toString();
@@ -138,12 +143,15 @@ public abstract class Rule<C extends Cell<C, ?>> {
    * @throws SimulationException if the input cell or neighbor is null
    */
   boolean matchesDirection(C cell, C neighbor, DirectionType direction) {
-    if (cell == null || neighbor == null) {
-      logger.error("Direction match failed: Null cell or neighbor.");
+    if (neighbor == null) {
+      // should never be able to hit
+      logger.error("Direction match failed: Null neighbor.");
       throw new SimulationException("NullParameter",
-          List.of("cell, neighbor", "matchesDirection()"));
+          List.of("neighbor", "matchesDirection()"));
     }
+
     try {
+      // should not be able to hit since directionalNeighbors shoould never be null
       return cell.getDirectionalNeighbors(direction).stream()
           .anyMatch(neighbor1 -> neighbor1.equals(neighbor));
     } catch (SimulationException e) {

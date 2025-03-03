@@ -3,22 +3,15 @@ package cellsociety.model.simulation.parameters;
 import static cellsociety.model.util.SimulationTypes.SimType.GameOfLife;
 import static cellsociety.model.util.SimulationTypes.SimType.Langton;
 import static cellsociety.model.util.SimulationTypes.SimType.RockPaperSciss;
-import static cellsociety.model.util.SimulationTypes.SimType.WaTor;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
-import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
-import java.lang.reflect.Executable;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 /**
  * Since GenericParameters is just an extension of Parameters, we can use it to test Parameters
