@@ -76,9 +76,9 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
     try {
       stateLength = 1;
+      this.rule = rule;
       setCurrentState(state);
       setNextState(state);
-      this.rule = rule;
       neighbors = new ArrayList<>();
       directionalNeighbors = Map.of();
       stateHistory = new LinkedList<>();

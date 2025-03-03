@@ -49,13 +49,21 @@ class GridDirectionRegistry {
 
   static {
     strategyMap.put("RECTANGLE_MOORE", new NoEvenOddParityGridDirectionStrategy(
-        new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}}));
+        new int[][]{
+            {-1, -1}, {-1, 0}, {-1, 1},
+            {0, -1}, {0, 1},
+            {1, -1}, {1, 0}, {1, 1},
+        }));
     strategyMap.put("RECTANGLE_VON_NEUMANN",
         new NoEvenOddParityGridDirectionStrategy(new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}));
     strategyMap.put("RECTANGLE_EXTENDED_MOORE", new NoEvenOddParityGridDirectionStrategy(
-        new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}, {-2, -2},
-            {-1, -2}, {0, -2}, {1, -2}, {2, -2}, {2, 2}, {1, 2}, {0, 2}, {-1, 2}, {-2, 2}, {-2, -1},
-            {-2, 0}, {-2, 1}, {2, -1}, {2, 0}, {2, 1}}));
+        new int[][]{
+            {-2, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {-2, 2},
+            {-1, -2}, {-1, -1}, {-1, 0}, {-1, 1}, {-1, 2},
+            {0, -2}, {0, -1}, {0, 1}, {0, 2},
+            {1, -2}, {1, -1}, {1, 0}, {1, 1}, {1, 2},
+            {2, -2}, {2, -1}, {2, 0}, {2, 1}, {2, 2},
+        }));
 
     strategyMap.put("HEXAGON_MOORE", new EvenOddParityGridDirectionStrategy(
         Map.of(true, new int[][]{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, -1}, {1, 0}}, // Even row
@@ -89,8 +97,7 @@ class GridDirectionRegistry {
   }
 
   /**
-   * Retrieves the movement directions for a given grid shape, neighborhood type, and row
-   * index.
+   * Retrieves the movement directions for a given grid shape, neighborhood type, and row index.
    *
    * <p>The method first looks up the corresponding strategy for the given shape and
    * neighborhood type. If found, it returns the movement directions based on the row index.</p>
@@ -98,10 +105,9 @@ class GridDirectionRegistry {
    * @param shape        The type of grid shape (e.g., RECTANGLE, HEXAGON, TRIANGLE).
    * @param neighborhood The neighborhood pattern defining movement rules (e.g., MOORE,
    *                     VON_NEUMANN).
-   * @param row          The row index (only relevant for hexagonal and triangular
-   *                     grids).
+   * @param row          The row index (only relevant for hexagonal and triangular grids).
    * @return An {@code Optional<int[][]>} containing the movement offsets, or
-   *     {@code Optional.empty()} if no matching strategy exists.
+   * {@code Optional.empty()} if no matching strategy exists.
    */
   static Optional<int[][]> getDirections(ShapeType shape, NeighborhoodType neighborhood, int row) {
     String key = shape.name() + "_" + neighborhood.name();

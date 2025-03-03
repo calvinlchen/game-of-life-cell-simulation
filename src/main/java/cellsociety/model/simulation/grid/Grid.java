@@ -126,6 +126,7 @@ public class Grid<T extends Cell<T, ?>> {
         index += myCols;
       }
     } catch (SimulationException e) {
+      // should never hit because create row should not error
       throw new SimulationException(e);
     }
   }
@@ -141,6 +142,8 @@ public class Grid<T extends Cell<T, ?>> {
       }
       return row;
     } catch (SimulationException e) {
+      // should never hit because only way is if you tried to set an invalid position
+      // this shouldn't happen because of validations before
       throw new SimulationException(e);
     }
   }
@@ -169,6 +172,7 @@ public class Grid<T extends Cell<T, ?>> {
         Optional<int[][]> directions = GridDirectionRegistry.getDirections(shape, neighborhood, i);
 
         if (directions.isEmpty()) {
+          // because of enums should usually never hit this case
           logger.error("Invalid shape/neighborhood combination: {} {}", shape.name(),
               neighborhood.name());
           throw new SimulationException("InvalidGridShapeNeighborhood",
@@ -223,6 +227,7 @@ public class Grid<T extends Cell<T, ?>> {
     try {
       Optional<EdgeHandler> edgeHandler = EdgeFactory.getHandler(edge);
       if (edgeHandler.isEmpty()) {
+        // should never happen because enums
         logger.error("Invalid edge type: {}", edge);
         throw new SimulationException("InvalidEdgeType", List.of(edge.name()));
       }
@@ -268,6 +273,8 @@ public class Grid<T extends Cell<T, ?>> {
       return direction.get();
     }
 
+    // should never reach this case since compare makes it always
+    // a valid vector but this be just in case
     logger.error("Invalid direction vector: {} {} from dir {}", x, y, dir[0] + "," + dir[1]);
     throw new SimulationException("InvalidDirectionVector",
         List.of(String.valueOf(x), String.valueOf(y), dir[0] + "," + dir[1]));
@@ -278,12 +285,16 @@ public class Grid<T extends Cell<T, ?>> {
   /**
    * Get neighbors of a specific cell.
    *
-   * @param position - position of a cell given in (row, col) pair
+   * <p>Used for testing since you can do this by combining get cell with
+   * get neighbors yourself, this just makes it easier to write in tests
+   *
+   * @param row - the row index of the cell to retrieve
+   * @param col - the column index of the cell to retrieve
    * @return - list of neighboring cells
    */
-  List<T> getNeighbors(int[] position) {
+  List<T> getNeighbors(int row, int col) {
     try {
-      return getCell(position[0], position[1]).getNeighbors();
+      return getCell(row, col).getNeighbors();
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
@@ -305,30 +316,6 @@ public class Grid<T extends Cell<T, ?>> {
               String.valueOf(myRows), String.valueOf(myCols)));
     }
     return myGrid.get(row).get(col);
-  }
-
-  /**
-   * Sets the specified cell at the given row and column position in the grid.
-   *
-   * @param row  - the row index of the cell to set
-   * @param col  - the column index of the cell to set
-   * @param cell - the cell object to place at the specified position
-   * @throws SimulationException if the position (row, col) is invalid or if the cell object is
-   *                             null
-   */
-  public void setCell(int row, int col, T cell) {
-    if (!isValidPosition(row, col)) {
-      logger.error("Cannot set cell at: {} {}", row, col);
-      throw new SimulationException("InvalidGridPosition",
-          List.of(String.valueOf(row), String.valueOf(col),
-              String.valueOf(myRows), String.valueOf(myCols)));
-    }
-    if (cell == null) {
-      logger.error("Cannot set cell to null");
-      throw new SimulationException("NullParameter",
-          List.of("cell", "setCell(int, int, T)"));
-    }
-    myGrid.get(row).set(col, cell);
   }
 
   /**
@@ -363,9 +350,5 @@ public class Grid<T extends Cell<T, ?>> {
 
   int getCols() {
     return myCols;
-  }
-
-  List<List<T>> getGrid() {
-    return myGrid;
   }
 }

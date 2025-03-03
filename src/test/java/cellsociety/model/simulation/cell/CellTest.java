@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.LangtonRule;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
