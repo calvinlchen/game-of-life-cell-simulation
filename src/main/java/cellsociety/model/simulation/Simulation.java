@@ -447,7 +447,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @throws SimulationException if an error occurs while updating the parameter
    */
   public void updateAdditionalParameter(String key, Object value) {
-      parameters.setAdditionalParameter(key, value);
+    parameters.setAdditionalParameter(key, value);
   }
 
   /**

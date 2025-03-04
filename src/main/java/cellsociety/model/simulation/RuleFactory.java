@@ -136,7 +136,8 @@ class RuleFactory {
       GenericParameters paramInstance = new GenericParameters(simType, genericParams);
       for (Map.Entry<String, Object> entry : additionalParams.entrySet()) {
         paramInstance.setAdditionalParameter(entry.getKey(), entry.getValue());
-        logger.warn("Stored additional parameter '{}' as non-double: {}", entry.getKey(), entry.getValue());
+        logger.warn("Stored additional parameter '{}' as non-double: {}", 
+            entry.getKey(), entry.getValue());
       }
 
       return paramInstance;

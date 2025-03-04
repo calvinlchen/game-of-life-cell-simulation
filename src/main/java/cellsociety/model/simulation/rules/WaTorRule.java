@@ -164,7 +164,8 @@ public class WaTorRule extends Rule<WaTorCell> {
     
     target.setNextState(type, stepsSurvived, energy, cell);
 
-    logger.debug("{} reproduction time ({}) and current stpes survived ({})", type, type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime, stepsSurvived);
+    logger.debug("{} reproduction time ({}) and current stpes survived ({})", type,
+        type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime, stepsSurvived);
 
     if (stepsSurvived >= (type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime)) {
       logger.debug("{} reproduced.", type);

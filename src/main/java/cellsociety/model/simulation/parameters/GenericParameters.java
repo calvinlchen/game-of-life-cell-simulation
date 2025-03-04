@@ -83,7 +83,7 @@ public class GenericParameters extends Parameters {
     UNMODIFIABLE_PARAMS.put(SimType.RockPaperSciss, List.of("numStates"));
   }
 
-  private final Map<String, Object> additionalParams;
+  private final Map<String, Object> additionalParams = new HashMap<>();
   private final List<String> unmodifiableParams = new ArrayList<>();
 
   /**
@@ -99,24 +99,7 @@ public class GenericParameters extends Parameters {
   public GenericParameters(SimType simType) {
     super();
 
-    if (DEFAULT_VALUES.containsKey(simType)) {
-      try {
-        super.setParameters(DEFAULT_VALUES.get(simType));
-
-      } catch (SimulationException e) {
-        throw new SimulationException(e);
-      }
-    }
-
-    if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
-      additionalParams = new HashMap<>(DEFAULT_ADDITIONAL_VALUES.get(simType));
-    } else {
-      additionalParams = new HashMap<>();
-    }
-
-    if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
-      unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
-    }
+    setDefaultParameters(simType);
   }
 
   /**
@@ -136,6 +119,12 @@ public class GenericParameters extends Parameters {
   public GenericParameters(SimType simType, Map<String, Double> newParams) {
     super();
 
+    setDefaultParameters(simType);
+
+    super.setParameters(newParams);
+  }
+
+  private void setDefaultParameters(SimType simType) {
     if (DEFAULT_VALUES.containsKey(simType)) {
       try {
         super.setParameters(DEFAULT_VALUES.get(simType));
@@ -146,16 +135,12 @@ public class GenericParameters extends Parameters {
     }
 
     if (DEFAULT_ADDITIONAL_VALUES.containsKey(simType)) {
-      additionalParams = new HashMap<>(DEFAULT_ADDITIONAL_VALUES.get(simType));
-    } else {
-      additionalParams = new HashMap<>();
+      additionalParams.putAll(DEFAULT_ADDITIONAL_VALUES.get(simType));
     }
 
     if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
       unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
     }
-
-    super.setParameters(newParams);
   }
 
   @Override

@@ -16,7 +16,8 @@ import org.apache.logging.log4j.Logger;
  * <ul>
  *   <li>Storing and retrieving **double-based** parameters efficiently.</li>
  *   <li>Providing methods to **update, validate, and retrieve** parameter values.</li>
- *   <li>Ensuring type safety by restricting parameters to doubles, except for explicit subclasses.</li>
+ *   <li>Ensuring type safety by restricting parameters to doubles, except for
+ *   explicit subclasses.</li>
  *   <li>Using **{@link ResourceBundle}** for localized error messages.</li>
  *   <li>Logging warnings/errors when invalid keys or values are encountered.</li>
  * </ul>

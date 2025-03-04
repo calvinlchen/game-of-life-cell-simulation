@@ -16,6 +16,7 @@
  * </ul>
  *
  * <h2>Package Overview</h2>
+ *
  * <p>This package abstracts grid logic while allowing flexibility in grid shapes,
  * neighbor connections, and edge handling. It integrates several design patterns:
  * <ul>
@@ -55,11 +56,14 @@
  *   - Retrieves appropriate {@link cellsociety.model.simulation.grid.edgehandler.EdgeHandler}
  *   based on edge behavior.</li>
  *   <li>{@link cellsociety.model.simulation.grid.DirectionRegistry}
- *   - Maps original Cartesian coordinate offsets to {@link cellsociety.model.util.constants.GridTypes.DirectionType}.</li>
+ *   - Maps original Cartesian coordinate offsets to
+ *   {@link cellsociety.model.util.constants.GridTypes.DirectionType}.</li>
  * </ul>
  *
  * <h2>Edge Handling</h2>
- * <p>Different edge behaviors can be configured using {@link cellsociety.model.simulation.grid.EdgeFactory}:</p>
+ *
+ * <p>Different edge behaviors can be configured using
+ * {@link cellsociety.model.simulation.grid.EdgeFactory}:</p>
  * <ul>
  *   <li>{@code NONE} - No special edge handling, cells at the boundary have fewer neighbors.</li>
  *   <li>{@code MIRROR} - Boundary cells reflect their positions for neighbors.</li>
@@ -67,6 +71,7 @@
  * </ul>
  *
  * <p><b>Note:</b> The grid itself does not store the neighbors. Each cell holds its own neighbor.
+ *
  * <p><b>Note:</b> The term position is more a formality, can also consider it a unique id for
  * each cell.
  *

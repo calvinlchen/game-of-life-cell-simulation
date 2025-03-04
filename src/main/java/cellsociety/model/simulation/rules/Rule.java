@@ -35,6 +35,8 @@ import org.apache.logging.log4j.Logger;
 public abstract class Rule<C extends Cell<C, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Rule.class);
+  private static final String NULL_PARAMETER = "NullParameter";
+
   private final GenericParameters parameters;
 
   /**
@@ -48,7 +50,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
   public Rule(GenericParameters parameters) {
     if (parameters == null) {
       logger.warn("Rule initialization failed: Parameters cannot be null.");
-      throw new SimulationException("NullParameter",
+      throw new SimulationException(NULL_PARAMETER,
           List.of("parameters", "Rule"));
     }
     this.parameters = parameters;
@@ -112,7 +114,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
     try {
       if (cell == null) {
         logger.error("Direction match failed: Null cell.");
-        throw new SimulationException("NullParameter",
+        throw new SimulationException(NULL_PARAMETER,
             List.of("cell", "matchesDirection()"));
       }
 
@@ -150,7 +152,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
     if (neighbor == null) {
       // should never be able to hit
       logger.error("Direction match failed: Null neighbor.");
-      throw new SimulationException("NullParameter",
+      throw new SimulationException(NULL_PARAMETER,
           List.of("neighbor", "matchesDirection()"));
     }
 
