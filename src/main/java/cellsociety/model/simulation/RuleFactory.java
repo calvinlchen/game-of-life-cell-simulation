@@ -3,7 +3,7 @@ package cellsociety.model.simulation;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +136,8 @@ class RuleFactory {
       GenericParameters paramInstance = new GenericParameters(simType, genericParams);
       for (Map.Entry<String, Object> entry : additionalParams.entrySet()) {
         paramInstance.setAdditionalParameter(entry.getKey(), entry.getValue());
-        logger.warn("Stored additional parameter '{}' as non-double: {}", entry.getKey(), entry.getValue());
+        logger.warn("Stored additional parameter '{}' as non-double: {}", 
+            entry.getKey(), entry.getValue());
       }
 
       return paramInstance;

@@ -4,7 +4,7 @@ import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.exceptions.XmlException;
+import cellsociety.model.util.exceptions.XmlException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

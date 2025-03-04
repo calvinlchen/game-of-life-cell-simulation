@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.SimulationConstants.MIN_STATE_HIS
 
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -119,6 +119,9 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
       // basically we counting the first guy as negligible
       // so if you have 1 that means you'll save one state you can go back to before you stuck
+
+      // the one is not a magic number, just how math works to make maxHistorySize work the
+      // way that is expected
       if (stateHistory.size()  > maxHistorySize + 1) {
         logger.debug("State history size exceeded maxHistorySize: {}, removed {}",
             maxHistorySize, stateHistory.removeFirst());

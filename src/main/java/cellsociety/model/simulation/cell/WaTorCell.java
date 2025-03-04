@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
 import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
 import cellsociety.model.simulation.rules.WaTorRule;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -3,7 +3,7 @@ package cellsociety.model.simulation.cell;
 import static cellsociety.model.util.constants.CellStates.PERCOLATION_MAXSTATE;
 
 import cellsociety.model.simulation.rules.PercolationRule;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 /**
  * The {@code PercolationCell} class represents a single cell in the Percolation simulation.

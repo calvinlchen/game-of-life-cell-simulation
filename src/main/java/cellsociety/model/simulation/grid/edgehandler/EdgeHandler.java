@@ -28,7 +28,7 @@ import java.util.Optional;
  * <p><b>Example Usage:</b>
  * <pre>
  * EdgeHandler handler = new ToroidalEdgeHandler();
- * Optional<List<Integer>> neighbor = handler.handleEdgeNeighbor(0, 0, 10, 10, new int[]{-1, 0});
+ * Optional&lt;List&lt;Integer>> neighbor = handler.handleEdgeNeighbor(0, 0, 10, 10, new int[]{-1, 0});
  * neighbor.ifPresent(pos -> System.out.println("Wrapped neighbor at: " + pos));
  * </pre>
  * </p>

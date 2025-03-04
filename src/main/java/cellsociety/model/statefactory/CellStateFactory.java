@@ -3,6 +3,7 @@ package cellsociety.model.statefactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.statefactory.handler.CellStateHandlerDynamic;
 import cellsociety.model.statefactory.handler.CellStateHandlerStatic;
+import cellsociety.model.statefactory.handler.DarwinStateHandler;
 import cellsociety.model.statefactory.handler.FallingSandStateHandler;
 import cellsociety.model.statefactory.handler.FireStateHandler;
 import cellsociety.model.statefactory.handler.GameOfLifeStateHandler;
@@ -27,7 +28,8 @@ import java.util.Map;
  * <p> If simulation type is static, still need to put in ID and number of states, but these values
  * do not matter
  *
- * @author Jessica Chen
+ * @author Jessica Chen initially
+ * @author Ky
  */
 public class CellStateFactory {
 
@@ -44,6 +46,9 @@ public class CellStateFactory {
     handlerMap.put(SimType.Langton, new LangtonStateHandler());
     handlerMap.put(SimType.ChouReg2, new LangtonStateHandler());
     handlerMap.put(SimType.Petelka, new PetelkaStateHandler());
+    // even though upgradable darwin is static because for all darwin simulations you ever only
+    // need one handler
+    handlerMap.put(SimType.Darwin, new DarwinStateHandler());
   }
 
   /**

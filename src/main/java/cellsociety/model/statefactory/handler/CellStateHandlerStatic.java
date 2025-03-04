@@ -81,4 +81,7 @@ public class CellStateHandlerStatic implements CellStateHandler {
     return cellStates.containsKey(state);
   }
 
+  public void addState(String state) {
+    return;   // doesnt do anything
+  }
 }

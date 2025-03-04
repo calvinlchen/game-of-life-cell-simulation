@@ -4,7 +4,7 @@ import static cellsociety.model.util.constants.CellStates.SEGREGATION_MAXSTATE;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.rules.SegregationRule;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 
 /**

@@ -2,7 +2,7 @@ package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.RockPaperScissCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 /**
  * The {@code RockPaperScissRule} class implements the Rock-Paper-Scissors simulation rule.

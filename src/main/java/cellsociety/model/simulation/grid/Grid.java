@@ -6,7 +6,7 @@ import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

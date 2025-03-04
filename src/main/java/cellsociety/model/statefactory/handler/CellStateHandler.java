@@ -48,4 +48,11 @@ public interface CellStateHandler {
    */
   boolean isValidState(int state);
 
+  /**
+   * Adds a new state to the state handler.
+   *
+   * @param state The string representation of the new state to be added.
+   */
+  void addState(String state);
+
 }

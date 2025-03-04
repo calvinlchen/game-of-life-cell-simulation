@@ -6,7 +6,7 @@ import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 
 import cellsociety.model.simulation.cell.WaTorCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -164,7 +164,8 @@ public class WaTorRule extends Rule<WaTorCell> {
     
     target.setNextState(type, stepsSurvived, energy, cell);
 
-    logger.debug("{} reproduction time ({}) and current stpes survived ({})", type, type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime, stepsSurvived);
+    logger.debug("{} reproduction time ({}) and current stpes survived ({})", type,
+        type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime, stepsSurvived);
 
     if (stepsSurvived >= (type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime)) {
       logger.debug("{} reproduced.", type);

@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -447,7 +447,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @throws SimulationException if an error occurs while updating the parameter
    */
   public void updateAdditionalParameter(String key, Object value) {
-      parameters.setAdditionalParameter(key, value);
+    parameters.setAdditionalParameter(key, value);
   }
 
   /**

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.LangtonRule;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

@@ -4,7 +4,7 @@ import static cellsociety.model.util.SimulationTypes.SimType.WaTor;
 
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.WaTorRule;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
