@@ -103,4 +103,8 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     nextInstruction = instruction;
   }
 
+  public int getNextProgramInstruction(int instruction) {
+    return program.nextInstructionNumber(instruction);
+  }
+
 }
