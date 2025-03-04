@@ -1,5 +1,7 @@
 package cellsociety.model.simulation.rules;
 
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_A;
+import static cellsociety.model.util.constants.CellStates.SEGREGATION_B;
 import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.cell.SegregationCell;
@@ -100,7 +102,7 @@ public class SegregationRule extends Rule<SegregationCell> {
     }
   }
 
-  private boolean isSatisfied(SegregationCell cell, double threshold) {
+  boolean isSatisfied(SegregationCell cell, double threshold) {
     try {
       List<SegregationCell> neighbors = cell.getNeighbors();
       if (neighbors.isEmpty()) {
@@ -108,25 +110,37 @@ public class SegregationRule extends Rule<SegregationCell> {
       }
 
       double similarityRatio = calculateSimilarityRatio(cell, neighbors);
+
       return similarityRatio >= threshold;
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
 
-  private double calculateSimilarityRatio(SegregationCell cell, List<SegregationCell> neighbors) {
+  double calculateSimilarityRatio(SegregationCell cell, List<SegregationCell> neighbors) {
     try {
       long similarNeighbors = neighbors.stream()
           .filter(neighbor -> neighbor.getCurrentState() == cell.getCurrentState())
           .count();
 
-      return (double) similarNeighbors / neighbors.size();
+      int oppositeState = (cell.getCurrentState() == SEGREGATION_A) ? SEGREGATION_B : SEGREGATION_A;
+
+      long oppositeNeighbors = neighbors.stream()
+          .filter(neighbor -> neighbor.getCurrentState() == oppositeState)
+          .count();
+
+      if (oppositeNeighbors == 0) {
+        return 1.0;
+      }
+
+      return (double) similarNeighbors / (similarNeighbors + oppositeNeighbors);
     } catch (SimulationException e) {
+      // should never be able to hit due to other places safe guards
       throw new SimulationException(e);
     }
   }
 
-  private Optional<SegregationCell> findAdjacentEmptyCell(SegregationCell cell) {
+  Optional<SegregationCell> findAdjacentEmptyCell(SegregationCell cell) {
     List<SegregationCell> emptyNeighbors = cell.getNeighbors().stream().filter(
         neighbor -> neighbor.getCurrentState() == SEGREGATION_EMPTY
             && neighbor.getNextState() == SEGREGATION_EMPTY).toList();

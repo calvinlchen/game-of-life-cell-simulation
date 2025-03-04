@@ -6,6 +6,7 @@ import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.exceptions.SimulationException;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,25 +83,30 @@ public class GameOfLifeRule extends Rule<GameOfLifeCell> {
     }
   }
 
-  private long countAliveNeighbors(GameOfLifeCell cell) {
+  long countAliveNeighbors(GameOfLifeCell cell) {
     try {
       return cell.getNeighbors().stream()
           .filter(neighbor -> neighbor.getCurrentState() == GAMEOFLIFE_ALIVE).count();
     } catch (SimulationException e) {
+      // should never reach because getNeighbors and getCurrent state should typically not hit
+      // their throw conditions
       throw new SimulationException(e);
     }
   }
 
-  private List<Integer> retrieveParameterList(String key) {
+  List<Integer> retrieveParameterList(String key) {
     List<?> parameterList = getParameters().getAdditionalParameter(key, List.class)
         .orElse(List.of());
 
+    List<Integer> integersList = new ArrayList<>();
+
     if (parameterList.stream().allMatch(e -> e instanceof Number)) {
-      return parameterList.stream().map(e -> (Integer) e).toList();
+      integersList =  parameterList.stream().map(e -> ((Number) e).intValue()).toList();
     } else {
-      logger.error("Invalid parameter format: '{}' must be a list of integers. Found: {}", key,
+      logger.warn("Invalid parameter format: '{}' must be a list of integers. Found: {}", key,
           parameterList);
-      throw new SimulationException("InvalidGameOfLifeParameters");
     }
+
+    return integersList;
   }
 }

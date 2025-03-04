@@ -46,4 +46,5 @@ public class FireCell extends Cell<FireCell, FireRule> {
   protected int getMaxState() {
     return FIRE_MAXSTATE;
   }
+
 }

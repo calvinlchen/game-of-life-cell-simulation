@@ -71,6 +71,9 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell> {
    *   <li>Otherwise, the cell retains its current state.</li>
    * </ul>
    *
+   * <p>Fun Fact: if you set your percentage to win to 0, you just always become the state that
+   * beats you.</p>
+   *
    * @param cell The {@code RockPaperScissCell} being evaluated.
    * @return The next state of the cell.
    */
@@ -85,7 +88,7 @@ public class RockPaperScissRule extends Rule<RockPaperScissCell> {
           .filter(neighbor -> neighbor.getCurrentState() == winningState).count();
 
       if ((double) winningNeighborsCount / cell.getNeighbors().size()
-          > getParameters().getParameter("percentageToWin")) {
+          >= getParameters().getParameter("percentageToWin")) {
         return winningState;
       }
 

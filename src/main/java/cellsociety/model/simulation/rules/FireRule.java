@@ -7,6 +7,7 @@ import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.exceptions.SimulationException;
+import java.util.Random;
 
 
 /**
@@ -39,6 +40,8 @@ import cellsociety.model.util.constants.exceptions.SimulationException;
  * @author ChatGPT helped with JavaDocs
  */
 public class FireRule extends Rule<FireCell> {
+
+  private Random random = new Random();
 
   /**
    * Constructs a {@code FireRule} object, initializing fire simulation parameters required for the
@@ -81,14 +84,14 @@ public class FireRule extends Rule<FireCell> {
     }
   }
 
-  private int evaluateTreeState(FireCell cell) {
+  int evaluateTreeState(FireCell cell) {
     try {
       if (hasBurningNeighbor(cell)) {
         return FIRE_BURNING;
       }
 
       double ignitionLikelihood = getParameters().getParameter("ignitionLikelihood");
-      if (Math.random() < ignitionLikelihood) {
+      if (random.nextDouble() < ignitionLikelihood) {
         return FIRE_BURNING;
       }
 
@@ -98,10 +101,21 @@ public class FireRule extends Rule<FireCell> {
     }
   }
 
-  private int evaluateEmptyState(FireCell cell) {
+  /**
+   * Sets the random instance to be used for stochastic operations within the {@code FireRule}.
+   *
+   * <p>Used for mocking because I couldn't figure out how to make it work any other way
+   *
+   * @param random the {@code Random} object to use for generating random values. Must not be null.
+   */
+  void setRandom(Random random) {
+    this.random = random;
+  }
+
+  int evaluateEmptyState(FireCell cell) {
     try {
       double treeSpawnLikelihood = getParameters().getParameter("treeSpawnLikelihood");
-      if (Math.random() < treeSpawnLikelihood) {
+      if (random.nextDouble() < treeSpawnLikelihood) {
         return FIRE_TREE;
       }
       return cell.getCurrentState();
@@ -110,7 +124,7 @@ public class FireRule extends Rule<FireCell> {
     }
   }
 
-  private boolean hasBurningNeighbor(FireCell cell) {
+  boolean hasBurningNeighbor(FireCell cell) {
     return cell.getNeighbors().stream()
         .anyMatch(neighbor -> neighbor.getCurrentState() == FIRE_BURNING);
   }

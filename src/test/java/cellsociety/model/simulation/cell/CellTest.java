@@ -75,9 +75,10 @@ public class CellTest {
     cell.saveCurrentState(); // 0 -> 1
 
     cell.setCurrentState(2);
-    cell.saveCurrentState(); // 1 -> 2
+    cell.saveCurrentState(); // 0 -> 1 -> 2
 
     cell.setCurrentState(3);
+    cell.saveCurrentState(); // 1 -> 2 -> 3
 
     cell.stepBack();
     assertEquals(2, cell.getCurrentState());

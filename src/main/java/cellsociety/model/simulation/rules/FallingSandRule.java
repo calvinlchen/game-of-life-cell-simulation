@@ -16,6 +16,8 @@ import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -52,7 +54,8 @@ import java.util.Random;
  */
 public class FallingSandRule extends Rule<FallingSandCell> {
 
-  private final Random random = new Random();
+  private static final Logger logger = LogManager.getLogger(FallingSandRule.class);
+  private static final Random random = new Random();
 
   /**
    * Constructs a {@code FallingSandRule} object, initializing it with the specified simulation
@@ -98,16 +101,20 @@ public class FallingSandRule extends Rule<FallingSandCell> {
     }
   }
 
-  private int attemptMovement(FallingSandCell cell, List<DirectionType> secondaryDirections,
+  int attemptMovement(FallingSandCell cell, List<DirectionType> secondaryDirections,
       int newState, List<Integer> replaceableNeighbors) {
     try {
       for (int replaceableNeighbor : replaceableNeighbors) {
+        logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
         Optional<FallingSandCell> neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
         if (neighbor.isPresent()) {
+          logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
           neighbor.get().setNextState(newState);
           return replaceableNeighbor;
         }
+      }
 
+      for (int replaceableNeighbor : replaceableNeighbors) {
         List<FallingSandCell> possibleMoves = secondaryDirections.stream()
             .map(dir -> findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
             .toList();
@@ -124,15 +131,15 @@ public class FallingSandRule extends Rule<FallingSandCell> {
     }
   }
 
-  private Optional<FallingSandCell> findValidNeighbor(FallingSandCell cell, DirectionType direction,
+  Optional<FallingSandCell> findValidNeighbor(FallingSandCell cell, DirectionType direction,
       int state) {
     try {
-      return cell.getNeighbors().stream()
-          .filter(neighbor -> matchesDirection(cell, neighbor, direction))
+      return cell.getDirectionalNeighbors(direction).stream()
           .filter(
               neighbor -> neighbor.getCurrentState() == state && neighbor.getNextState() == state)
           .findFirst();
     } catch (SimulationException e) {
+      // should not happen because matches direction should not be able to hit its exception cases
       throw new SimulationException(e);
     }
   }
