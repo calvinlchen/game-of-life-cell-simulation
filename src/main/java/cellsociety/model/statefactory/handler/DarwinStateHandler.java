@@ -12,6 +12,7 @@ public class DarwinStateHandler extends CellStateHandlerStatic implements CellSt
   public DarwinStateHandler() {
     super(Map.of());
     this.cellStates = new LinkedList<>();
+    cellStates.add("EMPTY");
   }
 
   @Override

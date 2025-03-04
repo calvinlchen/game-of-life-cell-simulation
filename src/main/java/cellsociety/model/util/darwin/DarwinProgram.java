@@ -25,13 +25,32 @@ public class DarwinProgram implements Iterable<DarwinCommand> {
 
   public DarwinCommand getDarwinCommand(int instructionNumber) {
     if (instructionNumber < 0 || instructionNumber >= commands.size()) {
-      throw new IndexOutOfBoundsException("Invalid instruction number: " + instructionNumber);
+      throw new SimulationException("InvalidInstructionNumber", List.of(
+          String.valueOf(instructionNumber)
+      ));
     }
+
     return commands.get(instructionNumber);
   }
 
   public int size() {
     return commands.size();
+  }
+
+  public int nextInstructionNumber(int instructionNumber) {
+    if (instructionNumber < 0) {
+      throw new SimulationException("InvalidInstructionNumber", List.of(
+          String.valueOf(instructionNumber)
+      ));
+    }
+
+    instructionNumber++;
+
+    // if incrementing puts number out of bound wrap it so it is in bounds, if negative just sad
+    if (instructionNumber >= commands.size()) {
+      return instructionNumber % commands.size();
+    }
+    return instructionNumber;
   }
 
   @Override

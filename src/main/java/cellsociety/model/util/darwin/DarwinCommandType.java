@@ -9,12 +9,22 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 public enum DarwinCommandType {
-  MOVE, LEFT, RIGHT, INFECT,
-  IF_EMPTY, IF_WALL, IF_SAME, IF_ENEMY, IF_RANDOM,
-  GO, UNKNOWN; // Default for unrecognized commands
+  MOVE(true), LEFT(true), RIGHT(true), INFECT(true),
+  IF_EMPTY(false), IF_WALL(false), IF_SAME(false), IF_ENEMY(false), IF_RANDOM(false),
+  GO(false), UNKNOWN(false); // Default for unrecognized commands
 
   private static final Map<String, DarwinCommandType> commandMap = new LinkedHashMap<>();
   private static final String COMMANDS_BUNDLE = "cellsociety.resourceproperty.DarwinCommands";
+
+  private final boolean isAction;
+
+  DarwinCommandType(boolean isAction) {
+    this.isAction = isAction;
+  }
+
+  public boolean isAction() {
+    return isAction;
+  }
 
   static {
     loadCommandMappings();
