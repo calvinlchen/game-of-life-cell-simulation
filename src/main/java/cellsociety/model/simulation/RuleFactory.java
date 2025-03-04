@@ -3,7 +3,7 @@ package cellsociety.model.simulation;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 import java.util.HashMap;
 import java.util.List;

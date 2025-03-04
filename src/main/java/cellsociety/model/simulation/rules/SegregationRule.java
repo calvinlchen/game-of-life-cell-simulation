@@ -6,7 +6,7 @@ import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
 
 import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;

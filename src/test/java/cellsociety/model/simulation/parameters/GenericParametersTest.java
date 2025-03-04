@@ -5,7 +5,7 @@ import static cellsociety.model.util.SimulationTypes.SimType.Langton;
 import static cellsociety.model.util.SimulationTypes.SimType.RockPaperSciss;
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

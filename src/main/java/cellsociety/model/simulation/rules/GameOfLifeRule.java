@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.CellStates.GAMEOFLIFE_DEAD;
 
 import cellsociety.model.simulation.cell.GameOfLifeCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;

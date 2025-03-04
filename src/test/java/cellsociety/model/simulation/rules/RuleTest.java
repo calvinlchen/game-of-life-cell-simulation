@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

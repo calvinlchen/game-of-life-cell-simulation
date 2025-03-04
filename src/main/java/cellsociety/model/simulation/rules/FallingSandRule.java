@@ -12,7 +12,7 @@ import static cellsociety.model.util.constants.GridTypes.DirectionType.SW;
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;

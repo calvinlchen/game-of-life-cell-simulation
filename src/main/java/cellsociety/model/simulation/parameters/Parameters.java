@@ -1,6 +1,6 @@
 package cellsociety.model.simulation.parameters;
 
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

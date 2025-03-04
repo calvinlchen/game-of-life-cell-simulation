@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;

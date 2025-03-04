@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.CellStates.PERCOLATION_PERCOLATED
 
 import cellsociety.model.simulation.cell.PercolationCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 /**
  * The {@code PercolationRule} class defines the behavior of percolation in a grid-based

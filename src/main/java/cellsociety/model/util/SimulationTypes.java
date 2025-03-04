@@ -29,7 +29,8 @@ public class SimulationTypes {
     RockPaperSciss(true, true),
     Langton(false, false),
     ChouReg2(false, false),
-    Petelka(false, true);
+    Petelka(false, true),
+    Darwin(false, true);
 
     private final boolean isDynamic;
     private final boolean defaultRectangularGrid;
@@ -59,6 +60,7 @@ public class SimulationTypes {
      *
      * @return true if the simulation type defaults to a rectangular grid, false otherwise
      */
+    @Deprecated
     public boolean isDefaultRectangularGrid() {
       return defaultRectangularGrid;
     }

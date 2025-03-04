@@ -5,7 +5,7 @@ import static cellsociety.model.util.constants.SimulationConstants.MIN_STATE_HIS
 
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;

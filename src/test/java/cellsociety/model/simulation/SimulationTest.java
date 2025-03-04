@@ -22,7 +22,6 @@ import static cellsociety.model.util.constants.CellStates.WATOR_SHARK;
 import static org.mockito.Mockito.mock;
 
 import cellsociety.model.simulation.cell.ChouReg2Cell;
-import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.cell.PetelkaCell;
 import cellsociety.model.simulation.cell.WaTorCell;
@@ -32,7 +31,7 @@ import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

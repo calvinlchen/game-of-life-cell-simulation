@@ -32,17 +32,14 @@ public class CellStateHandlerDynamic implements CellStateHandler {
     cellStates.put(state, name);
   }
 
-  @Override
   public List<Integer> getStateInt() {
     return List.copyOf(cellStates.keySet());
   }
 
-  @Override
   public List<String> getStateString() {
     return List.copyOf(cellStates.values());
   }
 
-  @Override
   public int stateFromString(String state) {
     for (Map.Entry<Integer, String> entry : cellStates.entrySet()) {
       if (entry.getValue().equalsIgnoreCase(state)) {
@@ -52,13 +49,17 @@ public class CellStateHandlerDynamic implements CellStateHandler {
     throw new IllegalArgumentException("Invalid state: " + state);
   }
 
-  @Override
   public String statetoString(int state) {
     return cellStates.getOrDefault(state, "INVALID");
   }
 
-  @Override
   public boolean isValidState(int state) {
     return cellStates.containsKey(state);
   }
+
+  public void addState(String state) {
+    return;   // doesnt do anything
+  }
+
+
 }

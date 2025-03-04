@@ -1,7 +1,7 @@
 package cellsociety.model.simulation.parameters;
 
 import cellsociety.model.util.SimulationTypes.SimType;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

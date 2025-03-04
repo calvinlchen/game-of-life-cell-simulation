@@ -1,4 +1,4 @@
-package cellsociety.model.util.constants.exceptions;
+package cellsociety.model.util.exceptions;
 
 /**
  * Custom exception class for handling XML-related errors.

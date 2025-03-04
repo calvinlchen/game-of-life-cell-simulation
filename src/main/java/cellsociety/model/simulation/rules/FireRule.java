@@ -6,7 +6,7 @@ import static cellsociety.model.util.constants.CellStates.FIRE_TREE;
 
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 import java.util.Random;
 
 

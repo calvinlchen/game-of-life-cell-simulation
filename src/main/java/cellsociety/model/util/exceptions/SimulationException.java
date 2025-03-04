@@ -1,4 +1,4 @@
-package cellsociety.model.util.constants.exceptions;
+package cellsociety.model.util.exceptions;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 

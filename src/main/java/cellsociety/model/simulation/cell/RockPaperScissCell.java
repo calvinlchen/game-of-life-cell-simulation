@@ -2,7 +2,7 @@ package cellsociety.model.simulation.cell;
 
 
 import cellsociety.model.simulation.rules.RockPaperScissRule;
-import cellsociety.model.util.constants.exceptions.SimulationException;
+import cellsociety.model.util.exceptions.SimulationException;
 
 /**
  * The {@code RockPaperScissCell} class represents a single cell in the Rock-Paper-Scissors
