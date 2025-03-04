@@ -3,10 +3,7 @@ package cellsociety.model.simulation.rules;
 import static cellsociety.model.util.SimulationTypes.SimType.FallingSand;
 import static cellsociety.model.util.SimulationTypes.SimType.Fire;
 import static cellsociety.model.util.SimulationTypes.SimType.GameOfLife;
-import static cellsociety.model.util.SimulationTypes.SimType.Langton;
 import static cellsociety.model.util.SimulationTypes.SimType.Percolation;
-import static cellsociety.model.util.SimulationTypes.SimType.Petelka;
-import static cellsociety.model.util.SimulationTypes.SimType.RockPaperSciss;
 import static cellsociety.model.util.SimulationTypes.SimType.Segregation;
 import static cellsociety.model.util.SimulationTypes.SimType.WaTor;
 import static cellsociety.model.util.constants.CellStates.FIRE_BURNING;
@@ -17,26 +14,17 @@ import static cellsociety.model.util.constants.CellStates.WATOR_EMPTY;
 import static cellsociety.model.util.constants.CellStates.WATOR_FISH;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import cellsociety.model.simulation.cell.FallingSandCell;
 import cellsociety.model.simulation.cell.FireCell;
 import cellsociety.model.simulation.cell.GameOfLifeCell;
-import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.cell.PercolationCell;
-import cellsociety.model.simulation.cell.RockPaperScissCell;
 import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.simulation.cell.WaTorCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
-import cellsociety.model.simulation.rules.LangtonRule;
-import cellsociety.model.simulation.rules.RockPaperScissRule;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
-import cellsociety.model.util.constants.GridTypes.EdgeType;
-import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
-import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +34,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 /**
  * Helper private methods for rule tests

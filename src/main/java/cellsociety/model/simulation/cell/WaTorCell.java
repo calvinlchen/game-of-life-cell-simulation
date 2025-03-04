@@ -258,4 +258,11 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
     this.consumed = consumed;
   }
 
+  int getNextStepsSurvived() {
+    return myNextStepsSurvived;
+  }
+
+  int getNextEnergy() {
+    return myNextEnergy;
+  }
 }
