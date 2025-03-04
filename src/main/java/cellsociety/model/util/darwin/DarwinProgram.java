@@ -25,7 +25,9 @@ public class DarwinProgram implements Iterable<DarwinCommand> {
 
   public DarwinCommand getDarwinCommand(int instructionNumber) {
     if (instructionNumber < 0 || instructionNumber >= commands.size()) {
-      throw new IndexOutOfBoundsException("Invalid instruction number: " + instructionNumber);
+      throw new SimulationException("InvalidInstructionNumber", List.of(
+          String.valueOf(instructionNumber)
+));
     }
     return commands.get(instructionNumber);
   }
