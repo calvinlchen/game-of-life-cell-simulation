@@ -117,8 +117,11 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
       stateHistory.addLast(currentState);
 
-      if (stateHistory.size() > maxHistorySize) {
-        stateHistory.removeFirst();
+      // basically we counting the first guy as negligible
+      // so if you have 1 that means you'll save one state you can go back to before you stuck
+      if (stateHistory.size()  > maxHistorySize + 1) {
+        logger.debug("State history size exceeded maxHistorySize: {}, removed {}",
+            maxHistorySize, stateHistory.removeFirst());
       }
 
     } catch (SimulationException e) {
@@ -144,13 +147,16 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
     boolean success = false;
 
     try {
+      if (stateHistory.size() > MIN_STATE_HISTORY) {
+        // this order because we step and immediately saved
+        // so gotta ignore this one for it to make sense
+        logger.debug("Remove the top {}", stateHistory.removeLast());
+        success = true;
+      }
+
       setCurrentState(stateHistory.getLast());
       setNextState(stateHistory.getLast());
 
-      if (stateHistory.size() > MIN_STATE_HISTORY) {
-        stateHistory.removeLast();
-        success = true;
-      }
 
     } catch (SimulationException e) {
       // should never hit since it shouldn't be possible for state to have bad history

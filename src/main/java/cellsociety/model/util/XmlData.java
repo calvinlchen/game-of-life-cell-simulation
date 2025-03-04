@@ -2,8 +2,12 @@ package cellsociety.model.util;
 
 import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.util.SimulationTypes.SimType;
 
+import cellsociety.model.util.constants.GridTypes.EdgeType;
+import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
+import cellsociety.model.util.constants.GridTypes.ShapeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -325,5 +329,27 @@ public class XmlData {
     System.out.println("numStates: " + numStates);
 
     return (int) numStates;
+  }
+
+
+  // placement methods Jessica made so she could test simulation
+  // simulation tests use a mock version of these so ckeep the structure change the insides
+  public ShapeType getShape() {
+    // right now just always rectangle
+    return ShapeType.RECTANGLE;
+  }
+
+  public EdgeType getEdge() {
+    return EdgeType.NONE;
+  }
+
+  public NeighborhoodType getNeighborhood() {
+    SimType simType = getType();
+
+    if (simType.isDefaultRectangularGrid()) {
+      return NeighborhoodType.MOORE;
+    } else {
+      return NeighborhoodType.VON_NEUMANN;
+    }
   }
 }

@@ -10,6 +10,8 @@ import cellsociety.model.util.constants.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The {@code WaTorRule} class defines the behavior of fish and sharks in the Wa-Tor world
@@ -42,10 +44,12 @@ import java.util.Random;
  */
 public class WaTorRule extends Rule<WaTorCell> {
 
+  private static Logger logger = LogManager.getLogger(WaTorRule.class);
+
   private final Random random = new Random();
-  private final int fishReproductionTime;
-  private final int sharkEnergyGain;
-  private final int sharkReproductionTime;
+  private int fishReproductionTime;
+  private int sharkEnergyGain;
+  private int sharkReproductionTime;
 
   /**
    * Constructs a {@code WaTorRule} object and initializes it with the provided parameters. The
@@ -83,6 +87,10 @@ public class WaTorRule extends Rule<WaTorCell> {
   @Override
   public int apply(WaTorCell cell) {
     try {
+      fishReproductionTime = (int) getParameters().getParameter("fishReproductionTime");
+      sharkEnergyGain = (int) getParameters().getParameter("sharkEnergyGain");
+      sharkReproductionTime = (int) getParameters().getParameter("sharkReproductionTime");
+
       int currentState = cell.getCurrentState();
       return switch (currentState) {
         case WATOR_FISH -> handleFish(cell);
@@ -136,13 +144,17 @@ public class WaTorRule extends Rule<WaTorCell> {
   }
 
   private int moveToFish(WaTorCell cell, WaTorCell target, int stepsSurvived, int energy) {
+
     energy += sharkEnergyGain;
+
+    logger.debug("{} energy set to {}, {}", cell.getPosition(), energy, sharkEnergyGain);
+
     cell.setCurrentState(WATOR_EMPTY);
     target.setNextState(WATOR_SHARK, stepsSurvived, energy);
     target.setConsumed(true);
 
     if (stepsSurvived >= sharkReproductionTime) {
-      return reproduce(cell, target, WATOR_FISH, energy);
+      return reproduce(cell, target, WATOR_SHARK, energy);
     }
     return WATOR_EMPTY;
   }
@@ -152,7 +164,10 @@ public class WaTorRule extends Rule<WaTorCell> {
     
     target.setNextState(type, stepsSurvived, energy, cell);
 
+    logger.debug("{} reproduction time ({}) and current stpes survived ({})", type, type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime, stepsSurvived);
+
     if (stepsSurvived >= (type == WATOR_SHARK ? sharkReproductionTime : fishReproductionTime)) {
+      logger.debug("{} reproduced.", type);
       return reproduce(cell, target, type, energy);
     }
     return WATOR_EMPTY;
@@ -160,8 +175,10 @@ public class WaTorRule extends Rule<WaTorCell> {
 
   private int reproduce(WaTorCell cell, WaTorCell target, int type, int energy) {
 
+    // yourself
     target.setNextState(type, 0, energy, cell);
 
+    // baby
     return type;
   }
 

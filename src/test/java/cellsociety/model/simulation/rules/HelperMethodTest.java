@@ -352,10 +352,10 @@ public class HelperMethodTest {
     }
 
     @Test
-    @DisplayName("RetrieveParameterList throws exception if parameter not a list of integers")
-    void retrieveParameterList_NonIntegerListSurvivalParams_ThrowsException() {
+    @DisplayName("RetrieveParameterList returns empty list if parameter not a list of integers")
+    void retrieveParameterList_NonIntegerListSurvivalParams_ReturnsEmptyList() {
       parameters.setAdditionalParameter("S", List.of("a", "b"));
-      assertThrows(SimulationException.class, () -> rule.retrieveParameterList("S"));
+      assertTrue(rule.retrieveParameterList("S").isEmpty());
     }
 
     @Test

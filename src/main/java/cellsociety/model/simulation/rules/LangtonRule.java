@@ -312,11 +312,12 @@ public class LangtonRule extends Rule<LangtonCell> {
           return RULES_MAP_LANGTON.get(stateKey);
         }
 
-        logger.warn("[LangtonRule] No valid rule found, retaining current state for cell at {}",
-            cell.getPosition());
         directions = rotateClockwise(directions);
       }
 
+      logger.warn("[LangtonRule] No valid rule found, retaining current state for cell at {}",
+          cell.getPosition());
+      // I feel like this shouldnt happen because langton's should cover most of them?
       return cell.getCurrentState();
     } catch (SimulationException e) {
       throw new SimulationException(e);

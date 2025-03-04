@@ -68,6 +68,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
 
     myStepsSurvived = 0;
     try {
+      // changing sharkInitialEnergy will only chang the behavior of newly created sharks
       myEnergy =
           state == WATOR_SHARK ? (int) getRule().getParameters().getParameter("sharkInitialEnergy")
               : 0;
@@ -110,6 +111,9 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
         myNextStepsSurvived = 0;
         myNextEnergy = newState == WATOR_SHARK ? (int) getRule().getParameters()
             .getParameter("sharkInitialEnergy") : 0;
+
+        logger.debug("Cell at {} calc to be {}", getPosition(), newState);
+
       }
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -130,6 +134,7 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
         // so can update steps after we know it will always add 1 to stateLength
         logger.debug("Cell at {} was moved from a consumed cell, resetting to EMPTY.",
             getPosition());
+
         setNextState(WATOR_EMPTY);
         setCurrentState(WATOR_EMPTY);
         updateStateLength();
@@ -205,30 +210,6 @@ public class WaTorCell extends Cell<WaTorCell, WaTorRule> {
    */
   public int getStepsSurvived() {
     return myStepsSurvived;
-  }
-
-  /**
-   * Sets the number of steps the cell has survived in its current state.
-   *
-   * <p>Currently only used in tests, because can set in other ways in rules, but can be used by
-   * rules
-   *
-   * @param stepsSurvived the number of steps the cell has survived
-   */
-  public void setStepsSurvived(int stepsSurvived) {
-    myStepsSurvived = stepsSurvived;
-  }
-
-  /**
-   * Sets the energy level of the cell.
-   *
-   * <p>Currently only used in tests, because can set in other ways in rules, but can be used by
-   * rules
-   *
-   * @param energy the energy value to be assigned to the cell
-   */
-  public void setEnergy(int energy) {
-    myEnergy = energy;
   }
 
   /**

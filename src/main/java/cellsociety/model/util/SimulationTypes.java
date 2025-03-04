@@ -20,9 +20,16 @@ public class SimulationTypes {
    * dynamic states and whether it defaults to a rectangular grid.
    */
   public enum SimType {
-    GameOfLife(false, true), Percolation(false, false), Fire(false, false), Segregation(false,
-        true), WaTor(false, false), FallingSand(false, true), RockPaperSciss(true, true), Langton(
-        false, false), ChouReg2(false, false), Petelka(false, true);
+    GameOfLife(false, true),
+    Percolation(false, false),
+    Fire(false, false),
+    Segregation(false, true),
+    WaTor(false, false),
+    FallingSand(false, true),
+    RockPaperSciss(true, true),
+    Langton(false, false),
+    ChouReg2(false, false),
+    Petelka(false, true);
 
     private final boolean isDynamic;
     private final boolean defaultRectangularGrid;

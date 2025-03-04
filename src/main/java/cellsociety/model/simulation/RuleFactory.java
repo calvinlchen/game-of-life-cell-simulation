@@ -168,6 +168,7 @@ class RuleFactory {
       Constructor<?> ruleConstructor = ruleClass.getConstructor(GenericParameters.class);
       return (Rule<?>) ruleConstructor.newInstance(paramInstance);
     } catch (Exception e) {
+      // should not happen
       logger.error("Error creating rule: {}", simType, e);
       throw new SimulationException("CreationError", List.of(simType.name()), e);
     }

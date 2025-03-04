@@ -74,7 +74,11 @@ public abstract class Rule<C extends Cell<C, ?>> {
    * @return a {@code GenericParameters} object containing the parameters for this rule.
    */
   public GenericParameters getParameters() {
-    return parameters;
+    try {
+      return parameters;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   // Start of Shared Helper methods for rules ------

@@ -129,7 +129,9 @@ public class SegregationRule extends Rule<SegregationCell> {
           .filter(neighbor -> neighbor.getCurrentState() == oppositeState)
           .count();
 
-      if (oppositeNeighbors == 0) { return 1.0;}
+      if (oppositeNeighbors == 0) {
+        return 1.0;
+      }
 
       return (double) similarNeighbors / (similarNeighbors + oppositeNeighbors);
     } catch (SimulationException e) {

@@ -63,8 +63,12 @@ public class Simulation<T extends Cell<T, ?>> {
    * @throws SimulationException if the XML data is null, or if simulation fails to setup
    */
   public Simulation(XmlData data) {
-    xmlData = getXmlData(data);
-    setUpSimulation();
+    try {
+      xmlData = getXmlData(data);
+      setUpSimulation();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
   }
 
   /**
@@ -109,9 +113,7 @@ public class Simulation<T extends Cell<T, ?>> {
 
       Rule<T> rule = setUpRules(simType);
       List<Cell<T, ?>> cellList = createCells(simType, rule);
-      // TODO: replace the current one with the commented out line
-      setUpGridStructure(cellList, simType);
-      // setUpGridStructure(cellList);
+      setUpGridStructure(cellList);
     } catch (SimulationException e) {
       logger.error("Failed to set up simulation: ", e);
       throw new SimulationException(e);
@@ -193,16 +195,6 @@ public class Simulation<T extends Cell<T, ?>> {
     return cellList;
   }
 
-  @Deprecated
-  private void setUpGridStructure(List<Cell<T, ?>> cellList, SimType simType) {
-    if (simType.isDefaultRectangularGrid()) {
-      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-          ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.NONE);
-    } else {
-      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-          ShapeType.RECTANGLE, NeighborhoodType.VON_NEUMANN, EdgeType.NONE);
-    }
-  }
 
   /**
    * Sets up the grid structure for the simulation using the provided list of cells. This method
@@ -213,9 +205,8 @@ public class Simulation<T extends Cell<T, ?>> {
    */
   private void setUpGridStructure(List<Cell<T, ?>> cellList) {
     try {
-      // TODO: once XML is changed, delete above and uncomment out this line of code
-      //    myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-      //        xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());}
+      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+          xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
@@ -232,6 +223,9 @@ public class Simulation<T extends Cell<T, ?>> {
    *
    * <p>If moving backward is not possible, the simulation remains in its current state,
    * and the total iterations count is not updated.
+   *
+   * <p>WARNING: this is not integrated with getStateLength, could probably
+   * make a symmetric state length similar to history but not made yet
    *
    * <p><b>Intended Use:</b> This method is used when a user wants to revert the simulation state
    * to a previous step, as long as that previous step is still stored.
@@ -265,10 +259,10 @@ public class Simulation<T extends Cell<T, ?>> {
   public void step() {
     try {
       totalIterations++;
-      myGrid.getCells().forEach(Cell::saveCurrentState);
       myGrid.getCells().forEach(Cell::calcNextState);
       myGrid.getCells().forEach(Cell::step);
       myGrid.getCells().forEach(Cell::resetParameters);
+      myGrid.getCells().forEach(Cell::saveCurrentState);
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
@@ -453,11 +447,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @throws SimulationException if an error occurs while updating the parameter
    */
   public void updateAdditionalParameter(String key, Object value) {
-    try {
       parameters.setAdditionalParameter(key, value);
-    } catch (SimulationException e) {
-      throw new SimulationException(e);
-    }
   }
 
   /**
@@ -481,7 +471,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @param type - the expected class type (e.g., List.class, String.class)
    * @param <T>  - the expected return type
    * @return an {@code Optional<T>} containing the parameter value if found and correctly typed, or
-   *     an empty {@code Optional} if not found or mismatched.
+   * an empty {@code Optional} if not found or mismatched.
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     return parameters.getAdditionalParameter(key, type);
@@ -512,6 +502,8 @@ public class Simulation<T extends Cell<T, ?>> {
   }
 
   // API Calls for use in saving simulation information ---
+  // I did not write tests for this, because frankly onot sure what they do precisely
+  // like i know the general
 
   /**
    * Returns the XML data that created the simulation.
@@ -553,5 +545,20 @@ public class Simulation<T extends Cell<T, ?>> {
    */
   public int getNumStates() {
     return xmlData.getNumStates();
+  }
+
+  /**
+   * Retrieves all the cells contained within the grid.
+   *
+   * <p>Only used in testing really to get all the cells, if you want all the cells otherwise
+   * please use getting each cell with chosen position
+   *
+   * <p>Maybe could have made an iterator but we live and we learn about better design patterns,
+   * and that was a timely one with less positive value
+   *
+   * @return a list of all cells in the grid
+   */
+  List<T> getAllCells() {
+    return myGrid.getCells();
   }
 }
