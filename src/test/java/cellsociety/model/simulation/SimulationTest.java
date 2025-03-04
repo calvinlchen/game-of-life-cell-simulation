@@ -46,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
+// if I had time I would really want to improve this but it tests what it needs to
 public class SimulationTest {
 
   private XmlData data = mock(XmlData.class);
