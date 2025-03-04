@@ -166,7 +166,7 @@ public class WaTorRule extends Rule<WaTorCell> {
   }
 
 
-  private Optional<WaTorCell> findEmptyCell(WaTorCell cell) {
+  Optional<WaTorCell> findEmptyCell(WaTorCell cell) {
     try {
       List<WaTorCell> emptyNeighbors = cell.getNeighbors().stream().filter(
           neighbor -> neighbor.getCurrentState() == WATOR_EMPTY
@@ -181,7 +181,7 @@ public class WaTorRule extends Rule<WaTorCell> {
     }
   }
 
-  private Optional<WaTorCell> findFishCell(WaTorCell cell) {
+  Optional<WaTorCell> findFishCell(WaTorCell cell) {
     try {
       List<WaTorCell> fishNeighbors = cell.getNeighbors().stream()
           .filter(neighbor -> neighbor.getCurrentState() == WATOR_FISH).toList();

@@ -69,11 +69,13 @@ public class PercolationRule extends Rule<PercolationCell> {
     }
   }
 
-  private boolean neighborIsPercolated(PercolationCell cell) {
+  boolean neighborIsPercolated(PercolationCell cell) {
     try {
       return cell.getNeighbors().stream()
           .anyMatch(neighbor -> neighbor.getCurrentState() == PERCOLATION_PERCOLATED);
     } catch (SimulationException e) {
+      // should never hit because getNeighbors and get Current state are set up in ways that
+      // their conditions should not be hit
       throw new SimulationException(e);
     }
   }
