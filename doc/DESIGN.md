@@ -8,42 +8,36 @@
 ## Team Roles and Responsibilities
 
  * Kyaira Boughton (keb125)
-   * XML Handling and XML Configurations + Related Test 
+   * All configuration related tasks such as the features under configuration and creating xml documents for testing.
 
  * Jessica Chen (jc939)
-   * Simulation rules + Related Test 
+   * Simulation related features as well as providing API to provide dynamic functionality for some of the dynamic updates.
 
  * Calvin Chen (clc162)
-   * Cell View + GUI Inputs 
-
-
+   * View related features.
 
 ## Design goals
 
 #### What Features are Easy to Add
-* add new simulations, add new states to existing simulations, new languages...
+* Add new simulations, parameters and states to existing simulations, new neighborhood types.
+<!-- Probably more stuff, i'm blanking -->
 
 
 ## High-level Design
-UML document
+view / model (simulation + configuration)
 
 #### Core Classes
-
+folder structure and core interactions (high level uml)
 
 ## Assumptions that Affect the Design
-* for ants, can only have one ant per cell
-  * didn't understand why there were birth so thats not happening 
+* I need to go through these for simulation theres a lot of random simulations I had
 
 #### Features Affected by Assumptions
-* ants features are going to be a lot less than that documents
+* erm RPS? general game of life?
 
 
 ## Significant differences from Original Plan
 
 
-## New Features HowTo
-
-#### Easy to Add Features
-
-#### Other Features not yet Done
-
+## How to Add Features
+- can add these later when I going through all of my assumptions
