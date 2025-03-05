@@ -122,10 +122,6 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
       // the one is not a magic number, just how math works to make maxHistorySize work the
       // way that is expected
-      if (stateHistory.size()  > maxHistorySize + 1) {
-        logger.debug("State history size exceeded maxHistorySize: {}, removed {}",
-            maxHistorySize, stateHistory.removeFirst());
-      }
 
     } catch (SimulationException e) {
       throw new SimulationException(e);
