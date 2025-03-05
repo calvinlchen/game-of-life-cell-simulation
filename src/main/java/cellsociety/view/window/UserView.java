@@ -420,4 +420,20 @@ public class UserView {
       throw new IllegalArgumentException(e.getMessage());
     }
   }
+
+  /**
+   * Return this view's animation object
+   * @return current Timeline object; null if no simulation is loaded
+   */
+  public Timeline getMyAnimation() {
+    return myAnimation;
+  }
+
+  /**
+   * Return the number of cells that are currently being displayed by this view
+   * @return int number of children of the SimulationView object (which this window displays as the grid)
+   */
+  public int getNumCellsDisplayed() {
+    return mySimulationView.getDisplay().getChildren().size();
+  }
 }
