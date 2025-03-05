@@ -1,10 +1,12 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.Cell;
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +40,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
   private static final String NULL_PARAMETER = "NullParameter";
 
   private final GenericParameters parameters;
+  private Grid grid;
 
   /**
    * Constructs a {@code Rule} object and initializes it with the provided parameters. The
@@ -54,6 +57,11 @@ public abstract class Rule<C extends Cell<C, ?>> {
           List.of("parameters", "Rule"));
     }
     this.parameters = parameters;
+  }
+
+  public Rule(GenericParameters parameters, Grid grid) {
+    this(parameters);
+    this.grid = grid;
   }
 
   // Abstract Methods ------
@@ -81,6 +89,10 @@ public abstract class Rule<C extends Cell<C, ?>> {
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
+  }
+
+  public Optional<Grid> getGrid() {
+    return Optional.ofNullable(grid);
   }
 
   // Start of Shared Helper methods for rules ------

@@ -47,9 +47,15 @@ public class Grid<T extends Cell<T, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Grid.class);
 
-  private final List<List<T>> myGrid;
+  private List<List<T>> myGrid;
   private int myRows;
   private int myCols;
+
+  private EdgeType edgeType;
+
+  public Grid() {
+    myGrid = new ArrayList<>();
+  }
 
   /**
    * Constructs a Grid with specified dimensions, shape type, neighborhood type, and edge type.
@@ -66,8 +72,29 @@ public class Grid<T extends Cell<T, ?>> {
    * @param edgeType         - the edge type specifying the behavior at the boundaries of the grid
    *                         (e.g., NONE, MIRROR, TOROIDAL)
    */
+  @Deprecated
   public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
       EdgeType edgeType) {
+    try {
+      setUpGridSteps(cells, rows, cols, shape, neighborhoodType, edgeType);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  public Grid<T> constructGrid(List<Cell<T, ?>> cells, int rows, int cols, ShapeType shape,
+      NeighborhoodType neighborhoodType, EdgeType edgeType) {
+    try {
+      myGrid.clear();
+      setUpGridSteps((List<T>) cells, rows, cols, shape, neighborhoodType, edgeType);
+      return this;
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  private void setUpGridSteps(List<T> cells, int rows, int cols, ShapeType shape,
+      NeighborhoodType neighborhoodType, EdgeType edgeType) {
     try {
       myGrid = initializeGrid(rows, cols);
       initializeCells(cells);
@@ -184,6 +211,8 @@ public class Grid<T extends Cell<T, ?>> {
           setNeighbors(i, j, directions.get(), edge);
         }
       }
+
+      edgeType = edge;
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
@@ -331,6 +360,10 @@ public class Grid<T extends Cell<T, ?>> {
     return myGrid.stream().flatMap(List::stream).toList();
   }
 
+  public EdgeType getEdgeType() {
+    return edgeType;
+  }
+
   // Start of Misc ------
 
   /**
@@ -342,15 +375,16 @@ public class Grid<T extends Cell<T, ?>> {
    * @param col the column index of the position to check
    * @return true if the position (row, col) is within the bounds of the grid; false otherwise
    */
-  boolean isValidPosition(int row, int col) {
+  public boolean isValidPosition(int row, int col) {
     return row >= 0 && row < myRows && col >= 0 && col < myCols;
   }
 
-  int getRows() {
+  public int getRows() {
     return myRows;
   }
 
-  int getCols() {
+  public int getCols() {
     return myCols;
   }
+
 }

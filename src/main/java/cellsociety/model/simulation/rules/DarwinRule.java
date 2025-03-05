@@ -1,6 +1,7 @@
 package cellsociety.model.simulation.rules;
 
 import cellsociety.model.simulation.cell.DarwinCell;
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.darwinhandler.DarwinCommandHandler;
 import cellsociety.model.statefactory.CellStateFactory;
@@ -22,8 +23,8 @@ public class DarwinRule extends Rule<DarwinCell> {
    *                   required for the rule. Must not be {@code null}.
    * @throws SimulationException if the parameters are {@code null}.
    */
-  public DarwinRule(GenericParameters parameters) {
-    super(parameters);
+  public DarwinRule(GenericParameters parameters, Grid grid) {
+    super(parameters, grid);
   }
 
   @Override
@@ -39,9 +40,10 @@ public class DarwinRule extends Rule<DarwinCell> {
         // handler is essentially the switch statement for what method should be executed
         DarwinCommandHandler handler = DarwinCommandFactory.getHandler(command.getType());
 
-        OptionalInt newInstruction = handler.execute(command, cell);
+        OptionalInt newInstruction = handler.execute(command, cell, this.getGrid());
         if (newInstruction.isPresent()) {
-          instruction = newInstruction.getAsInt();
+          // I think because of the indexes
+          instruction = newInstruction.getAsInt()-1;
         } else {
           instruction = cell.getNextProgramInstruction(instruction);
         }

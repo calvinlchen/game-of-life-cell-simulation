@@ -110,6 +110,7 @@ public class Simulation<T extends Cell<T, ?>> {
   private void setUpSimulation() {
     try {
       SimType simType = xmlData.getType();
+      myGrid = new Grid();
 
       Rule<T> rule = setUpRules(simType);
       List<Cell<T, ?>> cellList = createCells(simType, rule);
@@ -152,7 +153,7 @@ public class Simulation<T extends Cell<T, ?>> {
     try {
       Map<String, Object> params = xmlData.getParameters();
 
-      rule = (Rule<T>) RuleFactory.createRule(simType, params);
+      rule = (Rule<T>) RuleFactory.createRule(simType, params, myGrid);
       parameters = rule.getParameters();
 
     } catch (SimulationException e) {
@@ -205,7 +206,7 @@ public class Simulation<T extends Cell<T, ?>> {
    */
   private void setUpGridStructure(List<Cell<T, ?>> cellList) {
     try {
-      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
+      myGrid = myGrid.constructGrid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
           xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
     } catch (SimulationException e) {
       throw new SimulationException(e);

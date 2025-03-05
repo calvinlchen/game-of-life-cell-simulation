@@ -1,9 +1,12 @@
 package cellsociety.model.simulation.cell;
 
+import static cellsociety.model.util.constants.GridTypes.DirectionType.E;
+
 import cellsociety.model.simulation.rules.DarwinRule;
 import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.darwin.DarwinProgram;
 import cellsociety.model.util.darwin.DarwinProgramFactory;
@@ -19,6 +22,9 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
 
   private boolean infectedThisStep;
 
+  private DirectionType direction;
+  private DirectionType nextDirection;
+
 
   /**
    * Constructs a cell with the specified initial state and a rule for determining its behavior.
@@ -32,6 +38,10 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     currentInstruction = 0;
     nextInstruction = 0;
     infectedThisStep = false;
+
+    // everyone can just start facing east
+    direction = E;
+    nextDirection = E;
   }
 
   @Override
@@ -61,6 +71,7 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     super.step();
     // in addition to doing super step also update your next instruction
     currentInstruction = nextInstruction;
+    direction = nextDirection;
   }
 
   @Override
@@ -105,6 +116,14 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
 
   public int getNextProgramInstruction(int instruction) {
     return program.nextInstructionNumber(instruction);
+  }
+
+  public DirectionType getDirection() {
+    return direction;
+  }
+
+  public void setDirection(DirectionType direction) {
+    nextDirection = direction;
   }
 
 }

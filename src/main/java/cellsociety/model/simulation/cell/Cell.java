@@ -122,6 +122,10 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
       // the one is not a magic number, just how math works to make maxHistorySize work the
       // way that is expected
+      if (stateHistory.size()  > maxHistorySize + 1) {
+        stateHistory.removeFirst();
+      }
+
 
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -147,9 +151,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
     try {
       if (stateHistory.size() > MIN_STATE_HISTORY) {
-        // this order because we step and immediately saved
-        // so gotta ignore this one for it to make sense
-        logger.debug("Remove the top {}", stateHistory.removeLast());
+        stateHistory.removeLast();
         success = true;
       }
 
