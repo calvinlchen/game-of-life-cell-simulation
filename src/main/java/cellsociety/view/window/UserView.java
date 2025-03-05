@@ -30,6 +30,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * UserView manages the main display window for the simulation.
  *
@@ -64,6 +67,9 @@ public class UserView {
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
   private final XmlUtils xmlUtils;
+
+  // Create logger
+  private static final Logger logger = LogManager.getLogger(UserView.class);
 
   /**
    * Constructs a UserView instance and initializes the simulation window.
@@ -189,7 +195,7 @@ public class UserView {
    */
   private void loadSimulationFromFile(File dataFile) {
     if (dataFile != null) {
-      System.out.println("Loading file: " + dataFile.getName());
+      logger.debug("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
       try {
         configureAndDisplaySimFromXml(xmlUtils.readXml(dataFile));

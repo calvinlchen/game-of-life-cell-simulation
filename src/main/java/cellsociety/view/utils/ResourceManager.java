@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Utility class for dynamically analyzing and providing available resources in the application.
  *
@@ -28,14 +31,17 @@ public class ResourceManager {
    */
   public static final String MAIN_RESOURCE_PACKAGE = "cellsociety.resourceproperty.";
   public static final String MAIN_RESOURCE_FOLDER = MAIN_RESOURCE_PACKAGE.replace(".", "/");
-
-  public static final String ERROR_RESOURCE_PACKAGE =
-      "cellsociety.resourceproperty.Errors";
+  public static final String ERROR_RESOURCE_PACKAGE = "cellsociety.resourceproperty.Errors";
 
   /**
    * The base package path for css stylesheets
    */
   public static final String DEFAULT_STYLESHEET_FOLDER = "cellsociety/stylesheets/";
+
+  /**
+   * Create logger
+   */
+  private static final Logger logger = LogManager.getLogger(ResourceManager.class);
 
   private static String currentLanguage = "English";  // default
   private static ResourceBundle currentMainBundle = getMainBundleFromLanguage(currentLanguage);
@@ -123,8 +129,7 @@ public class ResourceManager {
         }
       }
     } catch (IOException | URISyntaxException e) {
-      // e.printStackTrace();
-      System.err.println("Error loading language files.");
+      logger.error("Error loading language files. ", e);
     }
     // If no languages are found, default to only English.
     if (languages.isEmpty()) {
@@ -157,8 +162,7 @@ public class ResourceManager {
         }
       }
     } catch (IOException | URISyntaxException e) {
-      // e.printStackTrace();
-      System.err.println("Error loading stylesheet files: " + e.getMessage());
+      logger.error("Error loading stylesheet files. ", e);
     }
 
     return stylesheets;

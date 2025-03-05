@@ -9,6 +9,8 @@ import cellsociety.model.util.exceptions.XmlException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * An object that holds simulation data.
@@ -38,6 +40,9 @@ public class XmlData {
   private Map<String, Object> parameters; //<parameter name as string, value>
   private int id;
   public static int totalSimulations;
+
+  //create logger
+  private static final Logger logger = LogManager.getLogger(XmlData.class);
 
   /**
    * Initializes an XmlData object with the current program language
@@ -310,7 +315,7 @@ public class XmlData {
       }
     }
 
-    System.out.println("numStates: " + numStates);
+    logger.debug("numStates: " + numStates);
 
     return (int) numStates;
   }
