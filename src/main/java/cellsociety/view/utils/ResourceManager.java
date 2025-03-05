@@ -113,12 +113,12 @@ public class ResourceManager {
 
       if (resourceUrl != null) {
         Path resourcePath = Paths.get(resourceUrl.toURI());
-        DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.properties");
-
-        for (Path path : stream) {
-          String fileName = path.getFileName().toString();
-          if (fileName.endsWith(".properties") && !fileName.startsWith("Errors")) {
-            languages.add(fileName.replace(".properties", "")); // Extract language name
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.properties")) {
+          for (Path path : stream) {
+            String fileName = path.getFileName().toString();
+            if (fileName.endsWith(".properties") && !fileName.startsWith("Errors")) {
+              languages.add(fileName.replace(".properties", "")); // Extract language name
+            }
           }
         }
       }
@@ -146,12 +146,13 @@ public class ResourceManager {
 
       if (resourceUrl != null) {
         Path resourcePath = Paths.get(resourceUrl.toURI());
-        DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.css");
-
-        for (Path path : stream) {
-          String fileName = path.getFileName().toString();
-          if (fileName.endsWith(".css")) {
-            stylesheets.add(fileName.replace(".css", "")); // Extract language name
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath, "*.css")) {
+          for (Path path : stream) {
+            String fileName = path.getFileName().toString();
+            if (fileName.endsWith(".css")) {
+              // Extract the stylesheet name by removing the ".css" extension
+              stylesheets.add(fileName.replace(".css", ""));
+            }
           }
         }
       }
