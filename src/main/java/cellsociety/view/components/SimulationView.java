@@ -1,16 +1,14 @@
 package cellsociety.view.components;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 import cellsociety.model.util.XmlData;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.utils.exceptions.ViewException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -33,8 +31,6 @@ public class SimulationView {
 
   private XmlData myXml;
   private Simulation<?> mySimulation;
-  private final String myLanguage;
-  private final ResourceBundle myErrorResources;
 
   // These define whether the cell grid view is visually flipped or not
   private boolean isFlippedHorizontally = false;
@@ -45,9 +41,8 @@ public class SimulationView {
    *
    * @param width    - the width of the grid display
    * @param height   - the height of the grid display
-   * @param language - the selected language for the UI
    */
-  public SimulationView(double width, double height, String language) {
+  public SimulationView(double width, double height) {
     myDisplay = new Pane();
     myGridWidth = width;
     myGridHeight = height;
@@ -56,8 +51,6 @@ public class SimulationView {
     myCellViews = new CellView[0][0];
     myCellWidth = 0;
     myCellHeight = 0;
-    myLanguage = language;
-    myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
   /**
@@ -121,7 +114,7 @@ public class SimulationView {
    */
   public void flipDisplayHorizontally() {
     if (myCellViewsIsEmpty()) {
-      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+      throw new ViewException("NoSimulationToFlip");
     }
     if (isFlippedHorizontally) {
       myDisplay.setScaleX(1);
@@ -138,7 +131,7 @@ public class SimulationView {
    */
   public void flipDisplayVertically() {
     if (myCellViewsIsEmpty()) {
-      throw new IllegalStateException(myErrorResources.getString("NoSimulationToFlip"));
+      throw new ViewException("NoSimulationToFlip");
     }
     if (isFlippedVertically) {
       myDisplay.setScaleY(1);
@@ -245,9 +238,7 @@ public class SimulationView {
       return;
     }
     if (state < 0 || state >= cellList.getFirst().getNumStates()) {
-      throw new IllegalArgumentException(
-          String.format(myErrorResources.getString("InvalidState"), state,
-              cellList.getFirst().getNumStates() - 1));
+      throw new ViewException("InvalidState", state);
     }
 
     for (CellView cellView : cellList) {

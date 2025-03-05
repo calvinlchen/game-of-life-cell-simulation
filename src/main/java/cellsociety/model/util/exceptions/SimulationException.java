@@ -1,9 +1,7 @@
 package cellsociety.model.util.exceptions;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
+import cellsociety.view.utils.ResourceManager;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * Custom exception class for handling simulation-related errors.
@@ -17,16 +15,24 @@ import java.util.ResourceBundle;
  */
 public class SimulationException extends RuntimeException {
 
-  // TODO: this should be replaced to something that can be switched later
-  private static final ResourceBundle myResources = getErrorSimulationResourceBundle("English");
-
   /**
    * Constructs a SimulationException with a specified error message key.
    *
    * @param key - the key used to retrieve the corresponding error message from the resource bundle
    */
   public SimulationException(String key) {
-    super(String.format(myResources.getString(key)));
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key)));
+  }
+
+
+  /**
+   * Constructs a SimulationException with the specified error message and a given object argument.
+   *
+   * @param key - the key used to retrieve the corresponding error message from the resource bundle
+   * @param argument - additional object displayed in the provided error message, such as a given invalid simulation type
+   */
+  public SimulationException(String key, Object argument) {
+    super(ResourceManager.getCurrentErrorBundle().getString(key) + argument);
   }
 
   /**
@@ -38,7 +44,10 @@ public class SimulationException extends RuntimeException {
    * @param additionalInfo - a list of additional information strings related to the error context
    */
   public SimulationException(String key, List<String> additionalInfo) {
-    super(String.format(myResources.getString(key), additionalInfo.toArray()));
+    super(String.format(
+        ResourceManager.getCurrentErrorBundle().getString(key),
+        additionalInfo.toArray())
+    );
   }
 
   /**
@@ -49,7 +58,7 @@ public class SimulationException extends RuntimeException {
    * @param cause - the underlying cause of the exception
    */
   public SimulationException(String key, Throwable cause) {
-    super(String.format(myResources.getString(key)), cause);
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key)), cause);
   }
 
   /**
@@ -62,7 +71,10 @@ public class SimulationException extends RuntimeException {
    * @param cause          - the underlying cause of the exception
    */
   public SimulationException(String key, List<String> additionalInfo, Throwable cause) {
-    super(String.format(myResources.getString(key), additionalInfo.toArray()), cause);
+    super(String.format(
+        ResourceManager.getCurrentErrorBundle().getString(key),
+        additionalInfo.toArray()), cause
+    );
   }
 
   /**

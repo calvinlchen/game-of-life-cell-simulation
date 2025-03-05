@@ -1,6 +1,5 @@
 package cellsociety.view.window;
 
-import cellsociety.Main;
 import cellsociety.model.util.XmlData;
 import cellsociety.model.util.XmlUtils;
 import cellsociety.model.util.exceptions.SimulationException;
@@ -13,6 +12,7 @@ import cellsociety.view.components.SimulationView;
 import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.utils.DateTime;
+import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
 import java.util.ArrayList;
@@ -52,10 +52,6 @@ public class UserView {
   private final int mySceneHeight;
   private final Stage myStage;
 
-  private final String myLanguage;
-  private ResourceBundle myResources;
-  private ResourceBundle myErrorResources;
-
   private ViewState myState;
   private BorderPane myRoot;
   private Timeline myAnimation;
@@ -75,29 +71,13 @@ public class UserView {
    * @param sceneWidth  - the width of the scene
    * @param sceneHeight - the height of the scene
    * @param stage       - the primary stage of the application
-   * @param language    - the selected language for the UI
    */
-  public UserView(int sceneWidth, int sceneHeight, Stage stage, String language) {
+  public UserView(int sceneWidth, int sceneHeight, Stage stage) {
     myStage = stage;
     mySceneWidth = sceneWidth;
     mySceneHeight = sceneHeight;
 
-    myLanguage = language;
-    xmlUtils = new XmlUtils(myLanguage);
-    try {
-      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
-    } catch (Exception e) {
-      myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "English");
-      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("LanguageUnavailable"));
-    }
-    try {
-      myErrorResources = ResourceBundle.getBundle(
-          Main.DEFAULT_RESOURCE_PACKAGE + "Errors" + language);
-    } catch (Exception e) {
-      myErrorResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + "ErrorsEnglish");
-      showMessage(Alert.AlertType.WARNING,
-          myErrorResources.getString("AlertsInEnglish") + language + ".");
-    }
+    xmlUtils = new XmlUtils();
 
     // by default, run simulation at default speed
     mySpeedFactor = 1;
@@ -113,11 +93,10 @@ public class UserView {
 
     // Initialize UI components
     mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN, myLanguage);
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
-    myInformationBox = new InformationBox(myResources);
-    myStateColorLegend = new StateColorLegend(this,
-        myLanguage);  // Color-state legend, with passed reference for event handling
+    myInformationBox = new InformationBox();
+    myStateColorLegend = new StateColorLegend(this);  // Color-state legend, with passed reference for event handling
 
     // Set components in BorderPane
     myRoot.setLeft(mySimulationView.getDisplay());
@@ -213,7 +192,7 @@ public class UserView {
       System.out.println("Loading file: " + dataFile.getName());
       stopAndResetSimulation();
       try {
-        configureAndDisplaySimFromXml(xmlUtils.readXml(dataFile, myLanguage));
+        configureAndDisplaySimFromXml(xmlUtils.readXml(dataFile));
       } catch (XmlException e) {
         myState = ViewState.ERROR;
         showMessage(AlertType.ERROR, e.getMessage());
@@ -246,7 +225,7 @@ public class UserView {
       // Update legend based on simulation type
       myStateColorLegend.updateLegend(xmlData);
     } catch (SimulationException e) {
-      e.printStackTrace();
+      // e.printStackTrace();
       myState = ViewState.ERROR;
       showMessage(Alert.AlertType.ERROR, e.getMessage());
     }
@@ -266,8 +245,13 @@ public class UserView {
    * Requests a simulation to be saved.
    */
   public void saveSimulation() {
+    ResourceBundle resources = ResourceManager.getCurrentMainBundle();
+    ResourceBundle errorResources = ResourceManager.getCurrentErrorBundle();
+
     if (!checkSimulationExists()) {
-      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToSave"));
+      showMessage(
+          Alert.AlertType.WARNING, errorResources.getString("NoSimulationToSave")
+      );
       return;
     }
 
@@ -276,8 +260,7 @@ public class UserView {
     // Open file chooser for saving
     FileChooser fileChooser = FileExplorer.getSaveFileChooser();
     fileChooser.setInitialFileName(
-        myResources.getString("DefaultFilePrefix") + DateTime.getLocalDateTime()
-            + ".xml"); // Default filename
+        resources.getString("DefaultFilePrefix") + DateTime.getLocalDateTime() + ".xml"); // Default filename
     File saveFile = fileChooser.showSaveDialog(myStage);
 
     if (saveFile != null) {
@@ -288,11 +271,11 @@ public class UserView {
             mySimulationView.getSimulation().getXmlDataObject().getAuthor(),
             mySimulationView.getSimulation().getXmlDataObject().getDescription(),
             mySimulationView.getSimulation());
-        showMessage(Alert.AlertType.INFORMATION, myResources.getString("SimulationSaved"));
+        showMessage(Alert.AlertType.INFORMATION, resources.getString("SimulationSaved"));
       } catch (XmlException e) {
         myState = ViewState.ERROR;
         showMessage(Alert.AlertType.ERROR,
-            myErrorResources.getString("ErrorSaving") + e.getMessage());
+            errorResources.getString("ErrorSaving") + e.getMessage());
       }
     }
     // Return myState to paused state.
@@ -304,7 +287,9 @@ public class UserView {
    */
   public void flipGridHorizontally() {
     if (!checkSimulationExists()) {
-      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+      showMessage(
+          Alert.AlertType.WARNING,
+          ResourceManager.getCurrentErrorBundle().getString("NoSimulationToFlip"));
     }
     mySimulationView.flipDisplayHorizontally();
   }
@@ -314,7 +299,9 @@ public class UserView {
    */
   public void flipGridVertically() {
     if (!checkSimulationExists()) {
-      showMessage(Alert.AlertType.WARNING, myErrorResources.getString("NoSimulationToFlip"));
+      showMessage(
+          Alert.AlertType.WARNING,
+          ResourceManager.getCurrentErrorBundle().getString("NoSimulationToFlip"));
     }
     mySimulationView.flipDisplayVertically();
   }
@@ -392,24 +379,6 @@ public class UserView {
   }
 
   /**
-   * Retrieve the resource properties for displaying text in correct language.
-   *
-   * @return ResourceBundle object
-   */
-  public ResourceBundle getResources() {
-    return myResources;
-  }
-
-  /**
-   * Retrieve the currently-displayed language (assuming its .properties file exists).
-   *
-   * @return name of current UI language as a String
-   */
-  public String getLanguage() {
-    return myLanguage;
-  }
-
-  /**
    * Retrieve the Scene that this window is displaying.
    *
    * @return Scene object containing all on-screen elements as children
@@ -436,7 +405,7 @@ public class UserView {
    */
   public void updateColorForState(int state, Color newColor) {
     if (mySimulationView == null) {
-      throw new SimulationException(myErrorResources.getString("NoSimulationToSave"));
+      throw new SimulationException("NoSimulationToSave");
     }
 
     try {

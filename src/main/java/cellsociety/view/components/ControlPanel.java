@@ -1,7 +1,7 @@
 package cellsociety.view.components;
 
 import cellsociety.Main;
-import cellsociety.view.utils.ResourceAnalyzer;
+import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.window.UserView;
 import cellsociety.view.window.UserView.ViewState;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ public class ControlPanel {
 
   private final VBox myPanel;
   private final UserView myUserView;
-  private final ResourceBundle myResources;
   private final List<Button> myButtons;
   private ChoiceBox<String> myThemeChoices;
 
@@ -35,48 +34,49 @@ public class ControlPanel {
    */
   public ControlPanel(UserView userView) {
     myUserView = userView;
-    myResources = userView.getResources();
     myPanel = new VBox(VBOX_SPACING);
     myButtons = new ArrayList<>();
     initializeControls();
   }
 
   private void initializeControls() {
-    Button playButton = new Button(myResources.getString("PlayCommand"));
+    ResourceBundle resources = ResourceManager.getCurrentMainBundle();
+
+    Button playButton = new Button(resources.getString("PlayCommand"));
     playButton.setOnAction(e -> myUserView.playSimulation());
     myButtons.add(playButton);
 
-    Button pauseButton = new Button(myResources.getString("PauseCommand"));
+    Button pauseButton = new Button(resources.getString("PauseCommand"));
     pauseButton.setOnAction(e -> myUserView.pauseSimulation());
     myButtons.add(pauseButton);
 
-    Button clearButton = new Button(myResources.getString("ClearCommand"));
+    Button clearButton = new Button(resources.getString("ClearCommand"));
     clearButton.setOnAction(e -> myUserView.stopAndResetSimulation());
     myButtons.add(clearButton);
 
-    Button loadButton = new Button(myResources.getString("LoadFileCommand"));
+    Button loadButton = new Button(resources.getString("LoadFileCommand"));
     loadButton.setOnAction(e -> {
       if (myUserView.getState() == ViewState.EMPTY || myUserView.getState() == ViewState.ERROR) {
         myUserView.chooseFileAndLoadSimulation();
       } else {
-        Main.startSimulationWindowWithFilePrompt(myUserView.getLanguage());
+        Main.startSimulationWindowWithFilePrompt();
       }
     });
     myButtons.add(loadButton);
 
-    Button saveButton = new Button(myResources.getString("SaveAsCommand"));
+    Button saveButton = new Button(resources.getString("SaveAsCommand"));
     saveButton.setOnAction(e -> myUserView.saveSimulation());
     myButtons.add(saveButton);
 
-    Button randomButton = new Button(myResources.getString("RandomGameOfLifeCommand"));
+    Button randomButton = new Button(resources.getString("RandomGameOfLifeCommand"));
     randomButton.setOnAction(e -> myUserView.loadRandomGameOfLife());
     myButtons.add(randomButton);
 
-    Button flipHorizontalButton = new Button(myResources.getString("FlipGridHorizontal"));
+    Button flipHorizontalButton = new Button(resources.getString("FlipGridHorizontal"));
     flipHorizontalButton.setOnAction(e -> myUserView.flipGridHorizontally());
     myButtons.add(flipHorizontalButton);
 
-    Button flipVerticalButton = new Button(myResources.getString("FlipGridVertical"));
+    Button flipVerticalButton = new Button(resources.getString("FlipGridVertical"));
     flipVerticalButton.setOnAction(e -> myUserView.flipGridVertically());
     myButtons.add(flipVerticalButton);
 
@@ -95,9 +95,9 @@ public class ControlPanel {
   private HBox makeSpeedPanel() {
     HBox speedPanel = new HBox((double) VBOX_SPACING / 2);
 
-    Button speedUpButton = new Button(myResources.getString("SpeedUpCommand"));
+    Button speedUpButton = new Button(ResourceManager.getCurrentMainBundle().getString("SpeedUpCommand"));
     speedUpButton.setOnAction(e -> myUserView.changeSimulationSpeed(2.0));
-    Button slowDownButton = new Button(myResources.getString("SlowDownCommand"));
+    Button slowDownButton = new Button(ResourceManager.getCurrentMainBundle().getString("SlowDownCommand"));
     slowDownButton.setOnAction(e -> myUserView.changeSimulationSpeed(0.5));
     speedPanel.getChildren().addAll(speedUpButton, slowDownButton);
 
@@ -107,7 +107,7 @@ public class ControlPanel {
   private HBox makeOutlinePanel() {
     HBox outlinePanel = new HBox((double) VBOX_SPACING / 2);
 
-    CheckBox outlineCheckbox = new CheckBox(myResources.getString("ShowGridlines"));
+    CheckBox outlineCheckbox = new CheckBox(ResourceManager.getCurrentMainBundle().getString("ShowGridlines"));
     outlineCheckbox.setSelected(true); // Default to showing outlines
 
     outlineCheckbox.setOnAction(e -> toggleOutlines(outlineCheckbox.isSelected()));
@@ -123,14 +123,14 @@ public class ControlPanel {
   private VBox makeThemePanel() {
     VBox themePanel = new VBox((double) VBOX_SPACING / 2);
 
-    Text themeTitle = new Text(myResources.getString("ThemeHeader"));
+    Text themeTitle = new Text(ResourceManager.getCurrentMainBundle().getString("ThemeHeader"));
     themeTitle.getStyleClass().add("bold-text");
     themePanel.getChildren().addAll(themeTitle);
 
-    List<String> themes = ResourceAnalyzer.getAvailableStylesheets();
+    List<String> themes = ResourceManager.getAvailableStylesheets();
     if (themes.isEmpty()) {
       // if no theme option(s) exist, display None
-      Text noneText = new Text(myResources.getString("None"));
+      Text noneText = new Text(ResourceManager.getCurrentMainBundle().getString("None"));
       themeTitle.getStyleClass().add("bold-text");
       themePanel.getChildren().addAll(noneText);
     } else {
@@ -151,11 +151,11 @@ public class ControlPanel {
    * Apply the theme that is currently selected in the dropdown menu.
    */
   public void applyCurrentlySelectedTheme() {
-    applyTheme(myThemeChoices.getValue());
+    if (myThemeChoices != null) { applyTheme(myThemeChoices.getValue()); }
   }
 
   private void applyTheme(String themeName) {
-    String stylesheetPath = "/" + Main.DEFAULT_STYLESHEET_FOLDER + themeName + ".css";
+    String stylesheetPath = "/" + ResourceManager.DEFAULT_STYLESHEET_FOLDER + themeName + ".css";
     Scene scene = myUserView.getScene();
 
     if (scene != null) {

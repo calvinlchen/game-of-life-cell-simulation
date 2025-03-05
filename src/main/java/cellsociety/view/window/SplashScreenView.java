@@ -1,7 +1,7 @@
 package cellsociety.view.window;
 
 import cellsociety.Main;
-import cellsociety.view.utils.ResourceAnalyzer;
+import cellsociety.view.utils.ResourceManager;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -41,16 +41,29 @@ public class SplashScreenView {
     titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
     myLanguageDropdown = new ChoiceBox<>();
-    myLanguageDropdown.getItems().addAll(ResourceAnalyzer.getAvailableLanguages());
+    myLanguageDropdown.getItems().addAll(ResourceManager.getAvailableLanguages());
     myLanguageDropdown.setValue("English"); // Default to English
+    ResourceManager.setLanguage("English");
+
+    // Change program language when new option is selected in language dropdown
+    myLanguageDropdown.setOnAction(e -> {
+      String selectedLanguage = myLanguageDropdown.getValue();
+      ResourceManager.setLanguage(selectedLanguage);
+    });
 
     Button loadFileButton = new Button("Load Simulation from File");
     loadFileButton.setOnAction(
-        e -> Main.startSimulationWindowWithFilePrompt(myLanguageDropdown.getValue()));
+        e -> {
+          Main.startSimulationWindowWithFilePrompt();
+          myStage.close();
+        });
 
     Button randomGameOfLifeButton = new Button("Generate Random Game of Life");
     randomGameOfLifeButton.setOnAction(
-        e -> Main.startSimulationWindowWithRandomGameOfLife(myLanguageDropdown.getValue()));
+        e -> {
+          Main.startSimulationWindowWithRandomGameOfLife();
+          myStage.close();
+        });
 
     VBox layout = new VBox(15);
     layout.setStyle("-fx-padding: 20px; -fx-alignment: center;");

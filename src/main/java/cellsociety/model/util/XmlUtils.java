@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,8 +22,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
 /**
  * A utility class for reading and writing simulation data to/from XML files. Provides functionality
  * to read simulation details, grid data, and parameters from XML files, and also to write
@@ -34,22 +31,11 @@ import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationRe
  */
 public class XmlUtils {
 
-  ResourceBundle myErrorResources;
-
   /**
-   * Constructs an XMLUtils object with the default language (English).
+   * Constructs an XMLUtils object with the current program language.
    */
   public XmlUtils() {
-    myErrorResources = getErrorSimulationResourceBundle("English");
-  }
 
-  /**
-   * Constructs an XMLUtils object with a specified language.
-   *
-   * @param language the language to be used for error messages
-   */
-  public XmlUtils(String language) {
-    myErrorResources = getErrorSimulationResourceBundle(language);
   }
 
   /**
@@ -59,8 +45,8 @@ public class XmlUtils {
    * @return an XMLData object containing the parsed simulation data
    * @throws XmlException if there is an error reading or parsing the XML file
    */
-  public XmlData readXml(File fxmlFile, String language) {
-    XmlData xmlObject = new XmlData(language);
+  public XmlData readXml(File fxmlFile) {
+    XmlData xmlObject = new XmlData();
 
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -70,7 +56,7 @@ public class XmlUtils {
 
       NodeList simulationList = doc.getElementsByTagName("simulation");
       if (simulationList.getLength() == 0) {
-        throw new IllegalArgumentException(myErrorResources.getString("NoSimTag"));
+        throw new XmlException("NoSimTag");
       }
 
       for (int i = 0; i < simulationList.getLength(); i++) {
@@ -97,7 +83,7 @@ public class XmlUtils {
             xmlObject.setLanguage(languageNodes.item(0).getTextContent());
           } else {
             xmlObject.setLanguage(
-                language); //if no language in og xml, will use the input language as default.
+                "English"); //if no language in og xml, will use the input language as default.
           }
 
           // Extract parameters
@@ -114,8 +100,7 @@ public class XmlUtils {
           CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(),
               xmlObject.getType(), xmlObject.getNumStates());
           if (handler == null) {
-            throw new IllegalArgumentException(
-                myErrorResources.getString("UnknownSimType") + xmlObject.getType());
+            throw new XmlException("UnknownSimType", xmlObject.getType());
           }
 
           NodeList colorsList = metadataElement.getElementsByTagName("color");
@@ -140,9 +125,7 @@ public class XmlUtils {
             // No variation: use explicitly defined cell states
             NodeList cellList = gridElement.getElementsByTagName("cell");
             if (cellList.getLength() != rows * columns) {
-              throw new XmlException(
-                  myErrorResources.getString("ExpectedDifferentNumber") + (rows * columns) + ", "
-                      + cellList.getLength());
+              throw new XmlException("ExpectedDifferentNumber", cellList.getLength());
             }
             xmlObject.setCellStateList(cellStatesToEnum(cellList, handler));
           }
@@ -168,7 +151,7 @@ public class XmlUtils {
   public void writeToXml(File file, String title, String author, String description,
       Simulation simulation) {
     if (file == null) {
-      throw new XmlException(myErrorResources.getString("NoFileSelectedSave"));
+      throw new XmlException("NoFileSelectedSave");
     }
 
     try {
@@ -244,7 +227,7 @@ public class XmlUtils {
       transformer.transform(source, result);
 
     } catch (Exception e) {
-      throw new XmlException(myErrorResources.getString("XMLSaveError") + e.getMessage());
+      throw new XmlException("XMLSaveError", e.getMessage());
     }
   }
 
@@ -265,8 +248,7 @@ public class XmlUtils {
         simulation.getSimulationType(), simulation.getNumStates());
 
     if (handler == null) {
-      throw new IllegalArgumentException(
-          myErrorResources.getString("UnknownSimType") + simulation.getSimulationType());
+      throw new XmlException("UnknownSimType", simulation.getSimulationType());
     }
 
     for (int i = 0; i < rowNum; i++) {
@@ -274,8 +256,7 @@ public class XmlUtils {
         int currentCellState = simulation.getCurrentState(i, j);
 
         if (!handler.isValidState(currentCellState)) {
-          throw new IllegalArgumentException(
-              myErrorResources.getString("UnknownCellState") + currentCellState);
+          throw new XmlException("UnknownCellState", currentCellState);
         }
 
         cellStateList.add(handler.statetoString(currentCellState));
@@ -297,7 +278,7 @@ public class XmlUtils {
     ArrayList<Integer> cellStateEnums = new ArrayList<>();
 
     if (handler == null) {
-      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType"));
+      throw new XmlException("UnknownSimType");
     }
 
     for (String cellType : cellTypes) {
@@ -305,8 +286,7 @@ public class XmlUtils {
         int stateEnum = handler.stateFromString(cellType);
         cellStateEnums.add(stateEnum);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            myErrorResources.getString("UnknownCellState") + cellType, e);
+        throw new XmlException("UnknownCellState", cellType);
       }
     }
 
@@ -333,8 +313,7 @@ public class XmlUtils {
         int stateEnum = handler.stateFromString(currentCellState);
         cellStateEnums.add(stateEnum);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            myErrorResources.getString("UnknownCellState") + currentCellState, e);
+        throw new XmlException("UnknownCellState", currentCellState);
       }
     }
 
@@ -374,7 +353,7 @@ public class XmlUtils {
             parameters.put("S", Double.parseDouble(survivalRules));
           }
         } else {
-          throw new IllegalArgumentException(myErrorResources.getString("RulestringFormat"));
+          throw new XmlException("RulestringFormat");
         }
       } else {
         // Default behavior for other parameters
@@ -423,7 +402,7 @@ public class XmlUtils {
     List<String> statesToAssign = new ArrayList<>();
 
     if (handler == null) {
-      throw new IllegalArgumentException(myErrorResources.getString("UnknownSimType"));
+      throw new XmlException("UnknownSimType");
     }
 
     // Process variation
@@ -464,7 +443,7 @@ public class XmlUtils {
       try {
         cellStateList.add(handler.stateFromString(state));
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(myErrorResources.getString("UnknownCellState") + state);
+        throw new XmlException("UnknownCellState", state);
       }
     }
 
@@ -483,8 +462,7 @@ public class XmlUtils {
       case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -> SimType.ChouReg2;
       case "petelka" -> SimType.Petelka;
       case "rock paper scissors", "rps" -> SimType.RockPaperSciss;
-      default -> throw new IllegalArgumentException(
-          myErrorResources.getString("UnknownSimType") + simTypeString);
+      default -> throw new XmlException("UnknownSimType", simTypeString);
     };
   }
 }

@@ -1,17 +1,16 @@
 package cellsociety.view.components;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
 import static cellsociety.view.interfaces.CellView.DEFAULT_OUTLINE_CLASS;
 
-import cellsociety.Main;
 import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.utils.ResourceManager;
+import cellsociety.view.utils.exceptions.ViewException;
 import cellsociety.view.window.UserView;
-import java.util.ResourceBundle;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -32,8 +31,6 @@ import javafx.scene.text.Text;
 public class StateColorLegend {
 
   private final VBox myLegendBox;
-  private final ResourceBundle myResources;
-  private final ResourceBundle myErrorResources;
   private final UserView myUserView;
   private XmlData myLastXmlData;
   private boolean colorPickerIsOpen = false;
@@ -45,14 +42,10 @@ public class StateColorLegend {
    * Constructs a StateColorLegend that dynamically updates based on the simulation type.
    *
    * @param userView - the UserView instance that manages the simulation window
-   * @param language - the selected language for UI text
    */
-  public StateColorLegend(UserView userView, String language) {
+  public StateColorLegend(UserView userView) {
     myLegendBox = new VBox();
     myLegendBox.setSpacing((double) ControlPanel.VBOX_SPACING / 2);
-
-    myResources = ResourceBundle.getBundle(Main.DEFAULT_RESOURCE_PACKAGE + language);
-    myErrorResources = getErrorSimulationResourceBundle(language);
     myUserView = userView;
   }
 
@@ -84,7 +77,8 @@ public class StateColorLegend {
       return;
     }
 
-    Text clickToChangeText = new Text(String.format(myResources.getString("ClickToChangeColors")));
+    Text clickToChangeText = new Text(
+        String.format(ResourceManager.getCurrentMainBundle().getString("ClickToChangeColors")));
     clickToChangeText.getStyleClass().add("bold-text");
     myLegendBox.getChildren().add(clickToChangeText);
 
@@ -162,8 +156,7 @@ public class StateColorLegend {
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
         xmlData.getNumStates());
     if (handler == null) {
-      throw new IllegalArgumentException(
-          myErrorResources.getString("UnknownSimType") + simulationType);
+      throw new ViewException("UnknownSimType", simulationType);
     }
 
     Map<Integer, Color> stateColorMap = new HashMap<>();
@@ -204,8 +197,7 @@ public class StateColorLegend {
     CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
         myUserView.getCellViewList().getFirst().getNumStates());
     if (handler == null) {
-      throw new IllegalArgumentException(
-          myErrorResources.getString("UnknownSimType") + simulationType);
+      throw new ViewException("UnknownSimType", simulationType);
     }
 
     Map<Integer, String> stateNameMap = new HashMap<>();

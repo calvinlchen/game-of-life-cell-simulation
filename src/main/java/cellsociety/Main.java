@@ -21,10 +21,6 @@ public class Main extends Application {
   // default to start in the data folder to make it easy on the user to find
   public static final String DEFAULT_DATA_FOLDER = System.getProperty("user.dir") + "/data";
 
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.resourceproperty.";
-  public static final String DEFAULT_RESOURCE_FOLDER = DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
-  public static final String DEFAULT_STYLESHEET_FOLDER = "cellsociety/stylesheets/";
-
   // width and height of application window
   public static final int SIM_WINDOW_WIDTH = 1200;
   public static final int SIM_WINDOW_HEIGHT = 800;
@@ -51,10 +47,9 @@ public class Main extends Application {
   /**
    * Starts an empty simulation window with the given language setting.
    *
-   * @param language the language to be used in the simulation window
    * @return a new UserView instance representing the simulation window
    */
-  public static UserView startEmptySimulationWindow(String language) {
+  public static UserView startEmptySimulationWindow() {
     // Create a new window
     Stage newStage = new Stage();
     newStage.setX(nextStageX);
@@ -63,27 +58,23 @@ public class Main extends Application {
     // Update nextStage position variables in case another window is generated later
     setNextStagePosition();
 
-    UserView view = new UserView(SIM_WINDOW_WIDTH, SIM_WINDOW_HEIGHT, newStage, language);
+    UserView view = new UserView(SIM_WINDOW_WIDTH, SIM_WINDOW_HEIGHT, newStage);
     view.resetView();
     return view;
   }
 
   /**
    * Starts a new simulation window and prompts the user to choose a file to load a simulation.
-   *
-   * @param language the language to be used in the simulation window
    */
-  public static void startSimulationWindowWithFilePrompt(String language) {
-    startEmptySimulationWindow(language).chooseFileAndLoadSimulation();
+  public static void startSimulationWindowWithFilePrompt() {
+    startEmptySimulationWindow().chooseFileAndLoadSimulation();
   }
 
   /**
    * Starts a new simulation window and loads a randomly generated Game of Life simulation.
-   *
-   * @param language the language to be used in the simulation window
    */
-  public static void startSimulationWindowWithRandomGameOfLife(String language) {
-    startEmptySimulationWindow(language).loadRandomGameOfLife();
+  public static void startSimulationWindowWithRandomGameOfLife() {
+    startEmptySimulationWindow().loadRandomGameOfLife();
   }
 
   /**

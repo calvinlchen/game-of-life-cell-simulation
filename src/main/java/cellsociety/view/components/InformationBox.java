@@ -2,6 +2,7 @@ package cellsociety.view.components;
 
 import cellsociety.Main;
 import cellsociety.model.util.XmlData;
+import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.SimViewConstants;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -20,12 +21,11 @@ import javafx.scene.control.TextArea;
 public class InformationBox {
 
   private final TextArea myTextArea;
-  private final ResourceBundle myResources;
 
   /**
    * Creates the text box which displays current simulation info.
    */
-  public InformationBox(ResourceBundle resources) {
+  public InformationBox() {
     myTextArea = new TextArea();
     myTextArea.setPrefHeight(
         Main.SIM_WINDOW_HEIGHT * (1 - SimViewConstants.GRID_PROPORTION_OF_SCREEN));
@@ -34,9 +34,6 @@ public class InformationBox {
 
     // Apply CSS class
     myTextArea.getStyleClass().add("info-box");
-
-    // Info will display in UI language
-    myResources = resources;
 
     emptyFields();
   }
@@ -56,19 +53,20 @@ public class InformationBox {
    * @param data XMLData containing the simulation's details.
    */
   public void updateInfo(XmlData data) {
+    ResourceBundle resources = ResourceManager.getCurrentMainBundle();
     StringBuilder infoText = new StringBuilder();
-    infoText.append(myResources.getString("SimulationTypeHeader")).append(data.getType())
+    infoText.append(resources.getString("SimulationTypeHeader")).append(data.getType())
         .append("\n");
-    infoText.append(myResources.getString("TitleHeader")).append(data.getTitle()).append("\n");
-    infoText.append(myResources.getString("AuthorHeader")).append(data.getAuthor()).append("\n");
-    infoText.append(myResources.getString("GridSizeHeader")).append(data.getGridRowNum())
+    infoText.append(resources.getString("TitleHeader")).append(data.getTitle()).append("\n");
+    infoText.append(resources.getString("AuthorHeader")).append(data.getAuthor()).append("\n");
+    infoText.append(resources.getString("GridSizeHeader")).append(data.getGridRowNum())
         .append(" x ").append(data.getGridColNum()).append("\n");
-    infoText.append(myResources.getString("ParametersHeader"));
+    infoText.append(resources.getString("ParametersHeader"));
     for (Map.Entry<String, Object> entry : data.getParameters().entrySet()) {
       infoText.append(entry.getKey()).append(": ").append(entry.getValue()).append(" // ");
     }
     infoText.append("\n");
-    infoText.append(myResources.getString("DescriptionHeader")).append(data.getDescription())
+    infoText.append(resources.getString("DescriptionHeader")).append(data.getDescription())
         .append("\n");
 
     myTextArea.setText(infoText.toString());
@@ -78,10 +76,11 @@ public class InformationBox {
    * Resets the text area to default state, displaying no simulation info.
    */
   public void emptyFields() {
+    ResourceBundle resources = ResourceManager.getCurrentMainBundle();
     myTextArea.setText(
-        myResources.getString("SimulationTypeHeader") + "\n" + myResources.getString("TitleHeader")
-            + "\n" + myResources.getString("AuthorHeader") + "\n" + myResources.getString(
-            "GridSizeHeader") + "\n" + myResources.getString("ParametersHeader") + "\n"
-            + myResources.getString("DescriptionHeader") + "\n");
+        resources.getString("SimulationTypeHeader") + "\n" + resources.getString("TitleHeader")
+            + "\n" + resources.getString("AuthorHeader") + "\n" + resources.getString(
+            "GridSizeHeader") + "\n" + resources.getString("ParametersHeader") + "\n"
+            + resources.getString("DescriptionHeader") + "\n");
   }
 }

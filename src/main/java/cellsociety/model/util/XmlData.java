@@ -1,17 +1,14 @@
 package cellsociety.model.util;
 
-import static cellsociety.model.util.constants.ResourcePckg.getErrorSimulationResourceBundle;
-
-import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.util.SimulationTypes.SimType;
 
 import cellsociety.model.util.constants.GridTypes.EdgeType;
 import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
+import cellsociety.model.util.exceptions.XmlException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * An object that holds simulation data.
@@ -42,23 +39,10 @@ public class XmlData {
   private int id;
   public static int totalSimulations;
 
-  private ResourceBundle myErrorResources;
-
   /**
-   * Initializes an XmlData object with default language (English).
+   * Initializes an XmlData object with the current program language
    */
   public XmlData() {
-    myErrorResources = getErrorSimulationResourceBundle("English");
-    initializeXmlData();
-  }
-
-  /**
-   * Initializes an XmlData object with a specified language.
-   *
-   * @param language - the language for error message localization
-   */
-  public XmlData(String language) {
-    myErrorResources = getErrorSimulationResourceBundle(language);
     initializeXmlData();
   }
 
@@ -309,7 +293,7 @@ public class XmlData {
    */
   public int getNumStates() {
     if (parameters == null) {
-      throw new IllegalStateException(myErrorResources.getString("NullParameterMap"));
+      throw new XmlException("NullParameterMap");
     }
 
     double numStates = 0.0; // Default value
@@ -322,7 +306,7 @@ public class XmlData {
       try {
         numStates = Double.parseDouble((String) value); // Convert from String if needed
       } catch (NumberFormatException e) {
-        throw new IllegalArgumentException(myErrorResources.getString("InvalidNumStates"));
+        throw new XmlException("InvalidNumStates");
       }
     }
 
