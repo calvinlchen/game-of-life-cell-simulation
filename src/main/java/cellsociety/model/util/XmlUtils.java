@@ -132,7 +132,7 @@ public class XmlUtils {
         }
       }
     } catch (Exception e) {
-      throw new XmlException(e.getMessage());
+      throw new XmlException("SimulationSetupFailed", " " + e.getMessage());
     }
 
     return xmlObject;
