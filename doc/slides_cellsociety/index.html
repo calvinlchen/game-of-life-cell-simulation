@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<link rel="manifest" href='data:application/manifest+json,{"display": "standalone", "name": "Minimal"}' />
+		<title>Minimal</title>
+
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-black-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="ee947414188f50476fda008567137d99" data-background-image="cellsociety/c6954a9beacfc9364c1d2f23a16ad994.jpg" id="title"><div class="sl-block" data-block-type="text" style="width: 876px; left: 42px; top: 185px; height: auto;" data-block-id="033091155f42bf5c147171137c356e11"><div class="sl-block-content" data-placeholder-tag="h1" style="z-index: 12; font-size: 160%; padding: 20px; line-height: 1.04;" data-has-line-height="" data-placeholder-text="Text"><h1>Cell Society</h1></div></div>
+<div class="sl-block" data-block-type="line" data-name="line-a5c0c7" style="width: auto; height: auto; left: 323px; top: 326px;" data-block-id="5fd97f00f3dedf189b67ce5f3b5e57b3"><div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="314" data-line-y2="0" data-line-color="#ffffff" data-line-start-type="none" data-line-end-type="none" style="z-index: 13;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="314" height="1" viewbox="0 0 314 1"><path class="line-element" fill="rgba(0,0,0,0)" stroke="#ffffff" stroke-width="4" d="M0 0 L314 0"></path><path class="line-skeleton" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" d="M0 0 L314 0"></path><path class="line-hitarea" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" stroke-width="15" d="M0 0 L314 0"></path></svg></div></div>
+<div class="sl-block" data-block-type="text" style="width: 877px; left: 41px; top: 326px; height: auto;" data-name="text-d18e72" data-block-id="fc591d4477bc73c1a8dc18354f217ab7"><div class="sl-block-content" data-placeholder-tag="p" style="z-index: 14; text-align: center; color: rgb(238, 238, 238); font-size: 120%; padding: 20px;" data-placeholder-text="Text"><p>Team 3: <em>Jessica Chen, Calvin Chen, Kyaira Boughton</em></p></div></div></section><section class="stack" data-id="2de2b87ee0cce267c2b87c1c78b65684"><section data-id="540fafa348e93bbc4719db3c61e62a6c" data-auto-animate=""><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 212.5px; height: auto;" data-block-id="17803a88a30ff8e04a02e40ee0639886" data-name="text-785d38">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Introduction</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 292.5px; height: auto;" data-block-id="8ca44d42b6f793ec1f490d8b39914621" data-name="text-59a7d8">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p>This project is a Java-based <span style="color:#ADD8E6"><strong>Cellular Automata (CA) simulator</strong></span> using OpenJFX. Users can simulate CA models on a 2D grid, with each cell updating its state based on neighbors. Rules, configurations, and parameters are loaded from XML files for flexibility.</p></div>
+						</div></section><section data-auto-animate="" data-id="d0a77a43c819dc83d076e4b00b708ab9"><div class="sl-block" data-block-type="text" style="width: 531px; left: 75px; top: 126px; height: auto;" data-name="text-785d38" data-block-id="5d54df85c9ca55dba1a1a5a2d3865f4a">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Problem Statement</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 488px; left: 75px; top: 286px; height: auto;" data-name="text-59a7d8" data-block-id="5a11b69ded307b531bc9c1b24631ef12">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text">
+<p style="color:rgb(255, 255, 255)">Create a robust system to support</p>
+
+<ul style="color:rgb(255, 255, 255)">
+	<li>11 Cellular automata models</li>
+	<li>Configurable starting conditions, simulation settings, grid structure</li>
+	<li>Customizable user interface</li>
+	<li>Real-time views</li>
+</ul>
+</div>
+						</div>
+<div class="sl-block" data-block-type="image" style="width: 325px; height: 648px; left: 610.5px; top: 26px; min-width: 1px; min-height: 1px;" data-name="image-76c1fc" data-block-id="f122e2665d54ce1350d2eaa28cdcffb3">
+							<div class="sl-block-content" style="z-index: 12;" data-maintain-ar="false">
+								<img data-natural-width="1920" data-natural-height="2880" data-lazy-loaded="" data-src="cellsociety/19d40496f7e053d0a7c149dab861b504">
+							</div>
+						</div></section><section data-id="b6019c981a0acabdadad97b29f198dbb" data-auto-animate=""><div class="sl-block" data-block-type="image" style="width: 432px; height: 648px; left: 36px; top: 21px; min-width: 1px; min-height: 1px;" data-block-id="c6bf6f67fc677d2aa60974c2fc2810c7" data-name="image-011108">
+							<div class="sl-block-content">
+								<img data-natural-width="4372" data-natural-height="6558" data-lazy-loaded="" data-src="cellsociety/19d40496f7e053d0a7c149dab861b504">
+							</div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 432px; left: 492px; top: 231px; height: auto;" data-block-id="849866398ad4168d32fecd45b4379032" data-name="text-a200c7">
+							<div class="sl-block-content" style="text-align: left;line-height: 1.04;letter-spacing: -0.1em;font-size: 80%;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text">
+								<h1>Meet the Team</h1>
+							</div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 432px; left: 492px; top: 303px; height: auto;" data-block-id="cef8d605714a40071236885c08905733" data-name="text-0969ef">
+							<div class="sl-block-content" style="text-align: left;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li>
+<strong>Jessica</strong> - Simulation </li>
+	<li>
+<strong>Kyaira</strong> - Configuration</li>
+	<li>
+<strong>Calvin</strong> - View</li>
+</ul></div>
+						</div></section><section data-auto-animate="" data-id="75a571260791cca5197d8ef0701e1c06"><div class="sl-block" data-block-type="image" style="width: 832px; height: 429.5px; left: 71.5px; top: 243px; min-width: 1px; min-height: 1px;" data-name="image-011108" data-block-id="84f9f29e99155a77836b244b2354dc99">
+							<div class="sl-block-content" style="z-index: 10;" data-maintain-ar="false">
+								<img data-natural-width="1920" data-natural-height="2880" data-lazy-loaded="" data-src="cellsociety/19d40496f7e053d0a7c149dab861b504">
+							</div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 703px; left: 48px; top: 63px; height: auto;" data-name="text-a200c7" data-block-id="b7426738c6feda40cc7268aa6050a5f5">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 80%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Meet the Design</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 855.5px; left: 48px; top: 145px; height: auto;" data-name="text-0969ef" data-block-id="b4b4d22ef239a8fbb58765eb5561412c">
+							<div class="sl-block-content" style="text-align: left; z-index: 12;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li><strong>chang eto high level overview of file structure and how it broken down and in our roles</strong></li>
+</ul></div>
+						</div></section></section><section data-auto-animate="" data-id="29041d8a6283c5635bdee1dd0fd153d0"><div class="sl-block" data-block-type="text" style="width: 795px; left: 82.5px; top: 290.5px; height: auto;" data-name="text-785d38" data-block-id="497175f7139cddad584186a91d349036">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Our Solution? </h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 82.5px; top: 368.5px; height: auto;" data-name="text-59a7d8" data-block-id="2e379e1067cd06f40db5126345d7f413">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="1"><p>Missed it? Checkout the wiki!</p></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 795px; left: 526.5px; top: 290.5px; height: auto;" data-block-id="6f62021dfd5229a86d398e410853ac10" data-name="text-ae5ca2">
+							<div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 12;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><h1><span style="font-size:0.9em"><span style="color:#ADD8E6">Live Demo</span></span></h1></div>
+						</div></section><section class="stack" data-id="31758bf341d846b2d688c1dc9be856fe"><section data-auto-animate="" data-id="0d885a9bc56c9ec9779d549b1415f076"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 292.5px; height: auto;" data-name="text-785d38" data-block-id="9180ff3e328d7622b4a538450805e300">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>The next issue?</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 372.5px; height: auto;" data-name="text-59a7d8" data-block-id="60f6435c2ed8114dab53630155329c23">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><p>How do we ensure our project behaves the way we expect?</p></div>
+						</div></section><section data-auto-animate="" data-id="fd10491944432f73ba64ce527e13604f"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 272.5px; height: auto;" data-name="text-785d38" data-block-id="e89ff5ff8eb0d81062dc72ac2db84e75">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1 style="text-align:center"><span style="font-size:1.8em"><strong><span style="color:rgb(173, 216, 230)">Tests</span></strong></span></h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 390.5px; height: auto;" data-name="text-59a7d8" data-block-id="453bf4f147b664634da698cbe680cfb1">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><p style="text-align: center;">Here's some of our favorites!</p></div>
+						</div></section></section><section class="stack" data-id="e942597019d8fe746bb46bb7ef5ad967"><section data-auto-animate="" data-id="4a5b882ab58e164d9b160f7182a863cb"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 234.25px; height: auto;" data-name="text-785d38" data-block-id="60256f2b459844fc79143d2fdb596e41">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Simulation Tests</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 326.75px; height: auto;" data-name="text-59a7d8" data-block-id="79a476a2da768b19152230d360635225">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fade-up fragment" data-fragment-index="1">functionality of helper methods</li>
+</ul></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 130px; left: 96px; top: 326.75px; height: auto;" data-block-id="6f6474ef2dbf1bb23f7ca26656719b62" data-name="text-a2c6a8">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 12;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><p><strong><span style="color:#FFFFFF">Focus:</span></strong></p></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 376.75px; height: auto;" data-block-id="1aad3f708b13d1fd26d7cb0d61e64bef" data-name="text-c09eb8">
+							<div class="sl-block-content" style="text-align: left; z-index: 13;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fragment fade-up" data-fragment-index="2">combined logic is accurate</li>
+</ul></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 426.75px; height: auto;" data-block-id="3b1077be965d6934d9ef82e3784f101e" data-name="text-46cba4">
+							<div class="sl-block-content" style="text-align: left; z-index: 14;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fragment fade-up" data-fragment-index="3">errors are propagated to view</li>
+</ul></div>
+						</div>
+
+</section><section data-auto-animate="" data-id="48189fb37a9bebc0e362acf6258c0abf"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 53.75px; height: auto;" data-name="text-785d38" data-block-id="02ee659f78e57b586fb1cec896eb64c5">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 13;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 159px; left: 116.5px; top: 257px; height: auto;" data-name="text-59a7d8" data-block-id="6ed06a2022697b6a7e269a33039c5ded">
+							<div class="sl-block-content" style="text-align: left; z-index: 14; color: rgb(0, 0, 0);" data-placeholder-tag="p" data-placeholder-text="Text"><p style="text-align:center"><span style="font-size:0.7em">functionality of helper methods</span></p></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 159px; left: 116.5px; top: 403px; height: auto;" data-name="text-c09eb8" data-block-id="e5271d4171063a9c190752b68ba321de">
+							<div class="sl-block-content" style="text-align: left; z-index: 15;" data-placeholder-tag="p" data-placeholder-text="Text"><p style="text-align:center"><span style="font-size:0.7em">combined logic is accurate</span></p></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 159px; left: 116.5px; top: 522.5px; height: auto;" data-name="text-46cba4" data-block-id="ea37ab518ba84ea2e2b3769e5ec861e0">
+							<div class="sl-block-content" style="text-align: left; z-index: 16; color: rgb(0, 0, 0);" data-placeholder-tag="p" data-placeholder-text="Text"><p class="visible" style="text-align: center;"><span style="font-size:0.7em">errors are propagated to view</span></p></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 96px; top: 143.5px;" data-name="text-083e24" data-block-id="d930b4476ce3321f6929112fc2ff5fcd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17;"><p style="text-align:left"><strong>What goes into Falling Sand/Wator</strong></p></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 200px; height: 200px; left: 96px; top: 202px;" data-name="shape-a1f21b" data-block-id="e0bcdce9173e609036664905e7d96bb1"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 10;" data-shape-corner-radius="200px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 200 200"><rect width="200" height="200" rx="200" ry="200" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 200px; height: 200px; left: 96px; top: 350px;" data-block-id="5384f021b2d27f09eb8e062e02464913" data-name="shape-878591"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 11;" data-shape-corner-radius="200px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 200 200"><rect width="200" height="200" rx="200" ry="200" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 200px; height: 200px; left: 96px; top: 481px;" data-block-id="723a1ceea1994a07da224d031652204c" data-name="shape-22ec67"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 12;" data-shape-corner-radius="200px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 200 200"><rect width="200" height="200" rx="200" ry="200" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="code" style="width: 547px; height: 300px; left: 317px; top: 202.5px;" data-name="code-9dc0f1" data-block-id="7026278c9685af6a0ad6918581b519a6"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 18;" data-fragment-index="0"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="3|6-7|17|8-9" data-fragment-index="1">  // FallingSandRule
+  @Override
+  public int apply(FallingSandCell cell) {
+    try {
+      return switch (cell.getCurrentState()) {
+        case FALLINGSAND_SAND -&gt; attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
+            List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
+        case FALLINGSAND_WATER -&gt;
+            attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+        default -&gt; cell.getCurrentState();  // steel and empty
+      };
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  int attemptMovement(FallingSandCell cell, List&lt;DirectionType&gt; secondaryDirections,
+      int newState, List&lt;Integer&gt; replaceableNeighbors) {
+    try {
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
+        Optional&lt;FallingSandCell&gt; neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
+        if (neighbor.isPresent()) {
+          logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
+          neighbor.get().setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        List&lt;FallingSandCell&gt; possibleMoves = secondaryDirections.stream()
+            .map(dir -&gt; findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
+            .toList();
+        // chose random secondary
+        if (!possibleMoves.isEmpty()) {
+          FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+          chosenMove.setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  Optional&lt;FallingSandCell&gt; findValidNeighbor(FallingSandCell cell, DirectionType direction,
+      int state) {
+    try {
+      return cell.getDirectionalNeighbors(direction).stream()
+          .filter(
+              neighbor -&gt; neighbor.getCurrentState() == state &amp;&amp; neighbor.getNextState() == state)
+          .findFirst();
+    } catch (SimulationException e) {
+      // should not happen because matches direction should not be able to hit its exception cases
+      throw new SimulationException(e);
+    }
+  }</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 547px; height: 300px; left: 317px; top: 310.5px;" data-block-id="2dd531ae2e99c8eb0ad6dfc84a57d054" data-name="code-ef700d"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 19;" data-fragment-index="4"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="13|10|3-5|8|20" data-fragment-index="5">  // FallingSandCell
+  @Override
+  protected boolean shouldSkipCalculation() {
+    return getCurrentState() != getNextState();
+  }
+  
+  // Cell 
+  public void calcNextState() {
+    try {
+      if (shouldSkipCalculation()) {
+        return;
+      }
+      int newState = rule.apply(getSelf());
+      postProcessNextState(newState);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+  
+  public void step() {
+    try {
+      updateStateLength();
+      setCurrentState(getNextState());
+    } catch (SimulationException e) {
+      // should never reach since nextState should never be invalid
+      throw new SimulationException(e);
+    }
+  }</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 547px; height: 300px; left: 317px; top: 381px;" data-block-id="d8fc28b51aea5f327afe8e50e10b6a5f" data-name="code-140270"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 20;" data-fragment-index="9"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="5-6|2" data-fragment-index="10">  // Simulation
+  public void step() {
+    try {
+      totalIterations++;
+      myGrid.getCells().forEach(Cell::calcNextState);
+      myGrid.getCells().forEach(Cell::step);
+      myGrid.getCells().forEach(Cell::resetParameters);
+      myGrid.getCells().forEach(Cell::saveCurrentState);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }</code></pre></div></div></section><section data-auto-animate="" data-id="6da78cc90e9d339f5eb3f904ca07a359"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 53.75px; height: auto;" data-name="text-785d38" data-block-id="08dc71c2f9e2b2b2481e4acc42565d8d">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 96px; top: 143px; height: auto;" data-name="text-59a7d8" data-block-id="8f71b85264d2c74e9bf5f6dba4b47710">
+							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><span style="font-size:1.0em"><strong>functionality of helper methods</strong></span></p></div>
+						</div>
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 768px; height: 452px; left: 96px; top: 201px;" data-name="code-9dc0f1" data-block-id="edb1610eb5cc93cb25197de7922f7871"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="17-45|47-57" data-fragment-index="0">  // FallingSandRule
+  @Override
+  public int apply(FallingSandCell cell) {
+    try {
+      return switch (cell.getCurrentState()) {
+        case FALLINGSAND_SAND -&gt; attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
+            List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
+        case FALLINGSAND_WATER -&gt;
+            attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+        default -&gt; cell.getCurrentState();  // steel and empty
+      };
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  int attemptMovement(FallingSandCell cell, List&lt;DirectionType&gt; secondaryDirections,
+      int newState, List&lt;Integer&gt; replaceableNeighbors) {
+    try {
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
+        Optional&lt;FallingSandCell&gt; neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
+        if (neighbor.isPresent()) {
+          logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
+          neighbor.get().setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        List&lt;FallingSandCell&gt; possibleMoves = secondaryDirections.stream()
+            .map(dir -&gt; findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
+            .toList();
+        // chose random secondary
+        if (!possibleMoves.isEmpty()) {
+          FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+          chosenMove.setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  Optional&lt;FallingSandCell&gt; findValidNeighbor(FallingSandCell cell, DirectionType direction,
+      int state) {
+    try {
+      return cell.getDirectionalNeighbors(direction).stream()
+          .filter(
+              neighbor -&gt; neighbor.getCurrentState() == state &amp;&amp; neighbor.getNextState() == state)
+          .findFirst();
+    } catch (SimulationException e) {
+      // should not happen because matches direction should not be able to hit its exception cases
+      throw new SimulationException(e);
+    }
+  }</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 768px; height: 452px; left: 96px; top: 201px;" data-block-id="68ba4eddc70154b549965f8aeb494200" data-name="code-a50113"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 13;" data-fragment-index="1"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="1-11|13-25|27-33" data-fragment-index="0">    @Test
+    @DisplayName("FindValidNeighbor finds valid neighbor when it exist")
+    void findValidNeighbor_ValidNeighbor_ReturnsValidNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbor, validNeighbor.get());
+    }
+
+    @Test
+    @DisplayName("FindValidNeighbor finds valid neighbor when multiple valid and returns one")
+    void findValidNeighbor_MultipleValidNeighbors_ReturnsOneValidNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      List&lt;FallingSandCell&gt; neighbors = List.of(new FallingSandCell(1, rule),
+          new FallingSandCell(1, rule));
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, neighbors));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbors.getFirst(), validNeighbor.get());
+
+    }
+
+    @Test
+    @DisplayName("FindValidNeighbor returns empty optional when no direction neighbors exist")
+    void findValidNeighbor_NoNeighborsInDirection_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns empty optional when neighbor does not have currect current state")
+    void findNeighbor_NeighborHasWrongCurrentState_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 2);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns empty optional when neighbor does not have correct next state")
+    void findNeighbor_NeighborHasWrongNextState_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      neighbor.setNextState(2);
+
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns correct neighbor when correct direction but one has correct state and one does not")
+    void findNeighbor_CorrectDirectionButOneHasWrongState_ReturnsCorrectNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      List&lt;FallingSandCell&gt; neighbors = List.of(new FallingSandCell(2, rule),
+          new FallingSandCell(1, rule));
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, neighbors));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbors.getLast(), validNeighbor.get());
+    }</code></pre></div></div></section><section data-auto-animate="" data-id="2e72c9c8137702093d928bf9ab796494"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="783124e8644d8044e6a706e2c13820c5">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 15px; top: 102px; height: auto;" data-name="text-59a7d8" data-block-id="04221f4c18700d6880bafa3180d32a60">
+							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong>combined logic is accurate</strong></p></div>
+						</div>
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 596px; height: 521px; left: 15px; top: 160px;" data-name="code-9dc0f1" data-block-id="78800c89ac4a57b8ae913c5ecf368945"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 10px; line-height: 12px; tab-size: 4;"><code data-line-numbers="" data-fragment-index="0">@Nested
+  @DisplayName("Tests for FallingSand simulation")
+  class FallingSandSimulationTest {
+
+    @BeforeEach
+    void setUp() {
+      when(data.getType()).thenReturn(SimType.FallingSand);
+      when(data.getGridColNum()).thenReturn(3);
+      when(data.getGridRowNum()).thenReturn(3);
+      // getParameters() -&gt; FallingSand's don't have any shouldn't be a problemm
+
+      when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
+      when(data.getEdge()).thenReturn(EdgeType.NONE);
+      when(data.getNeighborhood()).thenReturn(NeighborhoodType.MOORE);
+    }
+
+    // for doing each one change the return of getCellStateList to test different things
+    // types of keys and rotations
+
+    @Test
+    @DisplayName("Sand steps past obstacles diagally and sinks beneath water "
+        + "Water steps past obstacles to a side then down. Steel stays put. Air always goes "
+        + "to the top if it can")
+    void fallingSand_SimpleSetup_RulesBehaveAsExpected() {
+      when(data.getCellStateList()).thenReturn(
+          List.of(FALLINGSAND_SAND, FALLINGSAND_SAND, FALLINGSAND_EMPTY,
+              FALLINGSAND_STEEL, FALLINGSAND_WATER, FALLINGSAND_WATER,
+              FALLINGSAND_EMPTY, FALLINGSAND_STEEL, FALLINGSAND_WATER)
+      );
+
+      Simulation sim = new Simulation(data);
+      // when doing these go left to right down to top
+      sim.step();
+      /*
+       W W E
+       X S S
+       E X W
+       */
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(1, 1));  // swap
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(1, 2));  // swap
+      // since the interesting things swapped nothing else is done this step
+
+      sim.step();
+      /*
+      W E W
+      X E W
+      S X S
+       */
+      // first water can't do anything
+      // second water moves right
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      // sand prioritizes empty over water moves to the crack
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(2, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 1));
+      // now other sand flops with it
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(2, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
+
+      /*
+      E W W
+      X E W
+      S X S
+       */
+      sim.step();
+      // the only other thing now is the water just kinda wobbles back in form
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+
+      /*
+      E E W
+      X W W
+      S X S
+       */
+      sim.step();
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+
+      // now the top water just wiggles indefinitely
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+    }
+  }
+</code></pre></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 263px;" data-name="shape-9b6626" data-block-id="b7d09a598e6d65cc25aeb9422e259bc2"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 263px;" data-block-id="59570c7bdcd91b4b0d194e94dfb042ef" data-name="shape-69c673"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 263px;" data-block-id="6d9bd37266576618d7793d1e956f75c8" data-name="shape-4f6edb"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 345.5px;" data-block-id="0535cc8b5a7f4220dee51f3e62580ccc" data-name="shape-23d513"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 345.5px;" data-block-id="af692b2349ed41ca84a36a89fd8b457f" data-name="shape-ffc147"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 345.5px;" data-block-id="b201728044ffed1fa7dae5cbe8a32244" data-name="shape-eef3a2"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 345.5px;" data-block-id="a706dd125aa875c3832e44f210cd22c7" data-name="shape-a5b4fb"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 428.5px;" data-block-id="17710c40b3f67839a31fa63d25f2bf2c" data-name="shape-279c06"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 20;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 428.5px;" data-block-id="5deb46937729690018eaec11006f6107" data-name="shape-f735c0"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 21;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 428.5px;" data-block-id="ba47dc772da04c774f0d938a66d4a2ea" data-name="shape-289e9f"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 428.5px;" data-block-id="3f18a438f94fdb7c438f281824071689" data-name="shape-196e37"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 23;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div></section><section data-auto-animate="" data-id="4f5d84d55e9d5829a460c8f73ce0abb0"><div class="sl-block" data-block-type="text" style="width: 855.75px; left: 71.25px; top: 57px; height: auto;" data-name="text-785d38" data-block-id="f42d3b3dd7106fafcf115e582e2235fb">
+							<div class="sl-block-style" style="z-index: 10; transform: rotate(0deg);"><div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Simulation Error Catching</h1></div></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 71.25px; top: 150px; height: auto;" data-name="text-59a7d8" data-block-id="b93d0e8d4bac9d106eaa271480f9a364">
+							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong>combined logic is accurate</strong></p></div>
+						</div>
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 580px; height: 256px; left: 347px; top: 254px;" data-name="code-9dc0f1" data-block-id="0ae349772a04b6da4cbbed17d5927a8f"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 10px; line-height: 12px; tab-size: 4;"><code data-line-numbers="17" data-fragment-index="0">    @Test
+    @DisplayName("Simulation throws simulation exception if Xml data cells have bad states")
+    void simulation_BadCellStates_ThrowsException() {
+      when(data.getCellStateList()).thenReturn(
+          List.of(3, 0, 0,
+              2, 1, 7,
+              3, 4, 3)
+      );
+      when(data.getType()).thenReturn(SimType.GameOfLife);
+      when(data.getGridColNum()).thenReturn(3);
+      when(data.getGridRowNum()).thenReturn(3);
+
+      when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
+      when(data.getEdge()).thenReturn(EdgeType.NONE);
+      when(data.getNeighborhood()).thenReturn(NeighborhoodType.VON_NEUMANN);
+
+      assertThrows(SimulationException.class, () -&gt; new Simulation(data));
+
+    }</code></pre></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 71.25px; top: 380.773px;" data-name="shape-9b6626" data-block-id="784e6320e4b176525217a201c0fabe3d"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 71.25px; top: 537.121px;" data-name="shape-4f6edb" data-block-id="6640ad6c0bfa30bf7ba1e6582cb8109a"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 71.25px; top: 296.205px;" data-name="shape-ffc147" data-block-id="4873a4e8db790472c5414e580b9bf623"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 75px; left: 71.25px; top: 616px;" data-name="shape-eef3a2" data-block-id="5a8b1e425ec6cbeee853081130be7767"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 75"><rect width="258" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 71.25px; top: 217px;" data-name="shape-289e9f" data-block-id="59ad6c7028e8b448dcf9feba4a3792ba"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 21;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 71.25px; top: 458.741px;" data-name="shape-196e37" data-block-id="18528a6cd23b9c1f36df0b7561bdd487"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 78px; top: 231.851px;" data-name="text-7aeb4c" data-block-id="98af5bc43c2d27b9fb3beab12231cc5d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23;"><p><span style="font-size:0.5em">Simulation(data)</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 84px; top: 311.056px;" data-block-id="0da5893ef751f94e23e3e303a10368be" data-name="text-1a304b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24;"><p><span style="font-size:0.5em">setUpSimulation()</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 84px; top: 390.261px;" data-block-id="4a41bdcd88ed7a0540cb84377e57f374" data-name="text-d5c014"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 25;"><p><span style="font-size:15px">createCells(simType, rule)</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 78px; top: 457.503px;" data-block-id="31ee8bb8a7c3f1e14839195bdb87c09b" data-name="text-0a2ce4"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 26; color: rgb(0, 0, 0);"><p><span style="font-size:15px">cellConstruction.newInstance(state,rule(</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 84px; top: 550.322px;" data-block-id="836bab5c5f0008f23e60994c09a9b364" data-name="text-b45d74"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27; color: rgb(0, 0, 0);"><p><span style="font-size:15px">GameOfLifeCell()</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 78px; top: 634px;" data-block-id="0c10a08187bc8934944e590ece74ab8d" data-name="text-588abb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28; color: rgb(0, 0, 0);"><p><span style="font-size:15px">validateState()</span></p></div></div></section></section><section data-auto-animate="" data-id="9443c04bdfc7c4a93942587a2cd79a3d"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 284.25px; height: auto;" data-name="text-785d38" data-block-id="7b96d026a6a86b571ba7a2b689db1474">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 376.75px; height: auto;" data-name="text-59a7d8" data-block-id="70a193045ee35cd8fac7d41d09c993c1">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fade-up fragment" data-fragment-index="1">functionality of helper methods</li>
+</ul></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 130px; left: 96px; top: 376.75px; height: auto;" data-name="text-a2c6a8" data-block-id="39b42af046c0ccfa89605f7d363b656e">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 12;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><p><strong><span style="color:#FFFFFF">Focus:</span></strong></p></div>
+						</div>
+
+
+
+</section><section data-auto-animate="" data-id="f0ebddc6196d03f09cbd67669f57c521"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 253.25px; height: auto;" data-name="text-785d38" data-block-id="68873412a11729beb523c994332a91c4">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>TestFX</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 345.75px; height: auto;" data-name="text-59a7d8" data-block-id="d2118118177bcbd78e6534df189be384">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fade-up fragment" data-fragment-index="1">functionality of helper methods</li>
+</ul></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 130px; left: 96px; top: 345.75px; height: auto;" data-name="text-a2c6a8" data-block-id="bb18d783e2141465a029c9642f02297f">
+							<div class="sl-block-content fragment" style="text-align: left; z-index: 12;" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><p><strong><span style="color:#FFFFFF">Focus:</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 398.75px; height: auto;" data-block-id="c6e6257582bde99bb3b1d14710ab2fda" data-name="text-73572c">
+							<div class="sl-block-content" style="text-align: left; z-index: 13;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
+	<li class="fade-up fragment" data-fragment-index="2">functionality of helper methods</li>
+</ul></div>
+						</div></section><section data-auto-animate="" data-id="0d06e13dfc1447108873f2ae6dfa9226"><div class="sl-block" data-block-type="text" style="width: 768px; left: 123px; top: 284.75px; height: auto;" data-name="text-785d38" data-block-id="75bbd150f874c1a845f7361659984a90">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1 style="text-align: center;">Now Things Work...</h1></div>
+						</div>
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 485px; left: 268px; top: 354.75px; height: auto;" data-block-id="57b788bb0a7373984181c3037a35eda9" data-name="text-4bbdc6">
+							<div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><h1><span style="font-size:0.5em"><span style="color:#ADD8E6">How?</span></span></h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 411px; left: 372px; top: 354.75px; height: auto;" data-block-id="f450586f19335115f7689542529d271d" data-name="text-0c457d">
+							<div class="sl-block-style" style="z-index: 12; transform: rotate(0deg);"><div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 12;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="1"><h1><span style="font-size:0.5em"><span style="color:#ADD8E6">How do we make more?</span></span></h1></div></div>
+						</div></section><section class="stack" data-id="a342155e288c6d0d5b396d894a255a0f"><section data-auto-animate="" data-id="7a9d936d22efbae4a3e6c37da0202f05"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 315px; height: auto;" data-name="text-785d38" data-block-id="686be5e2411cc3445af79b4e358ed383">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1 style="text-align: center;">How Things Work...</h1></div>
+						</div>
+
+
+
+
+
+</section><section data-auto-animate="" data-id="2151a7a618f2a8f6e8ae07c4fc591c23"><div class="sl-block" data-block-type="text" style="width: 768px; left: 59px; top: 50px; height: auto;" data-name="text-785d38" data-block-id="28b0f711dec47d990fb291b70bb971f8">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Simulation API</h1></div>
+						</div>
+
+
+
+
+
+</section></section><section class="stack" data-id="033eeecd84c4c1e5e75c0d18fae67b11"><section data-auto-animate="" data-id="87a91718f29a3b8b9c8c70dca9ab4d76"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 280px; height: auto;" data-name="text-785d38" data-block-id="35f5ce21b6e5738874d50b7c8fd694c0">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>But how does it get information?</h1></div>
+						</div>
+
+
+
+
+
+</section><section data-auto-animate="" data-id="ed103298fe0d0c35ef7873a53219661f"><div class="sl-block" data-block-type="text" style="width: 768px; left: 49px; top: 39px; height: auto;" data-name="text-785d38" data-block-id="9c909af85374f0668d76608c9fbc4f6c">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Configuration API</h1></div>
+						</div>
+
+
+
+
+
+</section></section><section class="stack" data-id="ca352a3b094c5b112d651426aee6ffe3"><section data-auto-animate="" data-id="ce5e2739bc37a8aeae1264bdefcf35da"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 280px; height: auto;" data-name="text-785d38" data-block-id="d904bf8a299179c72f7992c5bb720f6f">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>What if I want a new simulation?</h1></div>
+						</div>
+
+
+
+
+
+</section><section data-auto-animate="" data-id="7c55a74843e08b91d23142e941338bd0"><div class="sl-block" data-block-type="text" style="width: 493px; left: 43px; top: 40px; height: auto;" data-name="text-785d38" data-block-id="5c7f836e50fc39e8105b0a732255a008">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Rule, Cell, Grid</h1></div>
+						</div>
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 348px; left: 523px; top: 40px; height: auto;" data-block-id="64bbbfb68907a113bf08d3abb163b020" data-name="text-b0b74f">
+							<div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><h1><span style="color:#ADD8E6"><span style="font-size:0.7em">+ Parameters</span></span></h1></div>
+						</div></section><section data-auto-animate="" data-id="02e85f481bcecd79aba762f57c1029cb"><div class="sl-block" data-block-type="text" style="width: 858px; left: 43px; top: 40px; height: auto;" data-name="text-785d38" data-block-id="7ce042e0b34bb59a9dea3983fc1f346f">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1 style="text-align:right">Cell States</h1></div>
+						</div>
+
+
+
+
+
+</section></section><section class="stack" data-id="3b3711a13431e29ad6e245ca10221c6d"><section data-auto-animate="" data-id="f2cf667a472bc58af5eb66d40efe62f8"><div class="sl-block" data-block-type="text" style="width: 768px; left: 95px; top: 280px; height: auto;" data-name="text-785d38" data-block-id="a5559ba2b431218f44fbd12b78542a6d">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>How effective is this actually?</h1></div>
+						</div>
+
+
+
+
+
+</section><section data-auto-animate="" data-id="45a8d823ba926e571e799e24219e9801"><div class="sl-block" data-block-type="text" style="width: 768px; left: 38px; top: 42px; height: auto;" data-name="text-785d38" data-block-id="d190b50a04a372f08091bc88ffbbbd11">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>If you asked Langton's or FallingSand?</h1></div>
+						</div>
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 179px; left: 610px; top: 112px; height: auto;" data-block-id="8b7cb883a7bd17126d5ce91515918c2c" data-name="text-3b8a18">
+							<div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><h1><span style="color:#ADD8E6"><span style="font-size:0.7em">Great!</span></span></h1></div>
+						</div></section><section data-auto-animate="" data-id="e9832a9cdaecee723fc2a844816e7162"><div class="sl-block" data-block-type="text" style="width: 885px; left: 38px; top: 42px; height: auto;" data-name="text-785d38" data-block-id="070e3ad34a448bd0b315d44d6779b73f">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>If you asked RPS or General Game of Life?</h1></div>
+						</div>
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 179px; left: 610px; top: 112px; height: auto;" data-name="text-3b8a18" data-block-id="20ef84d27ef9f294430e72b6cc9e4185">
+							<div class="sl-block-content fragment" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text" data-fragment-index="0"><h1><span style="color:#ADD8E6"><span style="font-size:0.7em">Meh...</span></span></h1></div>
+						</div></section></section><section class="stack" data-id="6c1c2bf92dd4a1f4a137d06ec4e502ea"><section data-auto-animate="" data-id="58739285c3859f100b600d60779d3f43"><div class="sl-block" data-block-type="text" style="width: 768px; left: 97px; top: 263px; height: auto;" data-name="text-785d38" data-block-id="82957a19c9a2a239186caa3cddfa4547">
+							<div class="sl-block-content" style="text-align: center; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>So we have a simulation</h1></div>
+						</div>
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 359px; height: auto;" data-block-id="d10694de4fcf3ca8ba726fb0d67b5a34" data-name="text-e6e71f">
+							<div class="sl-block-content" style="text-align: center; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>But what about</h1></div>
+						</div></section><section data-auto-animate="" data-id="d4dc46351fffa651bcd3756f084e4818">
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 301px; height: auto;" data-name="text-e6e71f" data-block-id="cb22cee8659368075ccdc2ac7f24ddc2">
+							<div class="sl-block-content" style="text-align: center; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 11;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1><strong><span style="color:#ADD8E6"><span style="font-size:1.4em">Teamwork</span></span></strong></h1></div>
+						</div></section></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":3362479,"slug":"cellsociety","title":"Minimal","description":"","width":960,"height":700,"margin":0.05,"visibility":"self","published_at":"2020-11-27T13:47:48.491Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/f73be6ecbd7b2b0f316e60364639a0b2/thumb.jpg?1741143464","view_count":0,"user":{"id":2890699,"username":"jessicachen-3","name":"Jessica Chen","description":null,"thumbnail_url":"https://lh3.googleusercontent.com/a/ACg8ocLMXTYrVPSTGu6lhB5mvavMZDONlX5BGXQoAuE1BLmuU2uOK5E3=s96-c","account_type":"lite","team_id":null,"settings":{"id":57504642,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"fade","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"black-blue","auto_slide_interval":0,"comments_enabled":false,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":false,"should_loop":false,"share_notes":false,"slide_number":false,"slide_count":36,"rtl":false,"version":2,"collaborative":false,"deck_user_editor_limit":1,"data_updated_at":1741150725995,"font_typekit":null,"font_google":null,"time_limit":null,"navigation_mode":"linear","upsizing_enabled":true,"language":"en","notes":{"48189fb37a9bebc0e362acf6258c0abf":"things be going everything depending on anything\n","6da78cc90e9d339f5eb3f904ca07a359":"so if we zoom into our falling sand attemptMovement we can see it actually depends on another helper method\n\n\nin this one we using values to first test the most basic task, you have one you find it\nthen a slightly more edge condition\nthen a null case, in which we use optional to prevent against null errors\n\n- theres more combos but this generally is the idea of how the helper methods are tested, a lot of emphases at the unit level, then we become more broad","2e72c9c8137702093d928bf9ab796494":"since we verify the edge cases in the helper methods, the goal for the simulation tests are just to see if their flows make logical sense\n\ni choose the values for this example because as you can see it captures different edge cases (sand can fill in the gap water couldn't\n\nsand sinks beneath water, water sinks beneath air\n","4f5d84d55e9d5829a460c8f73ce0abb0":"really important for errors to propagate up to inform the user what went wrong\n\nFor example, most parameters are modifiable but as a design decision we made it so rock paper scissors is not. \n\nThis is caught (x layers deep into code - make a graphic for that)\n\nHowever for the text to appear for the user the simulation must throw it.\n\nTest to check if it does","2151a7a618f2a8f6e8ae07c4fc591c23":"basically in this one JUST the simulation class\n","e9832a9cdaecee723fc2a844816e7162":"dynamic states and non double parameters remain the weakest part of our design\n"}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.js"></script>
+		<script src="lib/reveal-plugins.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: false,
+				fragmentInURL: true,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				autoAnimateMatcher: SL.deck.AutoAnimate.matcher,
+
+				scrollActivationWidth: null,
+
+				center: false,
+				shuffle: false,
+				loop: false,
+				rtl: false,
+				navigationMode: "linear",
+
+				transition: "slide",
+				backgroundTransition: "fade",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				plugins: [ RevealZoom, RevealNotes, RevealMarkdown, RevealHighlight ]
+			});
+		</script>
+
+		
+
+
+	</body>
+</html>
