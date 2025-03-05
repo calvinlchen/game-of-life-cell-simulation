@@ -4,6 +4,7 @@ import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,7 +33,7 @@ public class RandomSimulationGenerator {
     randomXmlData.setGridColNum(numCols);
 
     // Initialize cell states randomly
-    ArrayList<Integer> cellStateList = new ArrayList<>();
+    List<Integer> cellStateList = new ArrayList<>();
     Random random = new Random();
 
     for (int i = 0; i < numRows * numCols; i++) {

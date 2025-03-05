@@ -322,15 +322,15 @@ public class UserView {
     if (!checkSimulationExists()) {
       return;
     }
+
     double newSpeedFactor = mySpeedFactor * adjustmentFactor;
     // Only change the animation speed if the new speed is within bounds
-    if (checkStepTimeWithinBounds(SimViewConstants.DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
-      mySpeedFactor = newSpeedFactor;
-      if (myAnimation != null) {
-        if (myState == ViewState.RUN) {
-          runNewAnimation();
-        }
-      }
+    if (!checkStepTimeWithinBounds(SimViewConstants.DEFAULT_SIM_STEP_TIME / newSpeedFactor)) {
+      return;
+    }
+    mySpeedFactor = newSpeedFactor;
+    if (myAnimation != null && myState == ViewState.RUN) {
+      runNewAnimation();
     }
   }
 
