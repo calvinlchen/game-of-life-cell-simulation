@@ -242,16 +242,12 @@ public class Grid<T extends Cell<T, ?>> {
         neighbors.put(directionType, neighbors.getOrDefault(directionType, new ArrayList<>()));
 
         if (isValidPosition(newRow, newCol)) {
-          logger.debug("Found neighbor for cell {}, {}: {}, {} {} ", i, j, directionType.name(),
-              newRow, newCol);
           neighbors.get(directionType).add(myGrid.get(newRow).get(newCol));
         } else {
           Optional<List<Integer>> replacementCell = edgeHandler.get()
               .handleEdgeNeighbor(i, j, myRows, myCols, dir);
           replacementCell.ifPresent(integers -> {
             neighbors.get(directionType).add(myGrid.get(integers.get(0)).get(integers.get(1)));
-            logger.debug("Found neighbor for replacement cell {}, {}: {}, {} {}", i, j,
-                directionType.name(), integers.get(0), integers.get(1));
           });
         }
       }
