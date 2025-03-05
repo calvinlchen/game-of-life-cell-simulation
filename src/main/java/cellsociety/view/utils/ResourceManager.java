@@ -142,7 +142,7 @@ public class ResourceManager {
   public static List<String> getAvailableStylesheets() {
     List<String> stylesheets = new ArrayList<>();
     try {
-      URL resourceUrl = ResourceManager.class.getClassLoader().getResource(MAIN_RESOURCE_FOLDER);
+      URL resourceUrl = ResourceManager.class.getClassLoader().getResource(DEFAULT_STYLESHEET_FOLDER);
 
       if (resourceUrl != null) {
         Path resourcePath = Paths.get(resourceUrl.toURI());
@@ -158,7 +158,7 @@ public class ResourceManager {
       }
     } catch (IOException | URISyntaxException e) {
       // e.printStackTrace();
-      System.err.println("Error loading stylesheet files.");
+      System.err.println("Error loading stylesheet files: " + e.getMessage());
     }
 
     return stylesheets;
