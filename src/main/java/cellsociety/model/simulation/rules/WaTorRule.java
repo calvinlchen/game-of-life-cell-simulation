@@ -44,7 +44,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class WaTorRule extends Rule<WaTorCell> {
 
-  private static Logger logger = LogManager.getLogger(WaTorRule.class);
+  private static final Logger logger = LogManager.getLogger(WaTorRule.class);
 
   private final Random random = new Random();
   private int fishReproductionTime;

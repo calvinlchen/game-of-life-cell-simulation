@@ -33,7 +33,6 @@ import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,10 +44,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
-// if I had time I would really want to improve this but it tests what it needs to
+// if I had time I would really want to improve this, but it tests what it needs to.
 public class SimulationTest {
 
-  private XmlData data = mock(XmlData.class);
+  private final XmlData data = mock(XmlData.class);
 
   @Nested
   @DisplayName("Tests for General simulation")
@@ -312,7 +311,7 @@ public class SimulationTest {
       List<LangtonCell> cells = sim.getAllCells();
 
       // focus mainly on the center one
-      LangtonCell cell = (LangtonCell) cells.get(4);
+      LangtonCell cell = cells.get(4);
       assertEquals(4, cell.getNeighbors().size());
       assertTrue(cell.getDirectionalNeighbors(DirectionType.N).contains(cells.get(1)));
       assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(5)));
@@ -1168,8 +1167,8 @@ public class SimulationTest {
       );
 
       Simulation sim = new Simulation(data);
-      sim.updateAdditionalParameter("S", new ArrayList<>(Arrays.asList(8)));
-      sim.updateAdditionalParameter("B", new ArrayList<>(Arrays.asList(4)));
+      sim.updateAdditionalParameter("S", new ArrayList<>(List.of(8)));
+      sim.updateAdditionalParameter("B", new ArrayList<>(List.of(4)));
 
       sim.step();
       assertEquals(GAMEOFLIFE_DEAD, sim.getCurrentState(0, 0));
@@ -1193,7 +1192,7 @@ public class SimulationTest {
               GAMEOFLIFE_DEAD, GAMEOFLIFE_ALIVE, GAMEOFLIFE_DEAD)
       );
 
-      when(data.getParameters()).thenReturn(Map.of("S", Arrays.asList(8), "B", Arrays.asList(4)));
+      when(data.getParameters()).thenReturn(Map.of("S", List.of(8), "B", List.of(4)));
 
       Simulation sim = new Simulation(data);
 
@@ -1286,7 +1285,7 @@ public class SimulationTest {
 
       Simulation sim = new Simulation(data);
       sim.updateAdditionalParameter("S", new ArrayList<>(8));
-      sim.updateAdditionalParameter("B", new ArrayList<>(Arrays.asList(4)));
+      sim.updateAdditionalParameter("B", new ArrayList<>(List.of(4)));
       sim.step();
 
       assertEquals(GAMEOFLIFE_DEAD, sim.getCurrentState(0, 0));

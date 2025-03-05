@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 
 public class DarwinStateHandler extends CellStateHandlerStatic implements CellStateHandler  {
   // essentially each time you discover a new species you assign it a state
-  private List<String> cellStates;
+  private final List<String> cellStates;
 
   public DarwinStateHandler() {
     super(Map.of());

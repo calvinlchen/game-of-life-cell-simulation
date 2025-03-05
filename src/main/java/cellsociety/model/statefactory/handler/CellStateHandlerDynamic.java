@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class CellStateHandlerDynamic implements CellStateHandler {
 
-  private Map<Integer, String> cellStates;
+  private final Map<Integer, String> cellStates;
 
   /**
    * Constructs an empty CellStateHandlerDynamic with no predefined states.
@@ -58,7 +58,7 @@ public class CellStateHandlerDynamic implements CellStateHandler {
   }
 
   public void addState(String state) {
-    return;   // doesnt do anything
+    // doesnt do anything
   }
 
 

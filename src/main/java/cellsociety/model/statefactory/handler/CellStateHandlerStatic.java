@@ -82,6 +82,6 @@ public class CellStateHandlerStatic implements CellStateHandler {
   }
 
   public void addState(String state) {
-    return;   // doesnt do anything
+    // doesnt do anything
   }
 }

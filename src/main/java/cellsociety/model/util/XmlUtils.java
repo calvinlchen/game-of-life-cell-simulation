@@ -149,7 +149,7 @@ public class XmlUtils {
    * @throws XmlException if there is an error writing to the XML file
    */
   public void writeToXml(File file, String title, String author, String description,
-      Simulation simulation) {
+      Simulation<?> simulation) {
     if (file == null) {
       throw new XmlException("NoFileSelectedSave");
     }
@@ -240,7 +240,7 @@ public class XmlUtils {
    * @return a list of strings representing the state of each cell in the grid
    * @throws IllegalArgumentException if an invalid cell state is encountered
    */
-  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation simulation) {
+  private ArrayList<String> cellStatesToString(int rowNum, int colNum, Simulation<?> simulation) {
     ArrayList<String> cellStateList = new ArrayList<>();
 
     // Get the handler for the simulation's cell states
@@ -336,7 +336,7 @@ public class XmlUtils {
       String paramValue = paramElement.getAttribute("value");
 
       // Special handling for Game of Life's "rulestring" parameter
-      if (simulationType == SimType.GameOfLife && paramName.toLowerCase().equals("rulestring")) {
+      if (simulationType == SimType.GameOfLife && paramName.equalsIgnoreCase("rulestring")) {
         // Split the rulestring based on '/'
         String[] ruleParts = paramValue.split("/");
 
@@ -434,7 +434,7 @@ public class XmlUtils {
 
       // Fill remaining cells with random states if needed
       while (statesToAssign.size() < totalCells) {
-        statesToAssign.add(statesToAssign.get(0)); // Reassign random states
+        statesToAssign.add(statesToAssign.getFirst()); // Reassign random states
       }
     }
 

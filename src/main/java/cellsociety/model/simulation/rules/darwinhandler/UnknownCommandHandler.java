@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 public class UnknownCommandHandler implements DarwinCommandHandler {
 
-  private static Logger logger = LogManager.getLogger(UnknownCommandHandler.class);
+  private static final Logger logger = LogManager.getLogger(UnknownCommandHandler.class);
 
   @Override
   public OptionalInt execute(DarwinCommand command, DarwinCell cell) {

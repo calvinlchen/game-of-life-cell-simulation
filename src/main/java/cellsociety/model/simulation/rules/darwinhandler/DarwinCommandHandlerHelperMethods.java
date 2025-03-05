@@ -1,20 +1,16 @@
 package cellsociety.model.simulation.rules.darwinhandler;
 
-import static cellsociety.model.util.constants.CellStates.SEGREGATION_EMPTY;
-
 import cellsociety.model.simulation.cell.DarwinCell;
-import cellsociety.model.simulation.cell.SegregationCell;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // helper methods for handlers
 class DarwinCommandHandlerHelperMethods {
-  private static Logger logger = LogManager.getLogger(DarwinCommandHandlerHelperMethods.class);
+  private static final Logger logger = LogManager.getLogger(DarwinCommandHandlerHelperMethods.class);
   private static Random random = new Random();
 
 
