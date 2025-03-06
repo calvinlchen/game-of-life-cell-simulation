@@ -19,7 +19,7 @@ public class ViewException extends IllegalStateException {
    * @param key - the key used to retrieve the corresponding error message from the resource bundle
    */
   public ViewException(String key) {
-    super(ResourceManager.getCurrentErrorBundle().getString(key));
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key)));
   }
 
   /**
@@ -29,6 +29,6 @@ public class ViewException extends IllegalStateException {
    * @param argument - additional object displayed in the provided error message, such as a given invalid simulation type
    */
   public ViewException(String key, Object argument) {
-    super(ResourceManager.getCurrentErrorBundle().getString(key) + argument);
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key), argument));
   }
 }

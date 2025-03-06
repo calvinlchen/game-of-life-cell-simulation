@@ -64,11 +64,15 @@ public class GenericParameters extends Parameters {
   private static final Logger logger = LogManager.getLogger(GenericParameters.class);
 
   private static final Map<SimType, Map<String, Double>> DEFAULT_VALUES = new HashMap<>();
+  private static final Map<SimType, Map<String, Double[]>> SUGGETED_RANGE = new HashMap<>();
+
   private static final Map<SimType, Map<String, Object>> DEFAULT_ADDITIONAL_VALUES =
       new HashMap<>();
   private static final Map<SimType, List<String>> UNMODIFIABLE_PARAMS = new HashMap<>();
 
   static {
+    DEFAULT_VALUES.put(SimType.Darwin,
+        Map.of("nearbyAhead", 1.));
     DEFAULT_VALUES.put(SimType.RockPaperSciss, Map.of("numStates", 3.0, "percentageToWin", 0.5));
     DEFAULT_VALUES.put(SimType.Segregation, Map.of("toleranceThreshold", 0.5));
     DEFAULT_VALUES.put(SimType.Fire,
@@ -76,6 +80,20 @@ public class GenericParameters extends Parameters {
     DEFAULT_VALUES.put(SimType.WaTor,
         Map.of("fishReproductionTime", 3.0, "sharkEnergyGain", 2.0, "sharkReproductionTime", 3.0,
             "sharkInitialEnergy", 5.0));
+
+    SUGGETED_RANGE.put(SimType.Darwin,
+        Map.of("nearbyAhead", new Double[]{0.0, 4.0}));
+    SUGGETED_RANGE.put(SimType.RockPaperSciss,
+        Map.of("percentageToWin", new Double[]{0.0, 1.}));
+    SUGGETED_RANGE.put(SimType.Segregation, Map.of("toleranceThreshold", new Double[]{0.0, 1.}));
+    SUGGETED_RANGE.put(SimType.Fire,
+        Map.of("ignitionLikelihood", new Double[]{0.0, 1.}, "treeSpawnLikelihood",
+            new Double[]{0.0, 1.}));
+    SUGGETED_RANGE.put(SimType.WaTor,
+        Map.of("fishReproductionTime", new Double[]{0.0, 20.0}, "sharkEnergyGain",
+            new Double[]{0.0, 20.0},
+            "sharkReproductionTime", new Double[]{0.0, 20.0},
+            "sharkInitialEnergy", new Double[]{0.0, 20.0}));
 
     DEFAULT_ADDITIONAL_VALUES.put(SimType.GameOfLife,
         Map.of("S", new ArrayList<>(Arrays.asList(2, 3)), "B", new ArrayList<>(List.of(3))));
@@ -85,6 +103,7 @@ public class GenericParameters extends Parameters {
 
   private final Map<String, Object> additionalParams = new HashMap<>();
   private final List<String> unmodifiableParams = new ArrayList<>();
+  private final Map<String, Double[]> suggestedValues = new HashMap<>();
 
   /**
    * Constructs a new instance of GenericParameters with default parameter values initialized based
@@ -140,6 +159,10 @@ public class GenericParameters extends Parameters {
 
     if (UNMODIFIABLE_PARAMS.containsKey(simType)) {
       unmodifiableParams.addAll(UNMODIFIABLE_PARAMS.get(simType));
+    }
+
+    if (SUGGETED_RANGE.containsKey(simType)) {
+      suggestedValues.putAll(SUGGETED_RANGE.get(simType));
     }
   }
 
@@ -199,5 +222,23 @@ public class GenericParameters extends Parameters {
    */
   public List<String> getAdditionalParameterKeys() {
     return List.copyOf(additionalParams.keySet());
+  }
+
+  /**
+   * List of unmodifiable paramters
+   *
+   * @return list of keys that are unmodifiable paramters
+   */
+  public List<String> getUnmodifiableParameters() {
+    return unmodifiableParams;
+  }
+
+  /**
+   * List of suggested ranges, if key does not have a suggested range returns optional empty
+   *
+   * @return suggested values for the key, first one is min, second one is max
+   */
+  public Optional<Double[]> getSuggestedRange(String key) {
+    return Optional.ofNullable(suggestedValues.get(key));
   }
 }

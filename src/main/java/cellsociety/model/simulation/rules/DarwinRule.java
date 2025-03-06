@@ -16,11 +16,11 @@ import java.util.OptionalInt;
 public class DarwinRule extends Rule<DarwinCell> {
 
   /**
-   * Constructs a {@code Rule} object and initializes it with the provided parameters. The parameters
-   * are checked and set to ensure validity.
+   * Constructs a {@code Rule} object and initializes it with the provided parameters. The
+   * parameters are checked and set to ensure validity.
    *
-   * @param parameters the {@code GenericParameters} object containing the configuration and settings
-   *                   required for the rule. Must not be {@code null}.
+   * @param parameters the {@code GenericParameters} object containing the configuration and
+   *                   settings required for the rule. Must not be {@code null}.
    * @throws SimulationException if the parameters are {@code null}.
    */
   public DarwinRule(GenericParameters parameters, Grid grid) {
@@ -40,10 +40,11 @@ public class DarwinRule extends Rule<DarwinCell> {
         // handler is essentially the switch statement for what method should be executed
         DarwinCommandHandler handler = DarwinCommandFactory.getHandler(command.getType());
 
-        OptionalInt newInstruction = handler.execute(command, cell, this.getGrid());
+        OptionalInt newInstruction = handler.execute(command, cell, this.getGrid(),
+            this.getParameters());
         if (newInstruction.isPresent()) {
           // I think because of the indexes
-          instruction = newInstruction.getAsInt()-1;
+          instruction = newInstruction.getAsInt() - 1;
         } else {
           instruction = cell.getNextProgramInstruction(instruction);
         }
@@ -56,8 +57,7 @@ public class DarwinRule extends Rule<DarwinCell> {
       cell.setNextInstruction(instruction);
 
       return 0;
-    }
-    catch (SimulationException e) {
+    } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }

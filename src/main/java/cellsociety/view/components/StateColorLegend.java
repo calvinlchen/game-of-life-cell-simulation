@@ -6,8 +6,8 @@ import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
-import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.utils.ColorUtil;
 import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.exceptions.ViewException;
 import cellsociety.view.window.UserView;
@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.ScrollPane;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class StateColorLegend {
   private boolean colorPickerIsOpen = false;
 
   public static final int COLOR_BOX_LENGTH = 20;
+  public static final double LEGEND_MAX_HEIGHT = 200;
   public static final int COLOR_PICKER_MAX_LENGTH = 4 * COLOR_BOX_LENGTH;
 
   /**
@@ -50,13 +52,21 @@ public class StateColorLegend {
   }
 
   /**
-   * Return view of color-state legend.
+   * Return a scrollable view of color-state legend.
    *
-   * @return VBox object containing legend view
+   * @return ScrollPane containing the color legend VBox
    */
-  public VBox getLegendBox() {
-    return myLegendBox;
+  public ScrollPane getScrollableLegend() {
+    ScrollPane scrollPane = new ScrollPane(myLegendBox);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setPrefWidth(COLOR_BOX_LENGTH);
+    scrollPane.setPrefHeight(LEGEND_MAX_HEIGHT);
+
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    return scrollPane;
   }
+
 
   /**
    * Removes all elements from the legend display.
@@ -84,6 +94,15 @@ public class StateColorLegend {
 
     Map<Integer, String> stateNameMap = getStateNameMap(xmlData);
     Map<Integer, Color> stateColorMap = getColorMapFromUserView(myUserView);
+
+    // If XML defines custom colors, override the default colors
+    Map<Integer, String> customColorMap = xmlData.getCustomColorMap();
+    if (customColorMap != null && !customColorMap.isEmpty()) {
+      for (Map.Entry<Integer, String> entry : customColorMap.entrySet()) {
+        // Convert hex string to a Color using Color.web (or a custom conversion utility)
+        stateColorMap.put(entry.getKey(), Color.web(entry.getValue()));
+      }
+    }
 
     for (Map.Entry<Integer, String> entry : stateNameMap.entrySet()) {
       int stateValue = entry.getKey();
@@ -133,6 +152,12 @@ public class StateColorLegend {
         Color newColor = colorPicker.getValue();
         colorBox.setFill(newColor);  // Update legend color
         myUserView.updateColorForState(stateValue, newColor);  // Update simulation cells
+
+        addCustomColorToXml(stateValue, newColor);
+
+        parent.getChildren().remove(colorPicker);
+        colorPickerIsOpen = false;
+
         parent.getChildren().remove(colorPicker);
 
         colorPickerIsOpen = false;
@@ -144,28 +169,17 @@ public class StateColorLegend {
     }
   }
 
-  /**
-   * Retrieves the appropriate `getColorForState()` method based on simulation type. No longer in
-   * use since this only retrieves the default color mapping, not including any dynamic
-   * customizations.
-   */
-  @Deprecated
-  private Map<Integer, Color> getColorMapFromXml(XmlData xmlData) {
-    SimType simulationType = xmlData.getType();
-
-    CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
-        xmlData.getNumStates());
-    if (handler == null) {
-      throw new ViewException("UnknownSimType", simulationType);
+  private void addCustomColorToXml(int stateValue, Color newColor) {
+    // Convert the new color to a hex string, e.g., "#FF0000" for red.
+    String hexColor = ColorUtil.colorToHexString(newColor);
+    // Update the XML data's custom color map
+    XmlData xmlData = myUserView.getXmlDataObject();
+    Map<Integer, String> customColorMap = xmlData.getCustomColorMap();
+    if (customColorMap == null) {
+      customColorMap = new HashMap<>();
     }
-
-    Map<Integer, Color> stateColorMap = new HashMap<>();
-    for (int state : handler.getStateInt()) {
-      stateColorMap.put(state,
-          CellViewFactory.createCellView(simulationType, new double[]{0, 0}, 0, 0, state)
-              .getColorForState(state));
-    }
-    return stateColorMap;
+    customColorMap.put(stateValue, hexColor);
+    xmlData.setCustomColorMap(customColorMap);
   }
 
   /**
@@ -206,4 +220,5 @@ public class StateColorLegend {
     }
     return stateNameMap;
   }
+
 }

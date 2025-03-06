@@ -485,5 +485,4 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   protected R getRule() {
     return myRule;
   }
-
 }

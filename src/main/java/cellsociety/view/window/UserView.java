@@ -6,6 +6,7 @@ import cellsociety.model.util.exceptions.SimulationException;
 import cellsociety.model.util.exceptions.XmlException;
 import cellsociety.view.components.ControlPanel;
 import cellsociety.view.components.SimulationViewZoomable;
+import cellsociety.view.utils.ColorUtil;
 import cellsociety.view.utils.FileExplorer;
 import cellsociety.view.components.InformationBox;
 import cellsociety.view.components.RandomSimulationGenerator;
@@ -17,6 +18,7 @@ import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -66,6 +68,7 @@ public class UserView {
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
+  private ChangeParametersView myChangeParametersWindow;
   private final XmlUtils xmlUtils;
 
   // Create logger
@@ -110,7 +113,7 @@ public class UserView {
     myRoot.setLeft(mySimulationView.getZoomableDisplay());
 
     VBox rightPanel = new VBox(ControlPanel.VBOX_SPACING);
-    rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getLegendBox());
+    rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getScrollableLegend());
     myRoot.setRight(rightPanel);
 
     myRoot.setBottom(myInformationBox.getTextArea());
@@ -193,10 +196,53 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
+    closeChangeParametersWindow();
     mySimulationView.resetGrid();
     myInformationBox.emptyFields();
     myStateColorLegend.clearLegend();
     mySpeedFactor = 1;
+  }
+
+  /**
+   * Updates the information box, notably the parameter fields, based on the current Simulation object
+   */
+  public void updateInformationBox() {
+    if (checkSimulationExists() && myInformationBox != null) {
+      myInformationBox.updateInfo(mySimulationView.getSimulation().getXmlDataObject());
+    }
+  }
+
+  /**
+   * Open the window which allows user to change simulation parameters.
+   */
+  public void openChangeParametersWindow() {
+    if (!checkSimExistsElseAlert(ResourceManager.getCurrentErrorBundle())) { return; }
+
+    int numEditableParams = mySimulationView.getSimulation().getNumEditableParameters();
+    if (numEditableParams <= 0) {
+      showMessage(
+          AlertType.INFORMATION, ResourceManager.getCurrentErrorBundle().getString("NoParamsToEdit")
+      );
+      return;
+    }
+
+    myChangeParametersWindow = new ChangeParametersView(this, mySimulationView.getSimulation());
+  }
+
+  public void closeChangeParametersWindow() {
+    if (myChangeParametersWindow != null) {
+      myChangeParametersWindow.closeWindow();
+    }
+  }
+
+  private boolean checkSimExistsElseAlert(ResourceBundle errorBundle) {
+    if (!checkSimulationExists()) {
+      showMessage(
+          AlertType.WARNING, errorBundle.getString("NoSimulationToSave")
+      );
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -241,10 +287,24 @@ public class UserView {
 
       // Update legend based on simulation type
       myStateColorLegend.updateLegend(xmlData);
+
+      // Update cell colors if XML indicates custom cell colors
+      updateSimulationViewWithCustomXmlColors(xmlData);
+
     } catch (SimulationException e) {
       // e.printStackTrace();
       myState = ViewState.ERROR;
       showMessage(Alert.AlertType.ERROR, e.getMessage());
+    }
+  }
+
+  private void updateSimulationViewWithCustomXmlColors(XmlData xmlData) {
+    Map<Integer, String> colorMap = xmlData.getCustomColorMap();
+    if (colorMap != null && !colorMap.isEmpty()) {
+      for (int stateValue : colorMap.keySet()) {
+        Color newColor = ColorUtil.hexStringToColor(colorMap.get(stateValue));
+        mySimulationView.updateCellColorsForState(stateValue, newColor);
+      }
     }
   }
 
@@ -265,10 +325,7 @@ public class UserView {
     ResourceBundle resources = ResourceManager.getCurrentMainBundle();
     ResourceBundle errorResources = ResourceManager.getCurrentErrorBundle();
 
-    if (!checkSimulationExists()) {
-      showMessage(
-          Alert.AlertType.WARNING, errorResources.getString("NoSimulationToSave")
-      );
+    if (!checkSimExistsElseAlert(errorResources)) {
       return;
     }
 
@@ -421,7 +478,7 @@ public class UserView {
    * Updates a given state to a new color, assuming the color exists.
    */
   public void updateColorForState(int state, Color newColor) {
-    if (mySimulationView == null) {
+    if (!checkSimulationExists()) {
       throw new SimulationException("NoSimulationToSave");
     }
 
@@ -446,5 +503,24 @@ public class UserView {
    */
   public int getNumCellsDisplayed() {
     return mySimulationView.getDisplay().getChildren().size();
+  }
+
+  /**
+   * Return the XmlData of the currently running simulation, if a simulation currently exists.
+   * @return null or XmlData object
+   */
+  public XmlData getXmlDataObject() {
+    if (checkSimulationExists()) {
+      return mySimulationView.getSimulation().getXmlDataObject();
+    }
+    return null;
+  }
+
+  /**
+   * Return the animation speed factor of the currently running simulation
+   * @return 1.0 for default speed, higher for faster, lower for slower
+   */
+  public double getSpeedFactor() {
+    return mySpeedFactor;
   }
 }

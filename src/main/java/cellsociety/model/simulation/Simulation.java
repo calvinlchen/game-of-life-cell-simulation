@@ -48,7 +48,7 @@ import java.util.Map;
  *      Cell, and Parameters.</li>
  * </ul></p>
  */
-public class Simulation<T extends Cell<T, ?>> {
+public class Simulation<T extends Cell<T, Rule<T>>> {
 
   private static final Logger logger = LogManager.getLogger(Simulation.class);
 
@@ -288,6 +288,7 @@ public class Simulation<T extends Cell<T, ?>> {
     }
   }
 
+
   /**
    * Retrieves the current value of the simulation parameter associated with the provided key.
    *
@@ -395,6 +396,16 @@ public class Simulation<T extends Cell<T, ?>> {
    */
   public int getNumStates() {
     return myXmlData.getNumStates();
+  }
+
+  /**
+   * Return number of dynamically adjustable parameters.
+   * @return int amount of parameters, excluding maxHistorySize as a parameter
+   */
+  public int getNumEditableParameters() {
+    List<String> params = getParameterKeys();
+    // maxHistorySize is NOT an editable parameter, so subtract 1 from total
+    return params.size() - 1;
   }
 
   /**

@@ -44,4 +44,6 @@ public class CellStates {
   public static final int LANGTON_MAXSTATE = 8;
   public static final int PETELKA_MAXSTATE = 5;
 
+
+  public static final int DARWIN_EMPTY = 0;
 }

@@ -2,6 +2,7 @@ package cellsociety.model.simulation.rules.darwinhandler;
 
 import cellsociety.model.simulation.cell.DarwinCell;
 import cellsociety.model.simulation.grid.Grid;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.Optional;
@@ -13,7 +14,8 @@ public class IfEnemyCommandHandler implements DarwinCommandHandler {
   // occupied by a creature of any different species;
   // otherwise, go on with the next instruction
   @Override
-  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid) {
+  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid,
+      GenericParameters parameters) {
     int nextInstruction;
     try {
       nextInstruction = DarwinCommandHandlerHelperMethods.getIntegerArgument(command);
@@ -21,7 +23,8 @@ public class IfEnemyCommandHandler implements DarwinCommandHandler {
       throw new SimulationException(e);
     }
 
-    if (DarwinCommandHandlerHelperMethods.nearbyEnemy(cell)) {
+    if (DarwinCommandHandlerHelperMethods.nearbyEnemy(cell,
+        (int) Math.round(parameters.getParameter("nearbyAhead")), cell.getDirection())) {
       return OptionalInt.of(nextInstruction);
     }
 
