@@ -221,7 +221,7 @@ public class UserView {
 
     int numEditableParams = mySimulationView.getSimulation().getNumEditableParameters();
     numEditableParams--; // This accounts for the fact that maxHistorySize is not displayed
-    if (numEditableParams <= 0 || mySimulationView.getSimulation().getSimulationType() == SimType.GameOfLife) {
+    if (numEditableParams <= 0 ) {
       showMessage(
           AlertType.INFORMATION, ResourceManager.getCurrentErrorBundle().getString("NoParamsToEdit")
       );

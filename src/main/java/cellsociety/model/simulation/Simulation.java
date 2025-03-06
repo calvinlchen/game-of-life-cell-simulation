@@ -321,6 +321,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
    */
   public void updateAdditionalParameter(String key, Object value) {
     myParameters.setAdditionalParameter(key, value);
+    myXmlData.getParameters().put(key, value);
   }
 
   /**

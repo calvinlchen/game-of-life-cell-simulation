@@ -172,6 +172,7 @@ public class GenericParameters extends Parameters {
    * @param value The value of the parameter (can be Integer, Double, List, etc.).
    */
   public void setAdditionalParameter(String key, Object value) {
+    logger.debug("Setting additional parameter {} {}", key, value);
     additionalParams.put(key, value);
   }
 
