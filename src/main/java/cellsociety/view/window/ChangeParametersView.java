@@ -59,6 +59,7 @@ public class ChangeParametersView {
    */
   private void buildUI() {
     List<String> unmodifiableKeys = mySimulation.getUnmodifiableParameterKeys();
+    unmodifiableKeys.add("maxHistorySize"); // TODO: remove this line once backwards-playing is enabled
 
     // For each parameter, create a row with a label and a text field initialized with its current value.
     for (String key : mySimulation.getParameterKeys()) {
