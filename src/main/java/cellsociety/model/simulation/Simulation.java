@@ -282,6 +282,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   public void updateParameter(String key, double value) {
     try {
       myParameters.setParameter(key, value);
+      myXmlData.getParameters().put(key, value);
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }

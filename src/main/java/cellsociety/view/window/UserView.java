@@ -1,5 +1,6 @@
 package cellsociety.view.window;
 
+import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 import cellsociety.model.util.XmlUtils;
 import cellsociety.model.util.exceptions.SimulationException;
@@ -219,7 +220,8 @@ public class UserView {
     if (!checkSimExistsElseAlert(ResourceManager.getCurrentErrorBundle())) { return; }
 
     int numEditableParams = mySimulationView.getSimulation().getNumEditableParameters();
-    if (numEditableParams <= 0) {
+    numEditableParams--; // This accounts for the fact that maxHistorySize is not displayed
+    if (numEditableParams <= 0 || mySimulationView.getSimulation().getSimulationType() == SimType.GameOfLife) {
       showMessage(
           AlertType.INFORMATION, ResourceManager.getCurrentErrorBundle().getString("NoParamsToEdit")
       );
