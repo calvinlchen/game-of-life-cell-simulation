@@ -3,7 +3,10 @@ package cellsociety.view.window;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.exceptions.ViewException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChangeParametersView {
+
   public static final int CHANGE_PARAMS_WINDOW_WIDTH = 400;
   public static final int CHANGE_PARAMS_WINDOW_HEIGHT = 400;
 
@@ -72,22 +76,59 @@ public class ChangeParametersView {
       HBox row = new HBox(10, label, textField);
       layout.getChildren().add(row);
     }
+
+    for (String key : mySimulation.getAdditionalParameterKeys()) {
+      if (unmodifiableKeys.contains(key)) {
+        continue;
+      }
+      List<?> parameterList = (List<?>) mySimulation.getAdditionalParameter("S", List.class)
+          .orElse(List.of());
+
+      List<Integer> integersList = new ArrayList<>();
+
+      if (parameterList.stream().allMatch(e -> e instanceof Number)) {
+        integersList = parameterList.stream().map(e -> ((Number) e).intValue()).toList();
+      }
+
+      Label label = new Label(key + ":");
+      TextField textField = new TextField(integersList.stream()
+          .map(String::valueOf) // Convert integers to strings
+          .collect(Collectors.joining(", "))); // Join with ", " separator
+      parameterFields.put(key, textField);
+      HBox row = new HBox(10, label, textField);
+      layout.getChildren().add(row);
+    }
+
     // Add a save button at the bottom of the form.
-    Button saveButton = new Button(ResourceManager.getCurrentMainBundle().getString("SaveParameters"));
+    Button saveButton = new Button(
+        ResourceManager.getCurrentMainBundle().getString("SaveParameters"));
     saveButton.setOnAction(e -> saveParameters());
     layout.getChildren().add(saveButton);
   }
 
   /**
-   * Reads the new parameter values from the text fields and updates the simulation.
-   * Displays an error dialog if any value is invalid.
+   * Reads the new parameter values from the text fields and updates the simulation. Displays an
+   * error dialog if any value is invalid.
    */
   private void saveParameters() {
     for (Map.Entry<String, TextField> entry : parameterFields.entrySet()) {
       String key = entry.getKey();
       try {
-        double newValue = Double.parseDouble(entry.getValue().getText());
-        mySimulation.updateParameter(key, newValue);
+        if (mySimulation.getParameterKeys().contains(key)) {
+          double newValue = Double.parseDouble(entry.getValue().getText());
+          mySimulation.updateParameter(key, newValue);
+        }
+        if (mySimulation.getAdditionalParameterKeys().contains(key)) {
+          String stringList = entry.getValue().getText();
+
+          List<Integer> integersList = Arrays.stream(
+                  stringList.split(",\\s*"))  // Split by comma and optional spaces
+              .map(Integer::parseInt)        // Convert each part to an Integer
+              .collect(Collectors.toList()); // Collect into a list
+
+          mySimulation.updateAdditionalParameter(key, integersList);
+
+        }
       } catch (NumberFormatException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR,
             (new ViewException("InvalidParameterValue", key)).getMessage());
