@@ -110,7 +110,7 @@ public class UserView {
     myRoot.setLeft(mySimulationView.getZoomableDisplay());
 
     VBox rightPanel = new VBox(ControlPanel.VBOX_SPACING);
-    rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getLegendBox());
+    rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getScrollableLegend());
     myRoot.setRight(rightPanel);
 
     myRoot.setBottom(myInformationBox.getTextArea());

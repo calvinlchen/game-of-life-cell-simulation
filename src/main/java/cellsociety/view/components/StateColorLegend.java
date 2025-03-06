@@ -6,7 +6,6 @@ import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
-import cellsociety.view.components.cell.CellViewFactory;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.exceptions.ViewException;
@@ -17,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.ScrollPane;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,6 +36,7 @@ public class StateColorLegend {
   private boolean colorPickerIsOpen = false;
 
   public static final int COLOR_BOX_LENGTH = 20;
+  public static final double LEGEND_MAX_HEIGHT = 200;
   public static final int COLOR_PICKER_MAX_LENGTH = 4 * COLOR_BOX_LENGTH;
 
   /**
@@ -50,13 +51,21 @@ public class StateColorLegend {
   }
 
   /**
-   * Return view of color-state legend.
+   * Return a scrollable view of color-state legend.
    *
-   * @return VBox object containing legend view
+   * @return ScrollPane containing the color legend VBox
    */
-  public VBox getLegendBox() {
-    return myLegendBox;
+  public ScrollPane getScrollableLegend() {
+    ScrollPane scrollPane = new ScrollPane(myLegendBox);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setPrefWidth(COLOR_BOX_LENGTH);
+    scrollPane.setPrefHeight(LEGEND_MAX_HEIGHT);
+
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    return scrollPane;
   }
+
 
   /**
    * Removes all elements from the legend display.
@@ -142,30 +151,6 @@ public class StateColorLegend {
       updateLegend(myLastXmlData);
       colorPickerIsOpen = false;
     }
-  }
-
-  /**
-   * Retrieves the appropriate `getColorForState()` method based on simulation type. No longer in
-   * use since this only retrieves the default color mapping, not including any dynamic
-   * customizations.
-   */
-  @Deprecated
-  private Map<Integer, Color> getColorMapFromXml(XmlData xmlData) {
-    SimType simulationType = xmlData.getType();
-
-    CellStateHandler handler = CellStateFactory.getHandler(xmlData.getId(), simulationType,
-        xmlData.getNumStates());
-    if (handler == null) {
-      throw new ViewException("UnknownSimType", simulationType);
-    }
-
-    Map<Integer, Color> stateColorMap = new HashMap<>();
-    for (int state : handler.getStateInt()) {
-      stateColorMap.put(state,
-          CellViewFactory.createCellView(simulationType, new double[]{0, 0}, 0, 0, state)
-              .getColorForState(state));
-    }
-    return stateColorMap;
   }
 
   /**
