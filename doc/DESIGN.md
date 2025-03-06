@@ -20,7 +20,6 @@
 
 #### What Features are Easy to Add
 * Add new simulations, parameters and states to existing simulations, new neighborhood types.
-<!-- Probably more stuff, i'm blanking -->
 
 
 ## High-level Design
@@ -40,4 +39,4 @@ folder structure and core interactions (high level uml)
 
 
 ## How to Add Features
-- can add these later when I going through all of my assumptions
+

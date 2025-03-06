@@ -16,9 +16,9 @@ This project implements a cellular automata simulator.
      * Plan: 3 hr
      * Basic: 16 hr?
      * Robust: 24 hr?
-     * Change: 36 hr?
+     * Change: 60 hr?
      * Additional Doc's/Presentation: 12 hr?
-     * some of this time was doing like things together so I guess in total: 80?
+     * some of this time was doing like things together so I guess in total: 100?
      * I have no sense of time though
 
 
@@ -80,6 +80,7 @@ This project implements a cellular automata simulator.
    * Look into the checklist to see the detailed breakdown and how the project could support unimplemnted features
 
  * Noteworthy Features:
+   * Look at wiki for some better docs especially for overview in structure I know they not done still :(
 
 
 ### Assignment Impressions
