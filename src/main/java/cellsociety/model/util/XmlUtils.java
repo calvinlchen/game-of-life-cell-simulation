@@ -446,7 +446,7 @@ public class XmlUtils {
     List<Integer> remainingStates = new ArrayList<>(); //adding the remaining cell states!
     Set<Integer> explicitlyProvidedStates = cellStateMap.keySet();
     for (int i = 0; i < totalCellTypes; i++) {
-      if (!remainingStates.contains(i)){
+      if (!explicitlyProvidedStates.contains(i)){
         remainingStates.add(i);
       }
     }
