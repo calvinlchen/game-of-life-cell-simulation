@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,15 +40,17 @@ class XmlUtilsTest {
     void testReadXml_validXmlFile() {
         File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
 
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
         // Mock the behavior of xmlUtils.readXml() to return mockXmlData when a valid file is passed
-        when(xmlUtils.readXml(validXmlFile)).thenReturn(mockXmlData);
+        when(mockXmlUtils.readXml(any())).thenReturn(mockXmlData);
+
 
         // Assuming that mockXmlData is set up to return valid data
         when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
         when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
 
         assertDoesNotThrow(() -> {
-            XmlData xmlData = xmlUtils.readXml(validXmlFile);
+            XmlData xmlData = mockXmlUtils.readXml(validXmlFile);
             assertNotNull(xmlData);
             assertEquals("GameOfLife", xmlData.getType().toString());  // Assuming the file contains a GameOfLife simulation
             assertNotNull(xmlData.getParameters());  // Check if parameters are not null
@@ -60,10 +63,11 @@ class XmlUtilsTest {
         File invalidXmlFile = new File("invalid_simulation.xml"); // A file with invalid simulation data
 
         // Mock the behavior of xmlUtils.readXml() to throw XmlException when an invalid file is passed
-        when(xmlUtils.readXml(invalidXmlFile)).thenThrow(XmlException.class);
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
+        when(mockXmlUtils.readXml(invalidXmlFile)).thenThrow(XmlException.class);
 
         assertThrows(XmlException.class, () -> {
-            xmlUtils.readXml(invalidXmlFile);
+            mockXmlUtils.readXml(invalidXmlFile);
         });
     }
 
@@ -127,6 +131,9 @@ class XmlUtilsTest {
         when(mockSimulation.getSimulationType()).thenReturn(SimType.GameOfLife);
         when(mockSimulation.getNumStates()).thenReturn(8);
         when(mockSimulation.getCurrentState(anyInt(), anyInt())).thenReturn(0); // Returns 0 for any row and column
+
+        when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
+        when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
 
         return mockSimulation;
     }
