@@ -415,7 +415,7 @@ public class XmlUtils {
           int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
 
           // Add the cell type and count to the cellStateMap
-          cellStateMap.put(handler.stateFromString(cellType), cellCount);
+          cellStateMap.put(1, cellCount);
         }
         break;
       } case "ratio": {
@@ -427,7 +427,7 @@ public class XmlUtils {
           int cellCount = (int) (cellRatio * totalCells);
 
           // Add the cell type and count to the cellStateMap
-          cellStateMap.put(handler.stateFromString(cellType), cellCount);
+          cellStateMap.put(1, cellCount);
         }
 
         break;
