@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -317,7 +318,15 @@ public class UserView {
    * @param message - the message to be displayed
    */
   public static void showMessage(AlertType type, String message) {
-    new Alert(type, message).showAndWait();
+    Alert alert = new Alert(type);
+    alert.setTitle(ResourceManager.getCurrentMainBundle().getString("Message"));
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    // Force the dialog pane to use its preferred height so that it expands to show all text.
+    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+    // Optionally, set a preferred width.
+    alert.getDialogPane().setPrefWidth(600);
+    alert.showAndWait();
   }
 
   /**
