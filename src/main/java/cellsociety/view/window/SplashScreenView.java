@@ -25,6 +25,8 @@ public class SplashScreenView {
 
   private final Stage myStage;
   private ChoiceBox<String> myLanguageDropdown;
+  private Button loadFileButton;
+  private Button randomGameOfLifeButton;
 
   /**
    * Constructs a SplashScreenView and initializes the splash screen UI.
@@ -49,16 +51,17 @@ public class SplashScreenView {
     myLanguageDropdown.setOnAction(e -> {
       String selectedLanguage = myLanguageDropdown.getValue();
       ResourceManager.setLanguage(selectedLanguage);
+      updateSplashTexts();
     });
 
-    Button loadFileButton = new Button("Load Simulation from File");
+    loadFileButton = new Button("Load Simulation from File");
     loadFileButton.setOnAction(
         e -> {
           Main.startSimulationWindowWithFilePrompt();
           myStage.close();
         });
 
-    Button randomGameOfLifeButton = new Button("Generate Random Game of Life");
+    randomGameOfLifeButton = new Button("Generate Random Game of Life");
     randomGameOfLifeButton.setOnAction(
         e -> {
           Main.startSimulationWindowWithRandomGameOfLife();
@@ -75,6 +78,11 @@ public class SplashScreenView {
     myStage.setTitle("Welcome to Cell Society");
     myStage.show();
 
+  }
+
+  private void updateSplashTexts() {
+    loadFileButton.setText(ResourceManager.getCurrentMainBundle().getString("LoadFileCommand"));
+    randomGameOfLifeButton.setText(ResourceManager.getCurrentMainBundle().getString("RandomGameOfLifeCommand"));
   }
 
 }
