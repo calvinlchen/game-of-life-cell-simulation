@@ -14,7 +14,8 @@
 ### Simulations
 
 - [ ] Darwin
-    - [ ] @Jessica state transition rules
+    - [~] @Jessica state transition rules
+      - in but not verified yet :(, thus if they wrong, the design still supports the functionality I just did not have to right tests :( 
     - [ ] @Ky 2 new species programs and 5 configuration files that run successfully to test this
       simulation
     - *(the 2 new species programs might be Jessica's stuff I not sure)*
@@ -28,13 +29,11 @@
 
 ### Grid Topology
 
-*Jessica would like these*
-
-- [ ] Toroidal
-    - [ ] @Jessica wrapping edges, edges wrap around horizontally and vertically
+- [x] Toroidal
+    - [x] @Jessica wrapping edges, edges wrap around horizontally and vertically
     - [ ] @Ky 1 configuration file
-- [ ] Mirror
-    - [ ] @Jessica mirrored edges, edges act as mirrors reflected as many of cells adjacent to the
+- [x] Mirror
+    - x] @Jessica mirrored edges, edges act as mirrors reflected as many of cells adjacent to the
       edge as needed to make a full neighborhood
     - [ ] @Ky 1 configuration file
 
@@ -44,25 +43,23 @@
 
 - Von Neuman
     - [x] @Jessica, support neighbors that are directly adjacent to it grid setup (its adjacentgrid)
-    - [ ] @Jessica make thigns actually use this based on the config file
     - [ ] @Ky 1 configuration file
 - Extended Moore Neighborhood
-    - [ ] @Jessica, support moore neighborhood 2 cells away
-    - [ ] @Jessica change your like check if neighbor in direction function to instead of being -1/1
+    - [x] @Jessica, support moore neighborhood 2 cells away
+    - [x] @Jessica change your like check if neighbor in direction function to instead of being -1/1
       if its <0 and >0
     - [ ] @Ky 1 configuration file
       *NOTE! langton's loops won't work with these neighborhoods but such is life*
 
 ### Cell Shape
 
-*again jessica would like these, feel free to disagree calvin*
 
 - [ ] Hexagonal
-    - [ ] @Jessica support this cell shape for all neighborhoods and edges x.x
+    - [x] @Jessica support this cell shape for all neighborhoods and edges x.x
     - [ ] @Ky 1 configuration file
     - [ ] @Calvin
 - [ ] Triangular
-    - [ ] @Jessica support this cell shape for all neighborhoods and edges x.x
+    - [x] @Jessica support this cell shape for all neighborhoods and edges x.x
     - [ ] @Ky 1 configuration file
     - [ ] @Calvin
 
@@ -70,17 +67,17 @@
 *honestly these seem like the 3 easiest for you calvin lol, except for the cell shape, feel free to choose diferently with custom or undo*
 - [ ] Grid Edges
   - [ ] @Calvin allow users to change the grid edge policy of a CURRENTLY LOADED SIMULATION
-  - [ ] @Jessica allow grid edges to be dynamically updated 
+  - [x] @Jessica allow grid edges to be dynamically updated 
 - [ ] Cell Neighborhood
   - [ ] @Calvin allow users to change the grid neighbor of a CURRENTLY LOADED SIMULATION
-  - [ ] @Jessica allow grid neighbors to be dynamically updated
+  - [x] @Jessica allow grid neighbors to be dynamically updated
 - [ ] Cell Shape
   - [ ] @Calvin allow users to change the cell shape of a CURRENTLY LOADED SIMULATION
-  - [ ] @Jessica allow cell shape to be dynamically updated
+  - [x] @Jessica allow cell shape to be dynamically updated
 
 ### Different View
 - [ ] Number of Iterations
-  - [ ] @Jessica store the number of iterations of step
+  - [x] @Jessica store the number of iterations of step
   - [ ] @Calvin display number that is count of number of iterations run so far
 
 *calvin choose your 3 favorites*
