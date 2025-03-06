@@ -19,6 +19,7 @@ public class GameOfLifeStateHandler extends CellStateHandlerStatic {
   static {
     cellStates.put(CellStates.GAMEOFLIFE_DEAD, "dead");
     cellStates.put(CellStates.GAMEOFLIFE_ALIVE, "alive");
+    cellStates.put(CellStates.GAMEOFLIFE_MAXSTATE, "max");
   }
 
   /**

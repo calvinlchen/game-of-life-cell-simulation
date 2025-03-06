@@ -118,7 +118,7 @@ public class XmlUtils {
           Node variationNode = gridElement.getElementsByTagName("variation").item(0);
 
           if (variationNode != null) {
-            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns), xmlObject.getNumStates()));
+            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns)));
 
           } else {
             // No variation: use explicitly defined cell states
@@ -395,7 +395,7 @@ public class XmlUtils {
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells, int totalCellTypes) {
+  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells) {
     ArrayList<Integer> cellList = new ArrayList<>();
 
     // Get the variation type from the node
@@ -445,7 +445,7 @@ public class XmlUtils {
 
     List<Integer> remainingStates = new ArrayList<>(); //adding the remaining cell states!
     Set<Integer> explicitlyProvidedStates = cellStateMap.keySet();
-    for (int i = 0; i < totalCellTypes; i++) {
+    for (int i = 0; i < handler.stateFromString("max"); i++) {
       if (!explicitlyProvidedStates.contains(i)){
         remainingStates.add(i);
       }

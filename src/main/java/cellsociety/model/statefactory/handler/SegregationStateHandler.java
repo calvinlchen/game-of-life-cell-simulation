@@ -19,6 +19,7 @@ public class SegregationStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.SEGREGATION_EMPTY, "empty");
     cellStates.put(CellStates.SEGREGATION_A, "agentA");
     cellStates.put(CellStates.SEGREGATION_B, "agentB");
+    cellStates.put(CellStates.SEGREGATION_MAXSTATE, "max");
   }
 
   /**
