@@ -358,11 +358,18 @@ public class XmlUtils {
             String birthRules = ruleParts[0].substring(1); // Extract "1"
             parameters.put("B", Double.parseDouble(birthRules));
           }
-
           // Process the second part (e.g., "S12345")
           if (ruleParts[1].startsWith("S")) {
             String survivalRules = ruleParts[1].substring(1); // Extract "12345"
-            parameters.put("S", Double.parseDouble(survivalRules));
+
+            // Convert each character to an integer and collect them into a list
+            List<Integer> survivalList = new ArrayList<>();
+            for (char c : survivalRules.toCharArray()) {
+              survivalList.add(Character.getNumericValue(c)); // Convert char to int
+            }
+
+            // Put the list of survival rules into the map with the key "S"
+            parameters.put("S", survivalList);
           }
         } else {
           throw new XmlException("RulestringFormat");

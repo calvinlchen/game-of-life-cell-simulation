@@ -116,11 +116,7 @@ public class SimulationView {
     if (myCellViewsIsEmpty()) {
       throw new ViewException("NoSimulationToFlip");
     }
-    if (isFlippedHorizontally) {
-      myDisplay.setScaleX(1);
-    } else {
-      myDisplay.setScaleX(-1);
-    }
+    myDisplay.setScaleX(-myDisplay.getScaleX());
     isFlippedHorizontally = !isFlippedHorizontally;
   }
 
@@ -133,11 +129,7 @@ public class SimulationView {
     if (myCellViewsIsEmpty()) {
       throw new ViewException("NoSimulationToFlip");
     }
-    if (isFlippedVertically) {
-      myDisplay.setScaleY(1);
-    } else {
-      myDisplay.setScaleY(-1);
-    }
+    myDisplay.setScaleY(-myDisplay.getScaleY());
     isFlippedVertically = !isFlippedVertically;
   }
 
