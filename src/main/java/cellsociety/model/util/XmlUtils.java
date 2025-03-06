@@ -356,7 +356,14 @@ public class XmlUtils {
           // Process the first part (e.g., "B1")
           if (ruleParts[0].startsWith("B")) {
             String birthRules = ruleParts[0].substring(1); // Extract "1"
-            parameters.put("B", Double.parseDouble(birthRules));
+
+            // Convert each character to an integer and collect them into a list
+            List<Integer> birthList = new ArrayList<>();
+            for (char c : birthRules.toCharArray()) {
+              birthList.add(Character.getNumericValue(c)); // Convert char to int
+            }
+
+            parameters.put("B", birthList);
           }
           // Process the second part (e.g., "S12345")
           if (ruleParts[1].startsWith("S")) {
