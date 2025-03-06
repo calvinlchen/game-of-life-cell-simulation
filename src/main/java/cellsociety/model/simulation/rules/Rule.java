@@ -39,8 +39,8 @@ public abstract class Rule<C extends Cell<C, ?>> {
   private static final Logger logger = LogManager.getLogger(Rule.class);
   private static final String NULL_PARAMETER = "NullParameter";
 
-  private final GenericParameters parameters;
-  private Grid grid;
+  private final GenericParameters myParameters;
+  private Grid myGrid;
 
   /**
    * Constructs a {@code Rule} object and initializes it with the provided parameters. The
@@ -56,12 +56,12 @@ public abstract class Rule<C extends Cell<C, ?>> {
       throw new SimulationException(NULL_PARAMETER,
           List.of("parameters", "Rule"));
     }
-    this.parameters = parameters;
+    myParameters = parameters;
   }
 
   public Rule(GenericParameters parameters, Grid grid) {
     this(parameters);
-    this.grid = grid;
+    myGrid = grid;
   }
 
   // Abstract Methods ------
@@ -85,14 +85,14 @@ public abstract class Rule<C extends Cell<C, ?>> {
    */
   public GenericParameters getParameters() {
     try {
-      return parameters;
+      return myParameters;
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
 
   public Optional<Grid> getGrid() {
-    return Optional.ofNullable(grid);
+    return Optional.ofNullable(myGrid);
   }
 
   // Start of Shared Helper methods for rules ------

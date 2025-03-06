@@ -82,12 +82,11 @@ public class Grid<T extends Cell<T, ?>> {
     }
   }
 
-  public Grid<T> constructGrid(List<Cell<T, ?>> cells, int rows, int cols, ShapeType shape,
+  public void constructGrid(List<Cell<T, ?>> cells, int rows, int cols, ShapeType shape,
       NeighborhoodType neighborhoodType, EdgeType edgeType) {
     try {
       myGrid.clear();
       setUpGridSteps((List<T>) cells, rows, cols, shape, neighborhoodType, edgeType);
-      return this;
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
