@@ -105,7 +105,7 @@ public class XmlUtils {
 
           NodeList colorsList = metadataElement.getElementsByTagName("color");
           if (colorsList.getLength() > 0) {
-            xmlObject.setCustomColorMap(colorsToMap(colorsList, handler));
+            xmlObject.setCustomColorMap(colorsToMap(colorsList));
           }
 
           // Extract grid info
@@ -119,7 +119,7 @@ public class XmlUtils {
           Node variationNode = gridElement.getElementsByTagName("variation").item(0);
 
           if (variationNode != null) {
-            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns), xmlObject.getType()));
+            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, (rows*columns), xmlObject.getType()));
 
           } else {
             // No variation: use explicitly defined cell states
@@ -132,7 +132,7 @@ public class XmlUtils {
         }
       }
     } catch (Exception e) {
-      throw new XmlException("SimulationSetupFailed", " " + e.getMessage());
+      throw new XmlException("SimulationSetupFailed", e.getMessage());
     }
 
     return xmlObject;
@@ -187,6 +187,19 @@ public class XmlUtils {
       Element descriptionElement = doc.createElement("description");
       descriptionElement.appendChild(doc.createTextNode(description));
       metadataElement.appendChild(descriptionElement);
+
+      // Write custom color mappings if they exist
+      Map<Integer, String> customColors = simulation.getXmlDataObject().getCustomColorMap();
+      if (customColors != null && !customColors.isEmpty()) {
+        Element colorsElement = doc.createElement("colors");
+        metadataElement.appendChild(colorsElement);
+        for (Map.Entry<Integer, String> entry : customColors.entrySet()) {
+          Element colorElement = doc.createElement("color");
+          colorElement.setAttribute("cellType", String.valueOf(entry.getKey()));
+          colorElement.setAttribute("value", entry.getValue());
+          colorsElement.appendChild(colorElement);
+        }
+      }
 
       // Add grid info
       Element gridElement = doc.createElement("grid");
@@ -267,33 +280,6 @@ public class XmlUtils {
   }
 
   /**
-   * Converts a list of cell state strings into a list of cell state enums.
-   *
-   * @param cellTypes a list of cell state strings
-   * @param handler   the handler to convert the string to the appropriate cell state
-   * @return a list of integers representing the cell states as enums
-   * @throws IllegalArgumentException if an invalid cell state is encountered
-   */
-  private ArrayList<Integer> cellStatesToEnum(List<String> cellTypes, CellStateHandler handler) {
-    ArrayList<Integer> cellStateEnums = new ArrayList<>();
-
-    if (handler == null) {
-      throw new XmlException("UnknownSimType");
-    }
-
-    for (String cellType : cellTypes) {
-      try {
-        int stateEnum = handler.stateFromString(cellType);
-        cellStateEnums.add(stateEnum);
-      } catch (IllegalArgumentException e) {
-        throw new XmlException("UnknownCellState", cellType);
-      }
-    }
-
-    return cellStateEnums;
-  }
-
-  /**
    * A method that extracts the cellstates from the simulation xml and turns them into a string
    * list.
    *
@@ -368,10 +354,9 @@ public class XmlUtils {
    * Converts color definitions from an XML node list into a mapping of cell states to colors.
    *
    * @param colorList - a NodeList containing the color definitions
-   * @param handler   - the cell state handler used for conversion
    * @return a map of cell states to their corresponding colors
    */
-  public static Map<Integer, String> colorsToMap(NodeList colorList, CellStateHandler handler) {
+  public static Map<Integer, String> colorsToMap(NodeList colorList) {
     Map<Integer, String> colors = new HashMap<>();
 
     for (int i = 0; i < colorList.getLength(); i++) {
@@ -379,7 +364,15 @@ public class XmlUtils {
       String colorName = colorElement.getAttribute("cellType");
       String colorValue = colorElement.getAttribute("value");
 
-      colors.put(handler.stateFromString(colorName), colorValue);
+      if (colorName.isEmpty() || colorValue.isEmpty()) {
+        continue;
+      }
+      try {
+        colors.put(Integer.parseInt(colorName), colorValue);
+      }
+      catch (IllegalArgumentException e) {
+        throw new XmlException("InvalidState", colorName);
+      }
     }
 
     return colors;
@@ -388,15 +381,10 @@ public class XmlUtils {
   /**
    * Generates random cell states based on the grid size and variation information in the XML file.
    *
-   * @param rows           the number of rows in the grid
-   * @param columns        the number of columns in the grid
-   * @param gridElement    the XML element containing the grid's variation data
-   * @param simulationType the type of the simulation
-   * @param handler        the handler for cell state conversion
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells, SimType simType) {
+  private List<Integer> setCellStatesByVariation(Node variationNode, int totalCells, SimType simType) {
     ArrayList<Integer> cellList = new ArrayList<>();
 
     // Get the variation type from the node
@@ -412,7 +400,6 @@ public class XmlUtils {
         // Iterate through each cell element
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
-          String cellType = cellElement.getAttribute("cellType"); // Get the cell type
           int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
 
           // Add the cell type and count to the cellStateMap
@@ -422,7 +409,6 @@ public class XmlUtils {
       } case "ratio": {
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
-          String cellType = cellElement.getAttribute("cellType"); // Get the cell type
           float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
 
           int cellCount = (int) (cellRatio * totalCells);

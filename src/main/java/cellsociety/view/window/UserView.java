@@ -6,6 +6,7 @@ import cellsociety.model.util.exceptions.SimulationException;
 import cellsociety.model.util.exceptions.XmlException;
 import cellsociety.view.components.ControlPanel;
 import cellsociety.view.components.SimulationViewZoomable;
+import cellsociety.view.utils.ColorUtil;
 import cellsociety.view.utils.FileExplorer;
 import cellsociety.view.components.InformationBox;
 import cellsociety.view.components.RandomSimulationGenerator;
@@ -17,6 +18,7 @@ import cellsociety.view.utils.SimViewConstants;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -285,10 +287,24 @@ public class UserView {
 
       // Update legend based on simulation type
       myStateColorLegend.updateLegend(xmlData);
+
+      // Update cell colors if XML indicates custom cell colors
+      updateSimulationViewWithCustomXmlColors(xmlData);
+
     } catch (SimulationException e) {
       // e.printStackTrace();
       myState = ViewState.ERROR;
       showMessage(Alert.AlertType.ERROR, e.getMessage());
+    }
+  }
+
+  private void updateSimulationViewWithCustomXmlColors(XmlData xmlData) {
+    Map<Integer, String> colorMap = xmlData.getCustomColorMap();
+    if (colorMap != null && !colorMap.isEmpty()) {
+      for (int stateValue : colorMap.keySet()) {
+        Color newColor = ColorUtil.hexStringToColor(colorMap.get(stateValue));
+        mySimulationView.updateCellColorsForState(stateValue, newColor);
+      }
     }
   }
 
@@ -487,5 +503,16 @@ public class UserView {
    */
   public int getNumCellsDisplayed() {
     return mySimulationView.getDisplay().getChildren().size();
+  }
+
+  /**
+   * Return the XmlData of the currently running simulation, if a simulation currently exists.
+   * @return null or XmlData object
+   */
+  public XmlData getXmlDataObject() {
+    if (checkSimulationExists()) {
+      return mySimulationView.getSimulation().getXmlDataObject();
+    }
+    return null;
   }
 }

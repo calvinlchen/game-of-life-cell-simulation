@@ -7,6 +7,7 @@ import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.XmlData;
 import cellsociety.view.interfaces.CellView;
+import cellsociety.view.utils.ColorUtil;
 import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.exceptions.ViewException;
 import cellsociety.view.window.UserView;
@@ -94,6 +95,15 @@ public class StateColorLegend {
     Map<Integer, String> stateNameMap = getStateNameMap(xmlData);
     Map<Integer, Color> stateColorMap = getColorMapFromUserView(myUserView);
 
+    // If XML defines custom colors, override the default colors
+    Map<Integer, String> customColorMap = xmlData.getCustomColorMap();
+    if (customColorMap != null && !customColorMap.isEmpty()) {
+      for (Map.Entry<Integer, String> entry : customColorMap.entrySet()) {
+        // Convert hex string to a Color using Color.web (or a custom conversion utility)
+        stateColorMap.put(entry.getKey(), Color.web(entry.getValue()));
+      }
+    }
+
     for (Map.Entry<Integer, String> entry : stateNameMap.entrySet()) {
       int stateValue = entry.getKey();
       String stateName = entry.getValue();
@@ -142,6 +152,12 @@ public class StateColorLegend {
         Color newColor = colorPicker.getValue();
         colorBox.setFill(newColor);  // Update legend color
         myUserView.updateColorForState(stateValue, newColor);  // Update simulation cells
+
+        addCustomColorToXml(stateValue, newColor);
+
+        parent.getChildren().remove(colorPicker);
+        colorPickerIsOpen = false;
+
         parent.getChildren().remove(colorPicker);
 
         colorPickerIsOpen = false;
@@ -151,6 +167,19 @@ public class StateColorLegend {
       updateLegend(myLastXmlData);
       colorPickerIsOpen = false;
     }
+  }
+
+  private void addCustomColorToXml(int stateValue, Color newColor) {
+    // Convert the new color to a hex string, e.g., "#FF0000" for red.
+    String hexColor = ColorUtil.colorToHexString(newColor);
+    // Update the XML data's custom color map
+    XmlData xmlData = myUserView.getXmlDataObject();
+    Map<Integer, String> customColorMap = xmlData.getCustomColorMap();
+    if (customColorMap == null) {
+      customColorMap = new HashMap<>();
+    }
+    customColorMap.put(stateValue, hexColor);
+    xmlData.setCustomColorMap(customColorMap);
   }
 
   /**
@@ -191,4 +220,5 @@ public class StateColorLegend {
     }
     return stateNameMap;
   }
+
 }
