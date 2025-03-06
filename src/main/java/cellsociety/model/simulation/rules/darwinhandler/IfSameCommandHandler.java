@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.rules.darwinhandler;
 
 import cellsociety.model.simulation.cell.DarwinCell;
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.exceptions.SimulationException;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class IfSameCommandHandler implements DarwinCommandHandler {
@@ -11,7 +13,7 @@ public class IfSameCommandHandler implements DarwinCommandHandler {
   // is occupied by a creature of the same species;
   // otherwise, go on with the next instruction
   @Override
-  public OptionalInt execute(DarwinCommand command, DarwinCell cell) {
+  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid) {
     int nextInstruction;
     try {
       nextInstruction = DarwinCommandHandlerHelperMethods.getIntegerArgument(command);

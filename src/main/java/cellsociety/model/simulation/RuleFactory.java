@@ -1,5 +1,6 @@
 package cellsociety.model.simulation;
 
+import cellsociety.model.simulation.grid.Grid;
 import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.simulation.rules.Rule;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -83,10 +84,10 @@ class RuleFactory {
    * @return An initialized instance of {@link Rule} corresponding to the specified simulation type.
    * @throws SimulationException If the rule class cannot be found or instantiated.
    */
-  static Rule<?> createRule(SimType simType, Map<String, Object> parameters) {
+  static Rule<?> createRule(SimType simType, Map<String, Object> parameters, Grid grid) {
     try {
       GenericParameters paramInstance = createParameters(simType, parameters);
-      return createRuleInstance(simType, paramInstance);
+      return createRuleInstance(simType, paramInstance, grid);
     } catch (Exception e) {
       logger.error("Error creating rule for simulation type {}: {}", simType, e);
       throw new SimulationException("CreationError", List.of(simType.name()), e);
@@ -162,12 +163,26 @@ class RuleFactory {
    * @return A newly instantiated {@link Rule} object.
    * @throws SimulationException If the rule class is missing or cannot be instantiated.
    */
-  private static Rule<?> createRuleInstance(SimType simType, GenericParameters paramInstance) {
+  private static Rule<?> createRuleInstance(SimType simType, GenericParameters paramInstance,
+      Grid grid) {
     try {
       String ruleClassName = RULE_PACKAGE + simType.name() + "Rule";
       Class<?> ruleClass = Class.forName(ruleClassName);
-      Constructor<?> ruleConstructor = ruleClass.getConstructor(GenericParameters.class);
-      return (Rule<?>) ruleConstructor.newInstance(paramInstance);
+
+      Constructor<?> constructor;
+      Rule<?> ruleInstance;
+
+      try {
+        // first try normal constructor
+        constructor = ruleClass.getConstructor(GenericParameters.class);
+        ruleInstance = (Rule<?>) constructor.newInstance(paramInstance);
+      } catch (NoSuchMethodException e) {
+        // otherwise do it with the grid (for Darwin)
+        constructor = ruleClass.getConstructor(GenericParameters.class, Grid.class);
+        ruleInstance = (Rule<?>) constructor.newInstance(paramInstance, grid);
+      }
+
+      return ruleInstance;
     } catch (Exception e) {
       // should not happen
       logger.error("Error creating rule: {}", simType, e);
