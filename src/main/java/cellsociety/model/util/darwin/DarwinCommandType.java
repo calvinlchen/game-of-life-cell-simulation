@@ -2,8 +2,8 @@ package cellsociety.model.util.darwin;
 
 import cellsociety.model.util.exceptions.SimulationException;
 
-import cellsociety.view.utils.ResourceManager;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -14,6 +14,7 @@ public enum DarwinCommandType {
   GO(false), UNKNOWN(false); // Default for unrecognized commands
 
   private static final Map<String, DarwinCommandType> commandMap = new LinkedHashMap<>();
+  private static final String COMMANDS_BUNDLE = "cellsociety.constants.DarwinCommands";
 
   private final boolean isAction;
 
@@ -31,7 +32,7 @@ public enum DarwinCommandType {
 
   private static void loadCommandMappings() {
     try {
-      ResourceBundle bundle = ResourceManager.getCurrentMainBundle();
+      ResourceBundle bundle = ResourceBundle.getBundle(COMMANDS_BUNDLE, Locale.getDefault());
 
       for (DarwinCommandType type : values()) {
         if (bundle.containsKey(type.name())) {
