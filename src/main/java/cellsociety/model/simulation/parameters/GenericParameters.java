@@ -69,6 +69,8 @@ public class GenericParameters extends Parameters {
   private static final Map<SimType, List<String>> UNMODIFIABLE_PARAMS = new HashMap<>();
 
   static {
+    DEFAULT_VALUES.put(SimType.Darwin,
+        Map.of("nearbyAhead", 1.));
     DEFAULT_VALUES.put(SimType.RockPaperSciss, Map.of("numStates", 3.0, "percentageToWin", 0.5));
     DEFAULT_VALUES.put(SimType.Segregation, Map.of("toleranceThreshold", 0.5));
     DEFAULT_VALUES.put(SimType.Fire,
@@ -199,5 +201,9 @@ public class GenericParameters extends Parameters {
    */
   public List<String> getAdditionalParameterKeys() {
     return List.copyOf(additionalParams.keySet());
+  }
+
+  public List<String> getUnmodifiableParameters() {
+    return unmodifiableParams;
   }
 }

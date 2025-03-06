@@ -2,6 +2,7 @@ package cellsociety.model.simulation.rules.darwinhandler;
 
 import cellsociety.model.simulation.cell.DarwinCell;
 import cellsociety.model.simulation.grid.Grid;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
@@ -17,7 +18,8 @@ public class IfRandomCommandHandler implements DarwinCommandHandler {
   // with the next instruction half of the time)
   // This allows some creatures to exercise what might be called the rudiments of “free will”
   @Override
-  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid) {
+  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid,
+      GenericParameters parameters) {
     int nextInstruction;
     try {
       nextInstruction = DarwinCommandHandlerHelperMethods.getIntegerArgument(command);

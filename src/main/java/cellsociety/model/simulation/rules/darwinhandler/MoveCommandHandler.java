@@ -2,6 +2,7 @@ package cellsociety.model.simulation.rules.darwinhandler;
 
 import cellsociety.model.simulation.cell.DarwinCell;
 import cellsociety.model.simulation.grid.Grid;
+import cellsociety.model.simulation.parameters.GenericParameters;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.Optional;
@@ -11,7 +12,8 @@ public class MoveCommandHandler implements DarwinCommandHandler {
 
 
   @Override
-  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid) {
+  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid,
+      GenericParameters parameters) {
     int moveAmount;
     try {
       moveAmount = DarwinCommandHandlerHelperMethods.getIntegerArgument(command);
