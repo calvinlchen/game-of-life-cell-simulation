@@ -5,10 +5,9 @@ import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.exceptions.XmlException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -116,11 +115,11 @@ public class XmlUtils {
           xmlObject.setGridColNum(columns);
 
           // Check for variation
-          NodeList variationList = gridElement.getElementsByTagName("variation");
-          if (variationList.getLength() > 0) {
-            // Process variation (randomly generated cells)
-            xmlObject.setCellStateList(
-                generateRandomCellStates(rows, columns, gridElement, xmlObject.getType(), handler));
+          Node variationNode = gridElement.getElementsByTagName("variation").item(0);
+
+          if (variationNode != null) {
+            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns), xmlObject.getNumStates()));
+
           } else {
             // No variation: use explicitly defined cell states
             NodeList cellList = gridElement.getElementsByTagName("cell");
@@ -396,58 +395,96 @@ public class XmlUtils {
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private ArrayList<Integer> generateRandomCellStates(int rows, int columns, Element gridElement,
-      SimType simulationType, CellStateHandler handler) {
-    ArrayList<Integer> cellStateList = new ArrayList<>();
-    List<String> statesToAssign = new ArrayList<>();
+  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells, int totalCellTypes) {
+    ArrayList<Integer> cellList = new ArrayList<>();
 
-    if (handler == null) {
-      throw new XmlException("UnknownSimType");
-    }
+    // Get the variation type from the node
+    String variationType = ((Element) variationNode).getAttribute("type");
 
-    // Process variation
-    NodeList variationList = gridElement.getElementsByTagName("variation");
-    if (variationList.getLength() > 0) {
-      Element variationElement = (Element) variationList.item(0);
-      String variationType = variationElement.getAttribute("type");
-      NodeList cellList = variationElement.getElementsByTagName("cell");
+    Map<Integer, Integer> cellStateMap = new HashMap<>(); //first int is cell state, second is number of cells of that state
 
-      // Calculate cell counts based on variation type
-      Map<String, Integer> cellCounts = new HashMap<>();
-      int totalCells = rows * columns;
-      int remainingCells = totalCells;
+    // Get all cell elements within the variation
+    NodeList cellNodes = ((Element) variationNode).getElementsByTagName("cell");
 
-      for (int j = 0; j < cellList.getLength(); j++) {
-        Element cellElement = (Element) cellList.item(j);
-        String cellType = cellElement.getAttribute("cellType");
-        double value = Double.parseDouble(cellElement.getAttribute("value"));
-        cellCounts.put(cellType, (int) (value * totalCells));
-        remainingCells -= cellCounts.get(cellType);
-      }
+    switch (variationType) {
+      case "explicit": {
+        // Iterate through each cell element
+        for (int i = 0; i < cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType"); // Get the cell type
+          int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
 
-      // Add random cells based on counts
-      for (Map.Entry<String, Integer> entry : cellCounts.entrySet()) {
-        for (int i = 0; i < entry.getValue(); i++) {
-          statesToAssign.add(entry.getKey());
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(handler.stateFromString(cellType), cellCount);
         }
-      }
+        break;
+      } case "ratio": {
+        for (int i = 0; i < cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType"); // Get the cell type
+          float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
 
-      // Fill remaining cells with random states if needed
-      while (statesToAssign.size() < totalCells) {
-        statesToAssign.add(statesToAssign.getFirst()); // Reassign random states
+          int cellCount = (int) (cellRatio * totalCells);
+
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(handler.stateFromString(cellType), cellCount);
+        }
+
+        break;
+      }
+      default:
+        throw new IllegalArgumentException("Unsupported variation type: " + variationType);
+    }
+
+    // Calculate the total number of explicitly stated cells
+    int totalExplicitCells = cellStateMap.values().stream().mapToInt(Integer::intValue).sum();
+
+    // Calculate the remaining cells that are not explicitly stated
+    int remainingCells = totalCells - totalExplicitCells;
+
+
+    List<Integer> remainingStates = new ArrayList<>(); //adding the remaining cell states!
+    Set<Integer> explicitlyProvidedStates = cellStateMap.keySet();
+    for (int i = 0; i < totalCellTypes; i++) {
+      if (!remainingStates.contains(i)){
+        remainingStates.add(i);
       }
     }
 
-    // Create cell state list based on variation
-    for (String state : statesToAssign) {
-      try {
-        cellStateList.add(handler.stateFromString(state));
-      } catch (IllegalArgumentException e) {
-        throw new XmlException("UnknownCellState", state);
+    // Distribute the remaining cells among the missing states
+    int cellsPerState = remainingCells / remainingStates.size();
+    int remainder = remainingCells % remainingStates.size();
+
+    for (int i = 0; i < remainingStates.size(); i++) {
+      int state = remainingStates.get(i);
+      int cellCount = cellsPerState + (i < remainder ? 1 : 0); // Distribute remainder
+      cellStateMap.put(state, cellCount);
+    }
+
+    System.out.println(cellStateMap);
+
+    // Fill the cellList with randomly chosen cell types
+    for (int i = 0; i < totalCells; i++) {
+      // Convert the map keys (cell types) to a list for random selection
+      List<Integer> cellTypes = new ArrayList<>(cellStateMap.keySet());
+
+      // Randomly select a cell type from the list
+      Random random = new Random();
+      int chosenCellType = cellTypes.get(random.nextInt(cellTypes.size()));
+
+      cellList.add(chosenCellType);
+
+      // Decrement the count for the chosen cell type in the map
+      int updatedCount = cellStateMap.get(chosenCellType) - 1;
+      cellStateMap.put(chosenCellType, updatedCount);
+
+      // If the count for the chosen cell type reaches zero, remove it from the map
+      if (updatedCount == 0) {
+        cellStateMap.remove(chosenCellType);
       }
     }
 
-    return cellStateList;
+    return cellList;
   }
 
   private SimType simTypeFromString(String simTypeString) {
