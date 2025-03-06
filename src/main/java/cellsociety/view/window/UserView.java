@@ -5,10 +5,10 @@ import cellsociety.model.util.XmlUtils;
 import cellsociety.model.util.exceptions.SimulationException;
 import cellsociety.model.util.exceptions.XmlException;
 import cellsociety.view.components.ControlPanel;
+import cellsociety.view.components.SimulationViewZoomable;
 import cellsociety.view.utils.FileExplorer;
 import cellsociety.view.components.InformationBox;
 import cellsociety.view.components.RandomSimulationGenerator;
-import cellsociety.view.components.SimulationView;
 import cellsociety.view.components.StateColorLegend;
 import cellsociety.view.interfaces.CellView;
 import cellsociety.view.utils.DateTime;
@@ -62,7 +62,7 @@ public class UserView {
   private double mySpeedFactor;
 
   // Components of the UI
-  private SimulationView mySimulationView;
+  private SimulationViewZoomable mySimulationView;
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
@@ -98,14 +98,16 @@ public class UserView {
     myRoot = new BorderPane();
 
     // Initialize UI components
-    mySimulationView = new SimulationView(mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
-        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN);
+    mySimulationView = new SimulationViewZoomable(
+        mySceneWidth * SimViewConstants.GRID_PROPORTION_OF_SCREEN,
+        mySceneHeight * SimViewConstants.GRID_PROPORTION_OF_SCREEN
+    );
     myControlPanel = new ControlPanel(this); // Pass reference for event handling
     myInformationBox = new InformationBox();
     myStateColorLegend = new StateColorLegend(this);  // Color-state legend, with passed reference for event handling
 
     // Set components in BorderPane
-    myRoot.setLeft(mySimulationView.getDisplay());
+    myRoot.setLeft(mySimulationView.getZoomableDisplay());
 
     VBox rightPanel = new VBox(ControlPanel.VBOX_SPACING);
     rightPanel.getChildren().addAll(myControlPanel.getPanel(), myStateColorLegend.getLegendBox());
@@ -117,6 +119,15 @@ public class UserView {
     mySpeedFactor = 1;
 
     initializeScene();
+  }
+
+  /**
+   * Reset the positioning and zoom of the simulation grid view, if one exists
+   */
+  public void resetGridZoom() {
+    if (mySimulationView != null) {
+      mySimulationView.resetGridZoom();
+    }
   }
 
   /**

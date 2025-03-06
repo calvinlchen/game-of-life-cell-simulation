@@ -56,11 +56,12 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   private int currentState;
   private int nextState;
   private int[] position;
-  private final R rule;
+  private final R myRule;
 
   private int stateLength;
 
   private final List<Integer> stateHistory;
+  private final List<Integer> stateLengthHistory;
 
   /**
    * Constructs a cell with the specified initial state and a rule for determining its behavior.
@@ -76,12 +77,16 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
     try {
       stateLength = 1;
-      this.rule = rule;
+      myRule = rule;
+
       setCurrentState(state);
       setNextState(state);
+
       neighbors = new ArrayList<>();
       directionalNeighbors = Map.of();
+
       stateHistory = new LinkedList<>();
+      stateLengthHistory = new LinkedList<>();
 
       saveCurrentState();
     } catch (SimulationException e) {
@@ -108,7 +113,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   public void saveCurrentState() {
     try {
-      int maxHistorySize = (int) rule.getParameters().getParameter("maxHistorySize");
+      int maxHistorySize = (int) myRule.getParameters().getParameter("maxHistorySize");
       if (maxHistorySize < MIN_STATE_HISTORY) {
         logger.error("Invalid maxHistorySize parameter: {}", maxHistorySize);
         throw new SimulationException("InvalidHistorySize",
@@ -116,12 +121,18 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
       }
 
       stateHistory.addLast(currentState);
+      stateLengthHistory.addLast(stateLength);
 
       // basically we counting the first guy as negligible
       // so if you have 1 that means you'll save one state you can go back to before you stuck
 
       // the one is not a magic number, just how math works to make maxHistorySize work the
       // way that is expected
+      if (stateHistory.size()  > maxHistorySize + 1) {
+        stateHistory.removeFirst();
+        stateLengthHistory.removeFirst();
+      }
+
 
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -147,15 +158,15 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
 
     try {
       if (stateHistory.size() > MIN_STATE_HISTORY) {
-        // this order because we step and immediately saved
-        // so gotta ignore this one for it to make sense
-        logger.debug("Remove the top {}", stateHistory.removeLast());
+        stateHistory.removeLast();
+        stateLengthHistory.removeLast();
         success = true;
       }
 
       setCurrentState(stateHistory.getLast());
       setNextState(stateHistory.getLast());
 
+      stateLength = stateHistory.getLast();
 
     } catch (SimulationException e) {
       // should never hit since it shouldn't be possible for state to have bad history
@@ -180,7 +191,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
       if (shouldSkipCalculation()) {
         return;
       }
-      int newState = rule.apply(getSelf());
+      int newState = myRule.apply(getSelf());
       postProcessNextState(newState);
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -239,6 +250,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
       stateLength = 1;
     }
   }
+
 
   /**
    * Resets parameters after a simulation step.
@@ -471,7 +483,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    * @return the rule for the cell
    */
   protected R getRule() {
-    return rule;
+    return myRule;
   }
 
 }

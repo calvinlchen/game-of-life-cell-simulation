@@ -1,5 +1,30 @@
 package cellsociety.model.simulation.rules.darwinhandler;
 
-public class MoveCommandHandler {
+import cellsociety.model.simulation.cell.DarwinCell;
+import cellsociety.model.simulation.grid.Grid;
+import cellsociety.model.util.darwin.DarwinCommand;
+import cellsociety.model.util.exceptions.SimulationException;
+import java.util.Optional;
+import java.util.OptionalInt;
 
+public class MoveCommandHandler implements DarwinCommandHandler {
+
+
+  @Override
+  public OptionalInt execute(DarwinCommand command, DarwinCell cell, Optional<Grid> grid) {
+    int moveAmount;
+    try {
+      moveAmount = DarwinCommandHandlerHelperMethods.getIntegerArgument(command);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+
+    if (grid.isEmpty()) {
+      return OptionalInt.empty();
+    }
+
+    DarwinCommandHandlerHelperMethods.move(cell, moveAmount, grid.get());
+
+    return OptionalInt.empty();
+  }
 }

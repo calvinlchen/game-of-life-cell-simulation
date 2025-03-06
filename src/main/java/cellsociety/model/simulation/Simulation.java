@@ -22,68 +22,76 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a simulation where cells interact based on rules, parameters, and configurations
- * provided through XML data.
+ * The main entry point for interacting with simulation logic for both view and configuration. It
+ * encapsulates the setup of the internal grid, rule, parameter, and cell management, and allows the
+ * View to interact through well-defined methods.
  *
- * <p>This is the main API for interacting with simulations. The View should communicate only
- * through this class.
+ * <p><b>API Mindset:</b>
+ * This class follows an API mindset by providing methods to manage the simulation process rather
+ * than exposing raw data. It uses position as an ID to manage cells without revealing underlying
+ * structures. Simulation exceptions provide information to the View about errors and their causes.
+ * It employs read-only methods (getters for states) and update-only methods for simulation
+ * parameters to keep the internal state encapsulated.</p>
  *
- * <p><b>Contracts:</b>
+ * <p><b>SOLID Principles:</b>
  * <ul>
- *     <li>Encapsulates internal grid, rule, and parameter logic.</li>
- *     <li>Provides methods to step the simulation forward and backward.</li>
- *     <li>Provides methods to update the grids topology.</li>
- *     <li>Offers read-only access to cell states, and metadata.</li>
- *     <li>Offers read-write access to simulations current parameters.</li>
- *     <li>Throws {@link SimulationException} for invalid operations.</li>
- * </ul>
- * </p>
- *
- * @param <T> The type of cell used in the simulation, extending the base Cell class
- * @author Jessica Chen
- * @author ChatGPT, helped with some of the JavaDocs
+ *   <li><b>S:</b> This class manages simulation initialization, stepping, and metadata access only,
+ *       delegating cell logic and management to other subclasses.</li>
+ *   <li><b>O:</b> Utilizes polymorphism and the <b>Factory Pattern</b> as well as <b>Reflection</b>
+ *       to create Cell and Rule classes, allowing easy extension of simulation types without
+ *       modifying logic.</li>
+ *   <li><b>L:</b> Uses generics to allow any subclass of parameters, cell, or rule to be used in
+ *       the simulation as long as they follow generic constraints.</li>
+ *   <li><b>I:</b> External users do not interact directly with Grid, Rule, Cell, or Parameters.
+ *   </li>
+ *   <li><b>D:</b> Through the use of generics, the class depends on abstract versions of Rule,
+ *      Cell, and Parameters.</li>
+ * </ul></p>
  */
 public class Simulation<T extends Cell<T, ?>> {
 
   private static final Logger logger = LogManager.getLogger(Simulation.class);
 
-  private final XmlData xmlData;
+  private final XmlData myXmlData;
   private Grid<T> myGrid;
-  private GenericParameters parameters;
+  private GenericParameters myParameters;
 
   private static final String CELL_PACKAGE = "cellsociety.model.simulation.cell.";
 
 
   private int totalIterations;
 
+
   /**
-   * Constructs a Simulation instance using the provided XML data.
+   * Constructs a new simulation instance using the provided XML configuration data.
+   * This method initializes the simulation by validating the input data and setting up
+   * the simulation environment (grid, rules, parameters, and cells).
    *
-   * @param data the XML data containing the simulation configuration
-   * @throws SimulationException if the XML data is null, or if simulation fails to setup
+   * @param data The XMLData object containing configuration details such as simulation type,
+   *             grid dimensions, initial cell states, and parameter settings.
+   * @throws SimulationException If the provided XML data is null or if issues occur during
+   *                             simulation setup (e.g., rule creation or grid construction).
    */
   public Simulation(XmlData data) {
     try {
-      xmlData = getXmlData(data);
+      myXmlData = getXmlData(data);
       setUpSimulation();
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
 
+
   /**
-   * Retrieves and validates the provided XmlData object.
+   * Helper method: validates XmlData and stores it.
    *
-   * @param data - the XmlData object to be validated and returned
-   * @return the validated XmlData object
-   * @throws SimulationException if the provided XmlData object is null
+   * <p>Throws error if XML is null.</p>
    */
   private XmlData getXmlData(XmlData data) {
     final XmlData xmlData;
     if (data == null) {
       logger.error("Simulation initialization failed: Null XML data");
-      throw new SimulationException("NullParameter",
-          List.of("XmlData", "Simulation()"));
+      throw new SimulationException("NullParameter", List.of("XmlData", "Simulation()"));
     }
 
     xmlData = data;
@@ -93,23 +101,19 @@ public class Simulation<T extends Cell<T, ?>> {
   // Start of Simulation Setup ------
 
   /**
-   * Sets up the initial conditions for the simulation. This method initializes the simulation by
-   * configuring its type, parameters, and grid structure using the provided XML data.
+   * Helper method: outlines the order in which to setup the simulation.
    *
-   * <p>The method performs the following steps:
    * <ul>
-   *   <li>Retrieves the simulation type from the XML data.</li>
-   *   <li>Initialize rules and parameters based on the simulation type.</li>
-   *   <li>Creates a list of cells based on the simulation type with the rule.</li>
-   *   <li>Connects the list of cells based on the grid toplogy.</li>
+   *   <li>Create a grid instance so rule can get a reference of it if needed.</li>
+   *   <li>Call rule factory to set up Parameter and Rule based on simType.</li>
+   *   <li>Based on states from XML as well as new rule just created create cells.</li>
+   *   <li>Using cells, initialize them into the grid with the correct neighbors.</li>
    * </ul>
-   *
-   * @throws SimulationException if the setup process fails, including issues with rule creation,
-   *                             parameter retrieval, or grid initialization.
    */
   private void setUpSimulation() {
     try {
-      SimType simType = xmlData.getType();
+      SimType simType = myXmlData.getType();
+      myGrid = new Grid();
 
       Rule<T> rule = setUpRules(simType);
       List<Cell<T, ?>> cellList = createCells(simType, rule);
@@ -120,40 +124,15 @@ public class Simulation<T extends Cell<T, ?>> {
     }
   }
 
-  /**
-   * Configures the simulation rules and parameters based on the provided simulation type.
-   *
-   * <p>This method performs the following actions:</p>
-   * <ul>
-   *   <li>Retrieves parameter values from the XML data.</li>
-   *   <li>Uses {@link RuleFactory} to dynamically create the corresponding {@link Rule} instance.
-   *   </li>
-   *   <li>Assigns the retrieved parameters to the rule, ensuring that both numerical and
-   *       non-numerical parameters are handled correctly.</li>
-   * </ul>
-   *
-   * <h2>Error Handling</h2>
-   *
-   * <p>If any step in the rule setup process fails, a {@link SimulationException} is thrown,
-   * ensuring that the simulation does not proceed with invalid configurations.</p>
-   *
-   * <h2>Example Usage</h2>
-   * <pre>
-   * Rule<?> fireRule = setUpRules(SimType.Fire);
-   * </pre>
-   *
-   * @param simType The type of simulation for which the rules are being set up.
-   * @return The configured {@link Rule} instance for the specified simulation type.
-   * @throws SimulationException If rule creation or parameter retrieval fails.
-   */
+
   private Rule<T> setUpRules(SimType simType) {
     Rule<T> rule;
 
     try {
-      Map<String, Object> params = xmlData.getParameters();
+      Map<String, Object> params = myXmlData.getParameters();
 
-      rule = (Rule<T>) RuleFactory.createRule(simType, params);
-      parameters = rule.getParameters();
+      rule = (Rule<T>) RuleFactory.createRule(simType, params, myGrid);
+      myParameters = rule.getParameters();
 
     } catch (SimulationException e) {
       logger.error("Failed to set up rules for simulation type: {}", simType, e);
@@ -163,16 +142,7 @@ public class Simulation<T extends Cell<T, ?>> {
     return rule;
   }
 
-  /**
-   * Creates a list of cells for the simulation based on the provided simulation type and rule. The
-   * method dynamically determines the appropriate cell class to use, initializes cells with given
-   * states, and returns the resulting list of cells.
-   *
-   * @param simType - the type of simulation for which the cells are being created
-   * @param rule    - the rule object associated with the simulation type
-   * @return a list of cells created based on the provided simulation type and rule
-   * @throws SimulationException if cell creation fails due to reflection issues or other errors
-   */
+
   private List<Cell<T, ?>> createCells(SimType simType, Rule<T> rule) {
     List<Cell<T, ?>> cellList = new ArrayList<>();
 
@@ -182,12 +152,12 @@ public class Simulation<T extends Cell<T, ?>> {
       Constructor<?> cellConstructor = cellClass.getConstructor(int.class, rule.getClass());
 
       // for all the states, create cell with the correct state and rule of that specific typ
-      for (Integer state : xmlData.getCellStateList()) {
+      for (Integer state : myXmlData.getCellStateList()) {
         cellList.add((Cell<T, ?>) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
       logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
-          xmlData.getCellStateList().stream().map(Object::toString)
+          myXmlData.getCellStateList().stream().map(Object::toString)
               .collect(Collectors.joining(", ")), e);
       throw new SimulationException("CellCreationFailed", List.of(simType.name()), e);
     }
@@ -195,18 +165,10 @@ public class Simulation<T extends Cell<T, ?>> {
     return cellList;
   }
 
-
-  /**
-   * Sets up the grid structure for the simulation using the provided list of cells. This method
-   * initializes the grid's configuration, including its dimensions, cell shapes, neighborhood
-   * relationships, and edge behavior based on the XML data.
-   *
-   * @param cellList a list of cells that will make up the grid structure
-   */
   private void setUpGridStructure(List<Cell<T, ?>> cellList) {
     try {
-      myGrid = new Grid(cellList, xmlData.getGridRowNum(), xmlData.getGridColNum(),
-          xmlData.getShape(), xmlData.getNeighborhood(), xmlData.getEdge());
+      myGrid.constructGrid(cellList, myXmlData.getGridRowNum(), myXmlData.getGridColNum(),
+          myXmlData.getShape(), myXmlData.getNeighborhood(), myXmlData.getEdge());
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
@@ -219,22 +181,13 @@ public class Simulation<T extends Cell<T, ?>> {
   // Simulation Related
 
   /**
-   * Moves the simulation backward by one step, if possible.
+   * Moves the simulation backward by one step if all cells can revert to a previous state.
+   * If not, the simulation remains unchanged and a warning is logged. If successful,
+   * it also decrements the cell state length metadata and the total iteration count.
    *
-   * <p>If moving backward is not possible, the simulation remains in its current state,
-   * and the total iterations count is not updated.
-   *
-   * <p>WARNING: this is not integrated with getStateLength, could probably
-   * make a symmetric state length similar to history but not made yet
-   *
-   * <p><b>Intended Use:</b> This method is used when a user wants to revert the simulation state
-   * to a previous step, as long as that previous step is still stored.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * Simulation sim = new Simulation(xmlData);
-   * sim.stepBackward();
-   * </pre>
+   * @throws SimulationException If an error occurs during step back. This should never be thrown
+   *                             due to precautions in Cell (should not be possible to have no
+   *                             history).
    */
   public void stepBack() {
     if (myGrid.getCells().stream().allMatch(Cell::stepBack)) {
@@ -244,17 +197,14 @@ public class Simulation<T extends Cell<T, ?>> {
     }
   }
 
+
   /**
-   * Advances the simulation forward by one step.
+   * Advances the simulation forward by one step. This method calculates the next state
+   * for all cells, applies the state changes, resets parameters, and saves the current
+   * state for potential rollback.
    *
-   * <p><b>Intended Use:</b> This method progresses the simulation to its next state based on
-   * defined rules. It is the primary function for executing a simulation over time.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * Simulation sim = new Simulation(xmlData);
-   * sim.stepForward();
-   * </pre>
+   * @throws SimulationException If an error occurs in stepping forward. This should never be thrown
+   *                             due to precautions in Cell and Rule.
    */
   public void step() {
     try {
@@ -271,21 +221,12 @@ public class Simulation<T extends Cell<T, ?>> {
   // Metadata Related
 
   /**
-   * Returns the state of the cell at a specified location in the grid.
+   * Retrieves the current state of the cell at the specified row and column within the grid.
    *
-   * <p><b>Intended Use:</b> This method is used to retrieve the current state of a specific cell
-   * for visualization.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * int state = sim.getCurrentState(2, 3);
-   * System.out.println("Cell state: " + state);
-   * </pre>
-   *
-   * @param row - row index of the cell
-   * @param col - column index of the cell
-   * @return the current state of the cell at the specified location
-   * @throws SimulationException if the row and column are out of bounds
+   * @param row The row index of the target cell.
+   * @param col The column index of the target cell.
+   * @return The current state of the specified cell.
+   * @throws SimulationException If the specified row and column are out of bounds.
    */
   public int getCurrentState(int row, int col) {
     try {
@@ -296,22 +237,13 @@ public class Simulation<T extends Cell<T, ?>> {
   }
 
   /**
-   * Retrieves the duration for which the cell at the specified position has remained in the same
-   * state.
+   * Retrieves the duration (number of steps) that the cell at the given position
+   * has remained in its current state.
    *
-   * <p><b>Intended Use:</b> This method helps track how long a cell has maintained a specific
-   * state.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * int duration = sim.getStateLength(2, 3);
-   * System.out.println("State duration: " + duration);
-   * </pre>
-   *
-   * @param row - the row index of the cell
-   * @param col - the column index of the cell
-   * @return the state length of the cell at the specified location
-   * @throws SimulationException if the specified position is invalid or an error occurs
+   * @param row The row index of the cell.
+   * @param col The column index of the cell.
+   * @return The number of consecutive steps the cell has maintained its current state.
+   * @throws SimulationException If the cell position is invalid.
    */
   public int getStateLength(int row, int col) {
     try {
@@ -322,18 +254,9 @@ public class Simulation<T extends Cell<T, ?>> {
   }
 
   /**
-   * Retrieves the total number of iterations completed in the simulation.
+   * Returns the current iteration number of the simulation.
    *
-   * <p><b>Intended Use:</b> This method is useful for tracking how many steps the simulation has
-   * progressed and the current step of the simulation you are on.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * int iterations = sim.getTotalIterations();
-   * System.out.println("Total iterations: " + iterations);
-   * </pre>
-   *
-   * @return the total number of iterations completed
+   * @return The total iteration count.
    */
   public int getTotalIterations() {
     return totalIterations;
@@ -342,168 +265,95 @@ public class Simulation<T extends Cell<T, ?>> {
   // Parameter Related
 
   /**
-   * Retrieves all parameter keys in the simulation.
+   * Retrieves all double parameter key values for the current simulation.
    *
-   * <p><b>Intended Use:</b> This method provides access to all configurable parameters of the
-   * simulation.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * List&lt;String> keys = sim.getParameterKeys();
-   * System.out.println("Available parameters: " + keys);
-   * </pre>
-   *
-   * @return a list of parameter keys
+   * @return A list of all valid keys with double values for the current simulation.
    */
   public List<String> getParameterKeys() {
-    return parameters.getParameterKeys();
+    return myParameters.getParameterKeys();
   }
 
   /**
-   * Updates a single simulation parameter dynamically.
+   * Updates the simulation parameter identified by {@code key} with a new double value.
    *
-   * <p><b>Intended Use:</b> This method allows users to modify simulation behavior dynamically by
-   * updating parameters.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * sim.updateParameter("growthRate", 1.5);
-   * </pre>
-   *
-   * @param key   - the parameter name
-   * @param value - the new value for the parameter
-   * @throws SimulationException if the parameter key is not found
+   * @param key The name of the parameter to update.
+   * @param value The new value for the parameter.
+   * @throws SimulationException If the parameter key is not found.
    */
   public void updateParameter(String key, double value) {
     try {
-      parameters.setParameter(key, value);
+      myParameters.setParameter(key, value);
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
 
   /**
-   * Retrieves the current value of a parameter.
+   * Retrieves the current value of the simulation parameter associated with the provided key.
    *
-   * <p><b>Intended Use:</b> This method is used to access the current value of a given parameter
-   * for display or saving finally parameter value purposes.
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * double value = sim.getParameter("growthRate");
-   * System.out.println("Growth Rate: " + value);
-   * </pre>
-   *
-   * @param key - the parameter name
-   * @return the parameter's current value
-   * @throws SimulationException if the parameter key is not found
+   * @param key The name of the parameter to retrieve.
+   * @return The value of the parameter.
+   * @throws SimulationException If the parameter key is not found.
    */
   public double getParameter(String key) {
     try {
-      return parameters.getParameter(key);
+      return myParameters.getParameter(key);
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
 
   /**
-   * Retrieves all additional parameter keys in the simulation.
+   * Retrieves additional parameter keys that may be used in the simulation.
    *
-   * <p><b>Intended Use:</b> This method provides access to all additional parameters of the
-   * simulation that are not stored as standard double values.
-   *
-   * <p>These parameters may include non-numeric configurations, such as lists of values
-   * (e.g., survival rules in Game of Life).</p>
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * List&lt;String> additionalKeys = sim.getAdditionalParameterKeys();
-   * System.out.println("Additional parameters: " + additionalKeys);
-   * </pre>
-   *
-   * @return a list of additional parameter keys
+   * @return A list of additional parameter keys.
    */
   public List<String> getAdditionalParameterKeys() {
-    return parameters.getAdditionalParameterKeys();
+    return myParameters.getAdditionalParameterKeys();
   }
 
   /**
-   * Updates a single additional simulation parameter dynamically.
+   * Updates an additional simulation parameter identified by {@code key} with a new value.
    *
-   * <p><b>Intended Use:</b> This method is used to modify **non-double** simulation parameters
-   * dynamically, such as lists or categorical settings.</p>
-   *
-   * <p><b>Important:</b> While standard parameters are type-safe (stored as double values),
-   * additional parameters allow flexibility but should be used with caution. If a parameter type
-   * does not match expectations, an error will be logged.</p>
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * sim.updateAdditionalParameter("ruleList", List.of(2, 3, 4));
-   * </pre>
-   *
-   * @param key   - the parameter name
-   * @param value - the new value for the parameter (can be List, String, Integer, etc.)
-   * @throws SimulationException if an error occurs while updating the parameter
+   * @param key The name of the additional parameter.
+   * @param value The new value for the parameter.
+   * @throws SimulationException If the key is not a current key in additional parameters.
    */
   public void updateAdditionalParameter(String key, Object value) {
-    parameters.setAdditionalParameter(key, value);
+    myParameters.setAdditionalParameter(key, value);
   }
 
   /**
-   * Retrieves the current value of an additional parameter.
+   * Retrieves an additional parameter by key and casts it to the specified type, returning an Optional<T>.
    *
-   * <p><b>Intended Use:</b> This method provides safe access to additional parameters that are
-   * **not** stored as doubles. It ensures type safety by allowing the caller to specify the
-   * expected return type.</p>
-   *
-   * <p><b>Important:</b> If the parameter does not exist or is of the wrong type, an empty
-   * {@code Optional} is returned, and a warning is logged.</p>
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * Optional&lt;List&lt;Integer>> survivalRules =
-   * sim.getAdditionalParameter("survivalThreshold", List.class);
-   * survivalRules.ifPresent(rules -> System.out.println("Survival Rules: " + rules));
-   * </pre>
-   *
-   * @param key  - the parameter name
-   * @param type - the expected class type (e.g., List.class, String.class)
-   * @param <T>  - the expected return type
-   * @return an {@code Optional<T>} containing the parameter value if found and correctly typed, or
-   * an empty {@code Optional} if not found or mismatched.
+   * @param key The name of the parameter.
+   * @param type The expected type of the parameter value.
+   * @param <T> The generic type of the parameter.
+   * @return An optional containing the parameter value if found and correctly typed, or an empty optional otherwise.
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
-    return parameters.getAdditionalParameter(key, type);
+    return myParameters.getAdditionalParameter(key, type);
   }
 
   // Grid Topology Related
 
   /**
-   * Sets the neighbors for the grid cells based on the specified shape, neighborhood type, and edge
-   * type. This operation clears all previous neighbors for all cells before setting the new
-   * configuration.
+   * Updates the grid topology by reconfiguring the neighbor relationships based on the provided shape,
+   * neighborhood, and edge type parameters.
    *
-   * <p><b>Intended Use:</b> This method is used when the user wants to change grid topology for an
-   * already running simulation
-   *
-   * <p><b>Example Usage:</b>
-   * <pre>
-   * sim.configureNeighbors(ShapeType.RECTANGLE, NeighborhoodType.MOORE, EdgeType.TOROIDAL);
-   * </pre>
-   *
-   * @param shape        The shape type of the cells (e.g., RECTANGLE, HEXAGON, TRIANGLE).
-   * @param neighborhood The neighborhood type defining neighbor relationships (e.g., MOORE,
-   *                     VON_NEUMANN, EXTENDED_MOORE).
-   * @param edge         The edge type specifying boundary behavior (e.g., NONE, MIRROR, TOROIDAL).
+   * @param shape The desired cell shape (e.g., RECTANGLE, HEXAGON).
+   * @param neighborhood The desired neighborhood type (e.g., MOORE, VON_NEUMANN).
+   * @param edge The desired edge behavior (e.g., NONE, TOROIDAL).
+   * @throws SimulationException If an invalid topology configuration is provided
+   *                             (should not be possible due to enum restrictions).
    */
   public void changeTopology(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
     myGrid.setNeighborsAllCells(shape, neighborhood, edge);
   }
 
   // API Calls for use in saving simulation information ---
-  // I did not write tests for this, because frankly onot sure what they do precisely
-  // like i know the general
+  // these are related to saving simulation info, they just return info simulation currently
+  // knows
 
   /**
    * Returns the XML data that created the simulation.
@@ -511,7 +361,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @return the XMLData object containing the simulation's initial configuration
    */
   public XmlData getXmlDataObject() {
-    return xmlData;
+    return myXmlData;
   }
 
   /**
@@ -522,7 +372,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @return the simulation type as a SimType enum
    */
   public SimType getSimulationType() {
-    return xmlData.getType();
+    return myXmlData.getType();
   }
 
   /**
@@ -533,7 +383,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @return the simulation ID from the XML data
    */
   public int getSimulationId() {
-    return xmlData.getId();
+    return myXmlData.getId();
   }
 
   /**
@@ -544,7 +394,7 @@ public class Simulation<T extends Cell<T, ?>> {
    * @return the number of states from the XML data parameters
    */
   public int getNumStates() {
-    return xmlData.getNumStates();
+    return myXmlData.getNumStates();
   }
 
   /**
