@@ -2,6 +2,8 @@ package cellsociety.view.window;
 
 import cellsociety.model.simulation.Simulation;
 import cellsociety.view.utils.ResourceManager;
+import cellsociety.view.utils.exceptions.ViewException;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -19,6 +21,7 @@ public class ChangeParametersView {
   public static final int CHANGE_PARAMS_WINDOW_HEIGHT = 400;
 
   private final Stage myStage;
+  private final UserView myUserView;
   private final Simulation<?> mySimulation;
   private final VBox layout;
   // Map to keep track of parameter keys and their corresponding text fields
@@ -29,10 +32,12 @@ public class ChangeParametersView {
    *
    * @param simulation the Simulation instance whose parameters can be updated.
    */
-  public ChangeParametersView(Simulation<?> simulation) {
-    this.mySimulation = simulation;
+  public ChangeParametersView(UserView userView, Simulation<?> simulation) {
+    myUserView = userView;
+    mySimulation = simulation;
     myStage = new Stage();
     layout = new VBox(10);
+    layout.setPadding(new Insets(10, 0, 0, 10));
     parameterFields = new HashMap<>();
     buildUI();
     Scene scene = new Scene(layout, CHANGE_PARAMS_WINDOW_WIDTH, CHANGE_PARAMS_WINDOW_HEIGHT);
@@ -81,11 +86,15 @@ public class ChangeParametersView {
         double newValue = Double.parseDouble(entry.getValue().getText());
         mySimulation.updateParameter(key, newValue);
       } catch (NumberFormatException ex) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid value for parameter: " + key);
+        Alert alert = new Alert(Alert.AlertType.ERROR,
+            (new ViewException("InvalidParameterValue", key)).getMessage());
         alert.showAndWait();
+        myUserView.updateInformationBox();
         return; // Abort saving if any value is invalid.
       }
     }
-    myStage.close(); // Close the window if all updates are successful.
+    // Update main-window information panel and close this window if all updates are successful.
+    myUserView.updateInformationBox();
+    myStage.close();
   }
 }

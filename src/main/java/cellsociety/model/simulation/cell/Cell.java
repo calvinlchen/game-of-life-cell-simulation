@@ -56,7 +56,7 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
   private int currentState;
   private int nextState;
   private int[] position;
-  private final R myRule;
+  private R myRule;
 
   private int stateLength;
 
@@ -484,6 +484,14 @@ public abstract class Cell<C extends Cell<C, R>, R extends Rule<C>> {
    */
   protected R getRule() {
     return myRule;
+  }
+
+  /**
+   * Update the rules for a cell.
+   * @param rule new rule for the cell.
+   */
+  public void updateRule(R rule) {
+    myRule = rule;
   }
 
 }

@@ -202,6 +202,15 @@ public class UserView {
   }
 
   /**
+   * Updates the information box, notably the parameter fields, based on the current Simulation object
+   */
+  public void updateInformationBox() {
+    if (checkSimulationExists() && myInformationBox != null) {
+      myInformationBox.updateInfo(mySimulationView.getSimulation().getXmlDataObject());
+    }
+  }
+
+  /**
    * Open the window which allows user to change simulation parameters.
    */
   public void openChangeParametersWindow() {
@@ -215,7 +224,7 @@ public class UserView {
       return;
     }
 
-    myChangeParametersWindow = new ChangeParametersView(mySimulationView.getSimulation());
+    myChangeParametersWindow = new ChangeParametersView(this, mySimulationView.getSimulation());
   }
 
   public void closeChangeParametersWindow() {

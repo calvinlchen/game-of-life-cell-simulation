@@ -16,8 +16,6 @@ import cellsociety.model.util.exceptions.SimulationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -54,7 +52,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class FallingSandRule extends Rule<FallingSandCell> {
 
-  private static final Logger logger = LogManager.getLogger(FallingSandRule.class);
+  //private static final Logger logger = LogManager.getLogger(FallingSandRule.class);
   private static final Random random = new Random();
 
   /**
@@ -105,10 +103,10 @@ public class FallingSandRule extends Rule<FallingSandCell> {
       int newState, List<Integer> replaceableNeighbors) {
     try {
       for (int replaceableNeighbor : replaceableNeighbors) {
-        logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
+        //logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
         Optional<FallingSandCell> neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
         if (neighbor.isPresent()) {
-          logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
+          //logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
           neighbor.get().setNextState(newState);
           return replaceableNeighbor;
         }
