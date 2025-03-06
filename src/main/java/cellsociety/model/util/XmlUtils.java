@@ -22,6 +22,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * A utility class for reading and writing simulation data to/from XML files. Provides functionality
  * to read simulation details, grid data, and parameters from XML files, and also to write
@@ -30,6 +33,8 @@ import java.io.File;
  * @author Kyaira Boughton
  */
 public class XmlUtils {
+
+  private static final Logger logger = LogManager.getLogger(XmlData.class);
 
   /**
    * Constructs an XMLUtils object with the current program language.
@@ -267,33 +272,6 @@ public class XmlUtils {
   }
 
   /**
-   * Converts a list of cell state strings into a list of cell state enums.
-   *
-   * @param cellTypes a list of cell state strings
-   * @param handler   the handler to convert the string to the appropriate cell state
-   * @return a list of integers representing the cell states as enums
-   * @throws IllegalArgumentException if an invalid cell state is encountered
-   */
-  private ArrayList<Integer> cellStatesToEnum(List<String> cellTypes, CellStateHandler handler) {
-    ArrayList<Integer> cellStateEnums = new ArrayList<>();
-
-    if (handler == null) {
-      throw new XmlException("UnknownSimType");
-    }
-
-    for (String cellType : cellTypes) {
-      try {
-        int stateEnum = handler.stateFromString(cellType);
-        cellStateEnums.add(stateEnum);
-      } catch (IllegalArgumentException e) {
-        throw new XmlException("UnknownCellState", cellType);
-      }
-    }
-
-    return cellStateEnums;
-  }
-
-  /**
    * A method that extracts the cellstates from the simulation xml and turns them into a string
    * list.
    *
@@ -388,10 +366,9 @@ public class XmlUtils {
   /**
    * Generates random cell states based on the grid size and variation information in the XML file.
    *
-   * @param rows           the number of rows in the grid
-   * @param columns        the number of columns in the grid
-   * @param gridElement    the XML element containing the grid's variation data
-   * @param simulationType the type of the simulation
+   * @param totalCells        the number of rows * the number of colums in the grid
+   * @param variationNode    the XML element containing the grid's variation data
+   * @param simType          the type of the simulation
    * @param handler        the handler for cell state conversion
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
@@ -415,6 +392,8 @@ public class XmlUtils {
           String cellType = cellElement.getAttribute("cellType"); // Get the cell type
           int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
 
+          logger.debug("Found " + cellType + " as the cell type after explicit");
+
           // Add the cell type and count to the cellStateMap
           cellStateMap.put(1, cellCount);
         }
@@ -426,6 +405,8 @@ public class XmlUtils {
           float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
 
           int cellCount = (int) (cellRatio * totalCells);
+
+          logger.debug("Found " + cellType + " as the cell type after ratio");
 
           // Add the cell type and count to the cellStateMap
           cellStateMap.put(1, cellCount);
@@ -488,7 +469,7 @@ public class XmlUtils {
     return cellList;
   }
 
-  private SimType simTypeFromString(String simTypeString) {
+  SimType simTypeFromString(String simTypeString) {
     return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
       case "game of life", "gameoflife" -> SimType.GameOfLife;
       case "spreading of fire", "fire" -> SimType.Fire;
@@ -504,7 +485,7 @@ public class XmlUtils {
     };
   }
 
-  private int maxFromSimType(SimType simType) {
+  int maxFromSimType(SimType simType) {
     // Initialize the HashMap for mapping SimType to max states
     Map<SimType, Integer> maxConnector = new HashMap<>();
 
