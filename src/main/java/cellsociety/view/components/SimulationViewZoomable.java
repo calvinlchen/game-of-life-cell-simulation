@@ -77,4 +77,17 @@ public class SimulationViewZoomable extends SimulationView {
 
     myScrollPane = scrollPane;
   }
+
+  /**
+   * Reset the positioning and zoom of this grid view
+   */
+  public void resetGridZoom() {
+    Pane gridPane = super.myDisplay;
+    if (gridPane != null) {
+      gridPane.setScaleX(1.0);
+      gridPane.setScaleY(1.0);
+      gridPane.setTranslateX(0);
+      gridPane.setTranslateY(0);
+    }
+  }
 }

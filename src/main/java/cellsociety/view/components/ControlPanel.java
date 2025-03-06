@@ -50,6 +50,10 @@ public class ControlPanel {
     pauseButton.setOnAction(e -> myUserView.pauseSimulation());
     myButtons.add(pauseButton);
 
+    Button resetZoomButton = new Button(resources.getString("ResetZoomCommand"));
+    resetZoomButton.setOnAction(e -> myUserView.resetGridZoom());
+    myButtons.add(resetZoomButton);
+
     Button clearButton = new Button(resources.getString("ClearCommand"));
     clearButton.setOnAction(e -> myUserView.stopAndResetSimulation());
     myButtons.add(clearButton);

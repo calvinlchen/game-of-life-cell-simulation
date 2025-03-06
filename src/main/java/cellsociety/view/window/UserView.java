@@ -122,6 +122,15 @@ public class UserView {
   }
 
   /**
+   * Reset the positioning and zoom of the simulation grid view, if one exists
+   */
+  public void resetGridZoom() {
+    if (mySimulationView != null) {
+      mySimulationView.resetGridZoom();
+    }
+  }
+
+  /**
    * Initializes the scene.
    */
   private void initializeScene() {
