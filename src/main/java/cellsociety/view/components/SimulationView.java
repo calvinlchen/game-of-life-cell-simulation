@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
  */
 public class SimulationView {
 
-  private final Pane myDisplay;
+  protected final Pane myDisplay;
   private final double myGridWidth;
   private final double myGridHeight;
   private CellView[][] myCellViews;
