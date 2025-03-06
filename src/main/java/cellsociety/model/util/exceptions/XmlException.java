@@ -19,7 +19,7 @@ public class XmlException extends IllegalArgumentException {
    * @param key - the key used to retrieve the corresponding error message from the resource bundle
    */
   public XmlException(String key) {
-    super(ResourceManager.getCurrentErrorBundle().getString(key));
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key)));
   }
 
   /**
@@ -29,6 +29,6 @@ public class XmlException extends IllegalArgumentException {
    * @param argument - additional object displayed in the provided error message, such as a given invalid simulation type
    */
   public XmlException(String key, Object argument) {
-    super(ResourceManager.getCurrentErrorBundle().getString(key) + argument);
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key), argument));
   }
 }

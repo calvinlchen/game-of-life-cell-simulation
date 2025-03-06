@@ -32,7 +32,7 @@ public class SimulationException extends RuntimeException {
    * @param argument - additional object displayed in the provided error message, such as a given invalid simulation type
    */
   public SimulationException(String key, Object argument) {
-    super(ResourceManager.getCurrentErrorBundle().getString(key) + argument);
+    super(String.format(ResourceManager.getCurrentErrorBundle().getString(key), argument));
   }
 
   /**
