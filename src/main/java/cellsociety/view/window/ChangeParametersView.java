@@ -82,7 +82,7 @@ public class ChangeParametersView {
       if (unmodifiableKeys.contains(key)) {
         continue;
       }
-      List<?> parameterList = (List<?>) mySimulation.getAdditionalParameter("S", List.class)
+      List<?> parameterList = (List<?>) mySimulation.getAdditionalParameter(key, List.class)
           .orElse(List.of());
 
       List<Integer> integersList = new ArrayList<>();
@@ -95,6 +95,7 @@ public class ChangeParametersView {
       TextField textField = new TextField(integersList.stream()
           .map(String::valueOf) // Convert integers to strings
           .collect(Collectors.joining(", "))); // Join with ", " separator
+
       parameterFields.put(key, textField);
       HBox row = new HBox(10, label, textField);
       layout.getChildren().add(row);

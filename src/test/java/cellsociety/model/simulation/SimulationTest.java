@@ -33,6 +33,7 @@ import cellsociety.model.util.constants.GridTypes.NeighborhoodType;
 import cellsociety.model.util.constants.GridTypes.ShapeType;
 import cellsociety.model.util.exceptions.SimulationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -144,8 +145,10 @@ public class SimulationTest {
       when(data.getType()).thenReturn(SimType.Fire);
       when(data.getGridColNum()).thenReturn(1);
       when(data.getGridRowNum()).thenReturn(1);
-      when(data.getParameters()).thenReturn(
-          Map.of("ignitionLikelihood", 1, "treeSpawnLikelihood", 1));
+      Map<String, Object> params = new HashMap<>();
+      params.put("ignitionLikelihood", 1);
+      params.put("treeSpawnLikelihood", 1);
+      when(data.getParameters()).thenReturn(params);
       // so to test functionality just makes it always ignite, then do a different one where it never ignites or spawns
 
       when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
@@ -872,8 +875,10 @@ public class SimulationTest {
       when(data.getType()).thenReturn(SimType.Fire);
       when(data.getGridColNum()).thenReturn(3);
       when(data.getGridRowNum()).thenReturn(3);
-      when(data.getParameters()).thenReturn(
-          Map.of("ignitionLikelihood", 1, "treeSpawnLikelihood", 1));
+      Map<String, Object> params = new HashMap<>();
+      params.put("ignitionLikelihood", 1);
+      params.put("treeSpawnLikelihood", 1);
+      when(data.getParameters()).thenReturn(params);
       // so to test functionality just makes it always ignite, then do a different one where it never ignites or spawns
 
       when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
@@ -1000,7 +1005,10 @@ public class SimulationTest {
       when(data.getType()).thenReturn(SimType.RockPaperSciss);
       when(data.getGridColNum()).thenReturn(3);
       when(data.getGridRowNum()).thenReturn(3);
-      when(data.getParameters()).thenReturn(Map.of("numStates", 9, "percentageToWin", 0));
+      Map<String, Object> params = new HashMap<>();
+      params.put("numStates", 9);
+      params.put("percentageToWin", 0);
+      when(data.getParameters()).thenReturn(params);
 
       when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
       when(data.getEdge()).thenReturn(EdgeType.NONE);
@@ -1466,7 +1474,9 @@ public class SimulationTest {
               WATOR_FISH, WATOR_EMPTY, WATOR_EMPTY,
               WATOR_EMPTY, WATOR_EMPTY, WATOR_EMPTY)
       );
-      when(data.getParameters()).thenReturn(Map.of("sharkInitialEnergy", 2.));
+      Map<String, Object> params = new HashMap<>();
+      params.put("sharkInitialEnergy", 2.);
+      when(data.getParameters()).thenReturn(params);
       Simulation sim = new Simulation(data);
       sim.updateParameter("sharkEnergyGain", 1.);
 

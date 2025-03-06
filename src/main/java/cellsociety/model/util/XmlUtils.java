@@ -124,7 +124,8 @@ public class XmlUtils {
           Node variationNode = gridElement.getElementsByTagName("variation").item(0);
 
           if (variationNode != null) {
-            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, (rows*columns), xmlObject.getType()));
+            xmlObject.setCellStateList(
+                setCellStatesByVariation(variationNode, (rows * columns), xmlObject.getType()));
 
           } else {
             // No variation: use explicitly defined cell states
@@ -311,6 +312,18 @@ public class XmlUtils {
     return cellStateEnums;
   }
 
+  private static List<Integer> parseIntegerList(String str) {
+    // Remove square brackets and split the string by commas
+    String[] parts = str.replace("[", "").replace("]", "").split(",");
+
+    // Convert each part into an integer and return as a list
+    List<Integer> intList = new ArrayList<>();
+    for (String part : parts) {
+      intList.add(Integer.parseInt(part.trim()));  // Trim to remove spaces
+    }
+    return intList;
+  }
+
   /**
    * Converts the parameters from the XML file into a map.
    *
@@ -326,8 +339,16 @@ public class XmlUtils {
       String paramName = paramElement.getAttribute("name");
       String paramValue = paramElement.getAttribute("value");
 
+      if (simulationType == SimType.GameOfLife && (paramName.equalsIgnoreCase("S")
+          || paramName.equalsIgnoreCase("B"))) {
+        logger.debug(paramName);
+        List<Integer> intList = parseIntegerList(paramValue);
+
+        parameters.put(paramName, intList);
+      }
+
       // Special handling for Game of Life's "rulestring" parameter
-      if (simulationType == SimType.GameOfLife && paramName.equalsIgnoreCase("rulestring")) {
+      else if (simulationType == SimType.GameOfLife && paramName.equalsIgnoreCase("rulestring")) {
         // Split the rulestring based on '/'
         String[] ruleParts = paramValue.split("/");
 
@@ -374,8 +395,7 @@ public class XmlUtils {
       }
       try {
         colors.put(Integer.parseInt(colorName), colorValue);
-      }
-      catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException e) {
         throw new XmlException("InvalidState", colorName);
       }
     }
@@ -389,7 +409,8 @@ public class XmlUtils {
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private List<Integer> setCellStatesByVariation(Node variationNode, int totalCells, SimType simType) {
+  private List<Integer> setCellStatesByVariation(Node variationNode, int totalCells,
+      SimType simType) {
     ArrayList<Integer> cellList = new ArrayList<>();
 
     // Get the variation type from the node
@@ -406,7 +427,8 @@ public class XmlUtils {
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
           String cellType = cellElement.getAttribute("cellType");
-          int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
+          int cellCount = Integer.parseInt(
+              cellElement.getTextContent()); // Get the cell count from the text content
 
           logger.debug("Found " + cellType + " as the cell type after explicit");
 
@@ -414,11 +436,13 @@ public class XmlUtils {
           cellStateMap.put(1, cellCount);
         }
         break;
-      } case "ratio": {
+      }
+      case "ratio": {
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
           String cellType = cellElement.getAttribute("cellType");
-          float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
+          float cellRatio = Float.parseFloat(
+              cellElement.getTextContent()); // Get the cell count from the text content
 
           int cellCount = (int) (cellRatio * totalCells);
 
@@ -440,11 +464,10 @@ public class XmlUtils {
     // Calculate the remaining cells that are not explicitly stated
     int remainingCells = totalCells - totalExplicitCells;
 
-
     List<Integer> remainingStates = new ArrayList<>(); //adding the remaining cell states!
     Set<Integer> explicitlyProvidedStates = cellStateMap.keySet();
     for (int i = 0; i < maxFromSimType(simType); i++) {
-      if (!explicitlyProvidedStates.contains(i)){
+      if (!explicitlyProvidedStates.contains(i)) {
         remainingStates.add(i);
       }
     }
@@ -515,9 +538,11 @@ public class XmlUtils {
     maxConnector.put(SimType.Langton, CellStates.LANGTON_MAXSTATE);
     maxConnector.put(SimType.ChouReg2, CellStates.CHOUREG2_MAXSTATE);
     maxConnector.put(SimType.Petelka, CellStates.PETELKA_MAXSTATE);
-    maxConnector.put(SimType.RockPaperSciss, CellStates.FIRE_MAXSTATE); // assuming it's the same as Fire, adjust if necessary
+    maxConnector.put(SimType.RockPaperSciss,
+        CellStates.FIRE_MAXSTATE); // assuming it's the same as Fire, adjust if necessary
 
     // Return the max state for the given SimType
-    return maxConnector.getOrDefault(simType, -1); // If no matching type found, return -1 (or another default value)
+    return maxConnector.getOrDefault(simType,
+        -1); // If no matching type found, return -1 (or another default value)
   }
 }
