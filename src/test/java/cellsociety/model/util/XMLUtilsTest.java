@@ -5,6 +5,7 @@ import cellsociety.model.util.SimulationTypes.SimType;
 import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.exceptions.XmlException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,6 +35,7 @@ class XmlUtilsTest {
     }
 
     @Test
+    @DisplayName("Test reading a valid XML file")
     void testReadXml_validXmlFile() {
         File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
 
@@ -53,6 +55,7 @@ class XmlUtilsTest {
     }
 
     @Test
+    @DisplayName("Test reading an invalid XML file")
     void testReadXml_invalidXmlFile() {
         File invalidXmlFile = new File("invalid_simulation.xml"); // A file with invalid simulation data
 
@@ -65,6 +68,7 @@ class XmlUtilsTest {
     }
 
     @Test
+    @DisplayName("Test writing to a valid XML file")
     void testWriteToXml_validData() {
         File outputFile = new File("output_simulation.xml");
         Simulation<?> simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
@@ -76,6 +80,7 @@ class XmlUtilsTest {
     }
 
     @Test
+    @DisplayName("Test writing to XML with no file")
     void testWriteToXml_noFile() {
         Simulation<?> simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
 
@@ -85,24 +90,28 @@ class XmlUtilsTest {
     }
 
     @Test
+    @DisplayName("Test max state from a valid simulation type")
     void testMaxFromSimType_validSimType() {
         int maxState = xmlUtils.maxFromSimType(SimType.GameOfLife);
         assertEquals(CellStates.GAMEOFLIFE_MAXSTATE, maxState);  // Assuming CellStates.GAMEOFLIFE_MAXSTATE is a predefined constant
     }
 
     @Test
+    @DisplayName("Test max state from an invalid simulation type")
     void testMaxFromSimType_invalidSimType() {
         int maxState = xmlUtils.maxFromSimType(SimType.RockPaperSciss); // Assuming it's valid in the CellStates
         assertEquals(CellStates.FIRE_MAXSTATE, maxState); // Assuming it's the same as FIRE_MAXSTATE
     }
 
     @Test
+    @DisplayName("Test converting valid simulation type strings")
     void testSimTypeFromString_valid() {
         assertEquals(SimType.GameOfLife, xmlUtils.simTypeFromString("game of life"));
         assertEquals(SimType.Fire, xmlUtils.simTypeFromString("fire"));
     }
 
     @Test
+    @DisplayName("Test converting invalid simulation type string")
     void testSimTypeFromString_invalid() {
         assertThrows(XmlException.class, () -> {
             xmlUtils.simTypeFromString("nonexistent simulation");

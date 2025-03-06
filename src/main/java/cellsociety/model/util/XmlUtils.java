@@ -22,6 +22,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * A utility class for reading and writing simulation data to/from XML files. Provides functionality
  * to read simulation details, grid data, and parameters from XML files, and also to write
@@ -30,6 +33,8 @@ import java.io.File;
  * @author Kyaira Boughton
  */
 public class XmlUtils {
+
+  private static final Logger logger = LogManager.getLogger(XmlUtils.class);
 
   /**
    * Constructs an XMLUtils object with the current program language.
@@ -400,7 +405,10 @@ public class XmlUtils {
         // Iterate through each cell element
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
           int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
+
+          logger.debug("Found " + cellType + " as the cell type after explicit");
 
           // Add the cell type and count to the cellStateMap
           cellStateMap.put(1, cellCount);
@@ -409,9 +417,12 @@ public class XmlUtils {
       } case "ratio": {
         for (int i = 0; i < cellNodes.getLength(); i++) {
           Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
           float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
 
           int cellCount = (int) (cellRatio * totalCells);
+
+          logger.debug("Found " + cellType + " as the cell type after ratio");
 
           // Add the cell type and count to the cellStateMap
           cellStateMap.put(1, cellCount);
@@ -474,7 +485,7 @@ public class XmlUtils {
     return cellList;
   }
 
-  private SimType simTypeFromString(String simTypeString) {
+  SimType simTypeFromString(String simTypeString) {
     return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
       case "game of life", "gameoflife" -> SimType.GameOfLife;
       case "spreading of fire", "fire" -> SimType.Fire;
@@ -490,7 +501,7 @@ public class XmlUtils {
     };
   }
 
-  private int maxFromSimType(SimType simType) {
+  int maxFromSimType(SimType simType) {
     // Initialize the HashMap for mapping SimType to max states
     Map<SimType, Integer> maxConnector = new HashMap<>();
 
