@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mockStatic;
 
+import cellsociety.model.simulation.cell.Cell;
 import cellsociety.model.simulation.cell.LangtonCell;
 import cellsociety.model.simulation.cell.RockPaperScissCell;
 import cellsociety.model.simulation.parameters.GenericParameters;
@@ -43,7 +44,8 @@ public class GridTest {
       cells = List.of(new LangtonCell(0, rule), new LangtonCell(1, rule), new LangtonCell(2, rule),
           new LangtonCell(3, rule), new LangtonCell(4, rule), new LangtonCell(5, rule),
           new LangtonCell(6, rule), new LangtonCell(7, rule), new LangtonCell(0, rule));
-      grid = new Grid<LangtonCell>(cells, 3, 3, ShapeType.RECTANGLE, NeighborhoodType.MOORE,
+      grid = new Grid<LangtonCell>();
+      grid.constructGrid(cells, 3, 3, ShapeType.RECTANGLE, NeighborhoodType.MOORE,
           EdgeType.NONE);
     }
 
@@ -90,6 +92,8 @@ public class GridTest {
       assertTrue(cell.getDirectionalNeighbors(DirectionType.SW).contains(cells.get(6)));
       assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(7)));
       assertTrue(cell.getDirectionalNeighbors(DirectionType.SE).contains(cells.get(8)));
+
+      assertEquals(EdgeType.NONE, grid.getEdgeType());
     }
 
     @Test
@@ -139,6 +143,15 @@ public class GridTest {
       assertTrue(cell.getDirectionalNeighbors(DirectionType.W).contains(cells.get(3)));
       assertTrue(cell.getDirectionalNeighbors(DirectionType.E).contains(cells.get(5)));
       assertTrue(cell.getDirectionalNeighbors(DirectionType.S).contains(cells.get(7)));
+
+      assertEquals(EdgeType.NONE, grid.getEdgeType());
+
+      grid.setNeighborsAllCells(ShapeType.RECTANGLE, NeighborhoodType.VON_NEUMANN,
+          EdgeType.TOROIDAL);
+
+      assertEquals(EdgeType.TOROIDAL, grid.getEdgeType());
+
+
     }
 
     @Test

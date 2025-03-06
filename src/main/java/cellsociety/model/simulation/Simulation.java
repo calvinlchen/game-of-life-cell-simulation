@@ -63,12 +63,12 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
 
 
   /**
-   * Constructs a new simulation instance using the provided XML configuration data.
-   * This method initializes the simulation by validating the input data and setting up
-   * the simulation environment (grid, rules, parameters, and cells).
+   * Constructs a new simulation instance using the provided XML configuration data. This method
+   * initializes the simulation by validating the input data and setting up the simulation
+   * environment (grid, rules, parameters, and cells).
    *
-   * @param data The XMLData object containing configuration details such as simulation type,
-   *             grid dimensions, initial cell states, and parameter settings.
+   * @param data The XMLData object containing configuration details such as simulation type, grid
+   *             dimensions, initial cell states, and parameter settings.
    * @throws SimulationException If the provided XML data is null or if issues occur during
    *                             simulation setup (e.g., rule creation or grid construction).
    */
@@ -116,7 +116,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
       myGrid = new Grid();
 
       Rule<T> rule = setUpRules(simType);
-      List<Cell<T, ?>> cellList = createCells(simType, rule);
+      List<T> cellList = createCells(simType, rule);
       setUpGridStructure(cellList);
     } catch (SimulationException e) {
       logger.error("Failed to set up simulation: ", e);
@@ -143,8 +143,8 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   }
 
 
-  private List<Cell<T, ?>> createCells(SimType simType, Rule<T> rule) {
-    List<Cell<T, ?>> cellList = new ArrayList<>();
+  private List<T> createCells(SimType simType, Rule<T> rule) {
+    List<T> cellList = new ArrayList<>();
 
     try {
       // use reflections to find the type of cell to create
@@ -153,7 +153,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
 
       // for all the states, create cell with the correct state and rule of that specific typ
       for (Integer state : myXmlData.getCellStateList()) {
-        cellList.add((Cell<T, ?>) cellConstructor.newInstance(state, rule));
+        cellList.add((T) cellConstructor.newInstance(state, rule));
       }
     } catch (Exception e) {
       logger.error("Failed to create cells for simulation type: {} with states: {}", simType,
@@ -165,7 +165,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
     return cellList;
   }
 
-  private void setUpGridStructure(List<Cell<T, ?>> cellList) {
+  private void setUpGridStructure(List<T> cellList) {
     try {
       myGrid.constructGrid(cellList, myXmlData.getGridRowNum(), myXmlData.getGridColNum(),
           myXmlData.getShape(), myXmlData.getNeighborhood(), myXmlData.getEdge());
@@ -181,9 +181,9 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   // Simulation Related
 
   /**
-   * Moves the simulation backward by one step if all cells can revert to a previous state.
-   * If not, the simulation remains unchanged and a warning is logged. If successful,
-   * it also decrements the cell state length metadata and the total iteration count.
+   * Moves the simulation backward by one step if all cells can revert to a previous state. If not,
+   * the simulation remains unchanged and a warning is logged. If successful, it also decrements the
+   * cell state length metadata and the total iteration count.
    *
    * @throws SimulationException If an error occurs during step back. This should never be thrown
    *                             due to precautions in Cell (should not be possible to have no
@@ -197,11 +197,10 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
     }
   }
 
-
   /**
-   * Advances the simulation forward by one step. This method calculates the next state
-   * for all cells, applies the state changes, resets parameters, and saves the current
-   * state for potential rollback.
+   * Advances the simulation forward by one step. This method calculates the next state for all
+   * cells, applies the state changes, resets parameters, and saves the current state for potential
+   * rollback.
    *
    * @throws SimulationException If an error occurs in stepping forward. This should never be thrown
    *                             due to precautions in Cell and Rule.
@@ -237,8 +236,8 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   }
 
   /**
-   * Retrieves the duration (number of steps) that the cell at the given position
-   * has remained in its current state.
+   * Retrieves the duration (number of steps) that the cell at the given position has remained in
+   * its current state.
    *
    * @param row The row index of the cell.
    * @param col The column index of the cell.
@@ -276,7 +275,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   /**
    * Updates the simulation parameter identified by {@code key} with a new double value.
    *
-   * @param key The name of the parameter to update.
+   * @param key   The name of the parameter to update.
    * @param value The new value for the parameter.
    * @throws SimulationException If the parameter key is not found.
    */
@@ -287,7 +286,6 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
       throw new SimulationException(e);
     }
   }
-
 
   /**
    * Retrieves the current value of the simulation parameter associated with the provided key.
@@ -316,7 +314,7 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   /**
    * Updates an additional simulation parameter identified by {@code key} with a new value.
    *
-   * @param key The name of the additional parameter.
+   * @param key   The name of the additional parameter.
    * @param value The new value for the parameter.
    * @throws SimulationException If the key is not a current key in additional parameters.
    */
@@ -325,28 +323,51 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   }
 
   /**
-   * Retrieves an additional parameter by key and casts it to the specified type, returning an Optional<T>.
+   * Retrieves an additional parameter by key and casts it to the specified type, returning an
+   * Optional<T>.
    *
-   * @param key The name of the parameter.
+   * @param key  The name of the parameter.
    * @param type The expected type of the parameter value.
-   * @param <T> The generic type of the parameter.
-   * @return An optional containing the parameter value if found and correctly typed, or an empty optional otherwise.
+   * @param <T>  The generic type of the parameter.
+   * @return An optional containing the parameter value if found and correctly typed, or an empty
+   * optional otherwise.
    */
   public <T> Optional<T> getAdditionalParameter(String key, Class<T> type) {
     return myParameters.getAdditionalParameter(key, type);
   }
 
+  /**
+   * Returns the number of editable parameters for a simulation
+   *
+   * @return number of editable parameters for the simulation
+   */
+  public int getNumEditableParameters() {
+    List<String> params = getParameterKeys();
+    List<String> additionalParameterKeys = getAdditionalParameterKeys();
+    return params.size() + additionalParameterKeys.size() - myParameters.getUnmodifiableParameters()
+        .size();
+  }
+
+  /**
+   * Returns list of all unmodifiable keys
+   *
+   * @return list of all unmodifiable keys
+   */
+  public List<String> getUnmodifiableParameterKeys() {
+    return myParameters.getUnmodifiableParameters();
+  }
+
   // Grid Topology Related
 
   /**
-   * Updates the grid topology by reconfiguring the neighbor relationships based on the provided shape,
-   * neighborhood, and edge type parameters.
+   * Updates the grid topology by reconfiguring the neighbor relationships based on the provided
+   * shape, neighborhood, and edge type parameters.
    *
-   * @param shape The desired cell shape (e.g., RECTANGLE, HEXAGON).
+   * @param shape        The desired cell shape (e.g., RECTANGLE, HEXAGON).
    * @param neighborhood The desired neighborhood type (e.g., MOORE, VON_NEUMANN).
-   * @param edge The desired edge behavior (e.g., NONE, TOROIDAL).
-   * @throws SimulationException If an invalid topology configuration is provided
-   *                             (should not be possible due to enum restrictions).
+   * @param edge         The desired edge behavior (e.g., NONE, TOROIDAL).
+   * @throws SimulationException If an invalid topology configuration is provided (should not be
+   *                             possible due to enum restrictions).
    */
   public void changeTopology(ShapeType shape, NeighborhoodType neighborhood, EdgeType edge) {
     myGrid.setNeighborsAllCells(shape, neighborhood, edge);
@@ -398,15 +419,6 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
     return myXmlData.getNumStates();
   }
 
-  /**
-   * Return number of dynamically adjustable parameters.
-   * @return int amount of parameters, excluding maxHistorySize as a parameter
-   */
-  public int getNumEditableParameters() {
-    List<String> params = getParameterKeys();
-    // maxHistorySize is NOT an editable parameter, so subtract 1 from total
-    return params.size() - 1;
-  }
 
   /**
    * Retrieves all the cells contained within the grid.

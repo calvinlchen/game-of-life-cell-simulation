@@ -3,6 +3,7 @@ package cellsociety.model.simulation.parameters;
 import static cellsociety.model.util.SimulationTypes.SimType.GameOfLife;
 import static cellsociety.model.util.SimulationTypes.SimType.Langton;
 import static cellsociety.model.util.SimulationTypes.SimType.RockPaperSciss;
+import static cellsociety.model.util.SimulationTypes.SimType.WaTor;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.model.util.exceptions.SimulationException;
@@ -67,9 +68,10 @@ public class GenericParametersTest {
     @Test
     @DisplayName("SetParameter correctly updates valid existing parameter")
     void setParameter_ExistingKey_CorrectlyUpdatesParameter() {
-      parameters.setParameter("maxHistorySize", 3.0);
-      assertEquals(3.0, parameters.getParameter("maxHistorySize"));
-      assertEquals(1, parameters.getParameterKeys().size());
+      GenericParameters hasExistingParameters = new GenericParameters(WaTor);
+      assertEquals(5.0, hasExistingParameters.getParameter("sharkInitialEnergy"));
+      hasExistingParameters.setParameter("sharkInitialEnergy", 3.0);
+      assertEquals(3.0, hasExistingParameters.getParameter("sharkInitialEnergy"));
     }
 
     @Test

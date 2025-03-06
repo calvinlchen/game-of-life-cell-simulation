@@ -109,8 +109,6 @@ public class PetelkaRule extends Rule<PetelkaCell> {
       // Generate state key for the original direction order
       String stateKey = getStateKey(cell, baseDirections);
       if (stateKey.length() != KEYLENGTH_MOORE_LOOPS) {
-        logger.warn("[PetelkaRule] Invalid state key length for cell at {}: {}", cell.getPosition(),
-            stateKey);
         return cell.getCurrentState();
       }
 

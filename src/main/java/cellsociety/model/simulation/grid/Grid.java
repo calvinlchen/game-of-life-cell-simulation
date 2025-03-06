@@ -53,6 +53,10 @@ public class Grid<T extends Cell<T, ?>> {
 
   private EdgeType edgeType;
 
+  /**
+   * Initializes a blank grid, this allows for the reference of grid to be passed in even if the
+   * cells that should be used to construct the grid are not yet defined.
+   */
   public Grid() {
     myGrid = new ArrayList<>();
   }
@@ -60,6 +64,33 @@ public class Grid<T extends Cell<T, ?>> {
   /**
    * Constructs a Grid with specified dimensions, shape type, neighborhood type, and edge type.
    * Initializes the grid with the given cells and sets the neighbors based on the provided
+   * configuration.
+   *
+   * <p>Should only be used for tests, otherwise deprecated</p>
+   *
+   * @param cells            - the list of cells to be added to the grid
+   * @param rows             - the number of rows in the grid
+   * @param cols             - the number of columns in the grid
+   * @param shape            - the shape type of the cells in the grid (e.g., RECTANGLE, HEXAGON,
+   *                         TRIANGLE)
+   * @param neighborhoodType - the neighborhood type defining how neighbors are determined (e.g.,
+   *                         MOORE, VON_NEUMANN, EXTENDED_MOORE)
+   * @param edgeType         - the edge type specifying the behavior at the boundaries of the grid
+   *                         (e.g., NONE, MIRROR, TOROIDAL)
+   */
+  Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
+      EdgeType edgeType) {
+    try {
+      myGrid = new ArrayList<>();
+      setUpGridSteps(cells, rows, cols, shape, neighborhoodType, edgeType);
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  /**
+   * Constructs a Grid with specified dimensions, shape type, neighborhood type, and edge type.
+   * Clears any prior grid with the given cells and sets the neighbors based on the provided
    * configuration.
    *
    * @param cells            - the list of cells to be added to the grid
@@ -72,20 +103,9 @@ public class Grid<T extends Cell<T, ?>> {
    * @param edgeType         - the edge type specifying the behavior at the boundaries of the grid
    *                         (e.g., NONE, MIRROR, TOROIDAL)
    */
-  @Deprecated
-  public Grid(List<T> cells, int rows, int cols, ShapeType shape, NeighborhoodType neighborhoodType,
-      EdgeType edgeType) {
-    try {
-      setUpGridSteps(cells, rows, cols, shape, neighborhoodType, edgeType);
-    } catch (SimulationException e) {
-      throw new SimulationException(e);
-    }
-  }
-
-  public void constructGrid(List<Cell<T, ?>> cells, int rows, int cols, ShapeType shape,
+  public void constructGrid(List<T> cells, int rows, int cols, ShapeType shape,
       NeighborhoodType neighborhoodType, EdgeType edgeType) {
     try {
-      myGrid.clear();
       setUpGridSteps((List<T>) cells, rows, cols, shape, neighborhoodType, edgeType);
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -95,7 +115,7 @@ public class Grid<T extends Cell<T, ?>> {
   private void setUpGridSteps(List<T> cells, int rows, int cols, ShapeType shape,
       NeighborhoodType neighborhoodType, EdgeType edgeType) {
     try {
-      myGrid = initializeGrid(rows, cols);
+      initializeGrid(rows, cols);
       initializeCells(cells);
       setNeighborsAllCells(shape, neighborhoodType, edgeType);
     } catch (SimulationException e) {
@@ -105,8 +125,9 @@ public class Grid<T extends Cell<T, ?>> {
 
   // Start of Initialize Grid and Cells in Grid ------
 
-  private List<List<T>> initializeGrid(int rows, int cols) {
-    final List<List<T>> grid;
+  private void initializeGrid(int rows, int cols) {
+    myGrid.clear();
+
     if (rows <= 0 || cols <= 0) {
       logger.error("Grid initialization failed: Invalid dimensions {}x{}", rows, cols);
       throw new SimulationException("InvalidGridDimensions",
@@ -115,14 +136,11 @@ public class Grid<T extends Cell<T, ?>> {
 
     myRows = rows;
     myCols = cols;
-    grid = new ArrayList<>();
-    return grid;
   }
 
   private void initializeCells(List<T> cells) {
     try {
       validateCells(cells);
-      myGrid.clear();
       fillGridWithCells(cells);
     } catch (SimulationException e) {
       throw new SimulationException(e);
@@ -359,9 +377,6 @@ public class Grid<T extends Cell<T, ?>> {
     return myGrid.stream().flatMap(List::stream).toList();
   }
 
-  public EdgeType getEdgeType() {
-    return edgeType;
-  }
 
   // Start of Misc ------
 
@@ -378,10 +393,29 @@ public class Grid<T extends Cell<T, ?>> {
     return row >= 0 && row < myRows && col >= 0 && col < myCols;
   }
 
+  /**
+   * Return the current edge type of the grid.
+   *
+   * @return the edge type of the grid
+   */
+  public EdgeType getEdgeType() {
+    return edgeType;
+  }
+
+  /**
+   * Return the number of rows in the grid.
+   *
+   * @return the number of rows in the grid.
+   */
   public int getRows() {
     return myRows;
   }
 
+  /**
+   * Return the number of cols in the grid.
+   *
+   * @return the number of cols in the grid.
+   */
   public int getCols() {
     return myCols;
   }

@@ -246,6 +246,8 @@ public class SimulationTest {
       assertTrue(integersList.contains(2));
       assertFalse(integersList.contains(1));
 
+      assertEquals(3, sim.getNumEditableParameters());
+
     }
 
     @Test
@@ -271,7 +273,7 @@ public class SimulationTest {
 
       assertThrows(SimulationException.class, () -> sim.updateParameter("numStates", 10.));
 
-
+      assertTrue(sim.getUnmodifiableParameterKeys().contains("numStates"));
     }
 
     // do all the negative testing here just to catch errors, grids already been tested
