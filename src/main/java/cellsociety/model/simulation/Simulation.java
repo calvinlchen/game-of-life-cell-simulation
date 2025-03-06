@@ -283,21 +283,10 @@ public class Simulation<T extends Cell<T, Rule<T>>> {
   public void updateParameter(String key, double value) {
     try {
       myParameters.setParameter(key, value);
-      myXmlData.getParameters().put(key, value);
-      // Update the rules in all cells so that they use the new parameters.
-      updateCellRules();
     } catch (SimulationException e) {
       throw new SimulationException(e);
     }
   }
-
-  private void updateCellRules() {
-    Rule<T> newRule = setUpRules(myXmlData.getType());
-    for (T cell : myGrid.getCells()) {
-      cell.updateRule(newRule);
-    }
-  }
-
 
 
   /**
