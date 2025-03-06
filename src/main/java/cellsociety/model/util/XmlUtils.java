@@ -4,6 +4,7 @@ import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.CellStates;
 import cellsociety.model.util.exceptions.XmlException;
 
 import java.util.*;
@@ -118,7 +119,7 @@ public class XmlUtils {
           Node variationNode = gridElement.getElementsByTagName("variation").item(0);
 
           if (variationNode != null) {
-            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns)));
+            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, handler, (rows*columns), xmlObject.getType()));
 
           } else {
             // No variation: use explicitly defined cell states
@@ -395,7 +396,7 @@ public class XmlUtils {
    * @return a list of random cell states for the grid
    * @throws IllegalArgumentException if there are issues with the grid's variation data
    */
-  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells) {
+  private List<Integer> setCellStatesByVariation(Node variationNode, CellStateHandler handler, int totalCells, SimType simType) {
     ArrayList<Integer> cellList = new ArrayList<>();
 
     // Get the variation type from the node
@@ -445,7 +446,7 @@ public class XmlUtils {
 
     List<Integer> remainingStates = new ArrayList<>(); //adding the remaining cell states!
     Set<Integer> explicitlyProvidedStates = cellStateMap.keySet();
-    for (int i = 0; i < handler.stateFromString("max"); i++) {
+    for (int i = 0; i < maxFromSimType(simType); i++) {
       if (!explicitlyProvidedStates.contains(i)){
         remainingStates.add(i);
       }
@@ -501,5 +502,25 @@ public class XmlUtils {
       case "rock paper scissors", "rps" -> SimType.RockPaperSciss;
       default -> throw new XmlException("UnknownSimType", simTypeString);
     };
+  }
+
+  private int maxFromSimType(SimType simType) {
+    // Initialize the HashMap for mapping SimType to max states
+    Map<SimType, Integer> maxConnector = new HashMap<>();
+
+    // Populate the map with max states for each simulation type
+    maxConnector.put(SimType.GameOfLife, CellStates.GAMEOFLIFE_MAXSTATE);
+    maxConnector.put(SimType.Fire, CellStates.FIRE_MAXSTATE);
+    maxConnector.put(SimType.Percolation, CellStates.PERCOLATION_MAXSTATE);
+    maxConnector.put(SimType.Segregation, CellStates.SEGREGATION_MAXSTATE);
+    maxConnector.put(SimType.WaTor, CellStates.WATOR_MAXSTATE);
+    maxConnector.put(SimType.FallingSand, CellStates.FALLINGSAND_MAXSTATE);
+    maxConnector.put(SimType.Langton, CellStates.LANGTON_MAXSTATE);
+    maxConnector.put(SimType.ChouReg2, CellStates.CHOUREG2_MAXSTATE);
+    maxConnector.put(SimType.Petelka, CellStates.PETELKA_MAXSTATE);
+    maxConnector.put(SimType.RockPaperSciss, CellStates.FIRE_MAXSTATE); // assuming it's the same as Fire, adjust if necessary
+
+    // Return the max state for the given SimType
+    return maxConnector.getOrDefault(simType, -1); // If no matching type found, return -1 (or another default value)
   }
 }

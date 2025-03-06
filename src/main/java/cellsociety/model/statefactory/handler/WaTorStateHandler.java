@@ -19,7 +19,6 @@ public class WaTorStateHandler extends CellStateHandlerStatic {
     cellStates.put(CellStates.WATOR_EMPTY, "empty");
     cellStates.put(CellStates.WATOR_FISH, "fish");
     cellStates.put(CellStates.WATOR_SHARK, "shark");
-    cellStates.put(CellStates.WATOR_MAXSTATE, "max");
   }
 
   /**
