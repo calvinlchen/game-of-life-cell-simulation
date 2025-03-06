@@ -302,9 +302,6 @@ public class LangtonRule extends Rule<LangtonCell> {
         String stateKey = getStateKey(cell, directions);
 
         if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
-          logger.warn("[LangtonRule] Invalid state key length for cell at {}: {}",
-              cell.getPosition(),
-              stateKey);
           return cell.getCurrentState();
         }
 

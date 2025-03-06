@@ -149,8 +149,6 @@ public class ChouReg2Rule extends Rule<ChouReg2Cell> {
         String stateKey = getStateKey(cell, directions);
 
         if (stateKey.length() != KEYLENGTH_VON_NEUMANN_LOOPS) {
-          logger.warn("[ChouReg2Rule] Invalid state key length for cell at {}: {}",
-              cell.getPosition(), stateKey);
           return cell.getCurrentState();
         }
 

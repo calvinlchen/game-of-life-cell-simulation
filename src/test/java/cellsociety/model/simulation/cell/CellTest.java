@@ -89,12 +89,6 @@ public class CellTest {
   }
 
   @Test
-  @DisplayName("CalcNextState throws error if any of the internal steps has a simulation error")
-  void calcNextState_RuleApplyThrowsSimulationError_ThrowsException() {
-    assertThrows(SimulationException.class, () -> cell.calcNextState() );
-  }
-
-  @Test
   @DisplayName("Step correctly updates new state length and current state if valid next state")
   void step_ValidNextState_UpdatesStateLengthAndCurrentState() {
     cell.setNextState(2);

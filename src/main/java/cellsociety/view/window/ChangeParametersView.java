@@ -3,6 +3,7 @@ package cellsociety.view.window;
 import cellsociety.model.simulation.Simulation;
 import cellsociety.view.utils.ResourceManager;
 import cellsociety.view.utils.exceptions.ViewException;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -57,9 +58,11 @@ public class ChangeParametersView {
    * Builds the UI form by iterating over all available simulation parameters.
    */
   private void buildUI() {
+    List<String> unmodifiableKeys = mySimulation.getUnmodifiableParameterKeys();
+
     // For each parameter, create a row with a label and a text field initialized with its current value.
     for (String key : mySimulation.getParameterKeys()) {
-      if (key.equals("maxHistorySize")) {
+      if (unmodifiableKeys.contains(key)) {
         continue;
       }
       double currentValue = mySimulation.getParameter(key);

@@ -136,9 +136,7 @@ public abstract class Rule<C extends Cell<C, ?>> {
       for (DirectionType dir : directions) {
         cell.getNeighbors().stream().filter(neighbor -> matchesDirection(cell, neighbor, dir))
             .findFirst()
-            .ifPresentOrElse(
-                neighbor -> stateBuilder.append(neighbor.getCurrentState()),
-                () -> logger.warn("No neighbor found in direction {}.", dir));
+            .ifPresent(neighbor -> stateBuilder.append(neighbor.getCurrentState()));
       }
 
       return stateBuilder.toString();

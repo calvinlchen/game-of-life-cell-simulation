@@ -990,10 +990,10 @@
 <div class="sl-block sl-block-group" data-block-type="group" data-name="group-972244" data-block-id="172edff75a363111fd8b41a20c87bfe5"><div class="sl-block-content sl-block-group-content fragment" style="transform-origin: 790px 630.75px; z-index: 26;" data-fragment-index="4">
 <div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640.5px; top: 593.25px;" data-block-id="ba47dc772da04c774f0d938a66d4a2ea" data-name="shape-289e9f"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 27;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
 <div class="sl-block" data-block-type="text" style="height: auto; width: 280px; left: 649.5px; top: 617.25px;" data-name="text-8cc028" data-block-id="fb008970d14853d2cab3740fdf7aeda8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28; line-height: 0.975;" data-has-line-height=""><p>mixed validity</p></div></div>
-</div></div></section><section data-auto-animate="" data-id="c5895f5127bb2f90d9253b39c8bf8982"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="7f70124e8ba244098db85e21c2aa7791">
+</div></div></section><section data-auto-animate="" data-id="fa3ddba58bde8bfecbec54eb0c7efcde"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="dcbe41842256d857734730dd97602633">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
 						</div>
-<div class="sl-block" data-block-type="text" style="width: 570px; left: 15px; top: 102px; height: auto;" data-name="text-59a7d8" data-block-id="b30bdc33a8e390cdc3205e243ef22b09">
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 15px; top: 102px; height: auto;" data-name="text-59a7d8" data-block-id="2d736a27a183bd920b46a2870849d6f7">
 							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong>functionality of helper methods</strong></p></div>
 						</div>
 
@@ -1004,7 +1004,53 @@
 
 
 
-<div class="sl-block" data-block-type="code" style="width: 932px; height: 227px; left: 15px; top: 159.5px;" data-name="code-9dc0f1" data-block-id="2ad0f44a92864a9ae1856ff4cb9543b2"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 14px; line-height: 17px; tab-size: 4;"><code data-line-numbers="" data-fragment-index="0">  Optional&lt;FallingSandCell&gt; findValidNeighbor(FallingSandCell cell, DirectionType direction,
+<div class="sl-block" data-block-type="code" style="width: 596px; height: 521px; left: 15px; top: 159.5px;" data-name="code-9dc0f1" data-block-id="60aa93216ac20143fb2c1b1485912c76"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 10px; line-height: 12px; tab-size: 4;"><code data-line-numbers="47-58" data-fragment-index="0">  // FallingSandRule
+  @Override
+  public int apply(FallingSandCell cell) {
+    try {
+      return switch (cell.getCurrentState()) {
+        case FALLINGSAND_SAND -&gt; attemptMovement(cell, List.of(SW, SE), FALLINGSAND_SAND,
+            List.of(FALLINGSAND_EMPTY, FALLINGSAND_WATER));
+        case FALLINGSAND_WATER -&gt;
+            attemptMovement(cell, List.of(W, E), FALLINGSAND_WATER, List.of(FALLINGSAND_EMPTY));
+        default -&gt; cell.getCurrentState();  // steel and empty
+      };
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  int attemptMovement(FallingSandCell cell, List&lt;DirectionType&gt; secondaryDirections,
+      int newState, List&lt;Integer&gt; replaceableNeighbors) {
+    try {
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        logger.debug("Looking for primary neighbor with state {}", replaceableNeighbor);
+        Optional&lt;FallingSandCell&gt; neighbor = findValidNeighbor(cell, S, replaceableNeighbor);
+        if (neighbor.isPresent()) {
+          logger.debug("Primary neighbor found with state {}", replaceableNeighbor);
+          neighbor.get().setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+
+      for (int replaceableNeighbor : replaceableNeighbors) {
+        List&lt;FallingSandCell&gt; possibleMoves = secondaryDirections.stream()
+            .map(dir -&gt; findValidNeighbor(cell, dir, replaceableNeighbor)).flatMap(Optional::stream)
+            .toList();
+        // chose random secondary
+        if (!possibleMoves.isEmpty()) {
+          FallingSandCell chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+          chosenMove.setNextState(newState);
+          return replaceableNeighbor;
+        }
+      }
+      return cell.getCurrentState();
+    } catch (SimulationException e) {
+      throw new SimulationException(e);
+    }
+  }
+
+  Optional&lt;FallingSandCell&gt; findValidNeighbor(FallingSandCell cell, DirectionType direction,
       int state) {
     try {
       return cell.getDirectionalNeighbors(direction).stream()
@@ -1026,7 +1072,97 @@
 
 
 
-</section><section data-auto-animate="" data-id="e836f670bb94fc44a69ab40bbe0b0a97"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="5fa76a8ceac29ae22938c4e48545d557">
+<div class="sl-block" data-block-type="code" style="width: 596px; height: 521px; left: 15px; top: 159.5px;" data-name="code-a50113" data-block-id="3beaf338e1aa6e0574750c89e86a21d1"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 13;"><pre style="font-size: 12px; line-height: 14px; tab-size: 4;"><code data-line-numbers="1-11" data-fragment-index="0">    @Test
+    @DisplayName("FindValidNeighbor finds valid neighbor when it exist")
+    void findValidNeighbor_ValidNeighbor_ReturnsValidNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbor, validNeighbor.get());
+    }
+
+    @Test
+    @DisplayName("FindValidNeighbor finds valid neighbor when multiple valid and returns one")
+    void findValidNeighbor_MultipleValidNeighbors_ReturnsOneValidNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      List&lt;FallingSandCell&gt; neighbors = List.of(new FallingSandCell(1, rule),
+          new FallingSandCell(1, rule));
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, neighbors));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbors.getFirst(), validNeighbor.get());
+
+    }
+
+    @Test
+    @DisplayName("FindValidNeighbor returns empty optional when no direction neighbors exist")
+    void findValidNeighbor_NoNeighborsInDirection_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns empty optional when neighbor does not have currect current state")
+    void findNeighbor_NeighborHasWrongCurrentState_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 2);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns empty optional when neighbor does not have correct next state")
+    void findNeighbor_NeighborHasWrongNextState_ReturnsEmptyOptional() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      FallingSandCell neighbor = new FallingSandCell(1, rule);
+      neighbor.setNextState(2);
+
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, List.of(neighbor)));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertFalse(validNeighbor.isPresent());
+    }
+
+    @Test
+    @DisplayName("FindNeighbor returns correct neighbor when correct direction but one has correct state and one does not")
+    void findNeighbor_CorrectDirectionButOneHasWrongState_ReturnsCorrectNeighbor() {
+      FallingSandCell cell = new FallingSandCell(0, rule);
+      List&lt;FallingSandCell&gt; neighbors = List.of(new FallingSandCell(2, rule),
+          new FallingSandCell(1, rule));
+      cell.setDirectionalNeighbors(Map.of(DirectionType.S, neighbors));
+
+      Optional&lt;FallingSandCell&gt; validNeighbor = rule.findValidNeighbor(cell, DirectionType.S, 1);
+      assertTrue(validNeighbor.isPresent());
+      assertEquals(neighbors.getLast(), validNeighbor.get());
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-95ca62" data-block-id="d3437d59b1b8bdddc92a2dc2ae802cbc"><div class="sl-block-content sl-block-group-content" style="transform-origin: 790px 314.25px; z-index: 14;">
+<div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640.5px; top: 276.75px;" data-name="shape-ffc147" data-block-id="ac5d8b7ffd2642461986604ba57e6722"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 15;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 266px; left: 657px; top: 300.5px;" data-name="text-86c233" data-block-id="62eeedfa8aee4f286481267be9c412d2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; line-height: 0.975;" data-has-line-height=""><p>multiple valid</p></div></div>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="62a687da5e2163526484159f00da34d5"><div class="sl-block-content sl-block-group-content" style="transform-origin: 789.5px 209.25px; z-index: 17;">
+<div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640px; top: 171.75px;" data-name="shape-196e37" data-block-id="0ce7c368c247c8c9732747ba5d34e0c6"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 18;" data-shape-corner-radius="15px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 266px; left: 650px; top: 189.75px;" data-name="text-b38626" data-block-id="54e06b856bc970fcc269744532bf7fa5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>single valid</p></div></div>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-bc007b" data-block-id="c10a3c3e9296093ec5b54ce8462ea554"><div class="sl-block-content sl-block-group-content" style="transform-origin: 790px 419.75px; z-index: 20;">
+<div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640.5px; top: 382.25px;" data-name="shape-4f6edb" data-block-id="f655314a5a169b186823ad23f784e7b2"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 21;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 299px; left: 640.5px; top: 405.5px;" data-name="text-fac615" data-block-id="b27c327a55a7652568509687ad117ccb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; line-height: 0.975;" data-has-line-height=""><p>no valid</p></div></div>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-76c08a" data-block-id="9f328bf5f1332828e2f7555c133f1eb3"><div class="sl-block-content sl-block-group-content" style="transform-origin: 790px 525.75px; z-index: 23;">
+<div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640.5px; top: 488.25px;" data-name="shape-9b6626" data-block-id="38e775e6f60d8a32d1ff12edbf42f179"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 24;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 260px; left: 659.5px; top: 510.5px;" data-name="text-e15fc8" data-block-id="5414d3b610740ea6b01f7c95b22c33bb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 25; line-height: 0.975;" data-has-line-height=""><p>invalid partially</p></div></div>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-972244" data-block-id="4a34e79c0ef2998c7e6f1a938697115b"><div class="sl-block-content sl-block-group-content" style="transform-origin: 790px 630.75px; z-index: 26;">
+<div class="sl-block" data-block-type="shape" style="width: 299px; height: 75px; left: 640.5px; top: 593.25px;" data-name="shape-289e9f" data-block-id="9cc5f3642184b1581c9da61bd116b57b"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 27;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 299 75"><rect width="299" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 280px; left: 649.5px; top: 617.25px;" data-name="text-8cc028" data-block-id="aace34c08e353064905c18eaaed0457c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28; line-height: 0.975;" data-has-line-height=""><p>mixed validity</p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="video" data-name="video-bac3dc" data-block-id="ddbabbe3764311281bdca21733f99e9a" style="min-width: 30px; min-height: 30px; width: 641.686px; height: 541px; left: 158.314px; top: 149.5px;"><div class="sl-block-content" style="z-index: 29;" data-media-id="11989388" data-video-thumb="cellsociety/9e75041b0c50746d129490f782d823a9.jpg"><video playsinline="" controls="controls" poster="cellsociety/9e75041b0c50746d129490f782d823a9.jpg" data-autoplay="" data-paused-by-reveal="" data-lazy-loaded="" data-src="cellsociety/57031d0932d98fcc515c662e1d9464c4.mp4"></video></div></div></section><section data-auto-animate="" data-id="e836f670bb94fc44a69ab40bbe0b0a97"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="5fa76a8ceac29ae22938c4e48545d557">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
 						</div>
 <div class="sl-block" data-block-type="text" style="width: 570px; left: 15px; top: 102px; height: auto;" data-name="text-59a7d8" data-block-id="2bb31e8f03c229fdb05720f6b3582d25">
@@ -1085,10 +1221,14 @@
       sim.step();
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-
-      sim.step();
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
@@ -1165,14 +1305,18 @@
       sim.step();
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-
-      sim.step();
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1245,14 +1389,18 @@
       sim.step();
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-
-      sim.step();
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1325,14 +1473,18 @@
       sim.step();
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-
-      sim.step();
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1405,14 +1557,18 @@
       sim.step();
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-
-      sim.step();
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1489,12 +1645,14 @@
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
       
       sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1571,12 +1729,14 @@
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
       
       sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
       assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1660,7 +1820,7 @@
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1744,7 +1904,7 @@
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
     }
   }
 </code></pre></div></div>
@@ -1912,7 +2072,7 @@
 
       sim.step();
       assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
-      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
     }
   }
 </code></pre></div></div>
@@ -1926,7 +2086,92 @@
 
 <div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 428.5px;" data-name="shape-f735c0" data-block-id="eb5e479beed3888594204d7f737ba432"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 20;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
 <div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 345.5px;" data-name="shape-289e9f" data-block-id="079c7ba7152846453688b0f96ddc4114"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 21;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
-<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 262.5px;" data-name="shape-196e37" data-block-id="6d13f674672a745a04d3be3e68289be1"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div></section><section data-auto-animate="" data-id="4f5d84d55e9d5829a460c8f73ce0abb0"><div class="sl-block" data-block-type="text" style="width: 855.75px; left: 52.125px; top: 101.501px; height: auto;" data-name="text-785d38" data-block-id="f42d3b3dd7106fafcf115e582e2235fb">
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 262.5px;" data-name="shape-196e37" data-block-id="6d13f674672a745a04d3be3e68289be1"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div></section><section data-auto-animate="" data-id="ab9c4c9d6116baf3c87900cebb4b60a9"><div class="sl-block" data-block-type="text" style="width: 768px; left: 15px; top: 12.75px; height: auto;" data-name="text-785d38" data-block-id="25f64c520c5463a33d4181810accca82">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Falling Sand and Wator</h1></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 15px; top: 102px; height: auto;" data-name="text-59a7d8" data-block-id="1f0abfa05eb8dd7637ad546ff1ce38c3">
+							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong>combined logic is accurate</strong></p></div>
+						</div>
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 596px; height: 521px; left: 15px; top: 160px;" data-name="code-9dc0f1" data-block-id="903173957a392227c079bf3072f92097"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 10px; line-height: 12px; tab-size: 4;"><code data-line-numbers="55-57" data-fragment-index="0">@Nested
+  @DisplayName("Tests for FallingSand simulation")
+  class FallingSandSimulationTest {
+
+    @BeforeEach
+    void setUp() {
+      when(data.getType()).thenReturn(SimType.FallingSand);
+      when(data.getGridColNum()).thenReturn(3);
+      when(data.getGridRowNum()).thenReturn(3);
+
+      when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
+      when(data.getEdge()).thenReturn(EdgeType.NONE);
+      when(data.getNeighborhood()).thenReturn(NeighborhoodType.MOORE);
+    }
+
+    @Test
+    @DisplayName("Sand steps past obstacles diagally and sinks beneath water "
+        + "Water steps past obstacles to a side then down. Steel stays put. Air always goes "
+        + "to the top if it can")
+    void fallingSand_SimpleSetup_RulesBehaveAsExpected() {
+      when(data.getCellStateList()).thenReturn(
+          List.of(FALLINGSAND_SAND, FALLINGSAND_SAND, FALLINGSAND_EMPTY,
+              FALLINGSAND_STEEL, FALLINGSAND_WATER, FALLINGSAND_WATER,
+              FALLINGSAND_EMPTY, FALLINGSAND_STEEL, FALLINGSAND_WATER)
+      );
+
+      Simulation sim = new Simulation(data);
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(1, 1));  // swap
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(1, 2));  // swap
+
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(2, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_SAND, sim.getCurrentState(2, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
+
+      sim.step();
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(1, 2));
+      
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 0));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 2));
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(1, 2));
+
+      sim.step();
+      assertEquals(FALLINGSAND_WATER, sim.getCurrentState(0, 1));
+      assertEquals(FALLINGSAND_EMPTY, sim.getCurrentState(0, 0));
+    }
+  }
+</code></pre></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 428.5px;" data-name="shape-9b6626" data-block-id="e4637ae807055842b3a71257b5b132ef"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 428.5px;" data-name="shape-69c673" data-block-id="0b2208da4293fbca88467a593e7edb5d"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 217, 102)" data-shape-stretch="true" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 217, 102)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 262.5px;" data-name="shape-4f6edb" data-block-id="5bf41990ef0d9a34309ff161dad49c6e"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 345.5px;" data-name="shape-23d513" data-block-id="b9231a1b69a9648ab996f02620eb6baf"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 262.5px;" data-name="shape-ffc147" data-block-id="68ae2b8f3cca3fb6cf5f2dad7b24447a"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 345px;" data-name="shape-eef3a2" data-block-id="3932ae753c5232548857b8294efddced"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 643px; top: 345.5px;" data-name="shape-a5b4fb" data-block-id="111f33b5287b308cb41918384c50499e"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 428.5px;" data-name="shape-f735c0" data-block-id="f2689de83c72043d47fae9726803ca53"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(170, 170, 170)" data-shape-stretch="true" style="z-index: 20;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(170, 170, 170)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 724px; top: 345.5px;" data-name="shape-289e9f" data-block-id="22e6b5baf07c0689f661e85831317d65"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 21;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 75px; height: 75px; left: 805px; top: 262.5px;" data-name="shape-196e37" data-block-id="0be5b85c64b617a6cf8cc037915dbda7"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 75 75"><rect width="75" height="75" rx="0" ry="0" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="video" data-name="video-dc4c26" data-block-id="3699ea185b96bb43377f2fefc6e32db4" style="min-width: 30px; min-height: 30px; width: 639.32px; height: 539.005px; left: 159.68px; top: 150.998px;"><div class="sl-block-content" style="z-index: 23;" data-media-id="11989391" data-video-thumb="cellsociety/2d696f30a3f6750ac0845f06706e95f2.jpg"><video playsinline="" controls="controls" data-paused-by-reveal="" poster="cellsociety/2d696f30a3f6750ac0845f06706e95f2.jpg" data-autoplay="" data-lazy-loaded="" data-src="cellsociety/b30bfea3af6486a6b118ee779b32d518.mp4"></video></div></div></section><section data-auto-animate="" data-id="4f5d84d55e9d5829a460c8f73ce0abb0"><div class="sl-block" data-block-type="text" style="width: 855.75px; left: 52.125px; top: 101.501px; height: auto;" data-name="text-785d38" data-block-id="f42d3b3dd7106fafcf115e582e2235fb">
 							<div class="sl-block-style" style="z-index: 10; transform: rotate(0deg);"><div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Simulation Error Catching</h1></div></div>
 						</div>
 <div class="sl-block" data-block-type="text" style="width: 570px; left: 52.125px; top: 194.501px; height: auto;" data-name="text-59a7d8" data-block-id="b93d0e8d4bac9d106eaa271480f9a364">
@@ -1977,12 +2222,64 @@
 <div class="sl-block sl-block-group" data-block-type="group" data-name="group-735746" data-block-id="faf5b07523db72d3634585fccab1ddae"><div class="sl-block-content sl-block-group-content" style="transform-origin: 181.125px 355.44px; z-index: 17;">
 <div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 324.501px;" data-name="shape-ffc147" data-block-id="4873a4e8db790472c5414e580b9bf623"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 18;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
 <div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 68.375px; top: 332.001px;" data-block-id="0da5893ef751f94e23e3e303a10368be" data-name="text-1a304b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19;"><p><span style="font-size:0.5em">setUpSimulation()</span></p></div></div>
-</div></div></section></section><section data-auto-animate="" data-id="9443c04bdfc7c4a93942587a2cd79a3d"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 284.25px; height: auto;" data-name="text-785d38" data-block-id="7b96d026a6a86b571ba7a2b689db1474">
+</div></div></section><section data-auto-animate="" data-id="ffe1361a925efd8ddc968fc9fd95ef6e"><div class="sl-block" data-block-type="text" style="width: 855.75px; left: 52.125px; top: 101.501px; height: auto;" data-name="text-785d38" data-block-id="f87275f0c4087a3144c8c9c5d508bcea">
+							<div class="sl-block-style" style="z-index: 10; transform: rotate(0deg);"><div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Simulation Error Catching</h1></div></div>
+						</div>
+<div class="sl-block" data-block-type="text" style="width: 570px; left: 52.125px; top: 194.501px; height: auto;" data-name="text-59a7d8" data-block-id="7f96decae39dbcf5df9b609d467b0475">
+							<div class="sl-block-content" style="text-align: left; z-index: 11; color: rgb(255, 255, 255);" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong>combined logic is accurate</strong></p></div>
+						</div>
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 580px; height: 256px; left: 327.875px; top: 298.501px;" data-name="code-9dc0f1" data-block-id="a134d92a0258ea1645064f264e0d9055"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 10px; line-height: 12px; tab-size: 4;"><code data-line-numbers="" data-fragment-index="0">    @Test
+    @DisplayName("Simulation throws simulation exception if Xml data cells have bad states")
+    void simulation_BadCellStates_ThrowsException() {
+      when(data.getCellStateList()).thenReturn(
+          List.of(3, 0, 0,
+              2, 1, 7,
+              3, 4, 3)
+      );
+      when(data.getType()).thenReturn(SimType.GameOfLife);
+      when(data.getGridColNum()).thenReturn(3);
+      when(data.getGridRowNum()).thenReturn(3);
+
+      when(data.getShape()).thenReturn(ShapeType.RECTANGLE);
+      when(data.getEdge()).thenReturn(EdgeType.NONE);
+      when(data.getNeighborhood()).thenReturn(NeighborhoodType.VON_NEUMANN);
+
+      assertThrows(SimulationException.class, () -&gt; new Simulation(data));
+
+    }</code></pre></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 394.501px;" data-name="shape-9b6626" data-block-id="47b71c07a19dbc17de8e5dfac4894db2"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 13;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 536.62px;" data-name="shape-4f6edb" data-block-id="8d6b0dcc383c505362a108962ee16661"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+
+
+
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 465.74px;" data-name="shape-196e37" data-block-id="fcb5f614fa46e1d29d45f4ed9d47f038"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 15;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 68.375px; top: 401.274px;" data-name="text-d5c014" data-block-id="38419153fbc5cb4f2a429106fc5d290e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19;"><p><span style="font-size:15px">createCells(simType, rule)</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 58.875px; top: 470.274px;" data-name="text-0a2ce4" data-block-id="b6dab24b143be43c819795152618add5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20; color: rgb(255, 255, 255);"><p><span style="font-size:15px">GameOfLifeCell(state,rule)</span></p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 64.875px; top: 543.346px;" data-name="text-b45d74" data-block-id="d7ce016a62fd0c356b0ee6cbeef54562"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 21; color: rgb(255, 255, 255);"><p><span style="font-size:15px">validateState(state, maxState)</span></p></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-3f93ff" data-block-id="ec3e29f06b45c0f4475e974e4d2bc053"><div class="sl-block-content sl-block-group-content" style="transform-origin: 181.125px 286.334px; z-index: 22;">
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 255.395px;" data-name="shape-289e9f" data-block-id="916d34c61ddf5fcd8fac8544f0fbc52b"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 23;" data-shape-corner-radius="15px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 64.875px; top: 259.501px;" data-name="text-7aeb4c" data-block-id="b807c5768fff2c2687a4b4fdc74c35e8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p><span style="font-size:0.5em">Simulation(data)</span></p></div></div>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-735746" data-block-id="2db039905776c271fce967f687d1a744"><div class="sl-block-content sl-block-group-content" style="transform-origin: 181.125px 355.44px; z-index: 16;">
+<div class="sl-block" data-block-type="shape" style="width: 258px; height: 61.879px; left: 52.125px; top: 324.501px;" data-name="shape-ffc147" data-block-id="ed2c58d6a0da22c8f1afcb03d24d42ef"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 17;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 258 62"><rect width="258" height="61.879" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 232.5px; left: 68.375px; top: 332.001px;" data-name="text-1a304b" data-block-id="a1a7dd39989f625ff79e1a341993b8b7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18;"><p><span style="font-size:0.5em">setUpSimulation()</span></p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="video" data-name="video-ce9161" data-block-id="08ae7ec22c0d872ac24be0902093e719" style="min-width: 30px; min-height: 30px; width: 663.325px; height: 471px; left: 148.337px; top: 185.5px;"><div class="sl-block-content" style="z-index: 25;" data-media-id="11989393" data-video-thumb="cellsociety/0be99b68f982b6d76705b90624091c9f.jpg"><video playsinline="" controls="controls" poster="cellsociety/0be99b68f982b6d76705b90624091c9f.jpg" data-autoplay="" data-paused-by-reveal="" data-lazy-loaded="" data-src="cellsociety/5d0898f09740a4e8b56e6dbe017d62fd.mp4"></video></div></div></section></section><section class="stack" data-id="1dd5dc32ff2aa5623d9c4498c16958ca"><section data-auto-animate="" data-id="9443c04bdfc7c4a93942587a2cd79a3d"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 284.25px; height: auto;" data-name="text-785d38" data-block-id="7b96d026a6a86b571ba7a2b689db1474">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
 						</div>
 <div class="sl-block" data-block-type="text" style="width: 638px; left: 226px; top: 376.75px; height: auto;" data-name="text-59a7d8" data-block-id="70a193045ee35cd8fac7d41d09c993c1">
 							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><ul>
-	<li class="fade-up fragment" data-fragment-index="1">functionality of helper methods</li>
+	<li class="fade-up fragment" data-fragment-index="1">validating XML configuration for both reading and storing data</li>
 </ul></div>
 						</div>
 <div class="sl-block" data-block-type="text" style="width: 130px; left: 96px; top: 376.75px; height: auto;" data-name="text-a2c6a8" data-block-id="39b42af046c0ccfa89605f7d363b656e">
@@ -1991,7 +2288,296 @@
 
 
 
-</section><section data-auto-animate="" data-id="f0ebddc6196d03f09cbd67669f57c521"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 253.25px; height: auto;" data-name="text-785d38" data-block-id="68873412a11729beb523c994332a91c4">
+</section><section data-auto-animate="" data-id="6acfe7a4d62aac39eb21c37a61c9fffc"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="d6457290e27dc984e3e43b61a2538ade">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="773e59dacd62f42edd136c96b8de9d73">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: can read valid XML files</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" data-block-id="96fbcaf266f988eb9006e2d7b17b0441" style="width: 900px; height: 419px; left: 32px; top: 189.5px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="">    @Test
+    @DisplayName("Test reading a valid XML file")
+    void testReadXml_validXmlFile() {
+        File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
+
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
+        // Mock the behavior of xmlUtils.readXml() to return mockXmlData when a valid file is passed
+        when(mockXmlUtils.readXml(any())).thenReturn(mockXmlData);
+
+
+        // Assuming that mockXmlData is set up to return valid data
+        when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
+        when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
+
+        assertDoesNotThrow(() -&gt; {
+            XmlData xmlData = mockXmlUtils.readXml(validXmlFile);
+            assertNotNull(xmlData);
+            assertEquals("GameOfLife", xmlData.getType().toString());  // Assuming the file contains a GameOfLife simulation
+            assertNotNull(xmlData.getParameters());  // Check if parameters are not null
+        });
+    }</code></pre></div></div></section><section data-auto-animate="" data-id="835d60cb1b0b0c02f2fc27f1278e36e6"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="f3d96cc3aac819924867bc42ea6c96a2">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="3c2cd8578d9f7207d53ead0ecd82720e">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: can read valid XML files</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 419px; left: 32px; top: 189.5px;" data-block-id="5a17c4ae9ff4968cd87b9eb7e69d630d"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="6-8,12-13">    @Test
+    @DisplayName("Test reading a valid XML file")
+    void testReadXml_validXmlFile() {
+        File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
+
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
+        // Mock the behavior of xmlUtils.readXml() to return mockXmlData when a valid file is passed
+        when(mockXmlUtils.readXml(any())).thenReturn(mockXmlData);
+
+
+        // Assuming that mockXmlData is set up to return valid data
+        when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
+        when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
+
+        assertDoesNotThrow(() -&gt; {
+            XmlData xmlData = mockXmlUtils.readXml(validXmlFile);
+            assertNotNull(xmlData);
+            assertEquals("GameOfLife", xmlData.getType().toString());  // Assuming the file contains a GameOfLife simulation
+            assertNotNull(xmlData.getParameters());  // Check if parameters are not null
+        });
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="6790bfb050fe9f205543959c8bb19e52"><div class="sl-block-content sl-block-group-content" style="transform-origin: 773.5px 271.25px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 337px; height: 75px; left: 605px; top: 233.75px;" data-name="shape-196e37" data-origin-id="3f18a438f94fdb7c438f281824071689" data-block-id="8998489576f5663df9a37637c2ffad84"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 337 75"><rect width="337" height="75" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 299.806px; left: 623.597px; top: 251.75px;" data-name="text-b38626" data-origin-id="688056bfe17567ec59c1fed3fafb63b9" data-block-id="2d55d7aa64ee9a048f6c0e1e137ac44f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 50%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>mock XmlUtils to behave as if the file is valid (return an XmlData with info)</p></div></div>
+</div></div></section><section data-auto-animate="" data-id="da6ddbd29ae76d51f57cfc246a6390c9"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="ea29a6fe62374eeaf42766b8a9ce94dd">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="2e0c0a3b2b07cc6e17e60ae4e4a274a9">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: can read valid XML files</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 419px; left: 32px; top: 189.5px;" data-block-id="d0a4284ba0d18c0689ec4b809044331e"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="15-20">    @Test
+    @DisplayName("Test reading a valid XML file")
+    void testReadXml_validXmlFile() {
+        File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
+
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
+        // Mock the behavior of xmlUtils.readXml() to return mockXmlData when a valid file is passed
+        when(mockXmlUtils.readXml(any())).thenReturn(mockXmlData);
+
+
+        // Assuming that mockXmlData is set up to return valid data
+        when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
+        when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
+
+        assertDoesNotThrow(() -&gt; {
+            XmlData xmlData = mockXmlUtils.readXml(validXmlFile);
+            assertNotNull(xmlData);
+            assertEquals("GameOfLife", xmlData.getType().toString());  // Assuming the file contains a GameOfLife simulation
+            assertNotNull(xmlData.getParameters());  // Check if parameters are not null
+        });
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="0e582e76a9c2ce23f9c4823139ffe8d1"><div class="sl-block-content sl-block-group-content" style="transform-origin: 800px 569.5px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 205px; height: 62px; left: 697.5px; top: 538.5px;" data-name="shape-196e37" data-block-id="2befdfc6719d2fcbb1238dc83a381dca"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 205 62"><rect width="205" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 182.375px; left: 708.813px; top: 558.34px;" data-name="text-b38626" data-block-id="7a2cdadaff5a77d1ebe21de4e2cf3929"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 70%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>No exceptions!</p></div></div>
+</div></div></section><section data-auto-animate="" data-id="5f37b6eda1573663d789093081c5e77a"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="3e3169b9aca5778580c4c118101a2c01">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="eae01daa939afbe007529e82b3a2211b">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: can read valid XML files</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 419px; left: 32px; top: 189.5px;" data-block-id="51e792e957387818520dd2acdbe2f497"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="15-20">    @Test
+    @DisplayName("Test reading a valid XML file")
+    void testReadXml_validXmlFile() {
+        File validXmlFile = new File("valid_simulation.xml"); // A file with valid simulation data
+
+        XmlUtils mockXmlUtils = mock(XmlUtils.class);
+        // Mock the behavior of xmlUtils.readXml() to return mockXmlData when a valid file is passed
+        when(mockXmlUtils.readXml(any())).thenReturn(mockXmlData);
+
+
+        // Assuming that mockXmlData is set up to return valid data
+        when(mockXmlData.getType()).thenReturn(SimType.GameOfLife);
+        when(mockXmlData.getParameters()).thenReturn(Map.of()); // Mock parameters to be a non-null value
+
+        assertDoesNotThrow(() -&gt; {
+            XmlData xmlData = mockXmlUtils.readXml(validXmlFile);
+            assertNotNull(xmlData);
+            assertEquals("GameOfLife", xmlData.getType().toString());  // Assuming the file contains a GameOfLife simulation
+            assertNotNull(xmlData.getParameters());  // Check if parameters are not null
+        });
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="7b2b482877e92151d3b7543e3202eeaf"><div class="sl-block-content sl-block-group-content" style="transform-origin: 800px 569.5px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 205px; height: 62px; left: 697.5px; top: 538.5px;" data-name="shape-196e37" data-block-id="b9a777f6a70602bf501d8053b1a2b661"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 16;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 205 62"><rect width="205" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 182.375px; left: 708.813px; top: 558.34px;" data-name="text-b38626" data-block-id="3e2fd81a1d478aaa8ddf7e997eb2b110"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; font-size: 70%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>No exceptions!</p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="video" data-name="video-a9a513" style="width: 575.653px; height: 440.5px; left: 192.173px; top: 175.5px;" data-block-id="064cfcf702dd4fc47c90eb3969485589"><div class="sl-block-content" style="z-index: 18;" data-media-id="11989362" data-video-thumb="cellsociety/e13f53d8ab139885900a346031451177.jpg"><video playsinline="" controls="controls" poster="cellsociety/e13f53d8ab139885900a346031451177.jpg" data-paused-by-reveal="" data-lazy-loaded="" data-autoplay="" loop="loop" data-src="cellsociety/3d1b36ec6388aca7627601e775263804.mp4"></video></div></div></section><section data-auto-animate="" data-id="b77c5aa5840b7c0874508a03ef195b2d"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="28c81ee0908f3d617a494fe314eb7e04">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="1562ffbc0eeb150b0ec9d3d6dfb51e87">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: writing to a valid XML file</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 231px; left: 32px; top: 304.5px;" data-block-id="018a0a7d40e1fa7c9884635289053885"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="">    @Test
+    @DisplayName("Test writing to a valid XML file")
+    void testWriteToXml_validData() {
+        File outputFile = new File("output_simulation.xml");
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertDoesNotThrow(() -&gt; {
+            xmlUtils.writeToXml(outputFile, "Test Title", "Test Author", "Test Description", simulation);
+        });
+        assertTrue(outputFile.exists()); // Check if the file has been created
+    }</code></pre></div></div></section><section data-auto-animate="" data-id="2c6dbe43ec051345cc63ea8c946e87ea"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="623450723ac73c82d74ec2f24d78269e">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="7fac4552c3509393d902b37aff67c7eb">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: writing to a valid XML file</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 231px; left: 32px; top: 304.5px;" data-block-id="ea4104631512874e565bcbb0dcd540aa"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="7-9">    @Test
+    @DisplayName("Test writing to a valid XML file")
+    void testWriteToXml_validData() {
+        File outputFile = new File("output_simulation.xml");
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertDoesNotThrow(() -&gt; {
+            xmlUtils.writeToXml(outputFile, "Test Title", "Test Author", "Test Description", simulation);
+        });
+        assertTrue(outputFile.exists()); // Check if the file has been created
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="895eed24edb547aad95214a0c109fb2f"><div class="sl-block-content sl-block-group-content" style="transform-origin: 825.5px 389px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 241px; height: 62px; left: 705px; top: 358px;" data-name="shape-196e37" data-origin-id="cd1f94e3223b89032149e5c8a728163a" data-block-id="e10de3ae7ed8e17af8cd57bbf8999c24"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 241 62"><rect width="241" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 214.402px; left: 718.299px; top: 377.5px;" data-name="text-b38626" data-origin-id="a2c493d1ee75b865a08b3f31cf31cecc" data-block-id="2b84cb7d4faa77848a0b5b872e00cef0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 50%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p><span style="font-size:1.2em">no exceptions thrown</span></p></div></div>
+</div></div></section><section data-auto-animate="" data-id="99b0f89c33831dfb36fd86819c977be7"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="3fcd03033f40652c8709c9d3e258889f">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="86035ce894eeb3c8659a09588c6a1e96">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: writing to a valid XML file</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 231px; left: 32px; top: 304.5px;" data-block-id="22eba3b9904b58f82ca1ef2e45731f85"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="10">    @Test
+    @DisplayName("Test writing to a valid XML file")
+    void testWriteToXml_validData() {
+        File outputFile = new File("output_simulation.xml");
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertDoesNotThrow(() -&gt; {
+            xmlUtils.writeToXml(outputFile, "Test Title", "Test Author", "Test Description", simulation);
+        });
+        assertTrue(outputFile.exists()); // Check if the file has been created
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="4b80c8a0660ca95aebb8f2105899058f"><div class="sl-block-content sl-block-group-content" style="transform-origin: 648.5px 521px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 333px; height: 62px; left: 482px; top: 490px;" data-name="shape-196e37" data-block-id="2175a7c7b08a27c680e0f5c5a3ce2c9e"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 333 62"><rect width="333" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 296.248px; left: 500.376px; top: 497.5px;" data-name="text-b38626" data-block-id="ee8e4e8dbf9239b0e77f594ef4da4589"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 50%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p><span style="font-size:1.2em">also does the functionality or creating the file</span></p></div></div>
+</div></div></section><section data-auto-animate="" data-id="dd1232dbb86bfacd0c379e8d3026af81"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="dc50b0176b12e7bf3306c0f6a5cfad26">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="09e8b6e901246cbc021364ea43b5ddef">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Positive Test: writing to a valid XML file</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 231px; left: 32px; top: 304.5px;" data-block-id="0db354ae514796cfba8e24d77fb1f373"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="10">    @Test
+    @DisplayName("Test writing to a valid XML file")
+    void testWriteToXml_validData() {
+        File outputFile = new File("output_simulation.xml");
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertDoesNotThrow(() -&gt; {
+            xmlUtils.writeToXml(outputFile, "Test Title", "Test Author", "Test Description", simulation);
+        });
+        assertTrue(outputFile.exists()); // Check if the file has been created
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="0e61340b2e8863202e0eb113988b16dc"><div class="sl-block-content sl-block-group-content" style="transform-origin: 648.5px 521px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 333px; height: 62px; left: 482px; top: 490px;" data-name="shape-196e37" data-block-id="c526af70e831a63cd48700d71e8fe013"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 333 62"><rect width="333" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 296.248px; left: 500.376px; top: 497.5px;" data-name="text-b38626" data-block-id="6addd416a359dc713f7241d1b4c2307b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 50%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p><span style="font-size:1.2em">also does the functionality or creating the file</span></p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="video" data-name="video-ea60d1" data-block-id="df94c992739b335f1426babff81f7540" style="min-width: 30px; min-height: 30px; width: 640px; height: 307.67px; left: 162px; top: 266.165px;"><div class="sl-block-content" style="z-index: 16;" data-media-id="11989368" data-video-thumb="cellsociety/5cc3fdb082fb4b12a4295809f4467d6c.jpg"><video playsinline="" controls="controls" poster="cellsociety/5cc3fdb082fb4b12a4295809f4467d6c.jpg" data-paused-by-reveal="" data-autoplay="" data-lazy-loaded="" data-src="cellsociety/af9ace941082f557bf81ecc91c4bcb4b.mp4"></video></div></div></section><section data-auto-animate="" data-id="75d56d37a81e94ffd42083349c3e27eb"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="bf555f69e7530f9ffb7224f6cb294413">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="41ad7aa263dd09062828822a198f847b">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Negative Test: writing to no file throws exception</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 200px; left: 32px; top: 313px;" data-block-id="68be3732a8d327b0f447f7f11b75aa8d"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="">    @Test
+    @DisplayName("Test writing to XML with no file")
+    void testWriteToXml_noFile() {
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertThrows(XmlException.class, () -&gt; {
+            xmlUtils.writeToXml(null, "Test Title", "Test Author", "Test Description", simulation);
+        });
+    }</code></pre></div></div></section><section data-auto-animate="" data-id="179edfa8c235a5741b1aef86d3f92e68"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="ad014a6cbf60a9effee79dffb2682d18">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="d6f6447c31a24691e78d935e9f3ed277">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Negative Test: writing to no file throws exception</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 200px; left: 32px; top: 313px;" data-block-id="29a5cddb7ee1f86070139c21e3785cb5"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="6-7">    @Test
+    @DisplayName("Test writing to XML with no file")
+    void testWriteToXml_noFile() {
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertThrows(XmlException.class, () -&gt; {
+            xmlUtils.writeToXml(null, "Test Title", "Test Author", "Test Description", simulation);
+        });
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="ad5e74822ab578bb5daf70a78677c3b7"><div class="sl-block-content sl-block-group-content" style="transform-origin: 396px 499px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 312px; height: 62px; left: 240px; top: 468px;" data-name="shape-196e37" data-block-id="02e09028bb6ce5c51d982be6523c7289"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 16;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 312 62"><rect width="312" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 277.566px; left: 257.217px; top: 471.5px;" data-name="text-b38626" data-block-id="e03ddf118322de9cc9df5c2ac75eba36"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; font-size: 70%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>null file parameter, throws an exception</p></div></div>
+</div></div></section><section data-auto-animate="" data-id="410e3e57d28f57089d0073acd5dfc823"><div class="sl-block" data-block-type="text" style="width: 768px; left: 32px; top: 35px; height: auto;" data-name="text-785d38" data-block-id="62681828135cfcd42719eb8bda383d13">
+							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>XML Tests</h1></div>
+						</div>
+
+<div class="sl-block" data-block-type="text" style="width: 892px; left: 32px; top: 120.5px; height: auto;" data-name="text-a2c6a8" data-block-id="4f61a864c9a95eaf56386347c5381988">
+							<div class="sl-block-content" style="text-align: left; z-index: 11;" data-placeholder-tag="p" data-placeholder-text="Text"><p><strong><span style="color:#FFFFFF">Negative Test: writing to no file throws exception</span></strong></p></div>
+						</div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-2f79db" style="width: 900px; height: 200px; left: 32px; top: 313px;" data-block-id="196f47c9dbcc16112386226bc0967d1d"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="6-7">    @Test
+    @DisplayName("Test writing to XML with no file")
+    void testWriteToXml_noFile() {
+        Simulation&lt;?&gt; simulation = createMockSimulation(); // Assuming there's a method to create a mock Simulation object
+
+        assertThrows(XmlException.class, () -&gt; {
+            xmlUtils.writeToXml(null, "Test Title", "Test Author", "Test Description", simulation);
+        });
+    }</code></pre></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a5566" data-block-id="902ac803bc9e35598809e362ddd13151"><div class="sl-block-content sl-block-group-content" style="transform-origin: 396px 499px; z-index: 13;">
+<div class="sl-block" data-block-type="shape" style="width: 312px; height: 62px; left: 240px; top: 468px;" data-name="shape-196e37" data-block-id="4fbc6633a40255907b744ffaedcc7ebe"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(142, 170, 212)" data-shape-stretch="true" style="z-index: 14;" data-shape-corner-radius="15px" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDV8fGdyYWRpZW50fGVufDB8fHx8MTc0MTI2NjQzNHww&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 312 62"><rect width="312" height="62" rx="15" ry="15" class="shape-element" fill="rgb(142, 170, 212)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 277.566px; left: 257.217px; top: 471.5px;" data-name="text-b38626" data-block-id="f3c23fda6f1022dd11d0d2a53de3e94e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 70%;" data-preview-image="https://images.unsplash.com/photo-1557683316-973673baf926?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wyMDcwNnwwfDF8c2VhcmNofDF8fGdyYWRpZW50JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NDEyMDYwMTl8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=1920&amp;utm_source=slides&amp;utm_medium=referral&amp;utm_campaign=api-credit"><p>null file parameter, throws an exception</p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="video" data-name="video-9d9eb2" data-block-id="c2cb46b543b73b52999081dc548ce16a" style="min-width: 30px; min-height: 30px; width: 640px; height: 259.523px; left: 162px; top: 290.238px;"><div class="sl-block-content" style="z-index: 16;" data-media-id="11989375" data-video-thumb="cellsociety/e26a2bb5b3fd801d28501d9b9e0a8ad6.jpg"><video playsinline="" controls="controls" poster="cellsociety/e26a2bb5b3fd801d28501d9b9e0a8ad6.jpg" data-autoplay="" data-paused-by-reveal="" data-lazy-loaded="" data-src="cellsociety/1a646648700ed9df79cfbdeba5795637.mp4"></video></div></div></section></section><section data-auto-animate="" data-id="f0ebddc6196d03f09cbd67669f57c521"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 253.25px; height: auto;" data-name="text-785d38" data-block-id="68873412a11729beb523c994332a91c4">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>TestFX</h1></div>
 						</div>
 
@@ -2249,7 +2835,7 @@
 
 
 
-</section><section data-auto-animate="" data-id="ed103298fe0d0c35ef7873a53219661f"><div class="sl-block" data-block-type="text" style="width: 768px; left: 49px; top: 39px; height: auto;" data-name="text-785d38" data-block-id="9c909af85374f0668d76608c9fbc4f6c">
+</section><section data-auto-animate="" data-id="ed103298fe0d0c35ef7873a53219661f"><div class="sl-block" data-block-type="text" style="width: 768px; left: 34px; top: 43px; height: auto;" data-name="text-785d38" data-block-id="9c909af85374f0668d76608c9fbc4f6c">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>Configuration API</h1></div>
 						</div>
 
@@ -2257,7 +2843,731 @@
 
 
 
-</section></section><section class="stack" data-id="ca352a3b094c5b112d651426aee6ffe3"><section data-auto-animate="" data-id="ce5e2739bc37a8aeae1264bdefcf35da"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 280px; height: auto;" data-name="text-785d38" data-block-id="d904bf8a299179c72f7992c5bb720f6f">
+<div class="sl-block" data-block-type="code" data-name="code-ffb355" data-block-id="cbdb02036aa08e0d9087fe4166fc6a8b" style="width: 865px; height: 350px; left: 34px; top: 140px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 11;" data-code-wrap="true"><pre style="font-size: 12px; line-height: 14px; tab-size: 4;"><code data-line-numbers="53|75-76|111-116|95-103|105-109|126-128|129-136|156|218-225" data-fragment-index="0">package cellsociety.model.util;
+
+import cellsociety.model.statefactory.CellStateFactory;
+import cellsociety.model.statefactory.handler.CellStateHandler;
+import cellsociety.model.simulation.Simulation;
+import cellsociety.model.util.SimulationTypes.SimType;
+import cellsociety.model.util.constants.CellStates;
+import cellsociety.model.util.exceptions.XmlException;
+
+import java.util.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * A utility class for reading and writing simulation data to/from XML files. Provides functionality
+ * to read simulation details, grid data, and parameters from XML files, and also to write
+ * simulation data to XML files.
+ *
+ * @author Kyaira Boughton
+ */
+public class XmlUtils {
+
+  private static final Logger logger = LogManager.getLogger(XmlUtils.class);
+
+  /**
+   * Constructs an XMLUtils object with the current program language.
+   */
+  public XmlUtils() {
+
+  }
+
+  /**
+   * Reads an XML file and parses it into an XMLData object.
+   *
+   * @param fxmlFile the XML file to be read
+   * @return an XMLData object containing the parsed simulation data
+   * @throws XmlException if there is an error reading or parsing the XML file
+   */
+  public XmlData readXml(File fxmlFile) {
+    XmlData xmlObject = new XmlData();
+
+    try {
+      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+      Document doc = docBuilder.parse(fxmlFile);
+      doc.getDocumentElement().normalize();
+
+      NodeList simulationList = doc.getElementsByTagName("simulation");
+      if (simulationList.getLength() == 0) {
+        throw new XmlException("NoSimTag");
+      }
+
+      for (int i = 0; i &lt; simulationList.getLength(); i++) {
+        Node simulationNode = simulationList.item(i);
+        if (simulationNode.getNodeType() == Node.ELEMENT_NODE) {
+          Element simulationElement = (Element) simulationNode;
+
+          // Extract metadata
+          Element metadataElement = (Element) simulationElement.getElementsByTagName("metadata")
+              .item(0);
+          String simulationType = simulationElement.getElementsByTagName("type").item(0)
+              .getTextContent();
+          xmlObject.setType(simTypeFromString(simulationType));
+
+          xmlObject.setTitle(
+              metadataElement.getElementsByTagName("title").item(0).getTextContent());
+          xmlObject.setAuthor(
+              metadataElement.getElementsByTagName("author").item(0).getTextContent());
+          xmlObject.setDescription(
+              metadataElement.getElementsByTagName("description").item(0).getTextContent());
+
+          NodeList languageNodes = metadataElement.getElementsByTagName("language");
+          if (languageNodes.getLength() &gt; 0) {
+            xmlObject.setLanguage(languageNodes.item(0).getTextContent());
+          } else {
+            xmlObject.setLanguage(
+                "English"); //if no language in og xml, will use the input language as default.
+          }
+
+          // Extract parameters
+          Element parametersElement = (Element) simulationElement.getElementsByTagName("parameters")
+              .item(0);
+          if (parametersElement != null) {
+            NodeList paramList = parametersElement.getElementsByTagName("parameter");
+            Map&lt;String, Object&gt; params = parameterToMap(paramList, xmlObject.getType());
+            xmlObject.setParameters(params);
+          } else {
+            xmlObject.setParameters(new HashMap&lt;&gt;());  // Prevent parameters from being null
+          }
+
+          CellStateHandler handler = CellStateFactory.getHandler(xmlObject.getId(),
+              xmlObject.getType(), xmlObject.getNumStates());
+          if (handler == null) {
+            throw new XmlException("UnknownSimType", xmlObject.getType());
+          }
+
+          NodeList colorsList = metadataElement.getElementsByTagName("color");
+          if (colorsList.getLength() &gt; 0) {
+            xmlObject.setCustomColorMap(colorsToMap(colorsList));
+          }
+
+          // Extract grid info
+          Element gridElement = (Element) simulationElement.getElementsByTagName("grid").item(0);
+          int rows = Integer.parseInt(gridElement.getAttribute("rows"));
+          int columns = Integer.parseInt(gridElement.getAttribute("columns"));
+          xmlObject.setGridRowNum(rows);
+          xmlObject.setGridColNum(columns);
+
+          // Check for variation
+          Node variationNode = gridElement.getElementsByTagName("variation").item(0);
+
+          if (variationNode != null) {
+            xmlObject.setCellStateList(setCellStatesByVariation(variationNode, (rows*columns), xmlObject.getType()));
+
+          } else {
+            // No variation: use explicitly defined cell states
+            NodeList cellList = gridElement.getElementsByTagName("cell");
+            if (cellList.getLength() != rows * columns) {
+              throw new XmlException("ExpectedDifferentNumber", cellList.getLength());
+            }
+            xmlObject.setCellStateList(cellStatesToEnum(cellList, handler));
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new XmlException("SimulationSetupFailed", e.getMessage());
+    }
+
+    return xmlObject;
+  }
+
+  /**
+   * Writes simulation data to an XML file.
+   *
+   * @param file        the file to store the XML data
+   * @param title       the title of the simulation
+   * @param author      the author of the simulation
+   * @param description the description of the simulation
+   * @param simulation  the simulation object containing the simulation data
+   * @throws XmlException if there is an error writing to the XML file
+   */
+  public void writeToXml(File file, String title, String author, String description,
+      Simulation&lt;?&gt; simulation) {
+    if (file == null) {
+      throw new XmlException("NoFileSelectedSave");
+    }
+
+    try {
+      DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+      Document doc = docBuilder.newDocument();
+
+      // Create root element
+      Element rootElement = doc.createElement("simulation");
+      doc.appendChild(rootElement);
+
+      // Add metadata section
+      Element metadataElement = doc.createElement("metadata");
+      rootElement.appendChild(metadataElement);
+
+      Element typeElement = doc.createElement("type");
+      typeElement.appendChild(
+          doc.createTextNode(simulation.getXmlDataObject().getType().toString()));
+      metadataElement.appendChild(typeElement);
+
+      Element titleElement = doc.createElement("title");
+      titleElement.appendChild(doc.createTextNode(title));
+      metadataElement.appendChild(titleElement);
+
+      Element authorElement = doc.createElement("author");
+      authorElement.appendChild(doc.createTextNode(author));
+      metadataElement.appendChild(authorElement);
+
+      Element languageElement = doc.createElement("language");
+      languageElement.appendChild(doc.createTextNode(simulation.getXmlDataObject().getLanguage()));
+      metadataElement.appendChild(languageElement);
+
+      Element descriptionElement = doc.createElement("description");
+      descriptionElement.appendChild(doc.createTextNode(description));
+      metadataElement.appendChild(descriptionElement);
+
+      // Write custom color mappings if they exist
+      Map&lt;Integer, String&gt; customColors = simulation.getXmlDataObject().getCustomColorMap();
+      if (customColors != null &amp;&amp; !customColors.isEmpty()) {
+        Element colorsElement = doc.createElement("colors");
+        metadataElement.appendChild(colorsElement);
+        for (Map.Entry&lt;Integer, String&gt; entry : customColors.entrySet()) {
+          Element colorElement = doc.createElement("color");
+          colorElement.setAttribute("cellType", String.valueOf(entry.getKey()));
+          colorElement.setAttribute("value", entry.getValue());
+          colorsElement.appendChild(colorElement);
+        }
+      }
+
+      // Add grid info
+      Element gridElement = doc.createElement("grid");
+      gridElement.setAttribute("rows",
+          String.valueOf(simulation.getXmlDataObject().getGridRowNum()));
+      gridElement.setAttribute("columns",
+          String.valueOf(simulation.getXmlDataObject().getGridColNum()));
+      rootElement.appendChild(gridElement);
+
+      // Add cell states
+      ArrayList&lt;String&gt; cellStateList = cellStatesToString(
+          simulation.getXmlDataObject().getGridRowNum(),
+          simulation.getXmlDataObject().getGridColNum(), simulation);
+      for (String state : cellStateList) {
+        Element cellElement = doc.createElement("cell");
+        cellElement.setAttribute("state", state);
+        gridElement.appendChild(cellElement);
+      }
+
+      // Add parameters section
+      Element parametersElement = doc.createElement("parameters");
+      rootElement.appendChild(parametersElement);
+
+      // Add parameters
+      Map&lt;String, Object&gt; parameters = simulation.getXmlDataObject().getParameters();
+      for (Map.Entry&lt;String, Object&gt; entry : parameters.entrySet()) {
+        Element paramElement = doc.createElement("parameter");
+        paramElement.setAttribute("name", entry.getKey());
+        paramElement.setAttribute("value", String.valueOf(entry.getValue()));
+        parametersElement.appendChild(paramElement);
+      }
+
+      // Write the content to the selected XML file
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      DOMSource source = new DOMSource(doc);
+      StreamResult result = new StreamResult(file);
+      transformer.transform(source, result);
+
+    } catch (Exception e) {
+      throw new XmlException("XMLSaveError", e.getMessage());
+    }
+  }
+
+  /**
+   * Converts the cell states from a simulation object into a list of strings.
+   *
+   * @param rowNum     the number of rows in the grid
+   * @param colNum     the number of columns in the grid
+   * @param simulation the simulation object containing the grid's cell states
+   * @return a list of strings representing the state of each cell in the grid
+   * @throws IllegalArgumentException if an invalid cell state is encountered
+   */
+  private ArrayList&lt;String&gt; cellStatesToString(int rowNum, int colNum, Simulation&lt;?&gt; simulation) {
+    ArrayList&lt;String&gt; cellStateList = new ArrayList&lt;&gt;();
+
+    // Get the handler for the simulation's cell states
+    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationId(),
+        simulation.getSimulationType(), simulation.getNumStates());
+
+    if (handler == null) {
+      throw new XmlException("UnknownSimType", simulation.getSimulationType());
+    }
+
+    for (int i = 0; i &lt; rowNum; i++) {
+      for (int j = 0; j &lt; colNum; j++) {
+        int currentCellState = simulation.getCurrentState(i, j);
+
+        if (!handler.isValidState(currentCellState)) {
+          throw new XmlException("UnknownCellState", currentCellState);
+        }
+
+        cellStateList.add(handler.statetoString(currentCellState));
+      }
+    }
+
+    return cellStateList;
+  }
+
+  /**
+   * A method that extracts the cellstates from the simulation xml and turns them into a string
+   * list.
+   *
+   * @param cellList an NodeList variable that holds the xml data's cell data
+   * @param handler  the handler to convert the string to the appropriate cell state
+   * @return a list of integers representing the cell states as enums
+   * @throws IllegalArgumentException if an invalid cell state is encountered
+   */
+  private ArrayList&lt;Integer&gt; cellStatesToEnum(NodeList cellList, CellStateHandler handler) {
+    ArrayList&lt;Integer&gt; cellStateEnums = new ArrayList&lt;&gt;();
+
+    for (int j = 0; j &lt; cellList.getLength(); j++) {
+      Element cellElement = (Element) cellList.item(j);
+      String currentCellState = cellElement.getAttribute("state");
+
+      try {
+        int stateEnum = handler.stateFromString(currentCellState);
+        cellStateEnums.add(stateEnum);
+      } catch (IllegalArgumentException e) {
+        throw new XmlException("UnknownCellState", currentCellState);
+      }
+    }
+
+    return cellStateEnums;
+  }
+
+  /**
+   * Converts the parameters from the XML file into a map.
+   *
+   * @param paramList      a NodeList containing the parameter data
+   * @param simulationType the type of the simulation
+   * @return a map of parameter names to their corresponding values
+   */
+  private Map&lt;String, Object&gt; parameterToMap(NodeList paramList, Enum&lt;?&gt; simulationType) {
+    Map&lt;String, Object&gt; parameters = new HashMap&lt;&gt;();
+
+    for (int i = 0; i &lt; paramList.getLength(); i++) {
+      Element paramElement = (Element) paramList.item(i);
+      String paramName = paramElement.getAttribute("name");
+      String paramValue = paramElement.getAttribute("value");
+
+      // Special handling for Game of Life's "rulestring" parameter
+      if (simulationType == SimType.GameOfLife &amp;&amp; paramName.equalsIgnoreCase("rulestring")) {
+        // Split the rulestring based on '/'
+        String[] ruleParts = paramValue.split("/");
+
+        if (ruleParts.length == 2) {
+          // Process the first part (e.g., "B1")
+          if (ruleParts[0].startsWith("B")) {
+            String birthRules = ruleParts[0].substring(1); // Extract "1"
+            parameters.put("B", Double.parseDouble(birthRules));
+          }
+
+          // Process the second part (e.g., "S12345")
+          if (ruleParts[1].startsWith("S")) {
+            String survivalRules = ruleParts[1].substring(1); // Extract "12345"
+            parameters.put("S", Double.parseDouble(survivalRules));
+          }
+        } else {
+          throw new XmlException("RulestringFormat");
+        }
+      } else {
+        // Default behavior for other parameters
+        parameters.put(paramName, Double.parseDouble(paramValue));
+      }
+    }
+
+    return parameters;
+  }
+
+  /**
+   * Converts color definitions from an XML node list into a mapping of cell states to colors.
+   *
+   * @param colorList - a NodeList containing the color definitions
+   * @return a map of cell states to their corresponding colors
+   */
+  public static Map&lt;Integer, String&gt; colorsToMap(NodeList colorList) {
+    Map&lt;Integer, String&gt; colors = new HashMap&lt;&gt;();
+
+    for (int i = 0; i &lt; colorList.getLength(); i++) {
+      Element colorElement = (Element) colorList.item(i);
+      String colorName = colorElement.getAttribute("cellType");
+      String colorValue = colorElement.getAttribute("value");
+
+      if (colorName.isEmpty() || colorValue.isEmpty()) {
+        continue;
+      }
+      try {
+        colors.put(Integer.parseInt(colorName), colorValue);
+      }
+      catch (IllegalArgumentException e) {
+        throw new XmlException("InvalidState", colorName);
+      }
+    }
+
+    return colors;
+  }
+
+  /**
+   * Generates random cell states based on the grid size and variation information in the XML file.
+   *
+   * @return a list of random cell states for the grid
+   * @throws IllegalArgumentException if there are issues with the grid's variation data
+   */
+  private List&lt;Integer&gt; setCellStatesByVariation(Node variationNode, int totalCells, SimType simType) {
+    ArrayList&lt;Integer&gt; cellList = new ArrayList&lt;&gt;();
+
+    // Get the variation type from the node
+    String variationType = ((Element) variationNode).getAttribute("type");
+
+    Map&lt;Integer, Integer&gt; cellStateMap = new HashMap&lt;&gt;(); //first int is cell state, second is number of cells of that state
+
+    // Get all cell elements within the variation
+    NodeList cellNodes = ((Element) variationNode).getElementsByTagName("cell");
+
+    switch (variationType) {
+      case "explicit": {
+        // Iterate through each cell element
+        for (int i = 0; i &lt; cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
+          int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
+
+          logger.debug("Found " + cellType + " as the cell type after explicit");
+
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(1, cellCount);
+        }
+        break;
+      } case "ratio": {
+        for (int i = 0; i &lt; cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
+          float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
+
+          int cellCount = (int) (cellRatio * totalCells);
+
+          logger.debug("Found " + cellType + " as the cell type after ratio");
+
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(1, cellCount);
+        }
+
+        break;
+      }
+      default:
+        throw new IllegalArgumentException("Unsupported variation type: " + variationType);
+    }
+
+    // Calculate the total number of explicitly stated cells
+    int totalExplicitCells = cellStateMap.values().stream().mapToInt(Integer::intValue).sum();
+
+    // Calculate the remaining cells that are not explicitly stated
+    int remainingCells = totalCells - totalExplicitCells;
+
+
+    List&lt;Integer&gt; remainingStates = new ArrayList&lt;&gt;(); //adding the remaining cell states!
+    Set&lt;Integer&gt; explicitlyProvidedStates = cellStateMap.keySet();
+    for (int i = 0; i &lt; maxFromSimType(simType); i++) {
+      if (!explicitlyProvidedStates.contains(i)){
+        remainingStates.add(i);
+      }
+    }
+
+    // Distribute the remaining cells among the missing states
+    int cellsPerState = remainingCells / remainingStates.size();
+    int remainder = remainingCells % remainingStates.size();
+
+    for (int i = 0; i &lt; remainingStates.size(); i++) {
+      int state = remainingStates.get(i);
+      int cellCount = cellsPerState + (i &lt; remainder ? 1 : 0); // Distribute remainder
+      cellStateMap.put(state, cellCount);
+    }
+
+    System.out.println(cellStateMap);
+
+    // Fill the cellList with randomly chosen cell types
+    for (int i = 0; i &lt; totalCells; i++) {
+      // Convert the map keys (cell types) to a list for random selection
+      List&lt;Integer&gt; cellTypes = new ArrayList&lt;&gt;(cellStateMap.keySet());
+
+      // Randomly select a cell type from the list
+      Random random = new Random();
+      int chosenCellType = cellTypes.get(random.nextInt(cellTypes.size()));
+
+      cellList.add(chosenCellType);
+
+      // Decrement the count for the chosen cell type in the map
+      int updatedCount = cellStateMap.get(chosenCellType) - 1;
+      cellStateMap.put(chosenCellType, updatedCount);
+
+      // If the count for the chosen cell type reaches zero, remove it from the map
+      if (updatedCount == 0) {
+        cellStateMap.remove(chosenCellType);
+      }
+    }
+
+    return cellList;
+  }
+
+  SimType simTypeFromString(String simTypeString) {
+    return switch (simTypeString.toLowerCase()) { //switch case to determine enum type
+      case "game of life", "gameoflife" -&gt; SimType.GameOfLife;
+      case "spreading of fire", "fire" -&gt; SimType.Fire;
+      case "percolation" -&gt; SimType.Percolation;
+      case "model of segregation", "segregation" -&gt; SimType.Segregation;
+      case "wa-tor world", "wator" -&gt; SimType.WaTor;
+      case "falling sand", "fallingsand" -&gt; SimType.FallingSand;
+      case "langton", "langton's loop", "langtonsloop" -&gt; SimType.Langton;
+      case "chou-reggia loop", "choureggialoop", "choureg", "choureg2", "chou" -&gt; SimType.ChouReg2;
+      case "petelka" -&gt; SimType.Petelka;
+      case "rock paper scissors", "rps" -&gt; SimType.RockPaperSciss;
+      default -&gt; throw new XmlException("UnknownSimType", simTypeString);
+    };
+  }
+
+  int maxFromSimType(SimType simType) {
+    // Initialize the HashMap for mapping SimType to max states
+    Map&lt;SimType, Integer&gt; maxConnector = new HashMap&lt;&gt;();
+
+    // Populate the map with max states for each simulation type
+    maxConnector.put(SimType.GameOfLife, CellStates.GAMEOFLIFE_MAXSTATE);
+    maxConnector.put(SimType.Fire, CellStates.FIRE_MAXSTATE);
+    maxConnector.put(SimType.Percolation, CellStates.PERCOLATION_MAXSTATE);
+    maxConnector.put(SimType.Segregation, CellStates.SEGREGATION_MAXSTATE);
+    maxConnector.put(SimType.WaTor, CellStates.WATOR_MAXSTATE);
+    maxConnector.put(SimType.FallingSand, CellStates.FALLINGSAND_MAXSTATE);
+    maxConnector.put(SimType.Langton, CellStates.LANGTON_MAXSTATE);
+    maxConnector.put(SimType.ChouReg2, CellStates.CHOUREG2_MAXSTATE);
+    maxConnector.put(SimType.Petelka, CellStates.PETELKA_MAXSTATE);
+    maxConnector.put(SimType.RockPaperSciss, CellStates.FIRE_MAXSTATE); // assuming it's the same as Fire, adjust if necessary
+
+    // Return the max state for the given SimType
+    return maxConnector.getOrDefault(simType, -1); // If no matching type found, return -1 (or another default value)
+  }
+}
+</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-name="code-4516c8" data-block-id="39f0626ba5a3601a1acc9bcb7fd7b057" style="width: 288px; height: 36px; left: 664px; top: 129.5px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 12;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;"><code data-line-numbers="1|2|3|4|5|6|7|9|10" data-fragment-index="0"># Read XML
+- SimType from String
+- customColorMap
+- parameterToMap
+- CellStateFactory
+- setCellStatesByVariation
+- cellStates to Enum
+
+# WriteToXML
+- cellsStatesToString</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-name="code-0fbb37" data-block-id="67f535a84fd0c8a2d99cbaae719edd06" style="width: 760px; height: 252px; left: 192px; top: 435px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="none" style="z-index: 13;" data-code-wrap="true"><pre style="font-size: 12px; line-height: 14px; tab-size: 4;"><code data-line-numbers="191|1-9|19-54|182-191|56-120|122-144|191|146-197" data-fragment-index="1">// XmlData
+  /**
+   * Sets the custom color mapping for cell states.
+   *
+   * @param customColorMap - the new map of cell state values to color codes
+   */
+  public void setCustomColorMap(Map&lt;Integer, String&gt; customColorMap) {
+    this.customColorMap = customColorMap;
+  }
+  
+// XmlUtils
+  /**
+   * Converts the parameters from the XML file into a map.
+   *
+   * @param paramList      a NodeList containing the parameter data
+   * @param simulationType the type of the simulation
+   * @return a map of parameter names to their corresponding values
+   */
+  private Map&lt;String, Object&gt; parameterToMap(NodeList paramList, Enum&lt;?&gt; simulationType) {
+    Map&lt;String, Object&gt; parameters = new HashMap&lt;&gt;();
+
+    for (int i = 0; i &lt; paramList.getLength(); i++) {
+      Element paramElement = (Element) paramList.item(i);
+      String paramName = paramElement.getAttribute("name");
+      String paramValue = paramElement.getAttribute("value");
+
+      // Special handling for Game of Life's "rulestring" parameter
+      if (simulationType == SimType.GameOfLife &amp;&amp; paramName.equalsIgnoreCase("rulestring")) {
+        // Split the rulestring based on '/'
+        String[] ruleParts = paramValue.split("/");
+
+        if (ruleParts.length == 2) {
+          // Process the first part (e.g., "B1")
+          if (ruleParts[0].startsWith("B")) {
+            String birthRules = ruleParts[0].substring(1); // Extract "1"
+            parameters.put("B", Double.parseDouble(birthRules));
+          }
+
+          // Process the second part (e.g., "S12345")
+          if (ruleParts[1].startsWith("S")) {
+            String survivalRules = ruleParts[1].substring(1); // Extract "12345"
+            parameters.put("S", Double.parseDouble(survivalRules));
+          }
+        } else {
+          throw new XmlException("RulestringFormat");
+        }
+      } else {
+        // Default behavior for other parameters
+        parameters.put(paramName, Double.parseDouble(paramValue));
+      }
+    }
+
+    return parameters;
+  }
+  
+  /**
+   * Generates random cell states based on the grid size and variation information in the XML file.
+   *
+   * @return a list of random cell states for the grid
+   * @throws IllegalArgumentException if there are issues with the grid's variation data
+   */
+  private List&lt;Integer&gt; setCellStatesByVariation(Node variationNode, int totalCells, SimType simType) {
+    ArrayList&lt;Integer&gt; cellList = new ArrayList&lt;&gt;();
+
+    // Get the variation type from the node
+    String variationType = ((Element) variationNode).getAttribute("type");
+
+    Map&lt;Integer, Integer&gt; cellStateMap = new HashMap&lt;&gt;(); //first int is cell state, second is number of cells of that state
+
+    // Get all cell elements within the variation
+    NodeList cellNodes = ((Element) variationNode).getElementsByTagName("cell");
+
+    switch (variationType) {
+      case "explicit": {
+        // Iterate through each cell element
+        for (int i = 0; i &lt; cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
+          int cellCount = Integer.parseInt(cellElement.getTextContent()); // Get the cell count from the text content
+
+          logger.debug("Found " + cellType + " as the cell type after explicit");
+
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(1, cellCount);
+        }
+        break;
+      } case "ratio": {
+        for (int i = 0; i &lt; cellNodes.getLength(); i++) {
+          Element cellElement = (Element) cellNodes.item(i);
+          String cellType = cellElement.getAttribute("cellType");
+          float cellRatio = Float.parseFloat(cellElement.getTextContent()); // Get the cell count from the text content
+
+          int cellCount = (int) (cellRatio * totalCells);
+
+          logger.debug("Found " + cellType + " as the cell type after ratio");
+
+          // Add the cell type and count to the cellStateMap
+          cellStateMap.put(1, cellCount);
+        }
+
+        break;
+      }
+      default:
+        throw new IllegalArgumentException("Unsupported variation type: " + variationType);
+    }
+
+    // Calculate the total number of explicitly stated cells
+    int totalExplicitCells = cellStateMap.values().stream().mapToInt(Integer::intValue).sum();
+
+    // Calculate the remaining cells that are not explicitly stated
+    int remainingCells = totalCells - totalExplicitCells;
+
+
+    List&lt;Integer&gt; remainingStates = new ArrayList&lt;&gt;(); //adding the remaining cell states!
+    Set&lt;Integer&gt; explicitlyProvidedStates = cellStateMap.keySet();
+    for (int i = 0; i &lt; maxFromSimType(simType); i++) {
+      if (!explicitlyProvidedStates.contains(i)){
+        remainingStates.add(i);
+      }
+    }
+    
+   /**
+   * A method that extracts the cellstates from the simulation xml and turns them into a string
+   * list.
+   *
+   * @param cellList an NodeList variable that holds the xml data's cell data
+   * @param handler  the handler to convert the string to the appropriate cell state
+   * @return a list of integers representing the cell states as enums
+   * @throws IllegalArgumentException if an invalid cell state is encountered
+   */
+  private ArrayList&lt;Integer&gt; cellStatesToEnum(NodeList cellList, CellStateHandler handler) {
+    ArrayList&lt;Integer&gt; cellStateEnums = new ArrayList&lt;&gt;();
+
+    for (int j = 0; j &lt; cellList.getLength(); j++) {
+      Element cellElement = (Element) cellList.item(j);
+      String currentCellState = cellElement.getAttribute("state");
+
+      try {
+        int stateEnum = handler.stateFromString(currentCellState);
+        cellStateEnums.add(stateEnum);
+      } catch (IllegalArgumentException e) {
+        throw new XmlException("UnknownCellState", currentCellState);
+      }
+    }
+    
+  /**
+   * Converts the cell states from a simulation object into a list of strings.
+   *
+   * @param rowNum     the number of rows in the grid
+   * @param colNum     the number of columns in the grid
+   * @param simulation the simulation object containing the grid's cell states
+   * @return a list of strings representing the state of each cell in the grid
+   * @throws IllegalArgumentException if an invalid cell state is encountered
+   */
+  private ArrayList&lt;String&gt; cellStatesToString(int rowNum, int colNum, Simulation&lt;?&gt; simulation) {
+    ArrayList&lt;String&gt; cellStateList = new ArrayList&lt;&gt;();
+
+    // Get the handler for the simulation's cell states
+    CellStateHandler handler = CellStateFactory.getHandler(simulation.getSimulationId(),
+        simulation.getSimulationType(), simulation.getNumStates());
+
+    if (handler == null) {
+      throw new XmlException("UnknownSimType", simulation.getSimulationType());
+    }
+
+    for (int i = 0; i &lt; rowNum; i++) {
+      for (int j = 0; j &lt; colNum; j++) {
+        int currentCellState = simulation.getCurrentState(i, j);
+
+        if (!handler.isValidState(currentCellState)) {
+          throw new XmlException("UnknownCellState", currentCellState);
+        }
+
+        cellStateList.add(handler.statetoString(currentCellState));
+      }
+    }
+
+    return cellStateList;
+  }
+
+
+// CellStateFactory
+  public static CellStateHandler getHandler(int simulationId, SimType simulationType,
+      int numStates) {
+    if (simulationType.isDynamic()) {
+      return dynamicHandlerMap.computeIfAbsent(simulationId,
+          k -&gt; createNewDynamicStateHandler(numStates));
+    }
+
+    return getHandler(simulationType);
+  }</code></pre></div></div></section></section><section class="stack" data-id="ca352a3b094c5b112d651426aee6ffe3"><section data-auto-animate="" data-id="ce5e2739bc37a8aeae1264bdefcf35da"><div class="sl-block" data-block-type="text" style="width: 768px; left: 96px; top: 280px; height: auto;" data-name="text-785d38" data-block-id="d904bf8a299179c72f7992c5bb720f6f">
 							<div class="sl-block-content" style="text-align: left; line-height: 1.04; letter-spacing: -0.1em; font-size: 90%; z-index: 10;" data-has-line-height="" data-has-letter-spacing="" data-placeholder-tag="p" data-placeholder-text="Text"><h1>What if I want a new simulation?</h1></div>
 						</div>
 
@@ -2784,7 +4094,7 @@
 		</div>
 
 		<script>
-			var SLConfig = {"deck": {"id":3362479,"slug":"cellsociety","title":"Minimal","description":"","width":960,"height":700,"margin":0.05,"visibility":"all","published_at":"2025-03-05T05:06:31.985Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/f73be6ecbd7b2b0f316e60364639a0b2/thumb.jpg?1741143464","view_count":8,"user":{"id":2890699,"username":"jessicachen-3","name":"Jessica Chen","description":null,"thumbnail_url":"https://lh3.googleusercontent.com/a/ACg8ocLMXTYrVPSTGu6lhB5mvavMZDONlX5BGXQoAuE1BLmuU2uOK5E3=s96-c","account_type":"lite","team_id":null,"settings":{"id":57504642,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"fade","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"black-blue","auto_slide_interval":0,"comments_enabled":false,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":false,"should_loop":false,"share_notes":false,"slide_number":false,"slide_count":66,"rtl":false,"version":2,"collaborative":true,"deck_user_editor_limit":1,"data_updated_at":1741244066741,"font_typekit":null,"font_google":null,"time_limit":null,"navigation_mode":"linear","upsizing_enabled":true,"language":"en","notes":{"48189fb37a9bebc0e362acf6258c0abf":"things be going everything depending on anything\n","6da78cc90e9d339f5eb3f904ca07a359":"so if we zoom into our falling sand attemptMovement we can see it actually depends on another helper method\n\n\nin this one we using values to first test the most basic task, you have one you find it\nthen a slightly more edge condition\nthen a null case, in which we use optional to prevent against null errors\n\n- theres more combos but this generally is the idea of how the helper methods are tested, a lot of emphases at the unit level, then we become more broad","2e72c9c8137702093d928bf9ab796494":"since we verify the edge cases in the helper methods, the goal for the simulation tests are just to see if their flows make logical sense\n\ni choose the values for this example because as you can see it captures different edge cases (sand can fill in the gap water couldn't\n\nsand sinks beneath water, water sinks beneath air\n","4f5d84d55e9d5829a460c8f73ce0abb0":"really important for errors to propagate up to inform the user what went wrong\n\nFor example, most parameters are modifiable but as a design decision we made it so rock paper scissors is not. \n\nThis is caught (x layers deep into code - make a graphic for that)\n\nHowever for the text to appear for the user the simulation must throw it.\n\nTest to check if it does","2151a7a618f2a8f6e8ae07c4fc591c23":"basically in this one JUST the simulation class\n","e9832a9cdaecee723fc2a844816e7162":"dynamic states and non double parameters remain the weakest part of our design\n","2dd19e2be7dd03ce632136534c16026e":"for the most part this ensures simulation is immutable, but even with the mutable values view is not directly editing them, simulation can still decide how thigns should be modified\n"}}};
+			var SLConfig = {"deck": {"id":3362479,"slug":"cellsociety","title":"Minimal","description":"","width":960,"height":700,"margin":0.05,"visibility":"all","published_at":"2025-03-05T05:06:31.985Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/f73be6ecbd7b2b0f316e60364639a0b2/thumb.jpg?1741143464","view_count":8,"user":{"id":2890699,"username":"jessicachen-3","name":"Jessica Chen","description":null,"thumbnail_url":"https://lh3.googleusercontent.com/a/ACg8ocLMXTYrVPSTGu6lhB5mvavMZDONlX5BGXQoAuE1BLmuU2uOK5E3=s96-c","account_type":"lite","team_id":null,"settings":{"id":57504642,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"fade","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"black-blue","auto_slide_interval":0,"comments_enabled":false,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":false,"should_loop":false,"share_notes":false,"slide_number":false,"slide_count":80,"rtl":false,"version":2,"collaborative":true,"deck_user_editor_limit":1,"data_updated_at":1741274432865,"font_typekit":null,"font_google":null,"time_limit":null,"navigation_mode":"linear","upsizing_enabled":true,"language":"en","notes":{"48189fb37a9bebc0e362acf6258c0abf":"things be going everything depending on anything\n","6da78cc90e9d339f5eb3f904ca07a359":"so if we zoom into our falling sand attemptMovement we can see it actually depends on another helper method\n\n\nin this one we using values to first test the most basic task, you have one you find it\nthen a slightly more edge condition\nthen a null case, in which we use optional to prevent against null errors\n\n- theres more combos but this generally is the idea of how the helper methods are tested, a lot of emphases at the unit level, then we become more broad","2e72c9c8137702093d928bf9ab796494":"since we verify the edge cases in the helper methods, the goal for the simulation tests are just to see if their flows make logical sense\n\ni choose the values for this example because as you can see it captures different edge cases (sand can fill in the gap water couldn't\n\nsand sinks beneath water, water sinks beneath air\n","4f5d84d55e9d5829a460c8f73ce0abb0":"really important for errors to propagate up to inform the user what went wrong\n\nFor example, most parameters are modifiable but as a design decision we made it so rock paper scissors is not. \n\nThis is caught (x layers deep into code - make a graphic for that)\n\nHowever for the text to appear for the user the simulation must throw it.\n\nTest to check if it does","2151a7a618f2a8f6e8ae07c4fc591c23":"basically in this one JUST the simulation class\n","e9832a9cdaecee723fc2a844816e7162":"dynamic states and non double parameters remain the weakest part of our design\n","2dd19e2be7dd03ce632136534c16026e":"for the most part this ensures simulation is immutable, but even with the mutable values view is not directly editing them, simulation can still decide how thigns should be modified\n"}}};
 
 
 			// Use local fonts
