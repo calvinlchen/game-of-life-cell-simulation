@@ -515,4 +515,12 @@ public class UserView {
     }
     return null;
   }
+
+  /**
+   * Return the animation speed factor of the currently running simulation
+   * @return 1.0 for default speed, higher for faster, lower for slower
+   */
+  public double getSpeedFactor() {
+    return mySpeedFactor;
+  }
 }
