@@ -84,6 +84,10 @@ public class ControlPanel {
     flipVerticalButton.setOnAction(e -> myUserView.flipGridVertically());
     myButtons.add(flipVerticalButton);
 
+    Button changeParamtersButton = new Button(resources.getString("ChangeParameters"));
+    changeParamtersButton.setOnAction(e -> myUserView.openChangeParametersWindow());
+    myButtons.add(changeParamtersButton);
+
     myPanel.getChildren().addAll(myButtons);
 
     // Panel containing buttons for speeding up / slowing down the simulations

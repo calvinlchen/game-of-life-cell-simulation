@@ -66,6 +66,7 @@ public class UserView {
   private ControlPanel myControlPanel;
   private InformationBox myInformationBox;
   private StateColorLegend myStateColorLegend;
+  private ChangeParametersView myChangeParametersWindow;
   private final XmlUtils xmlUtils;
 
   // Create logger
@@ -193,10 +194,44 @@ public class UserView {
     if (myAnimation != null) {
       myAnimation.stop();
     }
+    closeChangeParametersWindow();
     mySimulationView.resetGrid();
     myInformationBox.emptyFields();
     myStateColorLegend.clearLegend();
     mySpeedFactor = 1;
+  }
+
+  /**
+   * Open the window which allows user to change simulation parameters.
+   */
+  public void openChangeParametersWindow() {
+    if (!checkSimExistsElseAlert(ResourceManager.getCurrentErrorBundle())) { return; }
+
+    int numEditableParams = mySimulationView.getSimulation().getNumEditableParameters();
+    if (numEditableParams <= 0) {
+      showMessage(
+          AlertType.INFORMATION, ResourceManager.getCurrentErrorBundle().getString("NoParamsToEdit")
+      );
+      return;
+    }
+
+    myChangeParametersWindow = new ChangeParametersView(mySimulationView.getSimulation());
+  }
+
+  public void closeChangeParametersWindow() {
+    if (myChangeParametersWindow != null) {
+      myChangeParametersWindow.closeWindow();
+    }
+  }
+
+  private boolean checkSimExistsElseAlert(ResourceBundle errorBundle) {
+    if (!checkSimulationExists()) {
+      showMessage(
+          AlertType.WARNING, errorBundle.getString("NoSimulationToSave")
+      );
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -265,10 +300,7 @@ public class UserView {
     ResourceBundle resources = ResourceManager.getCurrentMainBundle();
     ResourceBundle errorResources = ResourceManager.getCurrentErrorBundle();
 
-    if (!checkSimulationExists()) {
-      showMessage(
-          Alert.AlertType.WARNING, errorResources.getString("NoSimulationToSave")
-      );
+    if (!checkSimExistsElseAlert(errorResources)) {
       return;
     }
 
@@ -421,7 +453,7 @@ public class UserView {
    * Updates a given state to a new color, assuming the color exists.
    */
   public void updateColorForState(int state, Color newColor) {
-    if (mySimulationView == null) {
+    if (!checkSimulationExists()) {
       throw new SimulationException("NoSimulationToSave");
     }
 

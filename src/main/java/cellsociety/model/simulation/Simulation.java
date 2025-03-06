@@ -398,6 +398,16 @@ public class Simulation<T extends Cell<T, ?>> {
   }
 
   /**
+   * Return number of dynamically adjustable parameters.
+   * @return int amount of parameters, excluding maxHistorySize as a parameter
+   */
+  public int getNumEditableParameters() {
+    List<String> params = getParameterKeys();
+    // maxHistorySize is NOT an editable parameter, so subtract 1 from total
+    return params.size() - 1;
+  }
+
+  /**
    * Retrieves all the cells contained within the grid.
    *
    * <p>Only used in testing really to get all the cells, if you want all the cells otherwise
