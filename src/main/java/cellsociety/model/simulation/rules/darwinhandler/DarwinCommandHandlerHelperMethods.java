@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 // whooo this is all package protected so no java doc
 
-class DarwinCommandHandlerHelperMethods {
+public class DarwinCommandHandlerHelperMethods {
 
   private static final Logger logger = LogManager.getLogger(
       DarwinCommandHandlerHelperMethods.class);
@@ -110,6 +110,37 @@ class DarwinCommandHandlerHelperMethods {
     );
   }
 
+  public static boolean checkStillInfecting(DarwinCell cell, DarwinCell infectingCell,
+      int nearbyAhead, DirectionType direction) {
+    return nearbyCondition(infectingCell, nearbyAhead, direction,
+        (neighbor, grid) -> neighbor == cell,
+        null // Grid is not needed in this case
+    );
+  }
+
+  static void infectNearby(DarwinCell cell, int nearbyAhead, DarwinCell infectingCell, int steps) {
+    if (nearbyAhead <= 0) {
+      return;
+    }
+
+    List<DarwinCell> neighbors = cell.getDirectionalNeighbors(infectingCell.getDirection());
+
+
+    for (DarwinCell neighbor : neighbors) {
+      // once you are infected by one cell cannot be infected by another cell
+      if (neighbor.isInfected() || neighbor.getCurrentState() != cell.getCurrentState()
+          || neighbor.getCurrentState() != DARWIN_EMPTY) {
+        neighbor.setInfectingCell(infectingCell);
+        neighbor.setAwaitingInfectionTimer(steps);
+        neighbor.setInfectedTimer(steps);
+        neighbor.setOldProgram(neighbor.getCurrentState());
+        neighbor.setInfectedThisStep();
+      }
+
+      infectNearby(neighbor, nearbyAhead - 1, infectingCell, steps);
+    }
+  }
+
   static void rotate(DarwinCell cell, int degrees, boolean isRight) {
     // direction types clockwise
     List<DirectionType> directions = List.of(
@@ -150,4 +181,6 @@ class DarwinCommandHandlerHelperMethods {
       cell.setPosition(position);
     }
   }
+
+
 }

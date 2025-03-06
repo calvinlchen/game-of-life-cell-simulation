@@ -1,8 +1,10 @@
 package cellsociety.model.simulation.cell;
 
 import static cellsociety.model.util.constants.GridTypes.DirectionType.E;
+import static cellsociety.model.util.constants.SimulationConstants.NULL_STATE;
 
 import cellsociety.model.simulation.rules.DarwinRule;
+import cellsociety.model.simulation.rules.darwinhandler.DarwinCommandHandlerHelperMethods;
 import cellsociety.model.statefactory.CellStateFactory;
 import cellsociety.model.statefactory.handler.CellStateHandler;
 import cellsociety.model.util.SimulationTypes.SimType;
@@ -10,17 +12,27 @@ import cellsociety.model.util.constants.GridTypes.DirectionType;
 import cellsociety.model.util.darwin.DarwinCommand;
 import cellsociety.model.util.darwin.DarwinProgram;
 import cellsociety.model.util.darwin.DarwinProgramFactory;
-import cellsociety.model.util.exceptions.SimulationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // note I am not implementing the aprameters, if so you would just change the rules to look
 // at neighbors recursively based on the depth of your sight
 
 public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
+
+  private static Logger logger = LogManager.getLogger(DarwinCell.class);
+
   private DarwinProgram program;
   private int currentInstruction;
   private int nextInstruction;
 
-  private boolean infectedThisStep;
+  private int awaitingInfectionTimer; // how many steps before infected
+  private DarwinCell infectingCell;
+
+  private int infectedTimer;          // how many times to revert
+  private int oldProgram;             // additional thing to wator world
+
+  private boolean infectedThisStep;  // no infected this stage starts tracking till the next step
 
   private DirectionType direction;
   private DirectionType nextDirection;
@@ -37,7 +49,14 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     program = getProgramForSpecies(state);
     currentInstruction = 0;
     nextInstruction = 0;
-    infectedThisStep = false;
+
+    // waiting to be infected
+    awaitingInfectionTimer = NULL_STATE;
+    infectingCell = null;
+
+    // reverting after infection
+    infectedTimer = NULL_STATE;
+    oldProgram = NULL_STATE;
 
     // everyone can just start facing east
     direction = E;
@@ -49,8 +68,46 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     // if they have been infected this step
     // they don't get to do anything till next step
 
+    if (infectedThisStep) {
+      return false;
+    }
+
+    // on all steps want to check for awaitingInfection
+    // if this cell is in infection steps still
+    if (DarwinCommandHandlerHelperMethods.checkStillInfecting(this, infectingCell,
+        (int) Math.round(this.getRule().getParameters().getParameter("nearbyAhead")),
+        infectingCell.getDirection())) {
+      awaitingInfectionTimer--;
+      if (awaitingInfectionTimer == 0) {
+        // going to assume infection timer has been set as has old program
+        setNextState(this.getCurrentState());
+        setNextInstruction(0);  // set it to the start of the new program
+
+        // if its infected this state will never calculate its values
+        return shouldSkipCalculation();
+      }
+    } else {
+      awaitingInfectionTimer = NULL_STATE;
+      infectingCell = null;
+
+      oldProgram = NULL_STATE;
+      infectedTimer = NULL_STATE;
+    }
+
+    // on the step they become their new program that's all they do
+    if (infectedTimer > 0) {
+      infectedTimer--;
+      if (infectedTimer == 0) {
+        setNextState(oldProgram);
+        setNextInstruction(0);  // set it to the start of the new program
+
+        infectedTimer = NULL_STATE;
+        oldProgram = NULL_STATE;
+      }
+    }
+
     // empty cells should also not have to do anything
-    return getCurrentState() == 0 || infectedThisStep;
+    return getCurrentState() != getNextState();
   }
 
   @Override
@@ -59,23 +116,14 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     if (getNextState() != getCurrentState()) {
       program = getProgramForSpecies(newState);
     }
-
-    // otherwise no change to your state
   }
 
-  // I think infected creatures need to be treated the same way as consumed things
-  // in wator world aka their movement gets canceled
-  // TODO: implement cancleing of infected things moves
-  @Override
-  public void step() {
-    super.step();
-    // in addition to doing super step also update your next instruction
-    currentInstruction = nextInstruction;
-    direction = nextDirection;
-  }
 
   @Override
   public void resetParameters() {
+    currentInstruction = nextInstruction;
+    direction = nextDirection;
+
     infectedThisStep = false;
   }
 
@@ -88,6 +136,7 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
   protected int getMaxState() {
     return 0;
   }
+
 
   private DarwinProgram getProgramForSpecies(int species) {
     // get the current handler for Darwin, xml should have already updated it with the state
@@ -126,4 +175,31 @@ public class DarwinCell extends Cell<DarwinCell, DarwinRule> {
     nextDirection = direction;
   }
 
+  public void setInfectingCell(DarwinCell infectingCell) {
+    this.infectingCell = infectingCell;
+  }
+
+  public void setAwaitingInfectionTimer(int steps) {
+    awaitingInfectionTimer = steps;
+  }
+
+  public void setInfectedTimer(int steps) {
+    infectedTimer = steps;
+  }
+
+  public void setOldProgram(int currentState) {
+    oldProgram = currentState;
+  }
+
+  public void setInfectedThisStep() {
+    infectedThisStep = true;
+  }
+
+  public boolean infectedThisStep() {
+    return infectedThisStep;
+  }
+
+  public boolean isInfected() {
+    return infectingCell != null;
+  }
 }
