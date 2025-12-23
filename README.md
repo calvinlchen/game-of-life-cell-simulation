@@ -1,9 +1,18 @@
 # cell society
-## 3
+
 ## Jessica Chen, Calvin Chen, Kyaira Boughton
 
+## Project Overview
+Cell Society is a JavaFX-based framework for running and exploring a variety of cellular automata simulations. It separates concerns between a model layer (simulation logic and configuration) and a view layer (rendering, controls, and file management), making it straightforward to add new rules or tweak visuals without tightly coupling code.
 
-This project implements a cellular automata simulator.
+### Supported simulations
+The simulator ships with multiple rule sets, ranging from classic to more experimental automata. Current options include Game of Life, Percolation, Fire, Segregation, WaTor predator-prey, Falling Sand, Rock–Paper–Scissors, Langton’s Loop variants, Chou/Reg dynamics, Petelka, and an in-progress Darwin simulation. Each type carries metadata about dynamic state support and default grid topology, which the model layer uses to initialize rules and grids.
+
+### User interface highlights
+The main window presents a zoomable, pannable grid alongside a control panel for common actions: play/pause, speed adjustments, clearing or reloading a simulation, random Game of Life generation, grid flips, parameter editing, and saving/loading configurations. Users can toggle gridlines, switch visual themes, and view a legend that maps cell states to colors, while an information area surfaces status messages during runs.
+
+### Code structure
+Simulation configuration is centralized through the `SimulationTypes` metadata and the flexible `Parameters`/`GenericParameters` classes, allowing rules to declare defaults and optional non-numeric inputs without proliferating subclasses. XML utilities handle loading and saving configurations for reuse. The view layer is composed of modular UI components (control panel, state legend, information box, zoomable grid) orchestrated by `UserView`, which manages animation timelines, file dialogs, and scene styling. This modularity keeps simulation logic isolated from presentation and encourages extension via reflection-friendly rule creation and reusable UI helpers.
 
 ### Timeline
 
